@@ -4,12 +4,10 @@
 Ứng dụng Android (Java, SQLite) chạy ngoại tuyến: học từ vựng theo chủ đề và bộ từ tự tạo bằng flashcard, ôn tập theo thuật toán Leitner, quiz, ngữ pháp, tra từ, import/export, luyện thi TOEIC/IELTS/Aptis, theo dõi tiến độ và nhắc học.
 
 ## Thành viên
-| Thành viên | Phụ trách chính |
-|---|---|
-| Phan Anh Tuấn (nhóm trưởng) | Tài khoản, khung ứng dụng, nhắc học, đa ngôn ngữ, báo cáo |
-| Nguyễn Đức Quang Vinh | UI/UX, Figma, trang chủ, tiến độ, tra từ, bộ từ vựng |
-| Nguyễn Tấn Thành | CSDL SQLite, nạp dữ liệu, từ vựng, flashcard, import/export |
-| Lê Văn Tấn Lực | Thuật toán Leitner, quiz, ngữ pháp, luyện thi, kiểm thử |
+- Phan Anh Tuấn (nhóm trưởng)
+- Nguyễn Đức Quang Vinh
+- Nguyễn Tấn Thành
+- Lê Văn Tấn Lực
 
 ## Build nhanh
 Yêu cầu: Android Studio bản ổn định mới nhất (JDK 17 trở lên), Android SDK Platform 37.
