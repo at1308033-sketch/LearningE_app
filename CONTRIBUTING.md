@@ -11,7 +11,7 @@
   - `ui/<tính năng>/` — Activity/Fragment + ViewModel
 - `app/src/main/assets/seed/` — dữ liệu học có sẵn dạng JSON
 - `app/src/test/` — unit test JUnit; `app/src/androidTest/` — instrumented/Espresso
-- `docs/testing/` — tài liệu kiểm thử
+- `docs/` — tài liệu dự án theo 4 nhóm (project, engineering, quality, operations); danh mục ở `docs/README.md`. Tệp có dòng **TỰ SINH** không sửa trực tiếp
 
 ## Lệnh
 ```bash
@@ -37,4 +37,4 @@ Máy cần `JAVA_HOME` trỏ tới JDK 17+ (hoặc build trong Android Studio) v
 1. `./gradlew lint testDebugUnitTest assembleDebug` pass.
 2. Chạy app trên emulator, kiểm tra các test case của task, đính kèm ảnh chụp.
 3. **Tự giải thích được luồng code của task trong mô tả PR** — vấn đáp chiếm 50/100 điểm; mỗi người phải hiểu và sửa được code mình phụ trách.
-4. Thêm 1 dòng vào `CHANGELOG.md`; ghi file + tên hàm chính vào bảng minh chứng cho "File báo cáo kết quả dự án".
+4. Thêm 1 dòng vào `docs/operations/CHANGELOG.md`; ghi file + tên hàm chính vào bảng minh chứng cho "File báo cáo kết quả dự án".

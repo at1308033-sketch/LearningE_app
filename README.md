@@ -18,6 +18,6 @@ Yêu cầu: Android Studio bản ổn định mới nhất (JDK 17 trở lên), 
 Trên Windows dùng `gradlew.bat` (PowerShell: `.\gradlew`). Quy ước làm việc: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Tài liệu
-- Quy ước làm việc: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Kiểm thử: `docs/testing/`
-- Thiết kế giao diện: [Figma](https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App)
+- **Danh mục tài liệu:** [docs/README.md](docs/README.md) — PRD, SRS, use case, quy tắc nghiệp vụ, thiết kế hệ thống, CSDL, API, quy chuẩn code, UI/UX, kiểm thử, cài đặt, phát hành, vận hành.
+- **Bắt đầu tại:** [SYSTEM-BLUEPRINT](docs/engineering/SYSTEM-BLUEPRINT.md) · Quy ước: [CONTRIBUTING.md](CONTRIBUTING.md) · Lịch sử thay đổi: [CHANGELOG](docs/operations/CHANGELOG.md)
+- Thiết kế giao diện: [Figma v2](https://www.figma.com/design/exLWP8ZETekA11XOaD3K25/V2_App_English_Learning) · mockup gốc: [docs/design/](docs/design/)
