@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Token màu theme tối (REQ-013, DESIGN_SYSTEM). Cùng tên với values/colors.xml. -->
+<resources>
+    <color name="primary">#8FA8FF</color>
+    <color name="on_primary">#0E1320</color>
+    <color name="primary_container">#24345F</color>
+    <color name="background">#121620</color>
+    <color name="surface">#1B2130</color>
+    <color name="on_surface">#E8ECF3</color>
+    <color name="on_surface_variant">#A9B1C2</color>
+    <color name="outline">#3A4255</color>
+    <color name="streak">#FFC857</color>
+    <color name="streak_container">#4A3A12</color>
+    <color name="success">#4ADE80</color>
+    <color name="success_container">#14532D</color>
+    <color name="error">#FF7A7A</color>
+    <color name="error_container">#5C1D1D</color>
+</resources>
