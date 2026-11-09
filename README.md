@@ -23,3 +23,4 @@ Trên Windows dùng `gradlew.bat` (PowerShell: `.\gradlew`). Quy ước làm vi�
 - Quy ước làm việc: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Kiểm thử: `docs/testing/`
 - Thiết kế giao diện: [Figma](https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App)
+"# LearningE_app" 
