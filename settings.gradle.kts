@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "LearningE_app"
+rootProject.name = "LearningE"
 include(":app")

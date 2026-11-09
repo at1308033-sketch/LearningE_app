@@ -1,15 +1,13 @@
-package vn.edu.hcmute.damh.app;
+package com.learninge.app;
 
 import android.app.Application;
 import android.os.StrictMode;
 
-import vn.edu.hcmute.damh.BuildConfig;
-
 /**
- * Lớp Application của DAMH English.
- * T-005 sẽ khởi tạo ServiceLocator (DatabaseHelper, AppExecutors, Repository, Service) tại đây.
+ * Lớp Application của LearningE.
+ * T-005 sẽ khởi tạo ServiceLocator (DatabaseHelper, AppExecutors, Repository, Service) trong gói {@code core}.
  */
-public class DamhApp extends Application {
+public class LearningEApp extends Application {
 
     @Override
     public void onCreate() {

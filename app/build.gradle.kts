@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "vn.edu.hcmute.damh"
+    namespace = "com.learninge.app"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "vn.edu.hcmute.damh"
+        applicationId = "com.learninge.app"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

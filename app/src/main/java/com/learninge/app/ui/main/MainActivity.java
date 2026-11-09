@@ -1,10 +1,10 @@
-package vn.edu.hcmute.damh.ui.main;
+package com.learninge.app.ui.main;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import vn.edu.hcmute.damh.R;
+import com.learninge.app.R;
 
 /**
  * Màn hình tạm để kiểm chứng khung project (T-001).

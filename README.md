@@ -1,4 +1,4 @@
-# DAMH English — Ứng dụng hỗ trợ người dùng học tiếng Anh
+# LearningE — Ứng dụng hỗ trợ người dùng học tiếng Anh
 
 Đồ án môn **Lập trình di động (MOPR331279)**, HK1 2026–2027 — Trường Đại học Công nghệ Kỹ thuật TP.HCM.
 Ứng dụng Android (Java, SQLite) chạy ngoại tuyến: học từ vựng theo chủ đề và bộ từ tự tạo bằng flashcard, ôn tập theo thuật toán Leitner, quiz, ngữ pháp, tra từ, import/export, luyện thi TOEIC/IELTS/Aptis, theo dõi tiến độ và nhắc học.
@@ -21,4 +21,3 @@ Trên Windows dùng `gradlew.bat` (PowerShell: `.\gradlew`). Quy ước làm vi�
 - Quy ước làm việc: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Kiểm thử: `docs/testing/`
 - Thiết kế giao diện: [Figma](https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App)
-"# LearningE_app" 

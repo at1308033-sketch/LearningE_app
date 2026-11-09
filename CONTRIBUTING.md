@@ -3,8 +3,8 @@
 Áp dụng cho mọi thành viên. Đọc trước khi viết code hoặc mở Pull Request.
 
 ## Cấu trúc
-- `app/src/main/java/vn/edu/hcmute/damh/`
-  - `app/` — `DamhApp`, `ServiceLocator`, `AppExecutors`
+- `app/src/main/java/com/learninge/app/`
+  - `LearningEApp` (lớp Application); `core/` — `ServiceLocator`, `AppExecutors`
   - `data/db` (`DatabaseHelper`, `SeedLoader`, `DbContract`), `data/dao`, `data/repo`, `data/model`
   - `domain/` — Service; `domain/rules/` — quy tắc Java thuần (Leitner, chuỗi ngày, quiz, CSV, PBKDF2, chuẩn hóa chữ), **không import `android.*`**
   - `reminder/` — receiver nhắc học

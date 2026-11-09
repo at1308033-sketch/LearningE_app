@@ -4,14 +4,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".app.DamhApp"
+        android:name=".LearningEApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Damh">
+        android:theme="@style/Theme.LearningE">
 
         <!-- Màn hình tạm của T-001 để kiểm chứng build; T-005 thay bằng AuthActivity + MainActivity. -->
         <activity
