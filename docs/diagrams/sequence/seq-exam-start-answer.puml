@@ -1,0 +1,63 @@
+@startuml
+!include ../_style.puml
+title Thi thử (1/2): bắt đầu hoặc tiếp tục lượt thi, lưu từng đáp án ngay (FN-022, DEC-010)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "ExamFragment\n(SCR-31)" as F
+participant "ExamViewModel" as VM
+participant "ExamService" as S
+participant "ExamDao" as D
+database "SQLite" as DB
+
+U -> F : Chọn đề ở SCR-30 → navigate(testCode)
+F -> VM : start(testCode)
+group Luồng nền AppExecutors.dbWrite
+  VM -> S : startOrResume(testCode)
+  S -> D : findTestByCode(testCode)
+  alt Không có đề
+    S --> VM : Result.error(NOT_FOUND)
+  else Có đề
+    S -> D : findInProgress(userId, testId)
+    D -> DB : SELECT … FROM exam_attempts WHERE user_id = ?\nAND test_id = ? AND status = 'IN_PROGRESS'
+    alt Có lượt đang làm
+      S -> D : listAnswers(attemptId)
+      S -> S : remaining = duration_sec·1000 − (now − started_at)
+      opt remaining ≤ 0
+        S -> S : submit(attemptId) — tự nộp (xem 2/2)
+      end
+    else Chưa có
+      S -> D : insert(status = IN_PROGRESS, started_at = now)
+      D -> DB : INSERT INTO exam_attempts …
+    end
+    S --> VM : Result.ok(ExamSession: câu hỏi, đáp án đã chọn, remainingMillis)
+  end
+end
+VM -> F : postValue → luồng main
+F -> F : CountDownTimer(remainingMillis)
+
+loop Mỗi lần chọn đáp án / đánh dấu
+  U -> F : Chọn phương án / "Đánh dấu xem lại"
+  F -> VM : answer(number, optionIndex, flagged)
+  group Luồng nền AppExecutors.dbWrite
+    VM -> S : answer(attemptId, number, optionIndex, flagged)
+    alt Đã hết giờ (theo started_at)
+      S -> S : submit(attemptId)
+      S --> VM : Result.error(TIME_UP)
+    else Còn giờ
+      S -> D : saveAnswer(attemptId, questionId, selected_index, flagged)
+      D -> DB : INSERT OR REPLACE INTO exam_answers …\n(PK attempt_id, question_id)
+      S --> VM : Result.ok()
+    end
+  end
+  VM -> F : postValue
+  opt TIME_UP
+    F -> U : "Hết giờ! Bài của bạn đã được nộp" → SCR-32
+  end
+end
+note over F, VM
+  Thoát app giữa bài: dữ liệu đã nằm trong exam_answers;
+  mở lại đề → startOrResume tiếp tục lượt (AC-036.4)
+end note
+@enduml

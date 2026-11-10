@@ -1,0 +1,60 @@
+@startuml
+!include ../_style.puml
+set separator none
+title domain.rules (Java thuần) và data.io — băm mật khẩu, chuẩn hóa chuỗi, mã hóa tệp
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "com.learninge.app.domain.rules" {
+  class PasswordHasher {
+    +{static} ITERATIONS = 120000
+    +{static} KEY_LENGTH_BYTES = 32
+    +{static} SALT_LENGTH_BYTES = 16
+    +hash(char[] secret, byte[] salt) : String
+    +verify(char[] secret, String salt, String hash) : boolean
+  }
+  class TextNormalizer {
+    +normalizeTerm(String s, Language lang) : String
+    +foldVietnamese(String s) : String
+  }
+  class CsvCodec {
+    +parse(InputStream in) : ImportPreview
+    +write(List<Word> words, OutputStream out) : void
+  }
+  class ImportPreview <<value>> {
+    +String format
+    +int totalRows
+    +List<WordInput> validRows
+    +int duplicateCount
+    +List<RowError> errors
+    +List<WordInput> firstRows
+  }
+  class RowError <<value>> {
+    +int lineNumber
+    +String reason
+  }
+}
+
+package "com.learninge.app.data.io" {
+  class JsonCodec <<chưa đặc tả>> {
+    +parse(InputStream in) : ImportPreview
+    +write(Deck deck, List<Word> words,\n     OutputStream out) : void
+  }
+}
+
+PasswordHasher -[hidden]down- CsvCodec
+TextNormalizer -[hidden]down- JsonCodec
+CsvCodec ..> ImportPreview
+JsonCodec ..> ImportPreview
+ImportPreview *-- "*" RowError
+CsvCodec ..> TextNormalizer : khóa trùng
+
+legend bottom
+  <b>PasswordHasher</b> — PBKDF2-HMAC-SHA256 qua SecretKeyFactory ("PBKDF2WithHmacSHA256"), salt SecureRandom,
+  so sánh MessageDigest.isEqual (DEC-003, BR-002, BR-007).
+  <b>TextNormalizer</b> — chuẩn hóa theo ngôn ngữ của bộ, bỏ dấu tiếng Việt (BR-007, BR-053).
+  <b>CsvCodec</b> — RFC 4180, UTF-8 (export kèm BOM), tiêu đề term,reading,meaning,example,example_translation (BR-048, DEC-008).
+  <b>JsonCodec</b> — nằm ở data.io (cạnh mã SAF), không ở domain.rules, vì org.json của Android chỉ là stub khi chạy unit test JVM;
+  chữ ký là đề xuất theo CsvCodec (BR-049).
+endlegend
+@enduml

@@ -1,0 +1,75 @@
+' Kiểu dùng chung cho mọi sơ đồ LearningE — !include _style.puml (đường dẫn tương đối theo thư mục sơ đồ: ../_style.puml)
+!pragma layout smetana
+skinparam dpi 150
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam backgroundColor #FFFFFF
+skinparam ArrowColor #3B3654
+skinparam ArrowFontColor #3B3654
+skinparam linetype ortho
+
+skinparam actor {
+  BorderColor #3B3654
+  BackgroundColor #ECEBFF
+}
+skinparam usecase {
+  BorderColor #5146E0
+  BackgroundColor #F3F2FF
+  FontColor #1E1B3A
+}
+skinparam rectangle {
+  BorderColor #8B88A8
+  FontColor #1E1B3A
+}
+skinparam package {
+  BorderColor #8B88A8
+  BackgroundColor #FAFAFF
+}
+skinparam class {
+  BorderColor #5146E0
+  BackgroundColor #FFFFFF
+  HeaderBackgroundColor #ECEBFF
+  AttributeFontColor #1E1B3A
+}
+skinparam entity {
+  BorderColor #5146E0
+  BackgroundColor #FFFFFF
+}
+skinparam activity {
+  BorderColor #5146E0
+  BackgroundColor #F3F2FF
+  DiamondBorderColor #FF7A59
+  DiamondBackgroundColor #FFF1EC
+  StartColor #1E1B3A
+  EndColor #1E1B3A
+}
+skinparam swimlane {
+  BorderColor #8B88A8
+  TitleFontColor #1E1B3A
+  TitleFontStyle bold
+}
+skinparam sequence {
+  LifeLineBorderColor #8B88A8
+  ParticipantBorderColor #5146E0
+  ParticipantBackgroundColor #ECEBFF
+  ActorBorderColor #3B3654
+  ActorBackgroundColor #ECEBFF
+  GroupBorderColor #8B88A8
+  GroupBackgroundColor #FAFAFF
+}
+skinparam state {
+  BorderColor #5146E0
+  BackgroundColor #F3F2FF
+  StartColor #1E1B3A
+  EndColor #1E1B3A
+}
+skinparam component {
+  BorderColor #5146E0
+  BackgroundColor #F3F2FF
+}
+skinparam note {
+  BorderColor #E0B100
+  BackgroundColor #FFF8DB
+}

@@ -48,35 +48,82 @@ App có một vai trò; quyền phụ thuộc trạng thái đăng nhập và ch
 | Câu trả lời "điền từ" | Chuỗi | Có | 1–50 ký tự | "Vui lòng nhập câu trả lời" |
 
 ## Trạng thái & chuyển trạng thái của đối tượng chính
-Thẻ học (tiến độ của một người dùng với một từ — BR-011, BR-012, BR-014, BR-021):
+
+<!-- diagram:state/st-01-the-leitner.puml -->
+![Sơ đồ trạng thái thẻ học theo Leitner 5 hộp](../diagrams/state/st-01-the-leitner.png)
+<!-- /diagram -->
+
+<!-- diagram:state/st-02-tai-khoan.puml -->
+![Sơ đồ trạng thái tài khoản và khóa tạm](../diagrams/state/st-02-tai-khoan.png)
+<!-- /diagram -->
+
+<!-- diagram:state/st-03-luot-thi-thu.puml -->
+![Sơ đồ trạng thái lượt thi thử](../diagrams/state/st-03-luot-thi-thu.png)
+<!-- /diagram -->
+Thẻ học (tiến độ của một người dùng với một từ — BR-011, BR-012, BR-014, BR-021). Khớp sơ đồ PlantUML `docs/diagrams/state/st-01-the-leitner`:
 ```mermaid
 stateDiagram-v2
   [*] --> Moi
-  Moi --> Hop1: Chưa nhớ lần đầu / sai quiz
+  Moi --> Hop1: Chưa nhớ lần đầu / sai quiz, sai thi thử
   Moi --> Hop2: Đã nhớ lần đầu
   Hop1 --> Hop2: Đã nhớ (ôn sau 2 ngày)
   Hop2 --> Hop3: Đã nhớ (ôn sau 4 ngày)
   Hop3 --> Hop4: Đã nhớ (ôn sau 7 ngày)
   Hop4 --> Hop5: Đã nhớ (ôn sau 14 ngày)
   Hop5 --> Hop5: Đã nhớ (ôn sau 14 ngày)
-  Hop2 --> Hop1: Chưa nhớ / sai quiz
-  Hop3 --> Hop1: Chưa nhớ / sai quiz
-  Hop4 --> Hop1: Chưa nhớ / sai quiz
-  Hop5 --> Hop1: Chưa nhớ / sai quiz
-  Hop1 --> Hop1: Chưa nhớ (ôn sau 1 ngày)
-  Hop5 --> [*]: Xóa tài khoản / xóa từ sổ tay
+  Hop2 --> Hop1: Chưa nhớ / sai
+  Hop3 --> Hop1: Chưa nhớ / sai
+  Hop4 --> Hop1: Chưa nhớ / sai
+  Hop5 --> Hop1: Chưa nhớ / sai
+  Hop1 --> Hop1: Chưa nhớ / sai (ôn sau 1 ngày)
+  Hop1 --> [*]: Xóa tài khoản / xóa từ / xóa bộ
+  Hop2 --> [*]: Xóa tài khoản / xóa từ / xóa bộ
+  Hop3 --> [*]: Xóa tài khoản / xóa từ / xóa bộ
+  Hop4 --> [*]: Xóa tài khoản / xóa từ / xóa bộ
+  Hop5 --> [*]: Xóa tài khoản / xóa từ / xóa bộ
 ```
-Moi = Mới; Hop1–Hop4 = Đang học; Hop5 = Đã thuộc.
+Moi = Mới (chưa có bản ghi tiến độ); Hop1–Hop4 = Đang học; Hop5 = Đã thuộc (BR-014). "Sai" = câu quiz sai (BR-021) hoặc câu thi thử sai (BR-055). Từ **mọi hộp** đều thoát về [*] (bản ghi tiến độ bị xóa) khi xóa tài khoản (BR-005), xóa từ hoặc xóa bộ (BR-045) — thay đổi phạm vi.
 
-Tài khoản:
+Tài khoản và khóa tạm (BR-003, BR-005, BR-006, BR-008). Khớp `docs/diagrams/state/st-02-tai-khoan`; trong trạng thái Hoạt động có hai vùng chạy song song (đăng nhập, đặt lại mật khẩu), đếm sai và khóa tính **theo tên đăng nhập**:
 ```mermaid
 stateDiagram-v2
-  [*] --> ChuaThietLap: Đăng ký thành công
-  ChuaThietLap --> HoatDong: Hoàn thành / bỏ qua thiết lập
-  HoatDong --> KhoaTam: Sai mật khẩu 5 lần liên tiếp
-  KhoaTam --> HoatDong: Hết 60 giây
-  HoatDong --> [*]: Xóa tài khoản
+  [*] --> ChuaThietLap: Đăng ký thành công (BR-001, BR-046)
+  ChuaThietLap --> ChuaThietLap: Thoát app giữa chừng (mở lại về bước 1)
+  ChuaThietLap --> HoatDong: Hoàn thành / bỏ qua thiết lập (BR-006)
+  state HoatDong {
+    state "Bình thường (đếm sai đăng nhập dưới 5)" as BinhThuong
+    state "Khóa tạm đăng nhập 60 giây (BR-003)" as KhoaTam
+    [*] --> BinhThuong
+    BinhThuong --> BinhThuong: Sai mật khẩu (đếm + 1, dưới 5) / đăng nhập đúng hoặc đặt lại mật khẩu (đếm = 0)
+    BinhThuong --> KhoaTam: Sai mật khẩu lần thứ 5 liên tiếp
+    KhoaTam --> BinhThuong: Hết 60 giây
+    --
+    state "Cho phép đặt lại (đếm sai trả lời dưới 3)" as ChoDatLai
+    state "Khóa đặt lại mật khẩu 5 phút (BR-008)" as KhoaDatLai
+    [*] --> ChoDatLai
+    ChoDatLai --> ChoDatLai: Trả lời sai (dưới 3) / trả lời đúng (đếm = 0)
+    ChoDatLai --> KhoaDatLai: Trả lời sai lần thứ 3 liên tiếp
+    KhoaDatLai --> ChoDatLai: Hết 5 phút
+  }
+  HoatDong --> [*]: Xóa tài khoản (nhập lại mật khẩu, BR-005)
 ```
+
+Lượt thi thử (BR-054, BR-055, AC-036.4; cột `exam_attempts.status`: IN_PROGRESS gồm DangLam và GianDoan, SUBMITTED từ khi chấm và lưu xong). Khớp `docs/diagrams/state/st-03-luot-thi-thu`:
+```mermaid
+stateDiagram-v2
+  [*] --> DangLam: Bấm Bắt đầu (tạo lượt, lưu thời điểm bắt đầu)
+  DangLam --> DangLam: Trả lời / chuyển câu / đánh dấu xem lại (lưu câu trả lời ngay)
+  DangLam --> GianDoan: Thoát app giữa bài
+  GianDoan --> DangLam: Mở lại khi còn giờ (hỏi tiếp tục bài thi đang dở)
+  GianDoan --> DaNop: Mở lại khi quá giờ (tự nộp câu đã trả lời)
+  DangLam --> DaNop: Bấm Nộp bài (xác nhận nếu còn câu chưa làm)
+  DangLam --> DaNop: Hết giờ, tự nộp (E01 20 phút, E02 15 phút)
+  DaNop --> DaLuu: Chấm, câu chưa làm tính sai, điểm = round(đúng/tổng × 100), lưu 1 giao dịch
+  DaNop --> LoiLuu: Lỗi ghi CSDL
+  LoiLuu --> DaNop: Bấm Thử lại
+  DaLuu --> [*]: Xem kết quả và giải thích
+```
+DangLam = đang làm bài (đồng hồ đếm ngược); GianDoan = bị gián đoạn (đồng hồ vẫn tính theo thời điểm bắt đầu); DaNop = đã nộp, chờ chấm; DaLuu = đã chấm và lưu vào lịch sử thi thử; LoiLuu = lỗi lưu (rollback). Từ gắn với câu sai về hộp 1 (BR-055).
 
 ## Ngoại lệ & thông báo lỗi
 | Tình huống lỗi | Hệ thống làm gì | Thông báo cho người dùng | Có ghi log/cảnh báo? |
@@ -108,14 +155,14 @@ stateDiagram-v2
 | FN-022 Luyện thi | Đề, câu trả lời, thời gian | Lượt thi, điểm, câu trả lời; tiến độ thẻ | Bảng đề thi, câu hỏi thi (seed); bảng lượt thi |
 | FN-002 Đăng nhập | Tên đăng nhập, mật khẩu | Phiên / lỗi; đếm sai | Bảng người dùng; SharedPreferences |
 | FN-003 Thiết lập | Cấp độ, mục tiêu, giờ nhắc, bật/tắt | Cài đặt người dùng, lịch nhắc | Bảng cài đặt; AlarmManager/WorkManager |
-| FN-004 Hồ sơ | Các trường cài đặt, mật khẩu | Cài đặt mới / xóa toàn bộ dữ liệu người dùng | Bảng người dùng, cài đặt, mọi bảng dữ liệu người dùng |
+| FN-004 Hồ sơ | Các trường cài đặt, mật khẩu | Cài đặt mới / xóa toàn bộ dữ liệu người dùng (BR-005) | Bảng người dùng, cài đặt, mọi bảng dữ liệu người dùng (tiến độ thẻ, yêu thích, bộ từ riêng và từ, lượt quiz, lượt thi, nhật ký học) |
 | FN-005 Xem từ | Chủ đề, từ được chọn | Danh sách, chi tiết, cờ yêu thích | Bảng chủ đề, từ (seed); bảng yêu thích, tiến độ thẻ |
 | FN-006/007 Flashcard | Đánh giá Đã nhớ/Chưa nhớ | Tiến độ thẻ, hoạt động học, chuỗi | Bảng tiến độ thẻ, nhật ký học, người dùng |
 | FN-008 Quiz | Chủ đề, câu trả lời | Lượt làm, câu trả lời, điểm, tiến độ thẻ | Bảng từ (seed); bảng lượt làm, câu trả lời, tiến độ thẻ |
 | FN-009 Lịch sử | — | Danh sách lượt làm | Bảng lượt làm |
 | FN-010 Tiến độ | — | Số liệu thống kê | Truy vấn tổng hợp từ tiến độ thẻ, lượt làm, nhật ký học |
 | FN-011 Nhắc học | Giờ nhắc, trạng thái mục tiêu | Thông báo cục bộ | Bảng cài đặt, nhật ký học; NotificationManager |
-| FN-012 Ngữ pháp | Bài được chọn, câu trả lời | Trạng thái đã đọc, lượt làm | Bảng bài ngữ pháp, câu hỏi ngữ pháp (seed); bảng trạng thái bài, lượt làm |
+| FN-012 Ngữ pháp | Bài được chọn (≥ 5 câu hỏi mới làm bài tập — BR-056), câu trả lời | Trạng thái đã đọc, lượt làm | Bảng bài ngữ pháp, câu hỏi ngữ pháp (seed); bảng trạng thái bài, lượt làm |
 | FN-013 Tra từ | Từ khóa | Danh sách kết quả | Bảng từ (seed), sổ tay |
 | FN-014 Sổ tay | Từ, nghĩa, phiên âm, ví dụ, ghi chú | Mục sổ tay | Bảng sổ tay, tiến độ thẻ |
 | FN-015 Seed | File trong `assets/` | Dữ liệu chủ đề, từ, ngữ pháp, câu hỏi | `assets/` → SQLite |
@@ -127,7 +174,7 @@ stateDiagram-v2
 |---|---|---|
 | Hiệu năng — khởi động | NFR-P1: Khởi động lạnh đến khi hiện Trang chủ ≤ 2 giây (lần mở thứ 2 trở đi); lần đầu có nạp seed ≤ 5 giây (US-025) | `adb shell am start -W` đo TotalTime, 5 lần lấy trung vị |
 | Hiệu năng — truy vấn | NFR-P2: Mọi truy vấn CSDL trên luồng giao diện bị cấm; truy vấn danh sách/thống kê ≤ 100 ms với 5000 từ | StrictMode bật ở bản debug (không có vi phạm disk read trên main thread); đo thời gian truy vấn trong unit test/instrumented test |
-| Hiệu năng — tra từ | NFR-P3: Kết quả tra hiện ≤ 300 ms sau khi ngừng gõ (debounce 250 ms) | Instrumented test đo thời gian; thử tay |
+| Hiệu năng — tra từ | NFR-P3: Kết quả tra hiện ≤ 300 ms sau khi ngừng gõ (debounce 250 ms); tra trên các cột chuẩn hóa sẵn `search_term`, `search_reading`, `search_meaning` | Instrumented test đo thời gian; thử tay |
 | Hiệu năng — giao diện | NFR-P4: Cuộn danh sách từ (RecyclerView) và lật thẻ mượt, không quá 5% khung hình chậm (jank) | Android Studio Profiler / `adb shell dumpsys gfxinfo` |
 | Kích thước | NFR-P5: APK bản release ≤ 30 MB; CSDL sau seed ≤ 10 MB | Kiểm tra file build; kiểm tra file `.db` trên emulator |
 | Khả dụng — offline | NFR-A1: 100% chức năng dùng được không có mạng; manifest **không** khai báo quyền `INTERNET` | Bật chế độ máy bay chạy toàn bộ kịch bản UAT; kiểm tra manifest |
@@ -142,7 +189,7 @@ stateDiagram-v2
 | Bảo mật — tách dữ liệu | NFR-S5: Mọi truy vấn dữ liệu người dùng có điều kiện `user_id` của phiên hiện tại; không xem được dữ liệu người dùng khác trên cùng máy | Code review + test: 2 tài khoản trên một máy |
 | Bảo mật — chuẩn tham chiếu | NFR-S6: Đạt các mục áp dụng của OWASP MASVS (MASVS-STORAGE, MASVS-CODE) mức cơ bản | Checklist của người review trước G6 |
 | Accessibility | NFR-X1: Vùng chạm ≥ 48 × 48 dp; mọi nút chỉ có icon có `contentDescription` tiếng Việt; tương phản chữ ≥ 4.5:1 (WCAG 2.1 AA); không vỡ bố cục khi cỡ chữ hệ thống 200% | Accessibility Scanner trên 5 màn hình chính; thử TalkBack luồng FLOW-004 |
-| Thiết bị/trình duyệt hỗ trợ | NFR-D1: Android 7.0 (API 24) trở lên (A5); targetSdk = bản mới nhất Android Studio của nhóm hỗ trợ. NFR-D2: Điện thoại 5–6,9 inch, chỉ hướng dọc cho màn hình flashcard/quiz (các màn hình khác hỗ trợ cả hai hướng). NFR-D3: Kiểm thử trên emulator API 24 và API 34 + ít nhất 1 máy thật | Chạy kịch bản UAT trên 3 cấu hình |
+| Thiết bị/trình duyệt hỗ trợ | NFR-D1: Android 10 (API 29) đến Android 17 (API 37) (A5, thay đổi phạm vi): `minSdk = 29`, `targetSdk`/`compileSdk` = 37; `java.time` và `SecretKeyFactory("PBKDF2WithHmacSHA256")` có sẵn nên không cần thư viện hỗ trợ thêm; không dùng UPSERT của SQLite vì cần API 30 (minSdk 29 < API 30) — DEC-011. NFR-D2: Điện thoại 5–6,9 inch, chỉ hướng dọc cho màn hình flashcard/quiz (các màn hình khác hỗ trợ cả hai hướng). NFR-D3: Kiểm thử trên emulator API 29 (tối thiểu), API 33 (quyền thông báo), API 37 + ít nhất 1 máy thật | Chạy kịch bản UAT trên các cấu hình trên |
 | Dữ liệu & quyền riêng tư | NFR-R1: Chỉ thu tên hiển thị, tên đăng nhập, mật khẩu băm, dữ liệu học; không thu email/số điện thoại/vị trí. NFR-R2: Dữ liệu chỉ lưu trên máy, không gửi ra ngoài. NFR-R3: Xóa tài khoản xóa sạch dữ liệu người dùng (BR-005). NFR-R4: Quyền hệ thống chỉ gồm `POST_NOTIFICATIONS`, `RECEIVE_BOOT_COMPLETED` (và quyền lên lịch nếu lập trình viên chọn AlarmManager) | Kiểm tra manifest; test xóa tài khoản rồi truy vấn các bảng |
 | Khả năng mở rộng | NFR-E1: Đáp ứng NFR-P2 với 5000 từ, 100 chủ đề, 10 người dùng trên một máy. NFR-E2: Thêm chủ đề/từ mới chỉ cần sửa file seed và tăng phiên bản CSDL, không sửa code. NFR-E3: Lược đồ có cơ chế nâng cấp (`onUpgrade`) giữ dữ liệu người dùng | Test với seed giả 5000 từ; thử nâng phiên bản CSDL 1 → 2 |
 | Bảo trì | NFR-M1: Tách tầng giao diện / nghiệp vụ / truy cập dữ liệu (SYSTEM-BLUEPRINT chốt). NFR-M2: Quy tắc Leitner, chuỗi ngày, chấm điểm (BR-011..BR-013, BR-021..BR-025, BR-031) có unit test JUnit, độ phủ nhánh ≥ 80% cho các lớp này. NFR-M3: Không có chuỗi giao diện viết cứng trong code/layout — tất cả nằm trong `strings.xml` | `./gradlew test` + báo cáo JaCoCo; Android Lint (HardcodedText = 0) |

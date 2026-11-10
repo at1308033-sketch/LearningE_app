@@ -1,0 +1,93 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Lớp hạ tầng dùng chung — khởi tạo phụ thuộc, luồng nền, kết quả và CSDL
+skinparam classAttributeIconSize 0
+hide empty members
+
+class LearningEApp {
+  +onCreate()
+}
+class SQLiteOpenHelper <<android>>
+class Application <<android>>
+
+package "core" {
+  class ServiceLocator <<singleton>> {
+    +{static} init(Context)
+    +{static} get() : ServiceLocator
+    +authService() : AuthService
+    +studyService() : StudyService
+    +deckService() : DeckService
+    +examService() : ExamService
+    +executors() : AppExecutors
+    +clock() : Clock
+  }
+  class AppExecutors {
+    -ExecutorService dbWrite  // 1 luồng
+    -ExecutorService dbRead   // pool 2 luồng
+    -ExecutorService io       // đọc/ghi tệp SAF
+    -Executor main            // Handler
+    +dbWrite() : Executor
+    +dbRead() : Executor
+    +io() : Executor
+    +main() : Executor
+  }
+  class "Result<T>" as Result {
+    +T value
+    +ErrorCode error
+    +String detail
+    +{static} ok(T) : Result<T>
+    +{static} error(ErrorCode, String) : Result<T>
+    +isOk() : boolean
+  }
+  enum ErrorCode {
+    VALIDATION
+    USERNAME_TAKEN
+    INVALID_CREDENTIALS
+    LOCKED
+    WRONG_ANSWER
+    WRONG_PASSWORD
+    SAME_PASSWORD
+    NOT_FOUND
+    DUPLICATE
+    READ_ONLY
+    NOTHING_TO_STUDY
+    FILE_TOO_LARGE
+    FILE_FORMAT
+    NO_VALID_ROWS
+    IO
+    DB
+    TTS_UNAVAILABLE
+    PERMISSION_DENIED
+    TIME_UP
+  }
+}
+
+package "data" {
+  class DatabaseHelper {
+    +{static} DATABASE_VERSION = 1
+    +onConfigure(SQLiteDatabase)
+    +onCreate(SQLiteDatabase)
+    +onUpgrade(SQLiteDatabase, int, int)
+  }
+  class SeedLoader {
+    +load(SQLiteDatabase, AssetManager)
+  }
+  class DbContract
+  class SessionStore {
+    +currentUserId() : long
+    +save(long userId)
+    +clear()
+  }
+}
+
+Application <|-- LearningEApp
+SQLiteOpenHelper <|-- DatabaseHelper
+LearningEApp ..> ServiceLocator : init
+ServiceLocator *-- AppExecutors
+ServiceLocator *-- DatabaseHelper
+ServiceLocator *-- SessionStore
+DatabaseHelper --> SeedLoader : onCreate
+DatabaseHelper ..> DbContract
+Result --> ErrorCode
+@enduml

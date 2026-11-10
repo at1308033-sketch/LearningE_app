@@ -1,0 +1,44 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Service tầng nghiệp vụ — tài khoản, học, tiến độ, nhắc học, ngôn ngữ
+skinparam classAttributeIconSize 0
+hide empty fields
+
+package "com.learninge.app.domain" {
+  class AuthService {
+    +register(displayName, username, password, confirm, questionId, answer) : Result<User>
+    +login(username, password) : Result<User>
+    +logout() : Result<Void>
+    +getSecurityQuestion(username) : Result<Integer>
+    +resetPassword(username, answer, newPassword, confirm) : Result<Void>
+    +changePassword(current, newPassword, confirm) : Result<Void>
+    +deleteAccount(password) : Result<Void>
+    +currentUser() : Result<User>
+    +saveSettings(Settings s) : Result<Void>
+  }
+  class StudyService {
+    +newSession(long deckId) : Result<List<Card>>
+    +reviewSession() : Result<List<Card>>
+    +rate(long wordId, boolean remembered) : Result<CardProgress>
+    +finishSession(SessionKind kind, int remembered, int forgotten) : Result<SessionSummary>
+  }
+  class ProgressService {
+    +today() : Result<TodaySummary>
+    +statistics() : Result<Statistics>
+    +hasMetGoalToday() : Result<Boolean>
+  }
+  class ReminderService {
+    +schedule(int minuteOfDay) : Result<Void>
+    +cancel() : Result<Void>
+  }
+  class LanguageRegistry {
+    +all() : List<Language>
+    +get(String code) : Language
+  }
+}
+
+AuthService --> ReminderService : đặt/hủy lịch
+StudyService --> ProgressService : ghi study_log + chuỗi
+ReminderService --> ProgressService : hasMetGoalToday()
+@enduml

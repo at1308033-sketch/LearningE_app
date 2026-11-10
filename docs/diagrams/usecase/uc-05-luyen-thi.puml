@@ -1,0 +1,27 @@
+@startuml
+!include ../_style.puml
+title Use case chi tiết — Luyện thi TOEIC/IELTS/Aptis (F7)
+left to right direction
+
+actor "Người học" as N
+actor "Trình duyệt" as B
+
+rectangle "LearningE" {
+  usecase "UC-022 Luyện thi\nTOEIC/IELTS/Aptis" as UC22
+  usecase "Học bộ từ theo kỳ thi\n(US-035; UC-018 chỉ đọc)" as DECK
+  usecase "Làm bài thi thử có giờ\n(US-036; BR-054)" as EXAM
+  usecase "Tiếp tục bài thi dở\n(AC-036.4)" as RESUME
+  usecase "Chấm điểm, lưu lượt thi\n(BR-054)" as SCORE
+  usecase "Đưa từ sai về hộp 1,\nghi hoạt động học (BR-055)" as WRONG
+  usecase "Xem tài nguyên chính thức\n(US-037)" as RES
+}
+
+N -- UC22
+UC22 <.. DECK : <<extend>>
+UC22 <.. EXAM : <<extend>>
+UC22 <.. RES : <<extend>>
+EXAM <.. RESUME : <<extend>>\n[còn bài dở, còn giờ]
+EXAM ..> SCORE : <<include>>
+EXAM ..> WRONG : <<include>>
+RES -- B
+@enduml

@@ -1,0 +1,63 @@
+@startuml
+!include ../_style.puml
+title Bản đồ màn hình (2/2) — tab Luyện tập, Tra từ và Tôi
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #5146E0
+}
+skinparam frame {
+  BorderColor #8B88A8
+  BackgroundColor #FAFAFF
+}
+
+frame "Tab Luyện tập" {
+  rectangle "SCR-12\nChọn quiz" as S12
+  rectangle "SCR-15\nLịch sử quiz" as S15
+  rectangle "SCR-16\nDanh sách ngữ pháp" as S16
+  rectangle "SCR-17\nChi tiết bài" as S17
+  rectangle "SCR-30\nLuyện thi" as S30
+  rectangle "SCR-33\nTài nguyên chính thức" as S33
+}
+
+frame "Toàn màn hình (ẩn thanh tab)" {
+  rectangle "SCR-13\nLàm quiz\n(DECK / GRAMMAR)" as S13
+  rectangle "SCR-14\nKết quả quiz" as S14
+  rectangle "SCR-31\nLàm bài thi thử" as S31
+  rectangle "SCR-32\nKết quả thi thử" as S32
+}
+
+frame "Tab Tra từ" {
+  rectangle "SCR-18\nTra từ\n(Kết quả / Yêu thích / Sổ tay)" as S18
+  rectangle "SCR-08\nChi tiết từ" as S08
+  rectangle "SCR-19\nChi tiết bộ" as S19
+}
+
+frame "Tab Tôi" {
+  rectangle "SCR-22\nHồ sơ & cài đặt" as S22
+  rectangle "SCR-21\nTiến độ" as S21
+  rectangle "SCR-23\nĐổi mật khẩu" as S23
+  rectangle "SCR-24\nGiới thiệu" as S24
+}
+
+rectangle "Trình duyệt\n(ứng dụng khác)" as BRW
+
+S12 --> S13 : source=DECK, refId
+S12 --> S15
+S12 --> S16
+S16 --> S17
+S17 --> S13 : source=GRAMMAR
+S13 --> S14
+S12 --> S30
+S30 --> S31 : testCode
+S31 --> S32
+S30 --> S33
+S33 --> BRW : ACTION_VIEW
+S30 --> S19 : bộ từ kỳ thi
+
+S18 --> S08 : wordId
+S18 --> S19 : deckId
+
+S22 --> S21
+S22 --> S23
+S22 --> S24
+@enduml

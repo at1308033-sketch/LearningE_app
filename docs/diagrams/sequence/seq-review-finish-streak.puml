@@ -1,0 +1,45 @@
+@startuml
+!include ../_style.puml
+title Ôn tập Leitner (2/2): kết thúc phiên — ghi study_log và chuỗi ngày trong 1 giao dịch (FLOW-008)
+autonumber
+skinparam maxMessageSize 220
+
+participant "FlashcardFragment" as F
+participant "FlashcardViewModel" as VM
+participant "StudyService" as S
+participant "ProgressService" as P
+participant "StreakCalculator" as SC
+participant "ProgressRepository\n→ StudyLogDao, SettingsDao" as R
+database "SQLite" as DB
+
+F -> VM : (thẻ cuối đã chấm)
+group Luồng nền AppExecutors.dbWrite
+  VM -> S : finishSession(REVIEW, remembered, forgotten)
+  S -> P : completeSession(REVIEW, today)
+  P -> R : runInTransaction(…)
+  R -> DB : beginTransaction()
+  R -> DB : INSERT INTO study_log(user_id, activity_type='REVIEW',\nref_id, study_date, created_at)
+  R -> DB : SELECT current_streak, longest_streak, last_study_date\nFROM user_settings WHERE user_id = ?
+  P -> SC : next(StreakState, today)
+  SC --> P : StreakState mới (BR-031)
+  R -> DB : UPDATE user_settings SET current_streak, longest_streak,\nlast_study_date WHERE user_id = ?
+  alt Thành công
+    R -> DB : setTransactionSuccessful(); endTransaction()
+    P --> S : StreakState
+    S --> VM : Result.ok(SessionSummary: đã nhớ, chưa nhớ, chuỗi)
+  else SQLiteException
+    R -> DB : endTransaction() → rollback cả study_log và chuỗi
+    S --> VM : Result.error(DB)
+  end
+end
+VM -> F : LiveData.postValue → luồng main
+alt OK
+  F -> F : Điều hướng SCR-10 Kết quả phiên
+else DB
+  F -> F : Snackbar "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại"
+end
+note over S, P
+  card_progress đã được ghi từng thẻ ở phần 1/2
+  (mỗi lần rate là một câu lệnh độc lập).
+end note
+@enduml

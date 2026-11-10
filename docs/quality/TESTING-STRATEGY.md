@@ -10,7 +10,7 @@
 ## Phạm vi (in/out)
 **Trong phạm vi**
 - 37 user story trong PRD (36 Must, 1 Should — sau thay đổi phạm vi) với 95 tiêu chí chấp nhận → 95 test case `TC-xxx.n` (§Truy vết).
-- Quy tắc nghiệp vụ BR-001..BR-042 có logic tính toán (Leitner, chuỗi ngày, chấm điểm, sinh câu hỏi, băm mật khẩu, chuẩn hóa chữ).
+- Quy tắc nghiệp vụ BR-001..BR-056 có logic tính toán (Leitner, chuỗi ngày, chấm điểm, sinh câu hỏi, băm mật khẩu, chuẩn hóa chữ).
 - Yêu cầu phi chức năng NFR-P, A, S, X, D, R, E, M, L, Q (§Chiến lược, test case `TC-NFR-*`).
 - REQ-013 dark mode (Should); REQ-015 widget (Could) chỉ khi T-071 được làm.
 - Kiểm tra nội dung seed: số lượng, trường bắt buộc, trùng từ, nguồn/giấy phép.
@@ -25,7 +25,7 @@
 | Rủi ro | Ảnh hưởng | Cách kiểm thử giảm rủi ro |
 |---|---|---|
 | Sai quy tắc Leitner / ngày ôn / chuỗi ngày (lệch 1 ngày, đổi ngày lúc nửa đêm) | Ôn sai thẻ, chuỗi về 0 vô lý — lỗi người dùng dễ thấy nhất | Unit test với `Clock` giả: ranh giới 23:59 → 00:00, bỏ 1 ngày, học 2 lần trong ngày, hộp 5 + Đã nhớ |
-| Hiện thực PBKDF2 tự viết sai (DEC-003) | Không đăng nhập được hoặc băm yếu | Unit test bằng vector chuẩn RFC 7914 §11; so sánh thời gian băm trên máy yếu (AC-002.1 ≤ 1 giây — nếu vượt, giảm số vòng lặp qua DEC mới) |
+| Dùng sai thông số PBKDF2 (DEC-003) | Không đăng nhập được hoặc băm yếu | Unit test bằng vector chuẩn RFC 7914 §11; so sánh thời gian băm trên máy yếu (AC-002.1 ≤ 1 giây — nếu vượt, giảm số vòng lặp qua DEC mới) |
 | Truy vấn trên luồng giao diện gây giật/ANR | Trải nghiệm kém, ANR khi demo | StrictMode bản debug; Profiler khi cuộn danh sách và tra từ |
 | Mất trạng thái khi xoay màn hình / app bị hệ thống hủy | Mất tiến độ phiên học, quiz | Bật "Don't keep activities", xoay ở từng bước SCR-04, SCR-09, SCR-13 |
 | Xóa tài khoản không sạch / lộ dữ liệu giữa 2 tài khoản | Vi phạm NFR-R3, NFR-S5 | Instrumented test đếm bản ghi mọi bảng sau xóa; test 2 tài khoản trên 1 máy |
@@ -38,7 +38,7 @@
 |---|---|---|---|---|
 | **Unit (U)** | JUnit 4 + JaCoCo, chạy `./gradlew testDebugUnitTest` | Lớp `domain.rules.*` (LeitnerScheduler, StreakCalculator, QuizGenerator, AnswerChecker, PasswordHasher, TextNormalizer), kiểm tra seed JSON | Người viết lớp, cùng PR với code | 100% pass; độ phủ nhánh ≥ 80% cho `domain.rules` (NFR-M2) |
 | **Integration / instrumented (I)** | AndroidX Test trên emulator, `./gradlew connectedDebugAndroidTest` | DAO + Repository trên SQLite thật: tạo bảng, nạp seed, CASCADE, upsert tiến độ, truy vấn đến hạn, tra từ, giao dịch rollback | Nguyễn Tấn Thành (T-080), trước M4 | 100% pass |
-| **E2E tự động (E)** | Espresso | 1 luồng chính: đăng ký → thiết lập → học 5 thẻ → quiz → kết quả (T-081) | Lê Văn Tấn Lực, trước M5 | Pass trên emulator API 34 |
+| **E2E tự động (E)** | Espresso | 1 luồng chính: đăng ký → thiết lập → học 5 thẻ → quiz → kết quả (T-081) | Lê Văn Tấn Lực, trước M5 | Pass trên emulator API 33 |
 | **Thủ công theo kịch bản (M)** | Bảng §Truy vết, ghi kết quả vào báo cáo kiểm thử | Mọi AC có giao diện; UAT toàn bộ US Must | Cả nhóm, mỗi người chạy tính năng của người khác (kiểm tra chéo), tuần M5 | 100% TC Cao đạt |
 | **Hiệu năng** | `adb shell am start -W`, Android Studio Profiler, `dumpsys gfxinfo`, seed giả 5000 từ | TC-NFR-P1..P5, TC-NFR-E1 | người kiểm thử, M5 | Theo SRS (phi chức năng) |
 | **Bảo mật** | Đọc manifest, DB Browser for SQLite mở `learninge.db`, Logcat, rà code `rawQuery/execSQL` | TC-NFR-S1..S6, checklist MASVS-STORAGE/CODE của người review | người review, trước G6 | 0 phát hiện mức cao |
@@ -62,10 +62,10 @@ Test case cho SRS (phi chức năng):
 | TC-NFR-S5 | Tách dữ liệu | Tạo 2 tài khoản, học/thêm sổ tay ở tài khoản A, đăng nhập B | B không thấy dữ liệu của A |
 | TC-NFR-X1 | Accessibility | Scanner + TalkBack + cỡ chữ 200% | Như ngưỡng ở bảng trên |
 | TC-NFR-X1-DARK | Dark mode (REQ-013) | Bật theme tối hệ thống, đi qua 24 màn hình | Không có chữ/nền màu cứng sai; tương phản đạt UI-UX-SPECIFICATION (hệ thống thiết kế) |
-| TC-NFR-D3 | Thiết bị | Chạy UAT trên emulator API 24, API 34, 1 máy thật | Đạt trên cả 3 |
+| TC-NFR-D3 | Thiết bị | Chạy UAT trên emulator API 29, API 33, API 37, 1 máy thật | Đạt trên cả 4 |
 | TC-NFR-E1 | Mở rộng | Seed giả 5000 từ / 100 chủ đề, 10 tài khoản | Đạt TC-NFR-P2, P3 |
 | TC-NFR-E2 | Thêm ngôn ngữ không sửa code | Thêm 1 dòng `languages` (vd `fr`) + 1 file seed nhỏ, build lại không sửa Java | Tạo được bộ tiếng Pháp, TTS đọc giọng fr-FR, nhãn cách đọc đúng |
-| TC-NFR-IMP | Hiệu năng import | Import CSV 2000 dòng trên emulator API 34 | Xem trước ≤ 2 s; nhập ≤ 3 s; giao diện không treo |
+| TC-NFR-IMP | Hiệu năng import | Import CSV 2000 dòng trên emulator API 33 | Xem trước ≤ 2 s; nhập ≤ 3 s; giao diện không treo |
 | TC-NFR-E3 | Nâng cấp CSDL | Cài bản DB v1 có dữ liệu, cài đè bản v2 | Dữ liệu người dùng còn nguyên, seed mới được nạp |
 | TC-NFR-M2 | Độ phủ | `./gradlew jacocoTestReport` | ≥ 80% nhánh ở `domain.rules` |
 | TC-NFR-Q1 | Chất lượng build | `./gradlew lint assembleDebug` | Không lỗi; HardcodedText = 0 |
@@ -74,8 +74,9 @@ Test case cho SRS (phi chức năng):
 ## Môi trường & dữ liệu test
 | Môi trường | Cấu hình | Mục đích |
 |---|---|---|
-| Emulator 1 | Pixel 6, API 34 (Android 14), 4 GB RAM, tiếng Việt | Môi trường chính; có Doze, quyền thông báo Android 13+ |
-| Emulator 2 | Nexus 5, API 24 (Android 7.0), không cài gói giọng TTS tiếng Anh | minSdk; trường hợp thiếu giọng (AC-010.2, AC-013.3) |
+| Emulator 1 | Pixel 6, API 33 (Android 13), 4 GB RAM, tiếng Việt | Môi trường chính; có Doze, quyền thông báo Android 13+ |
+| Emulator 2 | Pixel, API 29 (Android 10), không cài gói giọng TTS tiếng Anh | minSdk; trường hợp thiếu giọng (AC-010.2, AC-013.3) |
+| Emulator 3 | Pixel, API 37 (Android 17) | targetSdk; hành vi bản mới nhất |
 | Máy thật | Điện thoại Android ≥ 10 của một thành viên | Hiệu năng thật, TTS thật, thông báo thật |
 | Dữ liệu | (1) Seed thật 450 từ; (2) seed giả 5000 từ sinh bằng script (chỉ dùng cho TC-NFR-E1, không đưa vào APK); (3) tài khoản test `qa.user1`/`qa.user2` với mật khẩu test ghi trong `docs/testing/test-accounts.md` của repo code — chỉ là dữ liệu test cục bộ | — |
 | Giả lập thời gian | Unit test dùng `Clock` giả; thủ công đổi ngày giờ máy để kiểm tra chuỗi ngày và ngày ôn | BR-012, BR-031 |

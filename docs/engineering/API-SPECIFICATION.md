@@ -5,9 +5,16 @@
 Tài liệu liên quan: [SYSTEM-BLUEPRINT](SYSTEM-BLUEPRINT.md) · [Business-Rules](../project/Business-Rules.md) · [SRS](../project/SRS.md) (thông báo lỗi) · [DATABASE-DESIGN](DATABASE-DESIGN.md).
 
 ## 1. Quy ước chung
+
+<!-- diagram:class/cls-core-infrastructure.puml -->
+![Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode, DatabaseHelper](../diagrams/class/cls-core-infrastructure.png)
+<!-- /diagram -->
+
 | Quy ước | Nội dung |
 |---|---|
 | Gọi bất đồng bộ | Mọi phương thức Service chạy trên `AppExecutors` (luồng nền). ViewModel gọi Service và đẩy kết quả lên giao diện bằng `LiveData.postValue`. Không gọi Service trên luồng giao diện. |
+| Luồng (`AppExecutors`, gói `core`) | Bốn luồng: `main` (cập nhật giao diện), `dbRead` (pool 2 luồng, đọc CSDL), `dbWrite` (1 luồng, tuần tự hóa mọi thao tác ghi), `io` (đọc/ghi tệp qua Storage Access Framework, để tệp chậm không chặn hàng đợi ghi CSDL). |
+| Gói của kiểu dùng chung | `Result<T>` và `ErrorCode` nằm ở gói `com.learninge.app.core`; dùng được ở mọi tầng. |
 | Kiểu trả về | `Result<T>`: hoặc `Result.ok(value)`, hoặc `Result.error(ErrorCode, String detail)`. Không ném exception ra khỏi Service — bắt `SQLiteException`/`IOException` và đổi thành mã lỗi. |
 | Người dùng hiện tại | Service tự lấy `userId` từ `SessionStore`; giao diện **không** truyền `userId` (NFR-S5, tách dữ liệu người dùng). |
 | Ngày "hôm nay" | Service nhận `Clock` qua `ServiceLocator`; quy tắc trong `domain.rules` nhận `LocalDate today` làm tham số để test được. |
@@ -15,6 +22,8 @@ Tài liệu liên quan: [SYSTEM-BLUEPRINT](SYSTEM-BLUEPRINT.md) · [Business-Rul
 | Chuỗi giao diện | Service trả `ErrorCode`; ViewModel đổi mã lỗi sang chuỗi trong `strings.xml` (bảng mục 2). |
 
 ```java
+package com.learninge.app.core;
+
 public final class Result<T> {
     public final T value;            // null khi lỗi
     public final ErrorCode error;    // null khi thành công
@@ -49,6 +58,15 @@ public final class Result<T> {
 | `TIME_UP` | Trả lời câu thi thử sau khi hết giờ — Service tự nộp bài | "Hết giờ! Bài của bạn đã được nộp" | BR-054 |
 
 ## 3. Service — tầng nghiệp vụ (`com.learninge.app.domain`)
+
+<!-- diagram:class/cls-services-account-progress.puml -->
+![Service tài khoản, học, tiến độ, nhắc học, ngôn ngữ](../diagrams/class/cls-services-account-progress.png)
+<!-- /diagram -->
+
+<!-- diagram:class/cls-services-content.puml -->
+![Service bộ từ, quiz, thi thử, import/export](../diagrams/class/cls-services-content.png)
+<!-- /diagram -->
+
 ### 3.1 `AuthService` (F1)
 | Phương thức | Đầu vào | Kết quả thành công | Lỗi có thể | Quy tắc / US |
 |---|---|---|---|---|
@@ -83,7 +101,7 @@ public final class Result<T> {
 | `newSession(deckId)` | `Result<List<Card>>` gồm N từ Mới (N theo mục tiêu còn lại, tối thiểu 5) | `NOTHING_TO_STUDY` | BR-010; US-009, US-031 |
 | `reviewSession()` | `Result<List<Card>>` thẻ đến hạn, tối đa 50 | `NOTHING_TO_STUDY` | BR-013; US-012 |
 | `rate(wordId, boolean remembered)` | `Result<CardProgress>` hộp + ngày ôn tiếp mới | `DB` | BR-011, BR-012, BR-015 |
-| `finishSession(SessionKind kind, int remembered, int forgotten)` | `Result<SessionSummary>` (kèm chuỗi ngày mới) | `DB` | BR-031, BR-032 |
+| `finishSession(SessionKind kind, int remembered, int forgotten)` | `Result<SessionSummary>` (kèm chuỗi ngày mới); gọi `ProgressService.completeSession(kind, today)` để ghi nhật ký học (`study_log`) và cập nhật chuỗi ngày trong một giao dịch | `DB` | BR-031, BR-032 |
 
 ### 3.4 `QuizService` (F3, F5)
 | Phương thức | Kết quả | Lỗi | Quy tắc / US |
@@ -96,6 +114,15 @@ public final class Result<T> {
 | `markLessonRead(lessonId)` | `Result<Void>`; ghi hoạt động học (1 lần/ngày/bài) | `DB` | BR-032; US-020 |
 
 ### 3.5 `ExamService` (F7)
+
+<!-- diagram:sequence/seq-exam-start-answer.puml -->
+![Sơ đồ tuần tự thi thử: bắt đầu/tiếp tục lượt thi và lưu đáp án](../diagrams/sequence/seq-exam-start-answer.png)
+<!-- /diagram -->
+
+<!-- diagram:sequence/seq-exam-submit.puml -->
+![Sơ đồ tuần tự thi thử: nộp bài, chấm điểm, đưa từ sai về hộp 1](../diagrams/sequence/seq-exam-submit.png)
+<!-- /diagram -->
+
 | Phương thức | Kết quả | Lỗi | Quy tắc / US |
 |---|---|---|---|
 | `listTests(String examTag)` | `Result<List<ExamTestSummary>>` | `DB` | US-035 |
@@ -105,24 +132,33 @@ public final class Result<T> {
 | `history()` | `Result<List<ExamAttemptSummary>>` | `DB` | US-036 |
 
 ### 3.6 `ImportExportService` (F6)
+
+<!-- diagram:sequence/seq-import-commit.puml -->
+![Sơ đồ tuần tự import CSV: ghi các dòng hợp lệ trong một giao dịch](../diagrams/sequence/seq-import-commit.png)
+<!-- /diagram -->
+
 | Phương thức | Kết quả | Lỗi | Quy tắc / US |
 |---|---|---|---|
 | `preview(Uri file)` | `Result<ImportPreview>`: định dạng, tổng dòng, hợp lệ, trùng, lỗi (số dòng + lý do), 5 dòng đầu | `FILE_TOO_LARGE`, `FILE_FORMAT`, `IO` | BR-048..BR-050; AC-032.1 |
 | `importInto(ImportPreview p, Long targetDeckId)` | `Result<ImportResult>` (đã nhập, bỏ qua); `targetDeckId = null` → tạo bộ mới theo tên tệp | `NO_VALID_ROWS`, `DB` | BR-050; AC-032.2 |
 | `export(deckId, Format format, Uri target)` | `Result<Integer>` số từ đã xuất | `IO` | BR-051; AC-033.1 |
 
+Đọc/ghi tệp (`preview`, `export`) chạy trên luồng `io`; phần ghi CSDL của `importInto` chạy trên `dbWrite`. `CsvCodec` là Java thuần ở `domain.rules`; `JsonCodec` nằm ở `data.io` (cạnh mã Storage Access Framework) vì dùng `org.json` — lớp này của Android chỉ là bản giả khi chạy unit test trên JVM, nên muốn test `JsonCodec` bằng `testDebugUnitTest` phải thêm thư viện `org.json:json` ở phạm vi test (chỉ thêm khi viết test đó).
+
 ### 3.7 `ProgressService`, `ReminderService`, `LanguageRegistry` (F4, F7)
 | Phương thức | Kết quả | Quy tắc / US |
 |---|---|---|
 | `ProgressService.today()` | `Result<TodaySummary>`: tên, chuỗi ngày, từ mới hôm nay / mục tiêu, thẻ đến hạn, bộ học gần nhất | US-016 |
 | `ProgressService.statistics()` | `Result<Statistics>`: số từ theo trạng thái, tiến độ từng bộ, điểm TB 7 ngày, hoạt động 7 ngày | BR-033; US-017 |
+| `ProgressService.completeSession(SessionKind kind, LocalDate today)` | `Result<SessionSummary>`; ghi `study_log`, cập nhật chuỗi ngày trong một giao dịch. Do `StudyService.finishSession` gọi khi kết thúc phiên học/ôn | BR-031, BR-032 |
 | `ProgressService.hasMetGoalToday()` | `Result<Boolean>` | BR-030 |
 | `ReminderService.schedule(int minuteOfDay)` / `cancel()` | `Result<Void>`; lỗi `PERMISSION_DENIED` | BR-030; US-019 |
 | `LanguageRegistry.all()` / `get(code)` | `List<Language>` / `Language` (locale TTS, nhãn cách đọc) | BR-052; US-034 |
 
 ## 4. DAO — tầng dữ liệu (`com.learninge.app.data.dao`)
 - Mỗi bảng chính một DAO: `UserDao`, `SettingsDao`, `LanguageDao`, `DeckDao`, `WordDao`, `CardProgressDao`, `FavoriteDao`, `GrammarDao`, `QuizDao`, `ExamDao`, `StudyLogDao`.
-- Phương thức đặt tên: `findById`, `findBy<Điều kiện>`, `list<…>`, `insert`, `update`, `upsert`, `delete`, `count<…>`.
+- Phương thức đặt tên: `findById`, `findBy<Điều kiện>`, `list<…>`, `insert`, `update`, `delete`, `count<…>`.
+- **Không dùng UPSERT.** Cấm `INSERT … ON CONFLICT DO UPDATE` vì cần SQLite 3.24 (chỉ có từ Android 11, API 30) trong khi `minSdk` là 24. Ghi tiến độ thẻ: chạy `UPDATE`; nếu số dòng bị ảnh hưởng bằng 0 thì `INSERT`, cả hai trong cùng một giao dịch do Service/Repository mở. Được dùng `INSERT OR IGNORE` và `INSERT OR REPLACE`. Test DAO phải chứng minh ghi hai lần cùng (user, word) chỉ còn một dòng.
 - Chỉ dùng `SQLiteDatabase.query/rawQuery` với tham số `?` hoặc `SQLiteStatement` đã biên dịch; tên bảng/cột lấy từ `DbContract`.
 - DAO **không** mở giao dịch và không chứa quy tắc nghiệp vụ; Service/Repository mở giao dịch.
 - DAO trả POJO trong `data.model` (`User`, `Deck`, `Word`, `CardProgress`, `QuizAttempt`, `ExamAttempt`…), không trả `Cursor` ra ngoài.

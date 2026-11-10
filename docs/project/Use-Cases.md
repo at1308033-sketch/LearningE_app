@@ -5,6 +5,34 @@
 **Mục đích:** danh sách và sơ đồ use case, đặc tả từng chức năng (tiền điều kiện, các bước, ngoại lệ), sơ đồ luồng người dùng và luồng hệ thống.
 
 ## Danh sách use case
+
+<!-- diagram:usecase/uc-00-overview.puml -->
+![Sơ đồ use case tổng quát của ứng dụng LearningE theo nhóm chức năng](../diagrams/usecase/uc-00-overview.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-01-tai-khoan-xac-thuc.puml -->
+![Sơ đồ use case nhóm Tài khoản và xác thực](../diagrams/usecase/uc-01-tai-khoan-xac-thuc.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-02-tu-vung-flashcard-on-tap.puml -->
+![Sơ đồ use case nhóm Từ vựng, flashcard và ôn tập](../diagrams/usecase/uc-02-tu-vung-flashcard-on-tap.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-03-quiz-ngu-phap.puml -->
+![Sơ đồ use case nhóm Luyện tập: quiz và ngữ pháp](../diagrams/usecase/uc-03-quiz-ngu-phap.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-04-bo-tu-import-export.puml -->
+![Sơ đồ use case nhóm Bộ từ, sổ tay, import/export và ngôn ngữ nội dung](../diagrams/usecase/uc-04-bo-tu-import-export.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-05-luyen-thi.puml -->
+![Sơ đồ use case nhóm Luyện thi TOEIC/IELTS/Aptis](../diagrams/usecase/uc-05-luyen-thi.png)
+<!-- /diagram -->
+
+<!-- diagram:usecase/uc-06-tien-do-nhac-hoc-cai-dat.puml -->
+![Sơ đồ use case nhóm Tiến độ, nhắc học và cài đặt](../diagrams/usecase/uc-06-tien-do-nhac-hoc-cai-dat.png)
+<!-- /diagram -->
 | UC | Tên | Tác nhân | US | FN |
 |---|---|---|---|---|
 | UC-001 | Đăng ký | Khách | US-001 | FN-001 |
@@ -17,7 +45,7 @@
 | UC-008 | Làm quiz chủ đề và xem kết quả | Người học | US-013, US-014 | FN-008 |
 | UC-009 | Xem lịch sử quiz | Người học | US-015 | FN-009 |
 | UC-010 | Xem trang chủ, tiến độ, chuỗi ngày học | Người học | US-016..US-018 | FN-010 |
-| UC-011 | Nhận nhắc học | Hệ thống (bộ hẹn giờ), Người học | US-019 | FN-011 |
+| UC-011 | Nhận nhắc học | Bộ hẹn giờ hệ thống (AlarmManager), Người học | US-019 | FN-011 |
 | UC-012 | Học ngữ pháp và làm bài tập | Người học | US-020, US-021 | FN-012 |
 | UC-013 | Tra từ | Người học | US-022 | FN-013 |
 | UC-014 | Quản lý sổ tay và học sổ tay | Người học | US-023, US-024 | FN-014 |
@@ -30,12 +58,12 @@
 | UC-021 | Chọn ngôn ngữ nội dung | Người học | US-034 | FN-021 |
 | UC-022 | Luyện thi TOEIC/IELTS/Aptis | Người học | US-035..US-037 | FN-022 |
 
-Sơ đồ use case (Mermaid không có ký hiệu use case UML; bản UML chuẩn vẽ lại bằng draw.io/StarUML cho báo cáo theo đúng bảng trên):
+Sơ đồ use case (Mermaid không có ký hiệu use case UML; bản UML chuẩn là PlantUML `docs/diagrams/usecase/uc-00..uc-06`, khớp bảng trên. thay đổi phạm vi: UC-011 → UC-010 chỉ là "mở Trang chủ" khi chạm thông báo, không phải `<<include>>`):
 ```mermaid
 flowchart LR
   K([Khách])
   N([Người học])
-  T([Hệ thống hẹn giờ])
+  T(["Bộ hẹn giờ hệ thống (AlarmManager)"])
   subgraph APP[App LearningE]
     UC1((UC-001 Đăng ký))
     UC2((UC-002 Đăng nhập/đăng xuất))
@@ -52,7 +80,8 @@ flowchart LR
     UC13((UC-013 Tra từ))
     UC14((UC-014 Sổ tay))
     UC16((UC-016 Giới thiệu))
-    UC17((UC-017 Quên mật khẩu))
+    UC15((UC-015 Khởi tạo dữ liệu seed))
+    UC17((UC-017 Đặt lại mật khẩu))
     UC18((UC-018 Bộ từ vựng))
     UC19((UC-019 Import))
     UC20((UC-020 Export))
@@ -63,6 +92,7 @@ flowchart LR
   K --- UC2
   K --- UC16
   K --- UC17
+  K --- UC15
   N --- UC18
   N --- UC19
   N --- UC20
@@ -83,7 +113,7 @@ flowchart LR
   N --- UC13
   N --- UC14
   T --- UC11
-  UC11 -. include .-> UC10
+  UC11 -. "mở Trang chủ (không bắt buộc)" .-> UC10
   UC1 -. include .-> UC3
 ```
 
@@ -93,15 +123,15 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 ### FN-001: Đăng ký (US-001)
 - Mục đích: tạo tài khoản cục bộ.
 - Điều kiện tiên quyết: chưa đăng nhập; CSDL đã khởi tạo.
-- Các bước chính: (1) Mở Đăng ký từ màn hình Đăng nhập. (2) Nhập tên hiển thị, tên đăng nhập, mật khẩu, xác nhận mật khẩu. (3) Bấm Đăng ký. (4) Hệ thống kiểm tra dữ liệu, kiểm tra trùng (BR-001). (5) Tạo salt, băm mật khẩu (BR-002), lưu người dùng. (6) Lưu phiên (BR-004), chuyển Thiết lập lần đầu.
-- Ngoại lệ: dữ liệu sai → lỗi tại trường; trùng tên → lỗi BR-001; lỗi ghi CSDL → "Không thể tạo tài khoản, vui lòng thử lại".
-- Quy tắc áp dụng: BR-001, BR-002, BR-004
+- Các bước chính: (1) Mở Đăng ký từ màn hình Đăng nhập. (2) Nhập tên hiển thị, tên đăng nhập, mật khẩu, xác nhận mật khẩu, chọn 1 trong 5 câu hỏi bảo mật (BR-009) và nhập câu trả lời (AC-001.4). (3) Bấm Đăng ký. (4) Hệ thống kiểm tra dữ liệu (gồm câu hỏi + câu trả lời bảo mật), kiểm tra trùng (BR-001). (5) Tạo salt, băm mật khẩu (BR-002), chuẩn hóa và băm câu trả lời bảo mật (BR-007), lưu người dùng. (6) Lưu phiên (BR-004), chuyển Thiết lập lần đầu.
+- Ngoại lệ: dữ liệu sai → lỗi tại trường; thiếu câu hỏi hoặc câu trả lời bảo mật → không cho đăng ký (AC-001.4); trùng tên → lỗi BR-001; lỗi ghi CSDL → "Không thể tạo tài khoản, vui lòng thử lại".
+- Quy tắc áp dụng: BR-001, BR-002, BR-004, BR-007, BR-009
 - Flow: FLOW-001
 
 ### FN-002: Đăng nhập / đăng xuất (US-002)
 - Điều kiện tiên quyết: có ít nhất một tài khoản trên máy (nếu không, màn hình Đăng nhập gợi ý Đăng ký).
 - Các bước chính: (1) Nhập tên đăng nhập, mật khẩu. (2) Kiểm tra khóa tạm (BR-003). (3) Tìm người dùng, băm mật khẩu nhập với salt đã lưu, so sánh. (4) Đúng → đặt lại đếm sai, lưu phiên, vào Trang chủ. (5) Đăng xuất: xác nhận → xóa phiên → màn hình Đăng nhập.
-- Ngoại lệ: sai → tăng đếm, thông báo chung; đủ 5 lần → khóa 60 giây.
+- Ngoại lệ: sai → tăng đếm theo tên đăng nhập, thông báo chung; sai lần thứ 5 liên tiếp → khóa ngay 60 giây (BR-003).
 - Quy tắc áp dụng: BR-002, BR-003, BR-004
 - Flow: FLOW-001
 
@@ -142,7 +172,7 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 
 ### FN-008: Làm quiz chủ đề (US-013, US-014)
 - Điều kiện tiên quyết: chủ đề có ≥ 4 từ.
-- Các bước chính: (1) Tab Luyện tập → chọn chủ đề → Bắt đầu. (2) Sinh câu hỏi (BR-020, BR-024). (3) Trả lời từng câu, hiện đúng/sai ngay (BR-022, BR-025). (4) Hết câu → tính điểm (BR-023), lưu lượt làm + câu trả lời, áp BR-021 cho câu sai, ghi hoạt động học. (5) Màn hình Kết quả.
+- Các bước chính: (1) Tab Luyện tập → chọn chủ đề → Bắt đầu. (2) Sinh câu hỏi 5 dạng (BR-020, BR-024). (3) Trả lời từng câu, hiện đúng/sai ngay (BR-022, BR-025). (4) Hết câu → tính điểm (BR-023), lưu lượt làm + câu trả lời, áp BR-021 cho câu sai, ghi hoạt động học. (5) Màn hình Kết quả.
 - Ngoại lệ: thiếu TTS → bỏ dạng nghe (AC-013.3); thoát giữa bài → hỏi xác nhận, không lưu.
 - Quy tắc áp dụng: BR-020..BR-025, BR-031, BR-032
 - Flow: FLOW-005
@@ -165,20 +195,21 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 - Flow: FLOW-007
 
 ### FN-012: Ngữ pháp (US-020, US-021)
-- Các bước chính: (1) Tab Luyện tập → Ngữ pháp → danh sách bài. (2) Mở bài, đọc đến cuối → đánh dấu đã đọc, ghi hoạt động học. (3) Làm bài tập → chấm như FN-008 (dạng trắc nghiệm, có giải thích) → lưu lượt làm.
-- Quy tắc áp dụng: BR-022, BR-023, BR-032
+- Các bước chính: (1) Tab Luyện tập → Ngữ pháp → danh sách bài. (2) Mở bài, đọc đến cuối → đánh dấu đã đọc, ghi hoạt động học. (3) Làm bài tập (chỉ khi bài có ≥ 5 câu hỏi — BR-056) → chấm như FN-008 (dạng trắc nghiệm, có giải thích, `question_type` = GRAMMAR) → lưu lượt làm.
+- Ngoại lệ: bài có < 5 câu hỏi → ẩn nút "Làm bài tập" (BR-056).
+- Quy tắc áp dụng: BR-022, BR-023, BR-032, BR-056
 - Flow: FLOW-006
 
 ### FN-013: Tra từ (US-022)
 - Các bước chính: (1) Tab Tra từ → gõ từ khóa. (2) Tìm trong từ seed + sổ tay của người dùng (BR-040). (3) Chạm kết quả → Chi tiết từ (seed) hoặc chi tiết mục sổ tay. (4) Mục Yêu thích nằm cùng tab.
 - Ngoại lệ: không có kết quả → gợi ý thêm vào sổ tay.
 - Quy tắc áp dụng: BR-040
-- Flow: FLOW-006
+- Flow: FLOW-011
 
 ### FN-014: Sổ tay (US-023, US-024)
 - Các bước chính: thêm/sửa/xóa mục sổ tay (BR-041); "Học sổ tay" mở phiên flashcard dùng chung FN-006 với nguồn là sổ tay.
 - Quy tắc áp dụng: BR-011, BR-012, BR-015, BR-041
-- Flow: FLOW-006
+- Flow: FLOW-011
 
 ### FN-015: Khởi tạo dữ liệu seed (US-025)
 - Các bước chính: lần mở đầu tiên `onCreate` tạo bảng → đọc file seed trong `assets/` → chèn trong một giao dịch → ghi phiên bản seed. Nâng phiên bản app có seed mới → `onUpgrade` chèn/cập nhật seed, không đụng dữ liệu người dùng.
@@ -188,7 +219,7 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 ### FN-017: Đặt lại mật khẩu (US-027, thay đổi phạm vi)
 - Điều kiện tiên quyết: chưa đăng nhập; tài khoản có câu hỏi bảo mật.
 - Các bước chính: (1) Đăng nhập → "Quên mật khẩu?". (2) Nhập tên đăng nhập → hiện câu hỏi bảo mật. (3) Nhập câu trả lời → kiểm tra khóa (BR-008), so sánh băm (BR-007). (4) Đúng → nhập mật khẩu mới + xác nhận → lưu băm mới, đếm sai đăng nhập về 0 → về Đăng nhập.
-- Ngoại lệ: tên không tồn tại; trả lời sai; bị khóa 5 phút.
+- Ngoại lệ: tên không tồn tại; trả lời sai; sai lần thứ 3 liên tiếp → khóa đặt lại mật khẩu của tài khoản đó 5 phút (BR-008).
 - Quy tắc áp dụng: BR-002, BR-007, BR-008
 - Flow: FLOW-013
 
@@ -247,6 +278,14 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 | FLOW-017 | Làm bài thi thử | user flow | Người học | US-035, US-036, US-037 | có |
 
 ## FLOW-001: Mở app, đăng ký, đăng nhập
+
+<!-- diagram:activity/act-01-dang-ky.puml -->
+![Sơ đồ hoạt động đăng ký tài khoản](../diagrams/activity/act-01-dang-ky.png)
+<!-- /diagram -->
+
+<!-- diagram:activity/act-03-dang-nhap-dang-xuat.puml -->
+![Sơ đồ hoạt động mở ứng dụng, đăng nhập (khóa tạm 60 giây) và đăng xuất](../diagrams/activity/act-03-dang-nhap-dang-xuat.png)
+<!-- /diagram -->
 - Vai trò: Khách · Điểm vào: chạm icon app · Thành công: vào Trang chủ hoặc Thiết lập lần đầu · Tiền đề: không có.
 ```mermaid
 flowchart TD
@@ -267,18 +306,24 @@ flowchart TD
   K -- Có --> KE([Kết thúc lỗi: báo thời gian chờ])
   K -- Không --> V{Đúng thông tin?}
   V -- Có --> H
-  V -- Không --> VE[Tăng đếm sai, báo lỗi chung]
-  VE --> L
+  V -- Không --> VE[Tăng đếm sai theo tên đăng nhập, báo lỗi chung]
+  VE --> K5{Đã sai 5 lần liên tiếp?}
+  K5 -- Không --> L
+  K5 -- Có --> KL([Kết thúc lỗi: khóa ngay 60 giây, BR-003])
 ```
 ### Nhánh ngoại lệ (bắt buộc)
 | Tình huống | Hệ thống làm gì | Thông báo | Quay về đâu |
 |---|---|---|---|
-| Sai mật khẩu lần thứ 5 | Khóa 60 giây (BR-003) | "Bạn đã nhập sai quá nhiều lần. Thử lại sau 60 giây" | SCR-02, nút Đăng nhập vô hiệu đến hết giờ |
+| Sai mật khẩu lần thứ 5 liên tiếp (đếm theo tên đăng nhập) | Khóa ngay 60 giây (BR-003) | "Bạn đã nhập sai quá nhiều lần. Thử lại sau 60 giây" | SCR-02, nút Đăng nhập vô hiệu đến hết giờ |
 | Tên đăng nhập đã dùng | Không tạo tài khoản | "Tên đăng nhập đã được sử dụng" | SCR-03, giữ dữ liệu đã nhập |
 | Nạp seed lỗi ở màn hình chờ | Xem FLOW-010 | "Không thể khởi tạo dữ liệu…" | Đóng app |
 | Phiên trỏ tới tài khoản đã bị xóa | Xóa phiên | Không | SCR-02 |
 
 ## FLOW-002: Thiết lập lần đầu
+
+<!-- diagram:activity/act-02-thiet-lap-lan-dau.puml -->
+![Sơ đồ hoạt động thiết lập lần đầu](../diagrams/activity/act-02-thiet-lap-lan-dau.png)
+<!-- /diagram -->
 - Vai trò: Người học vừa đăng ký · Thành công: cài đặt được lưu, vào Trang chủ.
 ```mermaid
 flowchart TD
@@ -337,7 +382,11 @@ flowchart TD
 | Chủ đề hết từ Mới | Ẩn nút Học từ mới | "Bạn đã học hết từ mới của chủ đề này" | SCR-07 |
 
 ## FLOW-004: Phiên flashcard (học từ mới / ôn tập / học sổ tay)
-- Điểm vào: "Học từ mới" (SCR-07), "Ôn tập" (SCR-05), "Học sổ tay" (SCR-19). Cùng một màn hình SCR-09, khác nguồn thẻ.
+
+<!-- diagram:activity/act-05-hoc-tu-moi-flashcard.puml -->
+![Sơ đồ hoạt động học từ mới bằng flashcard và cập nhật chuỗi ngày học](../diagrams/activity/act-05-hoc-tu-moi-flashcard.png)
+<!-- /diagram -->
+- Điểm vào: "Học từ mới" (SCR-07), "Ôn tập" (SCR-05), "Học sổ tay" (SCR-19 Chi tiết bộ; sổ tay là một bộ). Cùng một màn hình SCR-09, khác nguồn thẻ.
 ```mermaid
 flowchart TD
   S([Bắt đầu phiên]) --> A[Lấy danh sách thẻ theo nguồn]
@@ -366,6 +415,10 @@ flowchart TD
 | Xoay màn hình / app bị đưa xuống nền | Giữ vị trí thẻ và trạng thái lật | Không | Thẻ hiện tại |
 
 ## FLOW-005: Làm quiz chủ đề, xem kết quả, lịch sử
+
+<!-- diagram:activity/act-07-lam-quiz.puml -->
+![Sơ đồ hoạt động làm quiz chủ đề, chấm điểm và đưa từ sai về ôn sớm](../diagrams/activity/act-07-lam-quiz.png)
+<!-- /diagram -->
 ```mermaid
 flowchart TD
   S([Tab Luyện tập: chọn chủ đề]) --> A{Chủ đề có ít nhất 4 từ?}
@@ -407,18 +460,22 @@ flowchart TD
   BK -- Không --> C
   MK --> EX{Làm bài tập?}
   EX -- Không --> E1([Kết thúc: đã đọc bài])
-  EX -- Có --> H{Bài có ít nhất 5 câu hỏi?}
+  EX -- Có --> H{"Bài có ít nhất 5 câu hỏi? (BR-056)"}
   H -- Không --> E0([Kết thúc lỗi: bài chưa có bài tập])
-  H -- Có --> QZ[Làm câu hỏi như FLOW-005, có giải thích]
+  H -- Có --> QZ[Làm câu hỏi loại GRAMMAR như FLOW-005, có giải thích]
   QZ --> E2([Kết thúc: lưu lượt làm])
 ```
 ### Nhánh ngoại lệ (bắt buộc)
 | Tình huống | Hệ thống làm gì | Thông báo | Quay về đâu |
 |---|---|---|---|
-| Bài chưa có bài tập | Ẩn nút Làm bài tập | "Bài này chưa có bài tập" | SCR-17 |
+| Bài có dưới 5 câu hỏi (BR-056) | Ẩn nút Làm bài tập | "Bài này chưa có bài tập" | SCR-17 |
 | Đọc lại bài đã đọc | Không ghi thêm hoạt động học trong cùng ngày | Không | SCR-17 |
 
 ## FLOW-007: Nhắc học hằng ngày
+
+<!-- diagram:activity/act-12-nhac-hoc-hang-ngay.puml -->
+![Sơ đồ hoạt động nhắc học hằng ngày](../diagrams/activity/act-12-nhac-hoc-hang-ngay.png)
+<!-- /diagram -->
 ```mermaid
 flowchart LR
   subgraph ND[Người học]
@@ -498,7 +555,7 @@ flowchart TD
   A -- Xóa tài khoản --> D[Nhập lại mật khẩu]
   D --> DC{Mật khẩu đúng và xác nhận xóa?}
   DC -- Không --> E2([Kết thúc: hủy, không xóa])
-  DC -- Có --> DD[Xóa mọi dữ liệu người dùng, hủy nhắc, xóa phiên]
+  DC -- Có --> DD["Xóa mọi dữ liệu của người dùng trong một giao dịch (BR-005): cài đặt, tiến độ thẻ, yêu thích, bộ từ riêng và từ, lượt quiz và câu trả lời, lượt thi và câu trả lời, nhật ký học; hủy nhắc, xóa phiên"]
   DD --> E3([Kết thúc: về màn hình Đăng nhập])
   A -- Đăng xuất --> LO[Xác nhận, xóa phiên, hủy nhắc]
   LO --> E4([Kết thúc: về màn hình Đăng nhập])
@@ -567,11 +624,15 @@ flowchart TD
 | Từ khóa > 50 ký tự | Cắt còn 50 ký tự | Không | SCR-18 |
 
 ## FLOW-012: Đánh giá một thẻ flashcard
+
+<!-- diagram:activity/act-06-on-tap-leitner.puml -->
+![Sơ đồ hoạt động ôn tập thẻ đến hạn theo Leitner 5 hộp](../diagrams/activity/act-06-on-tap-leitner.png)
+<!-- /diagram -->
 ```mermaid
 sequenceDiagram
   actor U as Người học
-  participant FA as FlashcardActivity
-  participant RP as CardProgressRepository
+  participant FA as FlashcardFragment
+  participant RP as ProgressRepository
   participant DAO as CardProgressDao
   participant SQL as SQLite
   U->>FA: Chọn Đã nhớ / Chưa nhớ
@@ -580,8 +641,8 @@ sequenceDiagram
   DAO->>SQL: SELECT tiến độ thẻ
   SQL-->>DAO: Bản ghi hoặc rỗng
   RP->>RP: Tính hộp mới và ngày ôn tiếp (BR-011, BR-012)
-  RP->>DAO: upsert(tiến độ mới)
-  DAO->>SQL: INSERT hoặc UPDATE
+  RP->>DAO: saveProgress(tiến độ mới) trong một giao dịch
+  DAO->>SQL: UPDATE; nếu 0 dòng thì INSERT (không dùng UPSERT, )
   alt Lưu thành công
     SQL-->>DAO: OK
     RP-->>FA: Kết quả mới
@@ -592,9 +653,13 @@ sequenceDiagram
     FA-->>U: "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại"
   end
 ```
-Tên lớp ở sơ đồ này là đề xuất; lập trình viên chốt ở SYSTEM-BLUEPRINT phase 3.
+Tên lớp ở sơ đồ này theo SYSTEM-BLUEPRINT: `FlashcardFragment`, `ProgressRepository`, `CardProgressDao`; UI không truyền `userId` (Service lấy từ `SessionStore`).
 
 ## FLOW-013: Quên mật khẩu
+
+<!-- diagram:activity/act-04-quen-mat-khau.puml -->
+![Sơ đồ hoạt động đặt lại mật khẩu bằng câu hỏi bảo mật](../diagrams/activity/act-04-quen-mat-khau.png)
+<!-- /diagram -->
 - Vai trò: Khách · Điểm vào: SCR-02 "Quên mật khẩu?" · Thành công: mật khẩu mới được lưu.
 ```mermaid
 flowchart TD
@@ -625,6 +690,10 @@ flowchart TD
 | Lỗi ghi CSDL | Rollback | "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại" | SCR-25 bước 2 |
 
 ## FLOW-014: Quản lý bộ từ vựng
+
+<!-- diagram:activity/act-08-quan-ly-bo-tu.puml -->
+![Sơ đồ hoạt động tạo và sửa bộ từ vựng](../diagrams/activity/act-08-quan-ly-bo-tu.png)
+<!-- /diagram -->
 - Vai trò: Người học · Điểm vào: tab Học → "Bộ của tôi" · Thành công: bộ/từ được tạo hoặc sửa.
 ```mermaid
 flowchart TD
@@ -652,6 +721,10 @@ flowchart TD
 | Đổi ngôn ngữ bộ đã có từ | Ô ngôn ngữ bị khóa | "Chỉ đổi ngôn ngữ khi bộ chưa có từ" | SCR-27 |
 
 ## FLOW-015: Import từ vựng
+
+<!-- diagram:activity/act-09-import-tu-vung.puml -->
+![Sơ đồ hoạt động import từ vựng CSV/JSON có xem trước](../diagrams/activity/act-09-import-tu-vung.png)
+<!-- /diagram -->
 ```mermaid
 flowchart TD
   S([Bấm Import]) --> A[Chọn file bằng trình chọn của Android]
@@ -677,6 +750,10 @@ flowchart TD
 | File có dấu tiếng Việt lưu bằng ANSI (không phải UTF-8) | Phát hiện ký tự thay thế (U+FFFD), coi là sai định dạng | "File phải lưu dạng UTF-8" | SCR-26 |
 
 ## FLOW-016: Export từ vựng
+
+<!-- diagram:activity/act-10-export-tu-vung.puml -->
+![Sơ đồ hoạt động export bộ từ ra CSV/JSON](../diagrams/activity/act-10-export-tu-vung.png)
+<!-- /diagram -->
 ```mermaid
 flowchart TD
   S([Bấm Export trong một bộ]) --> A[Chọn định dạng CSV hoặc JSON]
@@ -696,6 +773,10 @@ flowchart TD
 | Bộ nhớ đầy | Xóa file dở dang | "Không thể xuất file" | SCR-29 |
 
 ## FLOW-017: Làm bài thi thử
+
+<!-- diagram:activity/act-11-lam-bai-thi-thu.puml -->
+![Sơ đồ hoạt động làm bài thi thử có đồng hồ](../diagrams/activity/act-11-lam-bai-thi-thu.png)
+<!-- /diagram -->
 ```mermaid
 flowchart TD
   S([Chọn đề thi thử]) --> A[Hiện thông tin đề: số câu, thời gian]
@@ -723,6 +804,10 @@ flowchart TD
 App chỉ có một vai trò người dùng; quy trình liên "vai trò" duy nhất là giữa Người học, App và Hệ thống Android khi nhắc học: xem FLOW-007.
 
 ## Tương tác hệ thống (sequence)
+
+<!-- diagram:sequence/seq-login-pbkdf2.puml -->
+![Sơ đồ tuần tự đăng nhập với PBKDF2 và khóa tạm](../diagrams/sequence/seq-login-pbkdf2.png)
+<!-- /diagram -->
 App không gọi API ngoài. Hai tương tác nội bộ quan trọng: khởi tạo seed (FLOW-010) và đánh giá thẻ (FLOW-012).
 
 ## Bản đồ màn hình và flow
@@ -739,11 +824,11 @@ App không gọi API ngoài. Hai tương tác nội bộ quan trọng: khởi t�
 | FLOW-008 | SCR-10, SCR-14, SCR-17 (điểm kích hoạt) → SCR-05, SCR-21 (hiển thị) | Chạy nền |
 | FLOW-009 | SCR-22 Hồ sơ & cài đặt → SCR-23 Đổi mật khẩu; SCR-21 Tiến độ; SCR-24 Giới thiệu | Tab Tôi |
 | FLOW-010 | SCR-01 | Chỉ lần mở đầu tiên hoặc khi nâng phiên bản seed |
-| FLOW-011 | SCR-18 Tra từ (gồm mục Yêu thích) → SCR-08 / SCR-20 Thêm-sửa mục sổ tay; SCR-19 Sổ tay | Tab Tra từ |
+| FLOW-011 | SCR-18 Tra từ (gồm mục Yêu thích) → SCR-08 / SCR-20 Thêm/sửa từ; SCR-19 Chi tiết bộ (sổ tay là một bộ) | Tab Tra từ |
 | FLOW-013 | SCR-02 → SCR-25 Quên mật khẩu (2 bước) → SCR-02 | thay đổi phạm vi |
 | FLOW-014 | SCR-06 → SCR-26 Bộ của tôi → SCR-27 Tạo/sửa bộ; SCR-19 Chi tiết bộ → SCR-20 Thêm/sửa từ | thay đổi phạm vi: SCR-19/20 đổi từ "Sổ tay" thành chi tiết bộ (sổ tay là một bộ) |
 | FLOW-015 | SCR-26 → trình chọn file hệ thống → SCR-28 Xem trước import → SCR-19 | thay đổi phạm vi |
 | FLOW-016 | SCR-19 → SCR-29 Chọn định dạng export → trình lưu file hệ thống | thay đổi phạm vi |
 | FLOW-017 | SCR-12 → SCR-30 Luyện thi → SCR-31 Làm bài thi thử → SCR-32 Kết quả thi thử; SCR-30 → SCR-33 Tài nguyên chính thức | thay đổi phạm vi |
 
-Tổng: 33 mã màn hình (SCR-01 … SCR-33) sau thay đổi phạm vi.
+Tổng: 32 màn hình (33 mã SCR: SCR-01 … SCR-33) sau thay đổi phạm vi và thay đổi phạm vi.

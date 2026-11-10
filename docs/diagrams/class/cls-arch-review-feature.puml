@@ -1,0 +1,98 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Lớp theo tầng — tính năng Ôn tập (flashcard Leitner) từ giao diện tới CSDL
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "ui.study (tầng giao diện)" {
+  class FlashcardFragment {
+    -FlashcardViewModel vm
+    -TtsHelper tts
+    +onViewCreated(View, Bundle)
+    -onRemembered() / onForgotten()
+  }
+  class FlashcardViewModel {
+    -SavedStateHandle state
+    +LiveData<Card> currentCard
+    +LiveData<SessionSummary> summary
+    +LiveData<ErrorCode> error
+    +start(String source, long deckId)
+    +onRated(boolean remembered)
+  }
+}
+
+package "domain (tầng nghiệp vụ)" {
+  class StudyService {
+    +Result<List<Card>> newSession(long deckId)
+    +Result<List<Card>> reviewSession()
+    +Result<CardProgress> rate(long wordId, boolean remembered)
+    +Result<SessionSummary> finishSession(SessionKind, int, int)
+  }
+  class ProgressService {
+    +Result<TodaySummary> today()
+    +Result<Boolean> hasMetGoalToday()
+  }
+  package "domain.rules (Java thuần)" {
+    class LeitnerScheduler
+    class StreakCalculator
+  }
+}
+
+package "data (tầng dữ liệu)" {
+  class ProgressRepository {
+    +List<Card> listDue(long userId, LocalDate today, int limit)
+    +void saveProgress(CardProgress)
+    +void runInTransaction(Runnable)
+  }
+  class CardProgressDao
+  class StudyLogDao
+  class SettingsDao
+  class DatabaseHelper
+  class SessionStore {
+    +long currentUserId()
+  }
+}
+
+package "core" {
+  class ServiceLocator <<singleton>>
+  class AppExecutors {
+    +Executor dbWrite()
+    +Executor dbRead()
+    +Executor io()
+    +Executor main()
+  }
+  class "Result<T>" as Result {
+    +T value
+    +ErrorCode error
+    +String detail
+    +boolean isOk()
+  }
+}
+
+FlashcardFragment --> FlashcardViewModel
+FlashcardViewModel --> StudyService
+FlashcardViewModel ..> AppExecutors : chạy trên dbRead/dbWrite
+FlashcardViewModel ..> Result
+StudyService --> LeitnerScheduler
+StudyService --> ProgressService
+ProgressService --> StreakCalculator
+StudyService --> ProgressRepository
+ProgressService --> ProgressRepository
+StudyService --> SessionStore : userId
+ProgressRepository --> CardProgressDao
+ProgressRepository --> StudyLogDao
+ProgressRepository --> SettingsDao
+CardProgressDao --> DatabaseHelper
+StudyLogDao --> DatabaseHelper
+SettingsDao --> DatabaseHelper
+ServiceLocator ..> StudyService : tạo
+ServiceLocator ..> FlashcardViewModel : ViewModelProvider.Factory
+
+note right of ProgressRepository
+  Mở beginTransaction /
+  setTransactionSuccessful /
+  endTransaction cho thao tác
+  nhiều bảng (NFR-A3)
+end note
+@enduml

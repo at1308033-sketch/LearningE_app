@@ -1,0 +1,55 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Thiết lập lần đầu (FLOW-002, UC-003)
+
+|Người học|
+start
+if (Bấm "Bỏ qua"?) then (có)
+  |Ứng dụng|
+  :Dùng mặc định: A1, 10 từ/ngày,
+  nhắc học bật lúc 20:00 (BR-006);
+else (không)
+  |Người học|
+  :Chọn cấp độ A1 / A2 / B1;
+  :Chọn mục tiêu 5 / 10 / 15 / 20 từ;
+  if (Bật nhắc học?) then (có)
+    :Chọn giờ nhắc (00:00–23:59);
+  else (không)
+  endif
+endif
+|Ứng dụng|
+if (Nhắc học bật?) then (có)
+  if (Android 13+ và chưa có quyền?) then (có)
+    |Hệ điều hành Android|
+    :Hiện hộp thoại xin quyền
+    POST_NOTIFICATIONS;
+    if (Người dùng cho phép?) then (có)
+    else (không)
+      |Ứng dụng|
+      :Nhắc học = tắt; hiện "Bạn có thể
+      bật nhắc học trong Cài đặt";
+    endif
+  else (không)
+  endif
+else (không)
+endif
+|CSDL SQLite|
+:Lưu cài đặt người dùng;
+|Ứng dụng|
+if (Lưu thành công?) then (không)
+  :Rollback; báo "Đã có lỗi khi lưu
+  dữ liệu", ở lại bước hiện tại;
+  stop
+else (có)
+endif
+if (Nhắc học bật và có quyền?) then (có)
+  |Hệ điều hành Android|
+  :Đặt lịch nhắc hằng ngày
+  (AlarmManager, BR-030);
+else (không)
+endif
+|Ứng dụng|
+:Tài khoản chuyển Hoạt động,
+vào Trang chủ;
+stop
+@enduml

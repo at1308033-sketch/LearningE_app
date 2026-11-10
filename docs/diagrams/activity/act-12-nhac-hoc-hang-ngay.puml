@@ -1,0 +1,57 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Nhắc học hằng ngày (FLOW-007, UC-011)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Hệ điều hành Android|
+|Người học|
+start
+:Bật nhắc học, chọn giờ
+(Thiết lập lần đầu / Cài đặt);
+|Ứng dụng|
+:Hủy lịch cũ (nếu có),
+đặt lịch nhắc mới (BR-030);
+|Hệ điều hành Android|
+repeat
+  :Chờ đến giờ hẹn (AlarmManager,
+  Doze có thể trễ ≤ 15 phút);
+  note right
+    Khởi động lại máy: receiver
+    BOOT_COMPLETED gọi app
+    đặt lại lịch (AC-019.3)
+  end note
+  :Đến giờ, gọi BroadcastReceiver
+  của app (exported = false);
+  |Ứng dụng|
+  if (Có người dùng đăng nhập?) then (có)
+    if (Nhắc học bật và có quyền\nthông báo?) then (có)
+      |CSDL SQLite|
+      :Đếm từ mới học hôm nay
+      và thẻ đến hạn;
+      |Ứng dụng|
+      if (Hôm nay chưa đạt mục tiêu?\n(từ mới < mục tiêu\nhoặc còn thẻ đến hạn)) then (chưa đạt)
+        :Tạo thông báo "Đến giờ học rồi!
+        Bạn còn x từ và y thẻ cần ôn";
+        |Hệ điều hành Android|
+        :Hiển thị thông báo;
+        note right
+          Người học chạm thông báo
+          → app mở Trang chủ
+        end note
+      else (đã đạt)
+      endif
+    else (không)
+      |Ứng dụng|
+      :Không hiện; Cài đặt hiện
+      công tắc tắt + "Cấp quyền"
+      (AC-019.4);
+    endif
+  else (không)
+  endif
+  |Ứng dụng|
+  :Đặt lịch cho ngày mai;
+repeat while (Còn đăng nhập và nhắc học bật?\n(đăng xuất / xóa tài khoản → hủy lịch)) is (còn) not (không)
+stop
+@enduml

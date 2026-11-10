@@ -1,0 +1,38 @@
+@startuml
+!include ../_style.puml
+title Use case chi tiết — Từ vựng, flashcard & ôn tập (F2, F5)
+left to right direction
+
+actor "Người học" as N
+actor "Hệ điều hành Android\n(TextToSpeech)" as OS
+
+rectangle "LearningE" {
+  usecase "UC-005 Xem chủ đề\nvà từ vựng" as UC5
+  usecase "Nghe phát âm (TTS)" as TTS
+  usecase "Bật/tắt yêu thích" as FAV
+  usecase "UC-006 Học từ mới\nbằng flashcard" as UC6
+  usecase "UC-007 Ôn tập thẻ đến hạn" as UC7
+  usecase "Đánh giá thẻ Leitner\n(BR-011, BR-012; FLOW-012)" as RATE
+  usecase "Ghi hoạt động học,\ncập nhật chuỗi ngày\n(BR-031, BR-032; FLOW-008)" as LOG
+  usecase "UC-013 Tra từ" as UC13
+  usecase "Thêm vào sổ tay\n(UC-014)" as ADD
+}
+
+N -- UC5
+N -- UC6
+N -- UC7
+N -- UC13
+
+UC5 <.. TTS : <<extend>>\n[bấm loa]
+UC5 <.. FAV : <<extend>>
+UC6 ..> RATE : <<include>>
+UC7 ..> RATE : <<include>>
+UC6 ..> LOG : <<include>>
+UC7 ..> LOG : <<include>>
+UC13 <.. ADD : <<extend>>\n[không có kết quả]
+TTS -- OS
+note as NOTE1
+  Mở từ danh sách từ của chủ đề
+  khi còn từ Mới (BR-010, AC-009.4).
+end note
+@enduml

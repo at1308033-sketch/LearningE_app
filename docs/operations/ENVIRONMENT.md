@@ -6,19 +6,19 @@ LearningE không có máy chủ nên **không có biến môi trường lúc ch�
 ## 1. Biến môi trường trên máy phát triển
 | Biến | Bắt buộc | Ví dụ | Dùng cho |
 |---|---|---|---|
-| `JAVA_HOME` | Khi chạy `gradlew` từ terminal | `C:\Program Files\Android\Android Studio\jbr` | JDK 17+ để chạy Gradle |
+| `JAVA_HOME` | Khi chạy `gradlew` từ terminal | `<thư mục cài Android Studio>\jbr`, vd `D:\Program Files\Android\Android Studio\jbr` | JDK để chạy Gradle; trỏ về JBR của Android Studio để dòng lệnh và Android Studio dùng cùng một JDK (Android Studio dùng sẵn JBR, không cần đặt biến) |
 | `ANDROID_HOME` | Không (đã có `sdk.dir`) | `D:\Android\Sdk` | Công cụ dòng lệnh (`adb`, `sdkmanager`); phải trỏ tới thư mục tồn tại |
 | `PATH` | Khuyên dùng | thêm `%ANDROID_HOME%\platform-tools` | Gọi `adb` từ terminal |
 
 ## 2. Tệp cấu hình
 | Tệp | Commit? | Nội dung |
 |---|---|---|
-| `local.properties` | **Không** | `sdk.dir=<đường dẫn SDK>` — Android Studio tự tạo |
+| `local.properties` | **Không** | `sdk.dir=<đường dẫn SDK>` — Android Studio tự tạo khi mở dự án lần đầu; mỗi máy một tệp riêng |
 | `keystore.properties` | **Không** | Thông tin ký bản release (mục 3) |
 | `gradle.properties` | Có | `org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8`, `org.gradle.caching=true`, `android.useAndroidX=true`, `android.nonTransitiveRClass=true` |
 | `gradle/libs.versions.toml` | Có | Phiên bản AGP và thư viện (một nơi duy nhất) |
 | `gradle/wrapper/gradle-wrapper.properties` | Có | Phiên bản Gradle (9.6.0) |
-| `app/build.gradle.kts` | Có | `compileSdk`/`targetSdk` 37, `minSdk` 24, `versionCode`, `versionName`, build types |
+| `app/build.gradle.kts` | Có | `compileSdk`/`targetSdk` 37, `minSdk` 29 (Android 10), `versionCode`, `versionName`, build types |
 
 ## 3. `keystore.properties` (chỉ máy nhóm trưởng)
 ```properties
@@ -49,8 +49,9 @@ Không gửi mật khẩu keystore qua nhóm chat công khai; không đưa lên 
 ## 5. Môi trường kiểm thử
 | Môi trường | Cấu hình |
 |---|---|
-| Emulator chính | Pixel 6, API 34, tiếng Việt |
-| Emulator minSdk | Nexus 5, API 24, không cài giọng đọc tiếng Anh |
+| Emulator chính | Pixel 6, API 33, tiếng Việt |
+| Emulator minSdk | Pixel, API 29, không cài giọng đọc tiếng Anh |
+| Emulator mới nhất | Pixel, API 37 |
 | Máy thật | Android ≥ 10 của một thành viên |
 | CI | GitHub Actions, Ubuntu, JDK 17 Temurin |
 Tài khoản test: [test-accounts.md](../quality/test-accounts.md).

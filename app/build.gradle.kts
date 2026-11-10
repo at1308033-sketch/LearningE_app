@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.learninge.app"
-        minSdk = 24
+        minSdk = 29
         targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"

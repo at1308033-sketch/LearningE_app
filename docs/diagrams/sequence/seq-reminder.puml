@@ -1,0 +1,50 @@
+@startuml
+!include ../_style.puml
+title Nhắc học hằng ngày: đặt lịch, báo thức, thông báo, đặt lại sau khởi động (FN-011, FLOW-007, DEC-004)
+autonumber
+skinparam maxMessageSize 200
+
+actor "Người học" as U
+participant "SCR-22 Tôi\n(ui.me)" as F
+participant "ReminderService" as RS
+participant "AlarmManager" as AM
+participant "ReminderReceiver\n(exported=false)" as RR
+participant "BootReceiver" as BR
+participant "ProgressService" as PS
+participant "NotificationManager" as NM
+
+== Bật nhắc học / đổi giờ ==
+U -> F : Bật nhắc học, chọn giờ
+opt Android 13+ chưa có POST_NOTIFICATIONS
+  F -> U : Hộp thoại xin quyền
+  U --> F : Từ chối → lưu nhắc học = tắt,\nPERMISSION_DENIED
+end
+F -> RS : AuthService.saveSettings(…) →\nschedule(minuteOfDay) (luồng nền dbWrite)
+RS -> AM : cancel(pendingIntent cũ)
+RS -> AM : setWindow(RTC_WAKEUP, triggerAt, 15 phút,\nPendingIntent FLAG_IMMUTABLE)
+
+== Đến giờ nhắc ==
+AM -> RR : onReceive()
+RR -> RR : pending = goAsync()
+RR -> RS : onAlarm() trên luồng nền
+alt Không có người dùng đăng nhập (SessionStore trống)
+  RS -> RS : bỏ qua
+else Có người dùng
+  RS -> PS : hasMetGoalToday()
+  PS --> RS : Result<Boolean>
+  alt Chưa đạt mục tiêu và có quyền thông báo
+    RS -> NM : notify(kênh "Nhắc học", "Đến giờ học rồi! …",\ncontentIntent → SCR-05)
+  else Đã đạt / không có quyền
+    RS -> RS : không hiện thông báo
+  end
+end
+RS -> AM : setWindow(…) cho ngày mai
+RR -> RR : pending.finish()
+
+== Khởi động lại máy / đổi giờ hệ thống ==
+[-> BR : BOOT_COMPLETED, TIME_SET,\nTIMEZONE_CHANGED
+BR -> RS : đọc user_settings; reminder_enabled = 1\n→ schedule(reminder_minute)
+RS -> AM : setWindow(…)
+
+U <- NM : Chạm thông báo → mở Trang chủ (SCR-05)
+@enduml

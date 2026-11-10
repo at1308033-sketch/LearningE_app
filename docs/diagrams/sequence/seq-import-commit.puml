@@ -1,0 +1,49 @@
+@startuml
+!include ../_style.puml
+title Import CSV (2/2): ghi các dòng hợp lệ theo lô trong 1 giao dịch (BR-050)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "ImportPreviewFragment\n(SCR-28)" as F
+participant "ImportPreviewViewModel" as VM
+participant "ImportExportService" as S
+participant "DeckDao" as DD
+participant "WordDao" as WD
+database "SQLite" as DB
+
+U -> F : Chọn bộ đích (hoặc "Bộ mới"), bấm "Nhập"
+F -> VM : importInto(targetDeckId)
+group Luồng nền AppExecutors.dbWrite
+  VM -> S : importInto(preview, targetDeckId)
+  alt preview không có dòng hợp lệ
+    S --> VM : Result.error(NO_VALID_ROWS)
+  else Có dòng hợp lệ
+    S -> DB : beginTransaction()
+    opt targetDeckId = null
+      S -> DD : insert(Deck: tên tệp bỏ đuôi, trùng → " (2)")
+      DD -> DB : INSERT INTO decks …
+    end
+    S -> WD : compile "INSERT OR IGNORE INTO words(deck_id, term, …,\nsearch_term, …) VALUES (?, …)" (SQLiteStatement)
+    loop Mỗi dòng hợp lệ (≤ 2000)
+      WD -> DB : bind + executeInsert()
+      DB --> WD : rowId hoặc -1 (trùng UNIQUE deck_id, search_term → bỏ qua)
+    end
+    alt Không lỗi
+      S -> DB : setTransactionSuccessful(); endTransaction()
+      S --> VM : Result.ok(ImportResult: đã nhập x, bỏ qua y)
+    else SQLiteException
+      S -> DB : endTransaction() → rollback toàn bộ
+      S --> VM : Result.error(DB)
+    end
+  end
+end
+VM -> F : postValue → luồng main
+alt OK
+  F -> U : Mở SCR-19 Chi tiết bộ; "Đã nhập x từ, bỏ qua y"
+else DB
+  F -> U : "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại" (ở lại SCR-28)
+else NO_VALID_ROWS
+  F -> U : "Không có dòng hợp lệ để nhập"
+end
+@enduml

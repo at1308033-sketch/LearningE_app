@@ -1,0 +1,70 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Mở app, đăng nhập (khóa tạm 60 giây), đăng xuất (FLOW-001, UC-002)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Ứng dụng|
+start
+:Màn hình chờ: kiểm tra
+dữ liệu seed (FLOW-010);
+if (Có phiên đăng nhập\nhợp lệ? (BR-004)) then (không)
+  :Hiện màn hình Đăng nhập;
+  repeat
+    |Người học|
+    :Nhập tên đăng nhập,
+    mật khẩu; bấm Đăng nhập;
+    |Ứng dụng|
+    if (Tên này đang\nbị khóa tạm?) then (có)
+      :Báo "Thử lại sau x giây",
+      nút Đăng nhập vô hiệu
+      đến hết giờ (BR-003);
+      stop
+    else (không)
+    endif
+    |CSDL SQLite|
+    :Lấy salt, mật khẩu
+    băm, đếm sai;
+    |Ứng dụng|
+    :Băm mật khẩu nhập với
+    salt, so sánh (BR-002);
+    if (Đúng thông tin?) then (không)
+      |CSDL SQLite|
+      :Đếm sai + 1;
+      |Ứng dụng|
+      if (Đếm sai = 5?) then (có)
+        |CSDL SQLite|
+        :Khóa tên này 60 giây
+        (sai lúc 10:00:00 →
+        thử lại từ 10:01:00);
+        |Ứng dụng|
+        :Báo "Bạn đã nhập sai
+        quá nhiều lần. Thử lại
+        sau 60 giây";
+        stop
+      else (không)
+      endif
+      :Báo "Tên đăng nhập hoặc
+      mật khẩu không đúng";
+    else (có)
+    endif
+  repeat while (Đúng thông tin?) is (không) not (có)
+  |CSDL SQLite|
+  :Đặt đếm sai = 0;
+  |Ứng dụng|
+  :Lưu mã người dùng vào
+  SharedPreferences;
+else (có)
+endif
+:Vào Trang chủ (≤ 1 giây);
+|Người học|
+:Bấm "Đăng xuất" (tab Tôi);
+if (Xác nhận?) then (có)
+  |Ứng dụng|
+  :Xóa phiên, hủy lịch nhắc,
+  về màn hình Đăng nhập;
+else (không)
+endif
+stop
+@enduml

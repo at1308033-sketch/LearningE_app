@@ -5,9 +5,17 @@
 **Mục đích:** sơ đồ màn hình và điều hướng, hệ thống thiết kế (màu, chữ, khoảng cách, component), đặc tả từng màn hình kèm link Figma, bố cục màn hình mới, ánh xạ token sang code.
 
 ## Sơ đồ màn hình & điều hướng
-> Cấu trúc màn hình/trang và điều hướng. Mã màn hình và flow theo Use-Cases (luồng) §Bản đồ màn hình (25 màn hình, đã gồm thay đổi phạm vi).
+> Cấu trúc màn hình/trang và điều hướng. Mã màn hình và flow theo Use-Cases (luồng) §Bản đồ màn hình (32 màn hình / 33 mã SCR, SCR-11 gộp vào SCR-09; đã gồm thay đổi phạm vi, thay đổi phạm vi).
 
 ## Sitemap
+
+<!-- diagram:architecture/arc-navigation-auth-home-learn.puml -->
+![Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học](../diagrams/architecture/arc-navigation-auth-home-learn.png)
+<!-- /diagram -->
+
+<!-- diagram:architecture/arc-navigation-practice-search-me.puml -->
+![Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi](../diagrams/architecture/arc-navigation-practice-search-me.png)
+<!-- /diagram -->
 ```mermaid
 flowchart TD
   S01[SCR-01 Màn hình chờ] --> S02[SCR-02 Đăng nhập]
@@ -60,14 +68,14 @@ flowchart TD
 | SCR-10 | Kết quả phiên học | Người học | FLOW-004 |
 | SCR-11 | (Gộp vào SCR-09: ôn tập dùng chung màn hình flashcard) | — | FLOW-004 |
 | SCR-12 | Luyện tập: chọn chủ đề làm quiz + lối vào Ngữ pháp, Lịch sử | Người học | FLOW-005 |
-| SCR-13 | Làm quiz (4 dạng câu hỏi) | Người học | FLOW-005, FLOW-006 |
+| SCR-13 | Làm quiz (5 dạng câu hỏi chủ đề + trắc nghiệm ngữ pháp) | Người học | FLOW-005, FLOW-006 |
 | SCR-14 | Kết quả quiz | Người học | FLOW-005 |
 | SCR-15 | Lịch sử quiz | Người học | FLOW-005 |
 | SCR-16 | Danh sách bài ngữ pháp | Người học | FLOW-006 |
 | SCR-17 | Chi tiết bài ngữ pháp | Người học | FLOW-006 |
 | SCR-18 | Tra từ (tab Kết quả / Yêu thích / Sổ tay) | Người học | FLOW-011 |
-| SCR-19 | Sổ tay (danh sách, Học sổ tay, FAB thêm) | Người học | FLOW-011, FLOW-004 |
-| SCR-20 | Thêm / sửa mục sổ tay | Người học | FLOW-011 |
+| SCR-19 | Chi tiết bộ: tóm tắt bộ, danh sách từ, Học / Quiz / Export, FAB thêm từ (Sổ tay của tôi là bộ mặc định) | Người học | FLOW-011, FLOW-004, FLOW-014 |
+| SCR-20 | Thêm / sửa từ trong bộ | Người học | FLOW-011, FLOW-014 |
 | SCR-21 | Tiến độ (thống kê, biểu đồ 7 ngày) | Người học | FLOW-008 |
 | SCR-22 | Tôi: hồ sơ & cài đặt | Người học | FLOW-009 |
 | SCR-23 | Đổi mật khẩu | Người học | FLOW-009 |
@@ -81,7 +89,7 @@ flowchart TD
 | SCR-31 | Làm bài thi thử: đồng hồ đếm ngược, bảng số câu, đánh dấu xem lại | Người học | FLOW-017 |
 | SCR-32 | Kết quả thi thử: điểm, thời gian, từng câu + giải thích, ghi chú "không quy đổi điểm chính thức" | Người học | FLOW-017 |
 | SCR-33 | Tài nguyên chính thức: liên kết ETS/IELTS/British Council | Người học | FLOW-017 |
-SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có màn hình riêng: **24 màn hình thực tế** cần thiết kế (SCR-04 có 3 bước, SCR-25 có 2 bước, SCR-13 có 4 dạng câu hỏi). thay đổi phạm vi thêm 8 màn hình (SCR-26..SCR-33) → **32 màn hình**; SCR-19/SCR-20 đổi từ "Sổ tay" thành "Chi tiết bộ"/"Thêm-sửa từ" dùng cho mọi bộ (sổ tay là bộ mặc định). Tab Học có 2 mục con: Chủ đề có sẵn / Bộ của tôi; tab Luyện tập thêm lối vào Luyện thi.
+SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có màn hình riêng: **24 màn hình thực tế** cần thiết kế (SCR-04 có 3 bước, SCR-25 có 2 bước, SCR-13 có 5 dạng câu hỏi chủ đề và dạng ngữ pháp). thay đổi phạm vi thêm 8 màn hình (SCR-26..SCR-33) → **32 màn hình**; SCR-19/SCR-20 đổi từ "Sổ tay" thành "Chi tiết bộ"/"Thêm-sửa từ" dùng cho mọi bộ (sổ tay là bộ mặc định). Tab Học có 2 mục con: Chủ đề có sẵn / Bộ của tôi; tab Luyện tập thêm lối vào Luyện thi.
 
 ## Điều hướng chính
 - **Thanh tab dưới (5 tab)**: Trang chủ (SCR-05) · Học (SCR-06) · Luyện tập (SCR-12) · Tra từ (SCR-18) · Tôi (SCR-22). Hiện ở 5 màn hình gốc của tab; ẩn ở màn hình con (SCR-07 trở đi) để có thêm chỗ cho nội dung.
@@ -101,7 +109,7 @@ SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có 
 - **Thân thiện**: nhân vật minh họa là học sinh, sinh viên Việt (tóc đen, nhiều tông da), bo góc lớn (16–28 dp), hình khối mềm (blob, tròn, vuông bo 30 %).
 - **Năng động**: màu chàm thương hiệu + điểm nhấn san hô và vàng nắng; mỗi khu vực tính năng có một màu nhận diện và một gradient hero, nên người dùng biết mình đang ở đâu chỉ bằng màu.
 - **Rõ ràng**: một hành động chính mỗi màn hình (nút Filled màu của khu vực), nội dung học (từ, câu hỏi) luôn đặt trên nền trắng/surface; trang trí chỉ nằm ở hero, góc thẻ và trạng thái rỗng, không bao giờ nằm sau chữ nội dung.
-- Khác v1: v1 chỉ có một màu xanh trên nền xám, icon emoji, không minh họa. v2 bổ sung màu phụ, màu theo tính năng, nền gradient/hoa văn, bộ 13 minh họa và huy hiệu tính năng có màu.
+- Khác v1: v1 chỉ có một màu xanh trên nền xám, biểu tượng bằng ký tự Unicode, không minh họa. v2 bổ sung màu phụ, màu theo tính năng, nền gradient/hoa văn, bộ 13 minh họa và huy hiệu tính năng có màu.
 - Tham chiếu tương tác (chỉ định hướng, không sao chép bố cục/hình): flashcard lật (Quizlet, AnkiDroid), thẻ tiến độ và chuỗi ngày (Duolingo), Material 3 (m3.material.io). Màu, hình và nhân vật là thiết kế riêng của nhóm.
 
 ## Color tokens (sáng / tối) và tương phản
@@ -174,7 +182,7 @@ Quy tắc phong cách:
 - Giấy phép: minh họa do nhóm tự vẽ, ghi nguồn ở SCR-24 Giới thiệu.
 
 ### Icon chủ đề (15 chủ đề nạp sẵn)
-Thay emoji bằng bộ icon tự vẽ cùng phong cách minh họa, lưu tại `docs/design/icons/topics/`: `viewBox 0 0 48 48`, khối phẳng bo tròn, 2–3 màu bảng v2 + một màu đậm điểm xuyết, nét ≥ 1,5; cùng ràng buộc kỹ thuật VectorDrawable như minh họa. Hiển thị 40–48 dp trong ô vuông bo góc 12 dp với màu nền riêng mỗi chủ đề; vẫn đọc được ở 24 dp (danh sách tiến độ). Icon chỉ trang trí, luôn đi kèm tên chủ đề (`importantForAccessibility="no"`). Icon giao diện (nút, thanh điều hướng, component) vẫn theo phong cách Lucide, không thay.
+Thay biểu tượng ký tự Unicode bằng bộ icon tự vẽ cùng phong cách minh họa, lưu tại `docs/design/icons/topics/`: `viewBox 0 0 48 48`, khối phẳng bo tròn, 2–3 màu bảng v2 + một màu đậm điểm xuyết, nét ≥ 1,5; cùng ràng buộc kỹ thuật VectorDrawable như minh họa. Hiển thị 40–48 dp trong ô vuông bo góc 12 dp với màu nền riêng mỗi chủ đề; vẫn đọc được ở 24 dp (danh sách tiến độ). Dữ liệu: cột `decks.icon` lưu tên tệp không đuôi (`t01-family` … `t15-health`), trường `icon` trong file seed; bộ không có icon riêng (`NULL`) dùng icon mặc định theo kỳ thi/ngôn ngữ. Icon chỉ trang trí, luôn đi kèm tên chủ đề (`importantForAccessibility="no"`). Icon giao diện (nút, thanh điều hướng, component) vẫn theo phong cách Lucide, không thay.
 
 | Chủ đề | Tệp → VectorDrawable | Màu nền ô (sáng / tối) |
 |---|---|---|
@@ -237,7 +245,7 @@ Tên component trong Figma = tên trong UI-UX-SPECIFICATION; cột "Android" là
 | Dropdown | Câu hỏi bảo mật, cấp độ, ngôn ngữ, bộ đích import | Đóng, Mở, Lỗi, Vô hiệu | `TextInputLayout` ExposedDropdownMenu |
 | Top app bar | Trên nền tint (chữ `on_surface`), trong hero (chữ trắng); có phụ đề | — | `MaterialToolbar` |
 | Bottom navigation | 5 tab: Trang chủ, Học, Luyện tập, Tra từ, Tôi; pill chọn theo màu khu vực | Chọn, Không chọn | `BottomNavigationView` + `itemActiveIndicatorStyle` |
-| Topic card | Lưới 2 cột: emoji trên ô tint, nhãn cấp độ, tên, "Đã thuộc x/30", thanh tiến độ; mỗi thẻ một màu tint, góc có tròn trang trí | Mặc định, Nhấn | `MaterialCardView` |
+| Topic card | Lưới 2 cột: icon chủ đề (VectorDrawable) trên ô tint, nhãn cấp độ, tên, "Đã thuộc x/30", thanh tiến độ; mỗi thẻ một màu tint, góc có tròn trang trí | Mặc định, Nhấn | `MaterialCardView` |
 | Word row | Từ + IPA + nghĩa, Status chip, nút yêu thích | Mới, Đang học, Đã thuộc | `RecyclerView` item |
 | Status chip | Mới (viền), Đang học (primary_container), Đã thuộc (success_container) | — | `Chip` |
 | Level badge | A1, A2, B1 | — | `TextView` nền `radius_full` |
@@ -318,16 +326,14 @@ Figma https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobil
 | SCR-17 Chi tiết bài ngữ pháp | mockup: SCR-17 `#scr-17` | — · Luyện tập (thẻ công thức trong hero) | 360–412 dp, cuộn dọc | Thẻ công thức, cách dùng, ví dụ (nút loa), lỗi thường gặp, Button | — | Đánh dấu "đã đọc" khi cuộn tới cuối (FLOW-006) |
 | SCR-18 Tra từ (có kết quả) | mockup: SCR-18 `#scr-18` | — · thương hiệu | 360–412 dp | Search bar, Filter chip (Kết quả/Yêu thích/Sổ tay), Word row, Bottom navigation | Debounce 250 ms | Số kết quả đọc qua live region |
 | SCR-18 Tra từ (không có kết quả) | mockup: SCR-18 `#scr-18-empty` | `empty-search` · thương hiệu | 360–412 dp | Search bar, Empty state, Button Tonal | — | — |
-| SCR-19 Sổ tay | mockup: SCR-19 `#scr-19` | — · Bộ từ (Sổ tay của tôi dùng chung khung Chi tiết bộ) | 360–412 dp | Top app bar, thẻ tóm tắt + Button, Word row, FAB | FAB thu gọn khi cuộn | FAB `contentDescription` "Thêm từ" |
-| SCR-20 Thêm từ vào sổ tay | mockup: SCR-20 `#scr-20` | — · Bộ từ | 360–412 dp | Top app bar, 5 Text field, Button | — | Trường bắt buộc có dấu "*" và đọc "bắt buộc" |
 | SCR-21 Tiến độ | mockup: SCR-21 `#scr-21` | `streak-mascot` · Tiến độ | 360–412 dp, cuộn dọc | Stat card, biểu đồ cột 7 ngày, thẻ trạng thái từ, Progress bar theo chủ đề | Cột mọc lên 300 ms | Biểu đồ có `contentDescription` liệt kê số hoạt động từng ngày |
 | SCR-22 Tôi — hồ sơ & cài đặt | mockup: SCR-22 `#scr-22` | `welcome-student` (avatar) · thương hiệu; huy hiệu mục theo nhóm | 360–412 dp | Thẻ hồ sơ, List item (6 + 2), Bottom navigation | — | "Xóa tài khoản" màu error + hộp thoại xác nhận nhập mật khẩu |
 | SCR-23 Đổi mật khẩu | mockup: SCR-23 `#scr-23` | — · thương hiệu | 360–412 dp | Top app bar, 3 Text field, Button | — | — |
 | SCR-24 Giới thiệu | mockup: SCR-24 `#scr-24` | `welcome-student` · thương hiệu | 360–412 dp | Top app bar, thẻ thông tin | — | — |
 | SCR-26 Bộ của tôi | mockup: SCR-26 `#scr-26`, `#scr-26-empty` | `onboarding-level` (header tab Học), `empty-decks` (rỗng) · Học + Bộ từ | 360–412 dp | Deck card, Segmented control (Chủ đề có sẵn / Bộ của tôi), nút Import (Tonal) + Tạo bộ (Outlined), Empty state | — | Thẻ bộ đọc "tên, ngôn ngữ, x từ, y thẻ cần ôn" |
 | SCR-27 Tạo/sửa bộ | mockup: SCR-27 `#scr-27`, `#scr-27-edit` | `empty-decks` · Bộ từ | 360–412 dp | Text field (tên, mô tả), Dropdown ngôn ngữ, Button | — | Ô ngôn ngữ khóa khi bộ đã có từ, có chữ giải thích |
-| SCR-19 Chi tiết bộ (sửa từ Sổ tay) | mockup: SCR-19 `#scr-19` | — · Bộ từ | 360–412 dp | Thẻ tóm tắt bộ + Học / Quiz / Export, Word row, FAB "Thêm từ" | — | Bộ có sẵn ẩn nút sửa/xóa |
-| SCR-20 Thêm/sửa từ (sửa từ Sổ tay) | mockup: SCR-20 `#scr-20` | — · Bộ từ | 360–412 dp | Text field: từ, cách đọc (nhãn theo ngôn ngữ), nghĩa, ví dụ, bản dịch ví dụ | — | Nhãn "cách đọc" đổi theo BR-052 |
+| SCR-19 Chi tiết bộ (thay "Sổ tay"; Sổ tay của tôi là bộ mặc định) | mockup: SCR-19 `#scr-19` | — · Bộ từ | 360–412 dp | Thẻ tóm tắt bộ + Học / Quiz / Export, Word row, FAB "Thêm từ" | — | Bộ có sẵn ẩn nút sửa/xóa |
+| SCR-20 Thêm/sửa từ (thay "Thêm từ vào sổ tay") | mockup: SCR-20 `#scr-20` | — · Bộ từ | 360–412 dp | Text field: từ, cách đọc (nhãn theo ngôn ngữ), nghĩa, ví dụ, bản dịch ví dụ | — | Nhãn "cách đọc" đổi theo BR-052 |
 | SCR-28 Xem trước import | mockup: SCR-28 `#scr-28` | `import-file` · Học | 360–412 dp | 3 Stat card (hợp lệ / trùng / lỗi), danh sách lỗi theo dòng, bảng 5 dòng đầu, Dropdown bộ đích, Button | Thanh tiến trình khi nhập | Số liệu đọc bằng TalkBack |
 | SCR-29 Export | mockup: SCR-29 `#scr-29` | — · Bộ từ | Bottom sheet | 2 lựa chọn CSV / JSON, Button | — | — |
 | SCR-30 Luyện thi | mockup: SCR-30 `#scr-30` | `exam-prep` · Luyện thi | 360–412 dp | 3 thẻ kỳ thi (TOEIC/IELTS/Aptis) với bộ từ + đề thi thử, lịch sử thi, liên kết Tài nguyên | — | — |
@@ -450,7 +456,7 @@ Không dùng: app là Android View + XML, Code Connect của Figma không hỗ t
 
 ## Asset & export
 - **Icon**: 26 icon nét 2 px trên lưới 24 dp, vẽ theo phong cách bộ Lucide (giấy phép ISC). Khi code: dùng SVG gốc từ lucide.dev cho đúng tên (home, book-open, clipboard-check, search, user, volume-2, heart, x, arrow-left, flame, check, plus, bell, chevron-right, lock, eye, bar-chart, notebook, refresh-cw, info, log-out, trash, pencil, file-text, history, target), nhập vào Android Studio bằng *Vector Asset → Local SVG*, đặt tên `ic_<tên>.xml`, màu bằng `android:tint="?attr/colorOnSurface"`.
-- **Biểu tượng chủ đề**: dùng emoji (👪 🔢 🎨 🧍 🍜 🐶 …) để chạy offline không cần ảnh. Code: lưu emoji trong cột `topics.emoji`; hiển thị bằng `TextView` 26 sp trên ô bo 16 dp, nền xoay vòng theo 6 màu `*_container` (v2).
+- **Biểu tượng chủ đề**: dùng 15 icon tự vẽ ở `docs/design/icons/topics/` (UI-UX-SPECIFICATION (hệ thống thiết kế) §Icon chủ đề), nhập thành VectorDrawable `ic_topic_<tên>`. Cột `decks.icon` lưu tên không đuôi (`t01-family` … `t15-health`); code ánh xạ sang `R.drawable` theo tên, `NULL` thì dùng icon mặc định theo kỳ thi/ngôn ngữ. Hiển thị 40–48 dp trong ô bo 12 dp với màu nền `topic_tile_tNN` (sáng/tối), không dùng emoji.
 - **Feature badge** (v2): icon nét trắng 50 % kích thước trên nền `feat_*` (đặc) hoặc icon `feat_*` trên `*_container` (mềm), bo 30 %.
 - **Minh họa** (v2): 13 SVG trong `docs/design/illustrations/` → *Vector Asset → Local file (SVG)* → `res/drawable/ill_<tên>.xml`.
 - **Logo**: chữ "Ee" màu `hero_brand_start` trên ô trắng bo 28 dp, đặt trên nền gradient thương hiệu; xuất adaptive icon (foreground + background) bằng *Image Asset* của Android Studio.

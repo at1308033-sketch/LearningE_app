@@ -1,0 +1,95 @@
+@startuml
+!include ../_style.puml
+title ERD — Ngữ pháp, quiz và nhật ký học
+hide circle
+
+entity "users" as users #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+entity "decks" as decks #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+entity "words" as words #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+
+entity "grammar_lessons" as gl {
+  * id : INTEGER <<PK>>
+  --
+  code : TEXT <<UK>> -- G01..G10
+  title : TEXT
+  level : TEXT
+  formula : TEXT
+  usage : TEXT
+  examples_json : TEXT
+  common_mistakes : TEXT
+  sort_order : INTEGER
+}
+entity "grammar_questions" as gq {
+  * id : INTEGER <<PK>>
+  --
+  * lesson_id : INTEGER <<FK>>
+  question : TEXT
+  options_json : TEXT -- 4 chuỗi
+  correct_index : INTEGER -- 0..3
+  explanation : TEXT
+}
+entity "grammar_progress" as gp {
+  * user_id : INTEGER <<PK, FK>>
+  * lesson_id : INTEGER <<PK, FK>>
+  --
+  read_at : INTEGER
+}
+entity "quiz_attempts" as qa {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * source_type : TEXT -- DECK | GRAMMAR
+  deck_id : INTEGER <<FK>> -- SET NULL
+  lesson_id : INTEGER <<FK>>
+  score : INTEGER -- 0..100
+  correct_count : INTEGER
+  total_count : INTEGER
+  duration_sec : INTEGER
+  created_at : INTEGER
+}
+entity "quiz_answers" as qn {
+  * id : INTEGER <<PK>>
+  --
+  * attempt_id : INTEGER <<FK>>
+  question_type : TEXT
+  word_id : INTEGER <<FK>> -- SET NULL
+  grammar_question_id : INTEGER <<FK>>
+  prompt : TEXT
+  user_answer : TEXT
+  correct_answer : TEXT
+  is_correct : INTEGER
+}
+entity "study_log" as sl {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  activity_type : TEXT
+  ref_id : INTEGER
+  study_date : TEXT -- yyyy-MM-dd
+  created_at : INTEGER
+}
+
+gl ||--o{ gq : "gồm"
+users ||--o{ gp : "đọc"
+gl ||--o{ gp
+users ||--o{ qa : "làm"
+decks |o--o{ qa : "nguồn"
+gl |o--o{ qa : "nguồn"
+qa ||--o{ qn : "gồm"
+words |o--o{ qn
+gq |o--o{ qn
+users ||--o{ sl : "ghi"
+
+legend bottom
+  * = NOT NULL · Bảng xám = tham chiếu (chi tiết ở ERD khác)
+  question_type: MCQ_TERM_MEANING, MCQ_MEANING_TERM, LISTEN, FILL, REORDER, GRAMMAR
+  activity_type: LEARN, REVIEW, QUIZ, GRAMMAR_READ, EXAM
+  Index: idx_attempts_user_time(user_id, created_at DESC) · idx_log_user_date(user_id, study_date)
+endlegend
+@enduml

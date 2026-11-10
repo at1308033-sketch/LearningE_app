@@ -47,6 +47,21 @@ Danh mục đầy đủ tài liệu của dự án, chia 4 nhóm. **Thành viên
 | [CHANGELOG.md](operations/CHANGELOG.md) | Lịch sử thay đổi phiên bản | Viết tay |
 | [HANDOVER.md](operations/HANDOVER.md) | Gói bàn giao, ngày đầu cho người mới, trạng thái hiện tại, lỗi đã biết, bảo trì, liên hệ | Viết tay |
 
+## Sơ đồ UML (`diagrams/`)
+48 sơ đồ PlantUML (mã nguồn `.puml` + ảnh `.png`/`.svg`), đã gắn vào đúng mục của các tài liệu trên:
+
+| Thư mục | Nội dung | Gắn vào |
+|---|---|---|
+| `usecase/` | Use case tổng quát + 6 nhóm chức năng | Use-Cases, PRD |
+| `activity/` | 12 sơ đồ hoạt động có swimlane (FLOW-001…017) | Use-Cases |
+| `state/` | Trạng thái thẻ Leitner, tài khoản, lượt thi thử | SRS |
+| `sequence/` | Đăng nhập, ôn tập, import, thi thử, nhắc học | Use-Cases, SYSTEM-BLUEPRINT, API, INTEGRATION |
+| `class/` | Lớp miền, lớp theo tầng MVVM, domain.rules, hạ tầng, service | SYSTEM-BLUEPRINT, API |
+| `erd/` | ERD tổng quan + 4 nhóm bảng | DATABASE-DESIGN |
+| `architecture/` | Thành phần, gói, triển khai, bản đồ màn hình | SYSTEM-BLUEPRINT, UI-UX, PRD |
+
+Sửa sơ đồ: sửa tệp `.puml` → `python docs/diagrams/render.py` (cần Java 17+ và biến `PLANTUML_JAR` trỏ tới plantuml.jar) → `python docs/diagrams/embed.py` (gắn lại ảnh theo `manifest.json`). Xuất bản Word có kèm sơ đồ: `python docs/tools/build_docx.py` → `docs/export/*.docx` (không commit, sinh lại được).
+
 ## Thiết kế (`design/`)
 | Tệp | Nội dung |
 |---|---|

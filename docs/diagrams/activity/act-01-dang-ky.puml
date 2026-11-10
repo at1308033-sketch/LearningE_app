@@ -1,0 +1,41 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Đăng ký tài khoản (FLOW-001, UC-001)
+
+|Người học|
+start
+:Mở Đăng ký từ\nmàn hình Đăng nhập;
+repeat
+  :Nhập tên hiển thị, tên đăng nhập,
+  mật khẩu, xác nhận mật khẩu,
+  câu hỏi bảo mật + câu trả lời;
+  :Bấm "Đăng ký";
+  |Ứng dụng|
+  :Kiểm tra dữ liệu
+  (SRS §Validation);
+  |CSDL SQLite|
+  :Tìm tên đăng nhập
+  (không phân biệt hoa thường);
+  |Ứng dụng|
+backward:Báo lỗi tại trường sai,\ngiữ dữ liệu (trừ mật khẩu);
+repeat while (Hợp lệ và tên chưa dùng?\n(BR-001)) is (không) not (có)
+:Tạo salt 16 byte; băm mật khẩu
+và câu trả lời bảo mật bằng
+PBKDF2 (BR-002, BR-007);
+|CSDL SQLite|
+:Lưu người dùng và bộ mặc định
+"Sổ tay của tôi" (BR-046)
+trong 1 giao dịch;
+|Ứng dụng|
+if (Ghi CSDL thành công?) then (không)
+  :Rollback; báo "Không thể tạo
+  tài khoản, vui lòng thử lại";
+  stop
+else (có)
+  :Lưu phiên (mã người dùng)
+  vào SharedPreferences (BR-004);
+  :Chuyển sang Thiết lập lần đầu
+  (FLOW-002);
+  stop
+endif
+@enduml

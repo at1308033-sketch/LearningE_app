@@ -1,0 +1,51 @@
+@startuml
+!include ../_style.puml
+title Thi thử (2/2): nộp bài, chấm điểm, đưa từ sai về hộp 1 (BR-054, BR-055)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "ExamFragment" as F
+participant "ExamViewModel" as VM
+participant "ExamService" as S
+participant "AnswerChecker" as AC
+participant "LeitnerScheduler" as L
+participant "ExamDao /\nCardProgressDao /\nStudyLogDao" as D
+database "SQLite" as DB
+
+alt Bấm "Nộp bài"
+  U -> F : Nộp bài (còn câu chưa làm → hộp thoại xác nhận)
+else CountDownTimer.onFinish()
+  F -> F : Hết giờ
+end
+F -> VM : submit()
+group Luồng nền AppExecutors.dbWrite
+  VM -> S : submit(attemptId)
+  S -> DB : beginTransaction()
+  S -> D : listQuestions(testId), listAnswers(attemptId)
+  loop Mỗi câu hỏi
+    S -> AC : check(question, selected) — chưa làm = sai
+  end
+  S -> AC : score(correct, total)
+  AC --> S : round(đúng / tổng × 100)
+  S -> D : UPDATE exam_attempts SET status = 'SUBMITTED',\nsubmitted_at, score, correct_count, total_count, duration_sec
+  loop Mỗi câu sai có word_id
+    S -> L : rate(progress, false, today) → hộp 1
+    S -> D : lưu card_progress (UPDATE, 0 dòng → INSERT)
+  end
+  S -> D : INSERT study_log(activity_type = 'EXAM') + cập nhật chuỗi
+  alt Thành công
+    S -> DB : setTransactionSuccessful(); endTransaction()
+    S --> VM : Result.ok(ExamResult)
+  else SQLiteException
+    S -> DB : endTransaction() → rollback
+    S --> VM : Result.error(DB)
+  end
+end
+VM -> F : postValue → luồng main
+alt OK
+  F -> U : SCR-32: điểm, thời gian, từng câu + giải thích,\n"không quy đổi điểm chính thức"
+else DB
+  F -> U : "Đã có lỗi khi lưu kết quả" + nút "Thử lại"
+end
+@enduml

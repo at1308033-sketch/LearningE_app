@@ -1,0 +1,59 @@
+@startuml
+!include ../_style.puml
+title Đăng nhập: kiểm tra khóa tạm, băm PBKDF2, lưu phiên (FN-002, BR-002..BR-004)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "LoginFragment\n(SCR-02)" as F
+participant "LoginViewModel" as VM
+participant "AuthService" as S
+participant "PasswordHasher" as PH
+participant "UserDao" as D
+participant "SessionStore" as SS
+database "SQLite" as DB
+
+U -> F : Nhập tên đăng nhập, mật khẩu; bấm Đăng nhập
+F -> VM : login(username, password)
+VM --> F : loading = true (nút "Đang xử lý")
+VM -> S : AppExecutors.dbWrite().execute(…)
+
+group Luồng nền AppExecutors.dbWrite
+  S -> D : findByUsername(username.toLowerCase())
+  D -> DB : SELECT … FROM users WHERE username = ?
+  DB --> D : bản ghi / rỗng
+  alt Không có tài khoản
+    S --> VM : Result.error(INVALID_CREDENTIALS)
+  else login_locked_until > now
+    S --> VM : Result.error(LOCKED, số giây còn lại)
+  else Có tài khoản, không bị khóa
+    S -> PH : verify(password, password_salt, password_hash)
+    note right of PH
+      PBKDF2-HMAC-SHA256, 120.000 vòng,
+      khóa 32 byte; so sánh
+      MessageDigest.isEqual (≈0,3–1 s)
+    end note
+    PH --> S : true / false
+    alt Đúng mật khẩu
+      S -> D : update(failed_login_count = 0, login_locked_until = 0)
+      D -> DB : UPDATE users SET … WHERE id = ?
+      S -> SS : save(userId)
+      S --> VM : Result.ok(User)
+    else Sai mật khẩu
+      S -> D : update(failed_login_count + 1;\nđủ 5 lần → login_locked_until = now + 60 s)
+      D -> DB : UPDATE users SET … WHERE id = ?
+      S --> VM : Result.error(INVALID_CREDENTIALS)\nhoặc Result.error(LOCKED, "60")
+    end
+  end
+  note over S, DB : SQLiteException → Result.error(DB) (Service không ném exception)
+end
+
+VM -> F : LiveData.postValue(result) → luồng main
+alt result.isOk()
+  F -> U : Mở MainActivity, xóa ngăn xếp → Trang chủ (SCR-05)
+else LOCKED
+  F -> U : "Bạn đã nhập sai quá nhiều lần. Thử lại sau %d giây"; khóa nút
+else INVALID_CREDENTIALS
+  F -> U : "Tên đăng nhập hoặc mật khẩu không đúng"
+end
+@enduml

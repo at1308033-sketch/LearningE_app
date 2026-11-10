@@ -1,0 +1,114 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Lớp miền (data.model) — ngữ pháp, quiz, thi thử
+hide empty methods
+skinparam classAttributeIconSize 0
+
+package "com.learninge.app.data.model" {
+  class User <<tham chiếu>> {
+    +long id
+  }
+  class Deck <<tham chiếu>> {
+    +long id
+  }
+  class Word <<tham chiếu>> {
+    +long id
+  }
+  class GrammarLesson {
+    +long id
+    +String code
+    +String title
+    +String level
+    +String formula
+    +String usage
+  }
+  class GrammarQuestion {
+    +long id
+    +long lessonId
+    +String question
+    +List<String> options
+    +int correctIndex
+    +String explanation
+  }
+  class GrammarProgress {
+    +long userId
+    +long lessonId
+    +long readAt
+  }
+  class QuizAttempt {
+    +long id
+    +long userId
+    +String sourceType
+    +Long deckId
+    +Long lessonId
+    +int score
+    +int correctCount
+    +int totalCount
+    +int durationSec
+  }
+  class QuizAnswer {
+    +long id
+    +long attemptId
+    +String questionType
+    +Long wordId
+    +Long grammarQuestionId
+    +String userAnswer
+    +String correctAnswer
+    +boolean isCorrect
+  }
+  class ExamTest {
+    +long id
+    +String code
+    +String examTag
+    +int questionCount
+    +int durationSec
+  }
+  class ExamQuestion {
+    +long id
+    +long testId
+    +int number
+    +String passage
+    +String question
+    +int correctIndex
+    +Long wordId
+  }
+  class ExamAttempt {
+    +long id
+    +long userId
+    +long testId
+    +String status
+    +long startedAt
+    +Long submittedAt
+    +int score
+    +long remainingMillis(Clock)
+  }
+  class ExamAnswer {
+    +long attemptId
+    +long questionId
+    +Integer selectedIndex
+    +boolean flagged
+  }
+}
+
+GrammarLesson "1" *-- "*" GrammarQuestion
+User "1" -- "*" GrammarProgress
+GrammarLesson "1" -- "*" GrammarProgress
+User "1" -- "*" QuizAttempt : làm >
+QuizAttempt "*" --> "0..1" Deck : nguồn
+QuizAttempt "*" --> "0..1" GrammarLesson : nguồn
+QuizAttempt "1" *-- "*" QuizAnswer
+QuizAnswer "*" --> "0..1" Word
+QuizAnswer "*" --> "0..1" GrammarQuestion
+ExamTest "1" *-- "*" ExamQuestion
+ExamQuestion "*" --> "0..1" Word : gắn từ
+User "1" -- "*" ExamAttempt : thi >
+ExamAttempt "*" --> "1" ExamTest
+ExamAttempt "1" *-- "*" ExamAnswer
+ExamAnswer "*" --> "1" ExamQuestion
+
+note bottom of ExamAttempt
+  remainingMillis = durationSec × 1000 − (now − startedAt)
+  (DEC-010); status: IN_PROGRESS | SUBMITTED
+end note
+@enduml

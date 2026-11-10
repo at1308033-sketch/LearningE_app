@@ -21,9 +21,14 @@
 - **Chọn giọng:** `setLanguage(language.ttsLocale)` lấy từ bảng `languages` (en-US, ja-JP, zh-CN, ko-KR).
 - **Kiểm tra sẵn sàng:** kết quả `setLanguage` là `LANG_MISSING_DATA` hoặc `LANG_NOT_SUPPORTED` → trả `TTS_UNAVAILABLE`, hiện thông báo + nút mở `TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA`; quiz không sinh câu dạng nghe.
 - **Khởi tạo chậm:** yêu cầu đọc trong lúc chưa `onInit` được xếp hàng tối đa 3 giây.
-- **Kiểm thử:** emulator API 24 không có gói giọng (AC-010.2, AC-013.3); máy thật có giọng.
+- **Kiểm thử:** emulator API 29 không cài gói giọng (AC-010.2, AC-013.3); máy thật có giọng.
 
 ## 3. Nhắc học: AlarmManager + thông báo
+
+<!-- diagram:sequence/seq-reminder.puml -->
+![Sơ đồ tuần tự nhắc học hằng ngày qua AlarmManager và BootReceiver](../diagrams/sequence/seq-reminder.png)
+<!-- /diagram -->
+
 - **Đặt lịch:** `ReminderService.schedule(minuteOfDay)` dùng `AlarmManager.setWindow(RTC_WAKEUP, triggerAt, 15 phút, pendingIntent)` — không cần quyền báo thức chính xác.
 - **Khi đến giờ:** `ReminderReceiver` (`exported=false`) gọi `goAsync()`, kiểm tra người dùng đang đăng nhập và `hasMetGoalToday()`; chưa đạt mục tiêu thì hiện thông báo kênh "Nhắc học"; luôn đặt lịch cho ngày hôm sau.
 - **Khởi động lại máy / đổi giờ:** `BootReceiver` nhận `BOOT_COMPLETED`, `TIME_SET`, `TIMEZONE_CHANGED` và đặt lại lịch.
@@ -32,8 +37,13 @@
 - **Giới hạn đã biết:** chế độ tiết kiệm pin (Doze) và một số hãng điện thoại có thể trễ thông báo; xử lý ở [TROUBLESHOOTING](../operations/TROUBLESHOOTING.md).
 
 ## 4. Storage Access Framework (import/export)
-- **Import:** `registerForActivityResult(new ActivityResultContracts.OpenDocument(), …)` với loại `text/csv`, `text/comma-separated-values`, `text/plain`, `application/json`; đọc bằng `getContentResolver().openInputStream(uri)` trên luồng nền; giới hạn 1 MB / 2000 dòng.
-- **Export:** `ActivityResultContracts.CreateDocument("text/csv")` hoặc `("application/json")`, tên gợi ý `<tên bộ>_<yyyyMMdd>.csv`; ghi bằng `openOutputStream(uri)`; lỗi giữa chừng → `DocumentsContract.deleteDocument` để không để lại tệp dở dang.
+
+<!-- diagram:sequence/seq-import-preview.puml -->
+![Sơ đồ tuần tự import CSV: chọn tệp qua SAF và xem trước](../diagrams/sequence/seq-import-preview.png)
+<!-- /diagram -->
+
+- **Import:** `registerForActivityResult(new ActivityResultContracts.OpenDocument(), …)` với loại `text/csv`, `text/comma-separated-values`, `text/plain`, `application/json`; đọc bằng `getContentResolver().openInputStream(uri)` trên luồng `io` của `AppExecutors` (không dùng luồng ghi CSDL); giới hạn 1 MB / 2000 dòng. `JsonCodec` (đọc/ghi JSON, dùng `org.json`) nằm ở gói `data.io`, cạnh mã này.
+- **Export:** `ActivityResultContracts.CreateDocument("text/csv")` hoặc `("application/json")`, tên gợi ý `<tên bộ>_<yyyyMMdd>.csv`; ghi bằng `openOutputStream(uri)` trên luồng `io`; lỗi giữa chừng → `DocumentsContract.deleteDocument` để không để lại tệp dở dang.
 - **Định dạng:** [DATABASE-DESIGN](DATABASE-DESIGN.md) mục định dạng dữ liệu; mã lỗi `FILE_TOO_LARGE`, `FILE_FORMAT`, `NO_VALID_ROWS`, `IO` ở [API-SPECIFICATION](API-SPECIFICATION.md).
 
 ## 5. Mở trang tài nguyên luyện thi
@@ -53,14 +63,14 @@
 ## 6. Thư viện và tài nguyên
 | Thư viện / tài nguyên | Phiên bản | Giấy phép | Ghi chú |
 |---|---|---|---|
-| AndroidX AppCompat | 1.8.0 | Apache 2.0 | |
-| Material Components for Android | 1.14.0 | Apache 2.0 | Theme `Theme.Material3.DayNight` |
-| AndroidX ConstraintLayout | 2.2.2 | Apache 2.0 | |
-| AndroidX Lifecycle, Navigation | theo version catalog khi thêm (T-005) | Apache 2.0 | |
-| JUnit 4, AndroidX Test, Espresso | 4.13.2 / 1.3.0 / 3.7.0 | EPL 1.0 / Apache 2.0 | Chỉ dùng để test |
+| AndroidX AppCompat | xem `gradle/libs.versions.toml` | Apache 2.0 | |
+| Material Components for Android | xem `gradle/libs.versions.toml` | Apache 2.0 | Theme `Theme.Material3.DayNight` |
+| AndroidX ConstraintLayout | xem `gradle/libs.versions.toml` | Apache 2.0 | |
+| AndroidX Lifecycle, Navigation | theo version catalog khi thêm | Apache 2.0 | |
+| JUnit 4, AndroidX Test, Espresso | xem `gradle/libs.versions.toml` | EPL 1.0 / Apache 2.0 | Chỉ dùng để test |
 | Baloo 2, Lexend, Noto Sans | — | SIL OFL 1.1 | Đóng gói trong `res/font/` |
 | Icon nét kiểu Lucide | — | ISC | Lấy SVG gốc, nhập bằng Vector Asset |
-Phiên bản chính xác luôn nằm ở `gradle/libs.versions.toml`.
+Phiên bản chính xác luôn nằm ở `gradle/libs.versions.toml` (nguồn duy nhất); tài liệu này không lặp số phiên bản.
 
 ## 7. GitHub Actions (CI)
 - Tệp `.github/workflows/ci.yml`: chạy khi push và PR vào `main`; JDK 17 Temurin; `./gradlew lint testDebugUnitTest assembleDebug`; tải báo cáo lint/test và APK debug làm artifact.

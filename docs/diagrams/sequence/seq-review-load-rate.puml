@@ -1,0 +1,60 @@
+@startuml
+!include ../_style.puml
+title Ôn tập Leitner (1/2): lấy thẻ đến hạn và chấm từng thẻ (FN-007, FLOW-004, FLOW-012)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "FlashcardFragment\n(SCR-09, source=REVIEW)" as F
+participant "FlashcardViewModel" as VM
+participant "StudyService" as S
+participant "LeitnerScheduler" as L
+participant "ProgressRepository\n→ CardProgressDao" as R
+database "SQLite" as DB
+
+U -> F : Trang chủ → "Ôn tập"
+F -> VM : start("REVIEW", -1)
+group Luồng nền AppExecutors.dbRead
+  VM -> S : reviewSession()
+  S -> S : userId = SessionStore.currentUserId()\ntoday = LocalDate.now(clock)
+  S -> R : listDue(userId, today, 50)
+  R -> DB : SELECT … FROM card_progress JOIN words\nWHERE user_id = ? AND next_review_date <= ?\nORDER BY next_review_date, box LIMIT 50
+  DB --> R : danh sách thẻ
+  alt Không có thẻ đến hạn
+    S --> VM : Result.error(NOTHING_TO_STUDY)
+  else Có thẻ
+    S --> VM : Result.ok(List<Card>)
+  end
+end
+VM -> F : postValue → luồng main
+alt NOTHING_TO_STUDY
+  F -> U : "Hôm nay không có thẻ cần ôn"
+else Có thẻ
+  loop Mỗi thẻ trong phiên
+    F -> U : Mặt trước; chạm để lật (có thể nghe TTS)
+    U -> F : "Đã nhớ" / "Chưa nhớ"
+    F -> VM : onRated(remembered)
+    group Luồng nền AppExecutors.dbWrite
+      VM -> S : rate(wordId, remembered)
+      S -> R : findProgress(userId, wordId)
+      R -> DB : SELECT … WHERE user_id = ? AND word_id = ?
+      S -> L : rate(progress, remembered, today)
+      L --> S : CardProgress mới (hộp, next_review_date)
+      S -> R : saveProgress(progress)
+      R -> DB : UPDATE card_progress …;\n0 dòng → INSERT (UNIQUE user_id, word_id)
+      alt Ghi thành công
+        S --> VM : Result.ok(CardProgress)
+      else SQLiteException
+        S --> VM : Result.error(DB)
+      end
+    end
+    VM -> F : postValue
+    alt Lỗi DB
+      F -> U : "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại" (đánh giá lại thẻ)
+    else OK
+      F -> U : Thẻ kế tiếp (vị trí giữ trong SavedStateHandle)
+    end
+  end
+  note over F, VM : Hết thẻ → finishSession(), xem phần 2/2
+end
+@enduml

@@ -1,0 +1,68 @@
+@startuml
+!include ../_style.puml
+title Bản đồ màn hình (1/2) — luồng chưa đăng nhập, tab Trang chủ và tab Học
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #5146E0
+}
+skinparam frame {
+  BorderColor #8B88A8
+  BackgroundColor #FAFAFF
+}
+
+frame "AuthActivity (chưa đăng nhập)" {
+  rectangle "SCR-01\nMàn hình chờ" as S01
+  rectangle "SCR-02\nĐăng nhập" as S02
+  rectangle "SCR-03\nĐăng ký" as S03
+  rectangle "SCR-25\nQuên mật khẩu" as S25
+  rectangle "SCR-24\nGiới thiệu" as S24a
+  rectangle "SCR-04\nThiết lập lần đầu" as S04
+}
+
+frame "MainActivity — tab Trang chủ" {
+  rectangle "SCR-05\nTrang chủ" as S05
+}
+
+frame "MainActivity — tab Học" {
+  rectangle "SCR-06\nChủ đề có sẵn" as S06
+  rectangle "SCR-07\nDanh sách từ" as S07
+  rectangle "SCR-08\nChi tiết từ" as S08
+  rectangle "SCR-26\nBộ của tôi" as S26
+  rectangle "SCR-27\nTạo/sửa bộ" as S27
+  rectangle "SCR-28\nXem trước import" as S28
+  rectangle "SCR-19\nChi tiết bộ" as S19
+  rectangle "SCR-20\nThêm/sửa từ" as S20
+  rectangle "SCR-29\nExport" as S29
+}
+
+frame "Toàn màn hình (ẩn thanh tab)" {
+  rectangle "SCR-09\nFlashcard\n(NEW / REVIEW)" as S09
+  rectangle "SCR-10\nKết quả phiên" as S10
+}
+
+S01 --> S02 : chưa có phiên
+S01 --> S05 : có phiên hợp lệ
+S02 --> S03
+S02 --> S25
+S02 --> S24a
+S25 --> S02
+S03 --> S04
+S04 --> S05
+S02 --> S05 : xóa ngăn xếp
+
+S05 --> S09 : Ôn tập
+S05 --> S07 : Học tiếp
+S06 --> S07 : deckId
+S07 --> S08 : wordId
+S07 --> S09 : Học từ mới
+S06 --> S26
+S26 --> S27
+S26 --> S28 : SAF → uri
+S28 --> S19
+S26 --> S19 : deckId
+S19 --> S20 : deckId, wordId
+S19 --> S29 : SAF lưu tệp
+S19 --> S09 : Học bộ
+S09 --> S10
+S10 --> S05 : Về trang chủ
+@enduml

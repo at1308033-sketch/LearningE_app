@@ -10,7 +10,7 @@
 - Lê Văn Tấn Lực
 
 ## Build nhanh
-Yêu cầu: Android Studio bản ổn định mới nhất (JDK 17 trở lên), Android SDK Platform 37.
+Yêu cầu: Android Studio 2026.2 trở lên (dùng JBR đi kèm làm Gradle JDK), Android SDK Platform 37; thiết bị chạy Android 10 (API 29) trở lên. Mở thư mục dự án trong Android Studio, chờ Sync rồi Run `app`; chi tiết ở [INSTALLATION](docs/operations/INSTALLATION.md).
 ```bash
 ./gradlew assembleDebug          # APK: app/build/outputs/apk/debug/
 ./gradlew lint testDebugUnitTest # kiểm tra trước khi mở PR

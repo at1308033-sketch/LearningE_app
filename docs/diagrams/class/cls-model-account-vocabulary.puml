@@ -1,0 +1,98 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Lớp miền (data.model) — tài khoản, bộ từ, từ, tiến độ
+hide empty methods
+skinparam classAttributeIconSize 0
+
+package "com.learninge.app.data.model" {
+  class User {
+    +long id
+    +String username
+    +String displayName
+    +String passwordHash
+    +String passwordSalt
+    +int securityQuestionId
+    +int failedLoginCount
+    +long loginLockedUntil
+    +boolean onboarded
+  }
+  class Settings {
+    +long userId
+    +String level
+    +int dailyGoal
+    +boolean reminderEnabled
+    +int reminderMinute
+    +int currentStreak
+    +int longestStreak
+    +LocalDate lastStudyDate
+  }
+  class Language {
+    +String code
+    +String nameVi
+    +Locale ttsLocale
+    +String readingLabel
+  }
+  class Deck {
+    +long id
+    +String code
+    +Long ownerUserId
+    +String name
+    +String languageCode
+    +String level
+    +String examTag
+    +boolean isDefault
+    +boolean isReadOnly()
+  }
+  class Word {
+    +long id
+    +long deckId
+    +String term
+    +String reading
+    +String partOfSpeech
+    +String meaningVi
+    +String example
+    +String exampleTranslation
+  }
+  class CardProgress {
+    +long userId
+    +long wordId
+    +int box
+    +LocalDate nextReviewDate
+    +LocalDate firstLearnedDate
+    +int reviewCount
+  }
+  class Favorite {
+    +long userId
+    +long wordId
+    +long createdAt
+  }
+  class StudyLog {
+    +long id
+    +long userId
+    +String activityType
+    +Long refId
+    +LocalDate studyDate
+  }
+}
+
+User "1" -- "1" Settings : có >
+User "0..1" -- "*" Deck : sở hữu >
+Deck "*" --> "1" Language : ngôn ngữ
+Deck "1" *-- "*" Word : gồm >
+User "1" -- "*" CardProgress
+Word "1" -- "0..*" CardProgress : theo dõi <
+User "1" -- "*" Favorite
+Word "1" -- "*" Favorite
+User "1" -- "*" StudyLog : ghi >
+
+note bottom of Deck
+  ownerUserId = null → bộ có sẵn,
+  isReadOnly() = true (BR-043)
+end note
+note bottom of CardProgress
+  Không có bản ghi = Mới; hộp 1–4 = Đang học;
+  hộp 5 = Đã thuộc (BR-014). Tối đa 1 bản ghi
+  mỗi (user, word) — BR-015
+end note
+@enduml

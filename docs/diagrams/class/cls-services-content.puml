@@ -1,0 +1,71 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Service tầng nghiệp vụ — bộ từ, quiz, thi thử, import/export
+skinparam classAttributeIconSize 0
+hide empty fields
+
+package "com.learninge.app.domain" {
+  class DeckService {
+    +listBuiltinDecks(String level, String examTag) : Result<List<DeckSummary>>
+    +listMyDecks() : Result<List<DeckSummary>>
+    +createDeck(name, description, languageCode) : Result<Deck>
+    +renameDeck(deckId, name, description) : Result<Void>
+    +deleteDeck(deckId) : Result<Void>
+    +listWords(deckId) : Result<List<WordWithStatus>>
+    +getWord(wordId) : Result<WordDetail>
+    +addWord(deckId, WordInput in) : Result<Word>
+    +updateWord(wordId, WordInput in) : Result<Word>
+    +deleteWord(wordId) : Result<Void>
+    +copyToDeck(wordId, targetDeckId) : Result<Word>
+    +toggleFavorite(wordId) : Result<Boolean>
+    +search(String query, SearchScope scope) : Result<List<WordHit>>
+  }
+  class QuizService {
+    +createDeckQuiz(deckId) : Result<Quiz>
+    +createGrammarQuiz(lessonId) : Result<Quiz>
+    +check(Question q, String answer) : Result<AnswerFeedback>
+    +submit(Quiz quiz, List<String> answers, int durationSec) : Result<QuizResult>
+    +history() : Result<List<QuizAttemptSummary>>
+    +markLessonRead(lessonId) : Result<Void>
+  }
+  class ExamService {
+    +listTests(String examTag) : Result<List<ExamTestSummary>>
+    +startOrResume(testCode) : Result<ExamSession>
+    +answer(attemptId, number, Integer optionIndex, boolean flagged) : Result<Void>
+    +submit(attemptId) : Result<ExamResult>
+    +history() : Result<List<ExamAttemptSummary>>
+  }
+  class ImportExportService {
+    +preview(Uri file) : Result<ImportPreview>
+    +importInto(ImportPreview p, Long targetDeckId) : Result<ImportResult>
+    +export(deckId, Format format, Uri target) : Result<Integer>
+  }
+}
+
+DeckService -[hidden]down- QuizService
+QuizService -[hidden]right- ExamService
+ExamService -[hidden]down- ImportExportService
+
+package "domain.rules" {
+  class TextNormalizer
+  class QuizGenerator
+  class AnswerChecker
+  class LeitnerScheduler
+  class CsvCodec
+}
+
+package "data.io" {
+  class JsonCodec
+}
+
+DeckService ..> TextNormalizer
+QuizService ..> QuizGenerator
+QuizService ..> AnswerChecker
+QuizService ..> LeitnerScheduler : từ sai về hộp 1
+ExamService ..> AnswerChecker
+ExamService ..> LeitnerScheduler : BR-055
+ImportExportService ..> CsvCodec
+ImportExportService ..> JsonCodec
+ImportExportService ..> TextNormalizer
+@enduml

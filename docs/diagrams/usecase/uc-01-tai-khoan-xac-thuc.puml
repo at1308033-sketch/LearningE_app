@@ -1,0 +1,42 @@
+@startuml
+!include ../_style.puml
+title Use case chi tiết — Tài khoản & xác thực (F1)
+left to right direction
+
+actor "Khách" as K
+actor "Người học" as N
+actor "Hệ điều hành Android" as OS
+
+rectangle "LearningE" {
+  usecase "UC-015 Khởi tạo dữ liệu seed\n(lần mở app đầu tiên)" as UC15
+  usecase "UC-001 Đăng ký" as UC1
+  usecase "Chọn câu hỏi bảo mật\nvà câu trả lời (BR-007, BR-009)" as SQ
+  usecase "UC-003 Thiết lập lần đầu" as UC3
+  usecase "Xin quyền thông báo\n(Android 13+)" as PERM
+  usecase "UC-002 Đăng nhập / đăng xuất" as UC2
+  usecase "Khóa tạm đăng nhập 60 giây\n(BR-003)" as LOCK
+  usecase "UC-017 Đặt lại mật khẩu" as UC17
+  usecase "Khóa đặt lại 5 phút\n(BR-008)" as RLOCK
+  usecase "UC-016 Xem giới thiệu" as UC16
+}
+
+K -- UC15
+K -- UC1
+K -- UC2
+K -- UC16
+N -- UC2
+N -- UC16
+
+UC1 ..> SQ : <<include>>
+UC1 ..> UC3 : <<include>>
+UC3 <.. PERM : <<extend>>\n[bật nhắc học]
+UC2 <.. LOCK : <<extend>>\n[sai 5 lần liên tiếp]
+UC2 <.. UC17 : <<extend>>\n[bấm "Quên mật khẩu?"]
+UC17 <.. RLOCK : <<extend>>\n[sai 3 lần liên tiếp]
+PERM -- OS
+note as NOTE1
+  UC-017: Khách khởi động từ màn hình Đăng nhập
+  ("Quên mật khẩu?"). UC-003: chạy ngay sau UC-001,
+  tác nhân là Người học vừa đăng ký.
+end note
+@enduml

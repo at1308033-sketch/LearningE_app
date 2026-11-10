@@ -5,7 +5,7 @@
 ## 1. Mã nguồn và build
 - [ ] `main` đã merge mọi PR của các task P0; không còn nhánh tính năng đang mở cần cho bản phát hành.
 - [ ] CI trên commit phát hành xanh (`lint`, `testDebugUnitTest`, `assembleDebug`).
-- [ ] `./gradlew connectedDebugAndroidTest` pass trên emulator API 34.
+- [ ] `./gradlew connectedDebugAndroidTest` pass trên emulator API 33.
 - [ ] Độ phủ nhánh `domain.rules` ≥ 80% (báo cáo JaCoCo).
 - [ ] Android Lint: 0 lỗi; không còn `HardcodedText`.
 - [ ] Tăng `versionCode` và `versionName` trong `app/build.gradle.kts` (xem [DEPLOYMENT](../operations/DEPLOYMENT.md)).
@@ -14,7 +14,7 @@
 ## 2. Chất lượng (theo [TESTING-STRATEGY](TESTING-STRATEGY.md))
 - [ ] 100% test case ưu tiên Cao đạt; ≥ 90% ưu tiên Trung bình đạt ([TEST-CASES](TEST-CASES.md) đã cập nhật cột Trạng thái).
 - [ ] 0 lỗi mức Nghiêm trọng/Cao đang mở; lỗi còn lại đã ghi vào "Lỗi đã biết" trong [HANDOVER](../operations/HANDOVER.md).
-- [ ] 0 crash/ANR khi chạy toàn bộ kịch bản nghiệm thu trên 3 cấu hình: emulator API 24, emulator API 34, 1 máy thật.
+- [ ] 0 crash/ANR khi chạy toàn bộ kịch bản nghiệm thu trên 4 cấu hình: emulator API 29, emulator API 33, emulator API 37, 1 máy thật.
 - [ ] Chạy kịch bản ở chế độ máy bay: mọi chức năng hoạt động.
 - [ ] Theme tối, xoay màn hình, cỡ chữ 200% không vỡ giao diện ở các màn hình chính.
 - [ ] Nhắc học hiện đúng giờ (±15 phút) và vẫn chạy sau khởi động lại máy.

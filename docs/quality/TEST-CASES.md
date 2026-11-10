@@ -15,13 +15,13 @@ Mức: **U** unit · **I** instrumented · **E** Espresso · **M** thủ công. 
 | TC-001.4 | AC-001.4 (US-001) | U+M | Given đang đăng ký, When chọn 1 trong 5 câu hỏi bảo mật có sẵn (BR-009) và nhập câu trả lời 2–50 ký tự, Then câu trả lời được chuẩn hóa và lưu dạng… | Cao |
 | TC-002.1 | AC-002.1 (US-002) | E+M | Given đúng tên đăng nhập và mật khẩu, When bấm Đăng nhập, Then vào Trang chủ trong ≤ 1 giây và phiên đăng nhập được ghi nhớ đến khi đăng xuất (BR-0… | Cao |
 | TC-002.2 | AC-002.2 (US-002) | M | Given sai tên đăng nhập hoặc mật khẩu, When bấm Đăng nhập, Then hiện thông báo chung "Tên đăng nhập hoặc mật khẩu không đúng" (không nói rõ sai phầ… | Cao |
-| TC-002.3 | AC-002.3 (US-002) | U+M | Given sai liên tiếp 5 lần, When đăng nhập lần thứ 6, Then khóa đăng nhập tài khoản đó 60 giây và hiện thời gian còn lại (BR-003). | Cao |
+| TC-002.3 | AC-002.3 (US-002) | U+M | Given một tên đăng nhập đã sai mật khẩu 4 lần liên tiếp, When nhập sai lần thứ 5, Then khóa ngay đăng nhập tên đó 60 giây và hiện thời gian còn lại (BR-003); lần 1–4 chưa khóa; tên đăng nhập khác không bị khóa. | Cao |
 | TC-002.4 | AC-002.4 (US-002) | M | Given đang đăng nhập, When bấm Đăng xuất và xác nhận, Then quay về màn hình Đăng nhập; mở lại app vẫn ở màn hình Đăng nhập. | Cao |
 | TC-003.1 | AC-003.1 (US-003) | M | Given đã đăng nhập, When mở tab Tôi, Then thấy tên hiển thị, cấp độ, mục tiêu hằng ngày, giờ nhắc học, công tắc nhắc học. | Cao |
 | TC-003.2 | AC-003.2 (US-003) | M | When đổi một giá trị hợp lệ và lưu, Then giá trị mới có hiệu lực ngay (lịch nhắc được đặt lại nếu đổi giờ nhắc — BR-030). | Cao |
 | TC-004.1 | AC-004.1 (US-004) | U+M | Given nhập đúng mật khẩu hiện tại và mật khẩu mới hợp lệ (khác mật khẩu cũ), When lưu, Then mật khẩu mới có hiệu lực ở lần đăng nhập sau. | Cao |
 | TC-004.2 | AC-004.2 (US-004) | M | Given mật khẩu hiện tại sai, When lưu, Then báo "Mật khẩu hiện tại không đúng", không đổi gì. | Cao |
-| TC-005.1 | AC-005.1 (US-005) | I+M | Given đã đăng nhập, When chọn Xóa tài khoản, nhập lại mật khẩu đúng và xác nhận, Then xóa tài khoản và mọi dữ liệu thuộc người dùng đó (tiến độ thẻ… | Cao |
+| TC-005.1 | AC-005.1 (US-005) | I+M | Given đã đăng nhập, When chọn Xóa tài khoản, nhập lại mật khẩu đúng và xác nhận, Then xóa tài khoản và mọi dữ liệu thuộc người dùng đó (BR-005); truy vấn từng bảng theo user_id (cài đặt, tiến độ thẻ, yêu thích, bộ từ riêng và từ, lượt quiz/thi và câu trả lời, nhật ký học) đều trả về 0 dòng; dữ liệu seed còn nguyên… | Cao |
 | TC-005.2 | AC-005.2 (US-005) | M | Given bấm Hủy ở hộp xác nhận, Then không xóa gì. | Cao |
 | TC-006.1 | AC-006.1 (US-006) | E+M | Given vừa đăng ký, When hoàn thành 3 bước (cấp độ A1/A2/B1; mục tiêu 5/10/15/20 từ mỗi ngày; giờ nhắc), Then lưu cài đặt và vào Trang chủ. | Cao |
 | TC-006.2 | AC-006.2 (US-006) | M | Given ở bước giờ nhắc trên Android 13+, When bật nhắc học, Then app xin quyền thông báo; nếu bị từ chối thì vẫn vào Trang chủ, nhắc học ở trạng thá… | Cao |
@@ -42,7 +42,7 @@ Mức: **U** unit · **I** instrumented · **E** Espresso · **M** thủ công. 
 | TC-012.1 | AC-012.1 (US-012) | I+M | Given có thẻ với ngày ôn tiếp ≤ hôm nay, When bấm "Ôn tập" ở Trang chủ, Then mở phiên flashcard gồm các thẻ đến hạn, sắp theo ngày ôn sớm nhất trướ… | Cao |
 | TC-012.2 | AC-012.2 (US-012) | U | When chọn "Đã nhớ", Then thẻ lên 1 hộp và ngày ôn tiếp = hôm nay + khoảng của hộp mới (1/2/4/7/14 ngày); When chọn "Chưa nhớ", Then thẻ về hộp 1, ô… | Cao |
 | TC-012.3 | AC-012.3 (US-012) | M | Given không có thẻ đến hạn, Then nút Ôn tập hiện "Hôm nay không có thẻ cần ôn" và bị vô hiệu. | Cao |
-| TC-013.1 | AC-013.1 (US-013) | U+M | Given chọn một chủ đề có ≥ 4 từ, When bấm "Bắt đầu quiz", Then tạo bài 10 câu ngẫu nhiên trộn 4 dạng: trắc nghiệm nghĩa, nghe chọn từ, điền từ, sắp… | Cao |
+| TC-013.1 | AC-013.1 (US-013) | U+M | Given chọn một chủ đề có ≥ 4 từ, When bấm "Bắt đầu quiz", Then tạo bài 10 câu ngẫu nhiên trộn 5 dạng: trắc nghiệm Anh→Việt, trắc nghiệm Việt→Anh, nghe chọn từ, điền từ, sắp xếp câu (BR-020)… | Cao |
 | TC-013.2 | AC-013.2 (US-013) | U+M | When trả lời một câu, Then hiện ngay đúng/sai và đáp án đúng; không trừ điểm, không khóa bài (BR-022). | Cao |
 | TC-013.3 | AC-013.3 (US-013) | M | Given máy không có giọng TTS, Then không sinh câu dạng "nghe chọn từ" mà thay bằng trắc nghiệm nghĩa. | Cao |
 | TC-013.4 | AC-013.4 (US-013) | M | Given thoát giữa bài, Then hỏi xác nhận; nếu thoát thì không lưu lượt làm. | Cao |
@@ -63,7 +63,7 @@ Mức: **U** unit · **I** instrumented · **E** Espresso · **M** thủ công. 
 | TC-019.4 | AC-019.4 (US-019) | M | Given quyền thông báo bị thu hồi, When mở Cài đặt, Then công tắc nhắc học hiện trạng thái tắt kèm nút "Cấp quyền". | Cao |
 | TC-020.1 | AC-020.1 (US-020) | M | When mở tab Luyện tập → Ngữ pháp, Then thấy ≥ 8 bài, mỗi bài có tên, cấp độ, trạng thái đã đọc/chưa đọc. | Cao |
 | TC-020.2 | AC-020.2 (US-020) | M | When mở một bài, Then thấy công thức, cách dùng, ví dụ (có nút phát âm), lỗi thường gặp; đọc đến cuối bài thì bài được đánh dấu "đã đọc". | Cao |
-| TC-021.1 | AC-021.1 (US-021) | M | Given bài có ≥ 5 câu hỏi, When bấm "Làm bài tập", Then làm 5–10 câu trắc nghiệm, mỗi câu sai có giải thích; kết quả lưu vào lịch sử quiz (BR-023). | Cao |
+| TC-021.1 | AC-021.1 (US-021) | M | Given bài có ≥ 5 câu hỏi (BR-056), When bấm "Làm bài tập", Then làm 5–10 câu trắc nghiệm (loại GRAMMAR), mỗi câu sai có giải thích; kết quả lưu vào lịch sử quiz (BR-023). Bài có < 5 câu thì ẩn nút "Làm bài tập". | Cao |
 | TC-022.1 | AC-022.1 (US-022) | I+M | When gõ ≥ 1 ký tự vào ô tìm kiếm, Then sau ≤ 300 ms hiện kết quả khớp tiền tố từ tiếng Anh hoặc chứa chuỗi trong nghĩa tiếng Việt, không phân biệt… | Cao |
 | TC-022.2 | AC-022.2 (US-022) | M | Given không có kết quả, Then hiện "Không tìm thấy “[từ khóa đã gõ]”" và nút "Thêm vào sổ tay" điền sẵn từ khóa. | Cao |
 | TC-023.1 | AC-023.1 (US-023) | M | When nhập từ (bắt buộc), nghĩa (bắt buộc), phiên âm, ví dụ, ghi chú (tùy chọn) và lưu, Then từ xuất hiện đầu danh sách Sổ tay. | Cao |
@@ -169,7 +169,7 @@ Mỗi `US-xxx` trong PRD phải xuất hiện ít nhất một lần trong bản
 | REQ-007 | US-019 | AC-019.4 | BR-030 | FLOW-007 | TC-019.4 | T-052 | Chưa chạy |
 | REQ-008 | US-020 | AC-020.1 | BR-032 | FLOW-006 | TC-020.1 | T-014, T-060 | Chưa chạy |
 | REQ-008 | US-020 | AC-020.2 | BR-032 | FLOW-006 | TC-020.2 | T-014, T-060 | Chưa chạy |
-| REQ-008 | US-021 | AC-021.1 | BR-022, BR-023 | FLOW-006 | TC-021.1 | T-014, T-060 | Chưa chạy |
+| REQ-008 | US-021 | AC-021.1 | BR-022, BR-023, BR-056 | FLOW-006 | TC-021.1 | T-014, T-060 | Chưa chạy |
 | REQ-009 | US-022 | AC-022.1 | BR-040, BR-053 | FLOW-011 | TC-022.1 | T-061, T-091 | Chưa chạy |
 | REQ-009 | US-022 | AC-022.2 | BR-040, BR-053 | FLOW-011 | TC-022.2 | T-061, T-091 | Chưa chạy |
 | REQ-010 | US-023 | AC-023.1 | BR-041, BR-046, BR-047 | FLOW-011, FLOW-014 | TC-023.1 | T-090 | Chưa chạy |

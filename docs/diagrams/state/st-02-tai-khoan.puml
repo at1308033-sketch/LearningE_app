@@ -1,0 +1,26 @@
+@startuml
+!include ../_style.puml
+title Trạng thái tài khoản và khóa tạm (đăng nhập, đặt lại mật khẩu)
+
+state "Chưa thiết lập" as ChuaThietLap
+state "Hoạt động" as HoatDong {
+  state "Bình thường\n(đếm sai đăng nhập < 5)" as BinhThuong
+  state "Khóa tạm đăng nhập\n60 giây (BR-003)" as KhoaTam
+  [*] --> BinhThuong
+  BinhThuong --> BinhThuong : Sai mật khẩu (đếm + 1, < 5) /\nđăng nhập đúng hoặc đặt lại\nmật khẩu (đếm = 0)
+  BinhThuong --> KhoaTam : Sai mật khẩu\nlần thứ 5 liên tiếp
+  KhoaTam --> BinhThuong : Hết 60 giây
+  --
+  state "Cho phép đặt lại\n(đếm sai trả lời < 3)" as ChoDatLai
+  state "Khóa đặt lại mật khẩu\n5 phút (BR-008)" as KhoaDatLai
+  [*] --> ChoDatLai
+  ChoDatLai --> ChoDatLai : Trả lời sai (< 3) /\ntrả lời đúng (đếm = 0)
+  ChoDatLai --> KhoaDatLai : Trả lời sai\nlần thứ 3 liên tiếp
+  KhoaDatLai --> ChoDatLai : Hết 5 phút
+}
+
+[*] --> ChuaThietLap : Đăng ký thành công\n(BR-001, BR-046)
+ChuaThietLap --> ChuaThietLap : Thoát app giữa chừng\n(mở lại về bước 1)
+ChuaThietLap --> HoatDong : Hoàn thành /\nbỏ qua thiết lập (BR-006)
+HoatDong --> [*] : Xóa tài khoản\n(nhập lại mật khẩu, BR-005)
+@enduml

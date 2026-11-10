@@ -1,0 +1,90 @@
+@startuml
+!include ../_style.puml
+title ERD — Từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ
+hide circle
+
+entity "users" as users #F4F4F8 {
+  * id : INTEGER <<PK>>
+  --
+  (xem ERD Tài khoản)
+}
+
+entity "languages" as lang {
+  * code : TEXT <<PK>> -- en, ja, zh, ko
+  --
+  name_vi : TEXT
+  tts_locale : TEXT -- en-US, ja-JP…
+  reading_label : TEXT
+  sort_order : INTEGER
+}
+
+entity "decks" as decks {
+  * id : INTEGER <<PK>>
+  --
+  code : TEXT <<UK>> -- T01, X01, J01 | NULL
+  owner_user_id : INTEGER <<FK>> -- NULL = có sẵn
+  * name : TEXT
+  name_norm : TEXT
+  description : TEXT
+  * language_code : TEXT <<FK>>
+  level : TEXT -- A1/A2/B1/NULL
+  icon : TEXT -- t01-family … t15-health | NULL
+  exam_tag : TEXT -- TOEIC/IELTS/APTIS/NULL
+  is_default : INTEGER -- 1 = Sổ tay của tôi
+  sort_order : INTEGER
+  created_at : INTEGER
+  .. UNIQUE(owner_user_id, name_norm) ..
+}
+
+entity "words" as words {
+  * id : INTEGER <<PK>>
+  --
+  * deck_id : INTEGER <<FK>>
+  * term : TEXT
+  reading : TEXT
+  part_of_speech : TEXT
+  * meaning_vi : TEXT
+  example : TEXT
+  example_translation : TEXT
+  search_term : TEXT
+  search_reading : TEXT
+  search_meaning : TEXT
+  sort_order : INTEGER
+  created_at : INTEGER
+  .. UNIQUE(deck_id, search_term) ..
+}
+
+entity "card_progress" as cp {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * word_id : INTEGER <<FK>>
+  box : INTEGER -- CHECK 1..5
+  next_review_date : TEXT -- yyyy-MM-dd
+  first_learned_date : TEXT
+  last_reviewed_at : INTEGER
+  review_count : INTEGER
+  .. UNIQUE(user_id, word_id) ..
+}
+
+entity "favorites" as fav {
+  * user_id : INTEGER <<PK, FK>>
+  * word_id : INTEGER <<PK, FK>>
+  --
+  created_at : INTEGER
+}
+
+users |o--o{ decks : "sở hữu"
+lang ||--o{ decks : "ngôn ngữ"
+decks ||--o{ words : "gồm"
+users ||--o{ cp : "học"
+words ||--o{ cp : "theo dõi"
+users ||--o{ fav
+words ||--o{ fav : "được thích"
+
+legend bottom
+  * = NOT NULL · Bảng xám = tham chiếu · mọi FK tới users/decks/words: ON DELETE CASCADE
+  Index: idx_decks_owner(owner_user_id, sort_order) · idx_words_deck(deck_id, sort_order)
+  idx_words_search(search_term) · idx_progress_due(user_id, next_review_date)
+endlegend
+@enduml

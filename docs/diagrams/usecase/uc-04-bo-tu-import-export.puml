@@ -1,0 +1,39 @@
+@startuml
+!include ../_style.puml
+title Use case chi tiết — Bộ từ, sổ tay, import/export & ngôn ngữ (F5–F7)
+left to right direction
+
+actor "Người học" as N
+actor "Hệ điều hành Android\n(Storage Access Framework)" as OS
+
+rectangle "LearningE" {
+  usecase "UC-018 Quản lý bộ từ vựng" as UC18
+  usecase "Tạo / đổi tên / xóa bộ\n(BR-044, BR-045)" as SET
+  usecase "Thêm / sửa / xóa từ\ntrong bộ (BR-047)" as WORD
+  usecase "Học, ôn, quiz trên bộ\n(UC-006, UC-007, UC-008)" as STUDY
+  usecase "UC-021 Chọn ngôn ngữ\nnội dung (BR-052)" as UC21
+  usecase "UC-014 Quản lý sổ tay\nvà học sổ tay" as UC14
+  usecase "UC-019 Import từ vựng\n(CSV/JSON)" as UC19
+  usecase "Xem trước: hợp lệ /\ntrùng / lỗi (BR-050)" as PREV
+  usecase "UC-020 Export từ vựng\n(CSV/JSON)" as UC20
+}
+
+N -- UC18
+N -- UC14
+
+UC18 ..> UC21 : <<include>>
+UC18 <.. SET : <<extend>>
+UC18 <.. WORD : <<extend>>\n[bộ của tôi]
+UC18 <.. STUDY : <<extend>>
+UC18 <.. UC19 : <<extend>>
+UC18 <.. UC20 : <<extend>>\n[bộ có ≥ 1 từ]
+UC19 ..> PREV : <<include>>
+UC14 ..> WORD : <<include>>
+UC19 -- OS
+UC20 -- OS
+
+note bottom of UC14
+  Sổ tay = bộ mặc định "Sổ tay của tôi"
+  (BR-046), không xóa được (BR-045).
+end note
+@enduml

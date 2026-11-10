@@ -1,0 +1,68 @@
+@startuml
+!include ../_style.puml
+set separator none
+title Sơ đồ gói com.learninge.app và hướng phụ thuộc
+hide empty members
+hide circle
+
+package "com.learninge.app" {
+  class LearningEApp
+  package "ui" {
+    package "ui.auth" as uiauth {
+  }
+    package "ui.main" as uimain {
+  }
+    package "ui.home · ui.learn · ui.practice\nui.search · ui.me" as uitabs {
+  }
+    package "ui.study · ui.quiz\nui.deck · ui.exam" as uifeat {
+  }
+    package "ui.common\n(TtsHelper, BarChartView,\nEmptyStateView)" as uicommon {
+  }
+  }
+  package "domain\n(Service, LanguageRegistry)" as domain {
+  }
+  package "domain.rules\n(Java thuần, không android.*)" as rules {
+  }
+  package "data" {
+    package "data.repo" as repo {
+  }
+    package "data.dao" as dao {
+  }
+    package "data.db\n(DatabaseHelper, SeedLoader)" as db {
+  }
+    package "data.model\n(POJO)" as model {
+  }
+    package "data.io\n(JsonCodec, org.json)" as dio {
+  }
+    class SessionStore
+  }
+  package "core\n(ServiceLocator, AppExecutors\nmain/dbRead/dbWrite/io,\nResult<T>, ErrorCode)" as core {
+  }
+  package "reminder\n(ReminderReceiver, BootReceiver)" as reminder {
+  }
+}
+
+LearningEApp ..> core
+uiauth ..> domain
+uimain ..> uitabs
+uitabs ..> domain
+uifeat ..> domain
+uitabs ..> uicommon
+uifeat ..> uicommon
+domain ..> rules
+domain ..> repo
+domain ..> SessionStore
+domain ..> dio
+repo ..> dao
+dao ..> db
+dao ..> model
+domain ..> model
+reminder ..> domain
+core ..> domain
+core ..> db
+
+legend bottom
+  Quy tắc: ui → domain → data; domain.rules không import android.*;
+  DAO không chứa quy tắc nghiệp vụ; ViewModel không giữ Context của Activity
+endlegend
+@enduml

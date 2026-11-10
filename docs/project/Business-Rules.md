@@ -9,9 +9,9 @@
 |---|---|---|---|
 | BR-001 | Nếu tên đăng nhập đã tồn tại (so sánh không phân biệt hoa thường) thì không cho đăng ký | US-001 | "Minh01" trùng "minh01" |
 | BR-002 | Mật khẩu chỉ lưu dạng băm PBKDF2-HMAC-SHA256 với salt ngẫu nhiên 16 byte riêng từng tài khoản; không bao giờ lưu hay ghi log mật khẩu rõ | US-001, US-004 | 120.000 vòng lặp (lập trình viên chốt ở ARCHITECTURE-DECISIONS) |
-| BR-003 | Nếu đăng nhập sai 5 lần liên tiếp cho một tên đăng nhập thì khóa đăng nhập tên đó 60 giây; đăng nhập đúng thì đếm về 0 | US-002 | Sai lần 5 lúc 10:00:00 → thử lại được từ 10:01:00 |
+| BR-003 | (thay đổi phạm vi làm rõ) Đếm lần sai mật khẩu liên tiếp theo từng tên đăng nhập (không theo thiết bị); khóa đăng nhập tên đó 60 giây **ngay sau lần sai thứ 5** (lần 1–4 chưa khóa); đăng nhập đúng hoặc đặt lại mật khẩu thành công thì đếm về 0 | US-002 | Sai lần 5 lúc 10:00:00 → thử lại được từ 10:01:00 |
 | BR-004 | Nếu đăng nhập thành công thì lưu mã người dùng hiện tại trong SharedPreferences; mở app có mã hợp lệ thì vào thẳng Trang chủ; đăng xuất hoặc xóa tài khoản thì xóa mã | US-002 | — |
-| BR-005 | Nếu xóa tài khoản thì xóa mọi bản ghi gắn với người dùng đó (tiến độ thẻ, lượt quiz và câu trả lời, sổ tay, yêu thích, nhật ký học, trạng thái bài ngữ pháp, cài đặt) trong một giao dịch; dữ liệu seed không bị ảnh hưởng | US-005 | — |
+| BR-005 | (thay đổi phạm vi làm rõ) Nếu xóa tài khoản thì xóa **mọi** dữ liệu gắn với người dùng đó trong một giao dịch (CASCADE từ `users`): `user_settings`, `card_progress`, `favorites`, `grammar_progress`, **bộ từ của người dùng và các từ trong bộ (kể cả bộ mặc định "Sổ tay của tôi")**, `quiz_attempts` và `quiz_answers`, **`exam_attempts` và `exam_answers`**, `study_log`; dữ liệu seed (bộ có sẵn, đề thi, ngữ pháp) không bị ảnh hưởng | US-005 | Người dùng có 3 bộ riêng (40 từ), 12 lượt quiz, 2 lượt thi → sau khi xóa, truy vấn mọi bảng theo `user_id` trả về 0 dòng |
 | BR-006 | Nếu bỏ qua Thiết lập lần đầu thì dùng mặc định: cấp độ A1, mục tiêu 10 từ/ngày, nhắc học bật lúc 20:00 (nếu có quyền thông báo) | US-006 | — |
 | BR-007 | Câu trả lời bảo mật được chuẩn hóa (bỏ khoảng trắng đầu/cuối, chữ thường, bỏ dấu tiếng Việt) rồi băm PBKDF2 với salt riêng như BR-002; so sánh bằng băm | US-001, US-027 | " Hà Nội " ≡ "ha noi" |
 | BR-008 | Nếu trả lời sai câu hỏi bảo mật 3 lần liên tiếp thì khóa đặt lại mật khẩu của tài khoản đó 5 phút; trả lời đúng thì đếm về 0 | US-027 | Sai lần 3 lúc 10:00 → thử lại từ 10:05 |
@@ -22,7 +22,7 @@
 | BR-013 | Thẻ đến hạn ôn khi ngày ôn tiếp ≤ hôm nay; phiên ôn tối đa 50 thẻ, sắp ngày ôn tiếp tăng dần rồi hộp tăng dần | US-012 | 63 thẻ đến hạn → phiên đầu 50, phiên sau 13 |
 | BR-014 | Trạng thái thẻ: chưa có bản ghi tiến độ = **Mới**; hộp 1–4 = **Đang học**; hộp 5 = **Đã thuộc** | US-008, US-017 | — |
 | BR-015 | Một từ seed hoặc một từ sổ tay có tối đa 1 bản ghi tiến độ cho mỗi người dùng | US-009, US-024 | — |
-| BR-020 | Quiz chủ đề gồm 10 câu (hoặc 2 × số từ nếu chủ đề có < 5 từ đã học), chọn ngẫu nhiên từ các từ của chủ đề, ưu tiên từ Đang học; dạng câu hỏi xoay vòng: trắc nghiệm Anh→Việt, trắc nghiệm Việt→Anh, nghe chọn từ, điền từ, sắp xếp câu | US-013 | — |
+| BR-020 | Quiz chủ đề gồm 10 câu (hoặc 2 × số từ nếu chủ đề có < 5 từ đã học), chọn ngẫu nhiên từ các từ của chủ đề, ưu tiên từ Đang học; **5 dạng** câu hỏi xoay vòng: trắc nghiệm Anh→Việt, trắc nghiệm Việt→Anh, nghe chọn từ, điền từ, sắp xếp câu. `question_type` lưu 6 giá trị: 5 dạng trên và `GRAMMAR` (câu của bài tập ngữ pháp, BR-056) | US-013, US-021 | 10 câu = mỗi dạng 2 câu |
 | BR-021 | Nếu một câu quiz về từ X sai thì thẻ của X (nếu đã có tiến độ) về hộp 1, ngày ôn tiếp = ngày mai; nếu X là Mới thì tạo tiến độ ở hộp 1 | US-014 | — |
 | BR-022 | Trả lời sai không trừ điểm, không giới hạn số lần sai, không khóa bài | US-013 | — |
 | BR-023 | Điểm lượt làm = round(số câu đúng / tổng số câu × 100); lượt làm chỉ lưu khi trả lời hết các câu | US-014, US-021 | 7/10 → 70 |
@@ -48,3 +48,4 @@
 | BR-053 | Tra từ (mở rộng BR-040) áp dụng cho mọi ngôn ngữ: khớp tiền tố trên `term` đã chuẩn hóa, chứa chuỗi trong `reading` và nghĩa tiếng Việt đã bỏ dấu | US-022, US-034 | "ねこ" khớp "ねこ"; "neko" khớp cách đọc |
 | BR-054 | Đề thi thử có số câu và thời gian cố định (E01: 30 câu/20 phút; E02: 20 câu/15 phút); hết giờ tự nộp, câu chưa làm tính sai; điểm = round(đúng/tổng × 100); không quy đổi sang thang điểm TOEIC/IELTS/Aptis | US-036 | 24/30 → 80 |
 | BR-055 | Câu thi thử sai có gắn từ vựng → thẻ của từ về hộp 1 như BR-021; lượt thi lưu lịch sử riêng (không lẫn với quiz chủ đề) và tính là một hoạt động học (BR-032) | US-036 | — |
+| BR-056 | Bài tập ngữ pháp chỉ mở (hiện nút "Làm bài tập") khi bài có ≥ 5 câu hỏi; bài có < 5 câu thì ẩn nút và báo "Bài này chưa có bài tập"; bài tập gồm 5–10 câu loại `GRAMMAR` | US-021 | Bài có 4 câu → ẩn; bài có 8 câu → làm 8 câu |

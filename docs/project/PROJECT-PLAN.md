@@ -67,25 +67,25 @@ gantt
 
 | ID | Epic | Story (US) | Task | Đề xuất phụ trách (có thể xoay tua) | Ước lượng | Phụ thuộc | Ưu tiên |
 |---|---|---|---|---|---|---|---|
-| T-001 | E0 Nền tảng | — | Tạo project Android (Java 17, minSdk 24), cấu trúc gói theo SYSTEM-BLUEPRINT, version catalog, `.gitignore`, đẩy lên GitHub `LearningE_app`, bật bảo vệ nhánh `main` | Phan Anh Tuấn | 0.5 | — | P0 |
+| T-001 | E0 Nền tảng | — | Tạo project Android (Java 17, minSdk 29), cấu trúc gói theo SYSTEM-BLUEPRINT, version catalog, `.gitignore`, đẩy lên GitHub `LearningE_app`, bật bảo vệ nhánh `main` | Phan Anh Tuấn | 0.5 | — | P0 |
 | T-002 | E0 Nền tảng | — | Theme Material 3 DayNight: `colors.xml` + `values-night`, `dimens.xml`, TextAppearance, font Baloo 2/Lexend/Noto Sans, 26 icon vector `ic_*` (UI-UX-SPECIFICATION §Ánh xạ token) | Nguyễn Đức Quang Vinh | 1.5 | T-001 | P0 |
 | T-003 | E0 Nền tảng | US-025 | `DatabaseHelper`: 14 bảng, khóa ngoại, CHECK, index theo DATABASE-DESIGN; `onConfigure` bật FK | Nguyễn Tấn Thành | 1 | T-001 | P0 |
 | T-004 | E0 Nền tảng | US-025 | `SeedLoader` đọc `assets/seed/*.json` (định dạng CODING-STANDARDS), chèn trong 1 giao dịch, `seed_meta`; unit test kiểm tra seed (số lượng, trường bắt buộc, trùng từ) | Nguyễn Tấn Thành | 1.5 | T-003 | P0 |
-| T-005 | E0 Nền tảng | — | `LearningEApp`, `ServiceLocator`, `AppExecutors`, `SessionStore`; `AuthActivity` + `MainActivity` (BottomNavigationView 5 tab, nav graph, ẩn tab ở màn hình con); StrictMode bản debug | Phan Anh Tuấn | 1.5 | T-001 | P0 |
+| T-005 | E0 Nền tảng | — | `LearningEApp`, `ServiceLocator`, `AppExecutors` (`main`, `dbRead`, `dbWrite`, `io`), `Result<T>`/`ErrorCode` (gói `core`), `SessionStore`; `AuthActivity` + `MainActivity` (BottomNavigationView 5 tab, nav graph, ẩn tab ở màn hình con); StrictMode bản debug | Phan Anh Tuấn | 1.5 | T-001 | P0 |
 | T-006 | E0 Nền tảng | US-001, US-027 | `PasswordHasher` (PBKDF2-HMAC-SHA256, DEC-003) + unit test vector RFC 7914 §11; `TextNormalizer` (chữ thường, bỏ dấu) + unit test | Phan Anh Tuấn | 1 | T-001 | P0 |
 | T-007 | E0 Nền tảng | US-009, US-012, US-018 | `LeitnerScheduler` (BR-011, BR-012), `StreakCalculator` (BR-031) + unit test ≥ 80% nhánh | Lê Văn Tấn Lực | 1 | T-001 | P0 |
 | T-008 | E0 Nền tảng | US-013, US-014 | `QuizGenerator` (BR-020, BR-024, nhận `Random` có seed), `AnswerChecker` (BR-022, BR-025), tính điểm (BR-023) + unit test | Lê Văn Tấn Lực | 1.5 | T-001 | P0 |
-| T-010 | E1 Nội dung seed | US-025 | Soạn `words_T01..T04.json` (120 từ: từ, IPA, từ loại, nghĩa, ví dụ Anh–Việt), ghi nguồn | Phan Anh Tuấn | 2 | T-004 (định dạng) | P0 |
-| T-011 | E1 Nội dung seed | US-025 | Soạn `words_T05..T08.json` (120 từ) | Nguyễn Đức Quang Vinh | 2 | T-004 | P0 |
-| T-012 | E1 Nội dung seed | US-025 | Soạn `words_T09..T12.json` (120 từ) | Nguyễn Tấn Thành | 2 | T-004 | P0 |
-| T-013 | E1 Nội dung seed | US-025 | Soạn `words_T13..T15.json` (90 từ) | Lê Văn Tấn Lực | 1.5 | T-004 | P0 |
+| T-010 | E1 Nội dung seed | US-025 | Soạn `decks/T01..T04.json` (mỗi bộ một tệp, trường `icon`) (120 từ: từ, IPA, từ loại, nghĩa, ví dụ Anh–Việt), ghi nguồn | Phan Anh Tuấn | 2 | T-004 (định dạng) | P0 |
+| T-011 | E1 Nội dung seed | US-025 | Soạn `decks/T05..T08.json` (mỗi bộ một tệp, trường `icon`) (120 từ) | Nguyễn Đức Quang Vinh | 2 | T-004 | P0 |
+| T-012 | E1 Nội dung seed | US-025 | Soạn `decks/T09..T12.json` (mỗi bộ một tệp, trường `icon`) (120 từ) | Nguyễn Tấn Thành | 2 | T-004 | P0 |
+| T-013 | E1 Nội dung seed | US-025 | Soạn `decks/T13..T15.json` (mỗi bộ một tệp, trường `icon`) (90 từ) | Lê Văn Tấn Lực | 1.5 | T-004 | P0 |
 | T-014 | E1 Nội dung seed | US-020, US-021 | Soạn `grammar.json`: 10 bài G01–G10 (công thức, cách dùng, ví dụ, lỗi thường gặp) + 100 câu hỏi có giải thích; mỗi người 2–3 bài, Lực tổng hợp | Lê Văn Tấn Lực + cả nhóm | 3 | T-004 | P0 |
 | T-020 | E2 Tài khoản (F1) | US-001, US-002 | `UserDao`, `SettingsDao`, `AuthService`: đăng ký (BR-001, BR-002, BR-009), đăng nhập, khóa tạm (BR-003), phiên (BR-004) | Phan Anh Tuấn | 1.5 | T-003, T-005, T-006 | P0 |
 | T-021 | E2 Tài khoản (F1) | US-001, US-002, US-025 | Giao diện SCR-01 Splash (nạp seed), SCR-02 Đăng nhập (+ trạng thái khóa), SCR-03 Đăng ký (+ câu hỏi bảo mật), validation theo SRS | Phan Anh Tuấn | 2 | T-002, T-020 | P0 |
 | T-022 | E2 Tài khoản (F1) | US-006 | SCR-04 Thiết lập lần đầu 3 bước, mặc định BR-006, xin quyền thông báo | Phan Anh Tuấn | 1 | T-021 | P0 |
 | T-023 | E2 Tài khoản (F1) | US-027 | SCR-25 Quên mật khẩu 2 bước, BR-007, BR-008 | Phan Anh Tuấn | 1 | T-020, T-021 | P0 |
 | T-024 | E2 Tài khoản (F1) | US-003, US-004, US-005 | SCR-22 Tôi (hồ sơ, cài đặt), SCR-23 Đổi mật khẩu, xóa tài khoản (BR-005, hộp thoại nhập mật khẩu), đăng xuất | Phan Anh Tuấn | 1.5 | T-020 | P0 |
-| T-030 | E3 Từ vựng (F2) | US-007, US-008 | `TopicDao`, `WordDao`; SCR-06 lưới chủ đề + lọc cấp độ; SCR-07 danh sách từ + trạng thái (BR-014) | Nguyễn Tấn Thành | 2 | T-002, T-004, T-005 | P0 |
+| T-030 | E3 Từ vựng (F2) | US-007, US-008 | `DeckDao`, `WordDao`; SCR-06 lưới chủ đề + lọc cấp độ; SCR-07 danh sách từ + trạng thái (BR-014) | Nguyễn Tấn Thành | 2 | T-002, T-004, T-005 | P0 |
 | T-031 | E3 Từ vựng (F2) | US-008, US-010, US-011 | SCR-08 Chi tiết từ; `TtsHelper` (thiếu giọng → thông báo); `FavoriteDao` + nút yêu thích | Nguyễn Tấn Thành | 1.5 | T-030 | P0 |
 | T-032 | E3 Từ vựng (F2) | US-009 | `CardProgressDao`, `StudyService`; `FlashcardFragment` SCR-09 (lật thẻ 350 ms, đánh giá) + SCR-10 Kết quả phiên; nguồn "học mới" (BR-010) | Nguyễn Tấn Thành | 2.5 | T-007, T-030, T-050 | P0 |
 | T-033 | E3 Từ vựng (F2) | US-012 | Nguồn "ôn tập": thẻ đến hạn (BR-013), tối đa 50 thẻ | Nguyễn Tấn Thành | 1 | T-032 | P0 |
@@ -100,7 +100,7 @@ gantt
 | T-063 | E6 Ngữ pháp & tra từ (F5) | US-026 | SCR-24 Giới thiệu (nhóm, nguồn dữ liệu, giấy phép, quyền riêng tư) | Nguyễn Đức Quang Vinh | 0.5 | T-002 | P1 |
 | T-070 | E7 Mở rộng | — (REQ-013) | Dark mode: rà 24 màn hình ở theme tối, sửa màu cứng, kiểm tra tương phản | Nguyễn Đức Quang Vinh | 1 | T-002 và các màn hình | P1 |
 | T-071 | E7 Mở rộng | — (REQ-015) | Widget "x thẻ cần ôn" — **Won't**  | — | 0 | — | Hủy |
-| T-080 | E8 Chất lượng | US-005, US-025 | Instrumented test DAO trên SQLite thật: seed, CASCADE khi xóa tài khoản, upsert tiến độ, tra từ | Nguyễn Tấn Thành | 1.5 | T-004, T-024, T-032 | P0 |
+| T-080 | E8 Chất lượng | US-005, US-025 | Instrumented test DAO trên SQLite thật: seed, CASCADE khi xóa tài khoản, ghi tiến độ hai lần cùng (user, word) chỉ còn 1 dòng (`UPDATE`, 0 dòng thì `INSERT`, ), tra từ | Nguyễn Tấn Thành | 1.5 | T-004, T-024, T-032 | P0 |
 | T-081 | E8 Chất lượng | US-001, US-009, US-013 | Espresso: đăng ký → thiết lập → học 5 thẻ → quiz → xem kết quả | Lê Văn Tấn Lực | 1.5 | T-041 | P1 |
 | T-082 | E8 Chất lượng | Tất cả US Must | Chạy kịch bản UAT trên 3 cấu hình (TESTING-STRATEGY), ghi lỗi, viết báo cáo kiểm thử | Lê Văn Tấn Lực + cả nhóm | 2 | Các task P0 | P0 |
 | T-083 | E9 Bàn giao | — | Báo cáo đồ án theo mẫu HCMUTE (gom từ tài liệu đã duyệt), slide, video/ảnh demo | Phan Anh Tuấn + cả nhóm | 4 | T-082 | P0 |
@@ -108,7 +108,7 @@ gantt
 | T-085 | E9 Bàn giao | — | Build APK release (R8, keystore không lên GitHub), CHANGELOG, hướng dẫn sử dụng, nén `GroupXX_MSSV…zip`, điền "File báo cáo kết quả dự án" (file/hàm minh chứng) | Phan Anh Tuấn | 0.5 | T-082 | P0 |
 | T-090 | E10 Bộ từ vựng (F6, thay đổi phạm vi) | US-028..US-031, US-023, US-024 | `DeckDao`, `WordDao` dùng chung, `DeckService` (BR-043..BR-047), tạo bộ "Sổ tay của tôi" khi đăng ký; SCR-26 Bộ của tôi, SCR-27 Tạo/sửa bộ, SCR-19 Chi tiết bộ, SCR-20 Thêm/sửa từ, "Lưu vào bộ" từ SCR-08; Học/Quiz trên bộ | Nguyễn Đức Quang Vinh | 3 | T-003, T-032, T-040 | P0 |
 | T-091 | E11 Đa ngôn ngữ (F7, thay đổi phạm vi) | US-034 | `LanguageRegistry`, seed `languages` (en, ja, zh, ko); `TextNormalizer` theo ngôn ngữ (BR-053); TTS theo `tts_locale`; nhãn cách đọc theo ngôn ngữ (BR-052) | Phan Anh Tuấn | 1.5 | T-003, T-006, T-031 | P0 |
-| T-092 | E12 Import/export (F6, thay đổi phạm vi) | US-032, US-033 | `CsvCodec` (RFC 4180, BOM, DEC-008) + `JsonCodec` + unit test các ca khó (dấu phẩy, nháy, xuống dòng, tiếng Việt, tệp rỗng, sai tiêu đề) | Lê Văn Tấn Lực | 1.5 | T-001 | P0 |
+| T-092 | E12 Import/export (F6, thay đổi phạm vi) | US-032, US-033 | `CsvCodec` (RFC 4180, BOM, DEC-008, `domain.rules`) + `JsonCodec` (`data.io`, ; test `JsonCodec` trên JVM cần `testImplementation` `org.json:json`, thêm khi viết test và được nhóm duyệt) + unit test các ca khó (dấu phẩy, nháy, xuống dòng, tiếng Việt, tệp rỗng, sai tiêu đề) | Lê Văn Tấn Lực | 1.5 | T-001 | P0 |
 | T-093 | E12 Import/export (F6, thay đổi phạm vi) | US-032, US-033 | `ImportExportService` (SAF, ≤ 1 MB / 2000 dòng, 1 giao dịch, `INSERT OR IGNORE`); SCR-28 Xem trước import; SCR-29 Export | Nguyễn Tấn Thành | 2 | T-090, T-092 | P0 |
 | T-094 | E13 Luyện thi (F7, thay đổi phạm vi) | US-036 | `ExamDao`, `ExamService`: bắt đầu/tiếp tục lượt, lưu từng câu, tính giờ theo `started_at`, tự nộp, chấm (BR-054), đưa từ sai về hộp 1 (BR-055) + unit test | Lê Văn Tấn Lực | 2 | T-003, T-007, T-008 | P0 |
 | T-095 | E13 Luyện thi (F7, thay đổi phạm vi) | US-035, US-036, US-037 | SCR-30 Luyện thi, SCR-31 Làm bài (Timer chip, Question grid), SCR-32 Kết quả, SCR-33 Tài nguyên chính thức (`ACTION_VIEW`) | Nguyễn Đức Quang Vinh | 1.5 | T-094, T-100 | P0 |
@@ -131,7 +131,7 @@ Tổng theo người (ngày công, chưa gồm phần chung T-014/T-082/T-083): 
 | R-01 | Soạn 450 từ + 10 bài ngữ pháp, cộng thêm 180 từ luyện thi/tiếng Nhật và 50 câu thi thử, tốn nhiều thời gian hơn dự kiến (4 người, song song với code) | Cao | Cao | Chốt định dạng JSON trước 20/11 (T-004); chia đều theo chủ đề (T-010..T-014); mỗi tuần nộp ít nhất 1 chủ đề; dùng nguồn mở có sẵn câu ví dụ (Tatoeba) | Mức tối thiểu  §Rollback: 10 chủ đề / 300 từ / 8 bài; các chủ đề còn thiếu để sau bảo vệ | Phan Anh Tuấn |
 | R-02 | Xung đột Git / ghi đè code khi 4 người cùng sửa | Trung bình | Cao | Nhánh tính năng ngắn, PR có review, bảo vệ `main`, chia task theo gói `ui.*` (CODING-STANDARDS); `pull --rebase` mỗi ngày | Khôi phục từ lịch sử Git; người sở hữu gói tự giải quyết xung đột trong gói của mình | Phan Anh Tuấn |
 | R-04 | Ngày nộp thật sớm hơn mốc tạm 20/12 | Trung bình | Cao | Hỏi giảng viên ngay khi có lịch; đóng băng tính năng sớm (M4 13/12); báo cáo bắt đầu từ 10/12 | Cắt theo thứ tự: T-071 widget → T-070 dark mode → T-062 sổ tay → giữ F1–F4 + ngữ pháp | Phan Anh Tuấn |
-| R-05 | PBKDF2 tự viết sai hoặc quá chậm trên máy yếu (DEC-003, AC-002.1 ≤ 1 s) | Thấp | Cao | Unit test vector RFC 7914 §11; đo thời gian băm trên emulator API 24 ở M1 | Giảm số vòng lặp (ghi DEC mới) hoặc nâng minSdk 26 dùng `PBKDF2WithHmacSHA256` (CR) | Phan Anh Tuấn |
+| R-05 | PBKDF2 dùng sai thông số hoặc quá chậm trên máy yếu (DEC-003, AC-002.1 ≤ 1 s) | Thấp | Cao | Unit test vector RFC 7914 §11; đo thời gian băm trên emulator API 29 ở M1 | Giảm số vòng lặp (ghi DEC mới) | Phan Anh Tuấn |
 | R-06 | Nhắc học không đúng giờ / không hiện trên một số máy (Doze, hãng điện thoại tắt app nền) | Trung bình | Trung bình | AlarmManager inexact + BootReceiver (DEC-004); test TC-NFR-A5 trên emulator và máy thật | Ghi danh sách lỗi đã biết; hướng dẫn tắt tối ưu pin cho app trong hướng dẫn sử dụng | Phan Anh Tuấn |
 | R-07 | Máy demo thiếu giọng đọc TTS tiếng Anh | Trung bình | Trung bình | Cài sẵn gói giọng trên máy demo trước buổi bảo vệ; app báo lỗi thân thiện (AC-010.2) | Demo trên emulator có giọng | Nguyễn Tấn Thành |
 | R-08 | Lỗi dữ liệu do giao dịch nhiều bảng sai (mất chuỗi ngày, lượt quiz dở) | Thấp | Cao | Repository bọc giao dịch; instrumented test TC-NFR-A3 | Sửa lỗi; dữ liệu demo tạo lại bằng tài khoản mới | Nguyễn Tấn Thành |

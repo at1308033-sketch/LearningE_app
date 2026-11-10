@@ -1,0 +1,63 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Tạo / sửa bộ từ vựng (FLOW-014, UC-018, UC-021)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Tab Học → "Bộ của tôi";
+if (Chọn thao tác?) then (Tạo bộ)
+  :Nhập tên, mô tả, chọn ngôn ngữ
+  en / ja / zh / ko (BR-052);
+  |Ứng dụng|
+  if (Tên 1–50 ký tự và chưa trùng\n(không phân biệt hoa thường)?\n(BR-044)) then (không)
+    :Báo "Vui lòng nhập tên bộ" /
+    "Bạn đã có bộ tên này",
+    giữ form để sửa;
+    stop
+  else (có)
+  endif
+  :Chuẩn bị bộ mới (0 từ);
+else (Mở một bộ)
+  |Ứng dụng|
+  :Hiện danh sách từ, nhãn
+  "cách đọc" theo ngôn ngữ;
+  if (Bộ có sẵn?\n(BR-043)) then (có)
+    :Chỉ cho Học, Quiz, Export
+    (FLOW-004 / 005 / 016);
+    stop
+  else (không: bộ của tôi)
+  endif
+  |Người học|
+  :Thêm / sửa / xóa từ
+  hoặc xóa bộ;
+  note left
+    Xóa bộ: hỏi xác nhận
+    "Xóa bộ và x từ? Tiến độ
+    học cũng bị xóa"; bộ
+    "Sổ tay của tôi" không
+    có nút xóa (BR-045).
+    Đổi ngôn ngữ chỉ khi
+    bộ chưa có từ (BR-052).
+  end note
+  |Ứng dụng|
+  if (Term trùng trong bộ sau chuẩn hóa?\n(BR-047: "Apple" ≡ " apple")) then (trùng)
+    :Báo "Từ này đã có trong bộ";
+    stop
+  else (không)
+  endif
+endif
+|CSDL SQLite|
+:Ghi trong 1 giao dịch
+(xóa bộ: bộ + từ + tiến độ thẻ);
+|Ứng dụng|
+if (Ghi thành công?) then (không)
+  :Rollback; báo "Đã có lỗi khi
+  lưu dữ liệu, vui lòng thử lại";
+else (có)
+  :Cập nhật danh sách ngay;
+endif
+stop
+@enduml

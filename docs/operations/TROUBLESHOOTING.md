@@ -5,12 +5,14 @@
 ## 1. Môi trường và build
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 |---|---|---|
-| `ERROR: JAVA_HOME is set to an invalid directory` | Biến `JAVA_HOME` trỏ tới JDK đã gỡ | Sửa `JAVA_HOME` sang JDK đang có (vd `…\Android Studio\jbr`), mở terminal mới; hoặc build trong Android Studio |
+| `ERROR: JAVA_HOME is set to an invalid directory` | Biến `JAVA_HOME` trỏ tới JDK đã gỡ | Sửa `JAVA_HOME` sang `<thư mục cài Android Studio>\jbr` (vd `D:\Program Files\Android\Android Studio\jbr`), mở terminal mới; hoặc build trong Android Studio |
 | `SDK location not found` | Thiếu `local.properties` | Mở dự án bằng Android Studio để tự tạo, hoặc tạo tay: `sdk.dir=D\:/Android/Sdk` (dùng `/` hoặc `\\`) |
 | `Failed to find target with hash string 'android-37'` | Chưa cài SDK Platform 37 | SDK Manager → cài Android SDK Platform 37, hoặc để Gradle tự tải sau khi chấp nhận license |
 | `You have not accepted the license agreements` | Chưa chấp nhận license SDK | `sdkmanager --licenses` hoặc SDK Manager |
 | Gradle Sync treo / tải chậm | Mạng, cache hỏng | File → Invalidate Caches; xóa `~/.gradle/caches` của phiên bản lỗi; thử lại |
-| `Unsupported class file major version` | JDK quá mới/cũ so với Gradle | Dùng JDK 17 hoặc 21 cho Gradle (Settings → Build Tools → Gradle → Gradle JDK) |
+| `Unsupported class file major version` | JDK quá mới/cũ so với Gradle | Dùng JBR của Android Studio (hoặc JDK 17 trở lên) cho Gradle (Settings → Build Tools → Gradle → Gradle JDK) |
+| Gradle Sync báo phiên bản Android Gradle Plugin (AGP) không được hỗ trợ ("The project is using an incompatible version of the Android Gradle plugin" hoặc tương tự) | Android Studio cũ hơn dòng AGP 9.5 của dự án | Cập nhật Android Studio lên 2026.2 trở lên (Help → Check for Updates), rồi Sync lại; không hạ phiên bản AGP trong `libs.versions.toml` |
+| Android Studio báo Gradle JDK không hợp lệ / `JAVA_HOME` trỏ tới JDK không còn tồn tại | Gradle JDK hoặc `JAVA_HOME` trỏ tới thư mục đã gỡ | Settings → Build, Execution, Deployment → Build Tools → Gradle → Gradle JDK = `jbr` (hoặc `GRADLE_LOCAL_JAVA_HOME`); với terminal, đặt `JAVA_HOME` = `<thư mục cài Android Studio>\jbr` rồi mở terminal mới |
 | Lint báo `HardcodedText` | Chuỗi viết cứng trong layout | Chuyển vào `strings.xml` |
 | CI đỏ nhưng máy mình xanh | Khác JDK, quên commit tệp, khác hệ điều hành (hoa/thường tên tệp) | Xem log trên tab Actions; chạy `./gradlew clean lint testDebugUnitTest` lại; kiểm tra `git status` |
 

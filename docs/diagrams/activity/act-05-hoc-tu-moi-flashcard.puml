@@ -1,0 +1,82 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Học từ mới bằng flashcard (FLOW-004, FLOW-008, UC-006)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Chọn chủ đề / bộ,
+bấm "Học từ mới";
+|CSDL SQLite|
+:Đếm từ Mới còn lại và số từ mới
+đã học hôm nay (BR-014, BR-042);
+|Ứng dụng|
+if (Còn từ Mới?) then (không)
+  :Ẩn nút, báo "Bạn đã học hết
+  từ mới của chủ đề này" (AC-009.4);
+  stop
+else (có)
+endif
+:N = max(5, mục tiêu − đã học hôm nay),
+không vượt số từ Mới còn lại (BR-010)
+(vd mục tiêu 10, đã học 7 → 5 thẻ);
+:Lấy N từ Mới theo thứ tự seed;
+repeat
+  :Hiện mặt trước thẻ
+  (từ + phiên âm);
+  |Người học|
+  :Chạm lật thẻ (nghĩa + ví dụ),
+  có thể nghe phát âm TTS;
+  note left
+    Thoát giữa phiên: giữ thẻ đã
+    đánh giá, thẻ chưa đánh giá
+    vẫn là Mới, không ghi hoạt
+    động học (AC-009.5)
+  end note
+  :Chọn "Đã nhớ" / "Chưa nhớ";
+  |Ứng dụng|
+  if (Đánh giá?) then (Đã nhớ)
+    :Thẻ Mới → hộp 2 (BR-011);
+  else (Chưa nhớ)
+    :Thẻ Mới → hộp 1 (BR-011);
+  endif
+  :Ngày ôn tiếp = hôm nay + khoảng hộp
+  (hộp 1: 1 ngày, hộp 2: 2 ngày — BR-012);
+  |CSDL SQLite|
+  :Upsert tiến độ thẻ (tối đa 1 bản ghi
+  / người dùng / từ — BR-015);
+  |Ứng dụng|
+  if (Ghi thành công?) then (không)
+    :Rollback thẻ đó, báo "Đã có lỗi khi
+    lưu dữ liệu", cho đánh giá lại;
+  else (có)
+  endif
+repeat while (Còn thẻ?) is (còn) not (hết)
+  |CSDL SQLite|
+  :Ghi hoạt động học ngày D
+  (BR-032, FLOW-008);
+  |Ứng dụng|
+  if (Hoạt động đầu tiên của ngày D?) then (có)
+    if (Ngày học gần nhất = D − 1?) then (có)
+      :Chuỗi = chuỗi + 1;
+    else (không)
+      :Chuỗi = 1 (BR-031);
+    endif
+    :Chuỗi dài nhất = max(chuỗi dài nhất, chuỗi);
+  else (không)
+  endif
+  |CSDL SQLite|
+  :Lưu nhật ký + chuỗi
+  trong 1 giao dịch;
+|Ứng dụng|
+if (Lưu thành công?) then (không)
+  :Rollback cả nhật ký và chuỗi,
+  báo "Đã có lỗi khi lưu dữ liệu";
+else (có)
+endif
+:Hiện Kết quả phiên
+(số đã nhớ / chưa nhớ);
+stop
+@enduml

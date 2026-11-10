@@ -27,20 +27,20 @@ Status: Accepted (Phan Anh Tuấn, 2026-11-09)
 
 ## DEC-002: Dữ liệu seed dạng JSON trong assets, nạp lúc tạo CSDL
 
-Decision: Nội dung học (15 chủ đề, 450 từ, 10 bài ngữ pháp, 100 câu hỏi) lưu thành các file `assets/seed/topics.json`, `words_T01.json` … `words_T15.json`, `grammar.json`; `DatabaseHelper.onCreate` đọc bằng `org.json` và chèn trong một giao dịch; `seed_meta.seed_version` để nâng cấp.
-Reason: Mỗi thành viên soạn file chủ đề của mình độc lập (PRD §Nội dung seed), ít xung đột Git; kiểm tra định dạng được bằng script; không cần thư viện ngoài.
+Decision: Nội dung học (15 chủ đề, 450 từ, các bộ luyện thi X01..X03, bộ tiếng Nhật J01, 10 bài ngữ pháp, 100 câu hỏi, đề thi thử) lưu thành file JSON trong `assets/seed/`: **mỗi bộ một tệp** dạng `{deck, source, words}` (`T01.json` … `T15.json`, `X01.json` … `X03.json`, `J01.json`, đặt trong `assets/seed/decks/`) cùng `languages.json`, `grammar.json`, `exams.json` (định dạng ở CODING-STANDARDS, khớp DATABASE-DESIGN; trường biểu tượng bộ là `icon`). `DatabaseHelper.onCreate` đọc bằng `org.json` và chèn trong một giao dịch; `seed_meta.seed_version` để nâng cấp. Không có `topics.json` hay `words_T*.json`: chủ đề là bộ (`decks`) từ thay đổi phạm vi.
+Reason: Mỗi thành viên soạn file bộ của mình độc lập (PRD §Nội dung seed), ít xung đột Git; kiểm tra định dạng được bằng script; không cần thư viện ngoài.
 Alternatives considered: (a) File `.db` dựng sẵn copy từ assets — nạp nhanh nhất nhưng khó sửa và review nội dung, dễ lệch lược đồ. (b) Câu lệnh SQL `INSERT` viết tay — khó đọc, dễ lỗi dấu nháy trong câu ví dụ. (c) CSV — không biểu diễn tốt mảng đáp án và ví dụ ngữ pháp.
 Constraints: NFR-P1 (nạp seed ≤ 5 giây lần đầu); bản quyền nội dung (Glossary (kiến thức miền) §Pháp lý).
 Consequences: Cần một bước kiểm tra seed (đếm số lượng, trường bắt buộc, trùng từ) chạy trong unit test; định dạng JSON chốt ở CODING-STANDARDS phase 4.
 Status: Accepted (Phan Anh Tuấn, 2026-11-09)
 
-## DEC-003: Tự hiện thực PBKDF2-HMAC-SHA256 trên `Mac("HmacSHA256")`
+## DEC-003: Băm PBKDF2-HMAC-SHA256 bằng `SecretKeyFactory`
 
-Decision: `PasswordHasher` hiện thực PBKDF2 (RFC 8018 §5.2) dùng `javax.crypto.Mac` với `HmacSHA256`, 120.000 vòng, salt 16 byte, khóa 32 byte; unit test với vector kiểm thử PBKDF2-HMAC-SHA256 của RFC 7914 §11.
-Reason: `SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")` chỉ có từ Android 8.0 (API 26), trong khi NFR-D1 chọn minSdk 24; `HmacSHA256` có trên mọi API. Giữ đúng BR-002 mà không phải nâng minSdk.
-Alternatives considered: (a) Nâng minSdk lên 26 và dùng `PBKDF2WithHmacSHA256` có sẵn — gọn hơn nhưng phải sửa NFR-D1 đã duyệt (cần CR). (b) Dùng `PBKDF2WithHmacSHA1` có từ API 1 — trái BR-002. (c) Thư viện bcrypt/Argon2 — thêm phụ thuộc, Argon2 cần mã native.
+Decision: `PasswordHasher` dùng `SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")` (có sẵn từ Android 8.0, API 26) với `PBEKeySpec`: 120.000 vòng, salt 16 byte, khóa 32 byte; unit test với vector kiểm thử PBKDF2-HMAC-SHA256 của RFC 7914 §11.
+Reason: minSdk 29 ≥ API 26 nên dùng được bản có sẵn của nền tảng, không phải tự viết mã mật mã. Giữ đúng BR-002 và thông số cũ.
+Alternatives considered: (a) Tự hiện thực PBKDF2 trên `Mac("HmacSHA256")` — chỉ cần khi minSdk < 26, nay thừa và tăng rủi ro sai. (b) Dùng `PBKDF2WithHmacSHA1` có từ API 1 — trái BR-002. (c) Thư viện bcrypt/Argon2 — thêm phụ thuộc, Argon2 cần mã native.
 Constraints: NFR-S1; không thêm thư viện; băm phải chạy trên luồng nền.
-Consequences: ~25 dòng mã mật mã tự viết → bắt buộc có unit test với vector chuẩn và người review kiểm tra. Nếu nhóm muốn đơn giản hóa, có thể chọn (a) qua một CR nhỏ.
+Consequences: Không còn mã mật mã tự viết; vẫn bắt buộc unit test với vector chuẩn (kiểm tra đúng thông số) và người review kiểm tra. Băm vẫn chạy trên luồng nền.
 Status: Accepted (Phan Anh Tuấn, 2026-11-09)
 
 ## DEC-004: Nhắc học bằng AlarmManager không chính xác + BootReceiver
@@ -49,7 +49,7 @@ Decision: Đặt một báo thức không chính xác mỗi ngày (`setWindow` v
 Reason: Đúng yêu cầu ±15 phút (BR-030, NFR-A5) mà không cần quyền `SCHEDULE_EXACT_ALARM` (bị hạn chế từ Android 14); không thêm thư viện.
 Alternatives considered: (a) `setExactAndAllowWhileIdle` — chính xác hơn nhưng cần quyền báo thức chính xác, người dùng phải cấp trong Cài đặt. (b) WorkManager `PeriodicWorkRequest` 24 giờ — giờ chạy trôi dần, không bảo đảm đúng giờ đã chọn. (c) WorkManager `OneTimeWorkRequest` với độ trễ tính toán — hợp lệ nhưng thêm thư viện và vẫn có thể trễ khi Doze.
 Constraints: Android 6+ Doze có thể trễ báo thức không chính xác; Android 13+ cần `POST_NOTIFICATIONS`.
-Consequences: Phải xử lý đổi giờ/đổi múi giờ máy (`ACTION_TIME_CHANGED`, `ACTION_TIMEZONE_CHANGED` → đặt lại lịch); người kiểm thử kiểm tra trên emulator API 34 có Doze.
+Consequences: Phải xử lý đổi giờ/đổi múi giờ máy (`ACTION_TIME_CHANGED`, `ACTION_TIMEZONE_CHANGED` → đặt lại lịch); người kiểm thử kiểm tra trên emulator API 33 có Doze.
 Status: Accepted (Phan Anh Tuấn, 2026-11-09)
 
 ## DEC-005: Biểu đồ 7 ngày tự vẽ bằng Canvas
@@ -81,7 +81,7 @@ Status: Accepted
 
 ## DEC-008: Import/export CSV tự hiện thực theo RFC 4180, JSON dùng `org.json`
 
-Decision: `CsvCodec` (Java thuần) đọc/ghi CSV UTF-8 theo RFC 4180: ô bọc nháy kép khi chứa dấu phẩy/nháy/xuống dòng, nháy trong ô viết `""`, bỏ BOM đầu tệp, ghi kèm BOM để Excel mở đúng tiếng Việt. JSON dùng cùng định dạng file seed và `org.json`. Đọc tệp theo luồng (stream), dừng khi vượt 1 MB hoặc 2000 dòng.
+Decision: `CsvCodec` (Java thuần) đọc/ghi CSV UTF-8 theo RFC 4180: ô bọc nháy kép khi chứa dấu phẩy/nháy/xuống dòng, nháy trong ô viết `""`, bỏ BOM đầu tệp, ghi kèm BOM để Excel mở đúng tiếng Việt. JSON dùng cùng định dạng file seed và `org.json`; `JsonCodec` đặt ở `data.io` (cạnh mã SAF), không ở `domain.rules`, vì `org.json` của Android chỉ là bản stub khi chạy unit test JVM — muốn test `JsonCodec` trên JVM thì thêm `testImplementation` của `org.json:json` khi có test cần. Đọc tệp theo luồng (stream), dừng khi vượt 1 MB hoặc 2000 dòng.
 Reason: Đáp ứng rubric "import, export từ vựng" mà không thêm thư viện; logic phân tích tách riêng nên unit test được các ca khó (dấu phẩy trong nghĩa, câu ví dụ có nháy, tiếng Việt có dấu, xuống dòng trong ô).
 Alternatives considered: (a) Thư viện OpenCSV/Apache Commons CSV — chuẩn hơn nhưng thêm phụ thuộc, khó giải thích khi vấn đáp. (b) Chỉ hỗ trợ JSON — người dùng khó soạn bằng Excel/Google Sheets. (c) Excel `.xlsx` — cần Apache POI, nặng.
 Constraints: Offline, không quyền bộ nhớ (dùng SAF), NFR-P5 kích thước APK.
@@ -104,4 +104,13 @@ Reason: AC-036.4 (thoát app không mất bài, không "dừng đồng hồ" gia
 Alternatives considered: (a) Giữ trạng thái trong ViewModel — mất khi tiến trình bị hệ thống hủy. (b) Foreground service đếm giờ — phức tạp, cần quyền thông báo.
 Constraints: Đồng hồ dựa vào giờ máy (BR-042).
 Consequences: Người dùng đổi giờ máy có thể làm sai thời gian còn lại — chấp nhận cho bài luyện tập.
+Status: Accepted
+
+## DEC-011: Không dùng UPSERT, luồng `io` riêng
+
+Decision: (1) Dùng trực tiếp `java.time` (`LocalDate`, `Instant`, `Clock`) có sẵn từ API 26; không bật core library desugaring (đã bỏ ). (2) Không dùng `INSERT … ON CONFLICT DO UPDATE`; ghi tiến độ bằng `UPDATE`, 0 dòng thì `INSERT`, cùng giao dịch; được dùng `INSERT OR IGNORE` / `INSERT OR REPLACE`. (3) `AppExecutors` có 4 luồng: `main`, `dbRead`, `dbWrite`, `io` (đọc/ghi tệp SAF). `Result<T>` và `ErrorCode` nằm ở gói `core`.
+Reason: `minSdk 29` (NFR-D1) ≥ API 26 nên `java.time` có sẵn; UPSERT cần SQLite 3.24 (API 30) mà minSdk 29 < API 30. Tách luồng `io` để đọc/ghi tệp chậm không chặn hàng đợi ghi CSDL.
+Alternatives considered: (a) Dùng `Calendar`/`SimpleDateFormat` — dễ sai múi giờ và khó test; (b) nâng `minSdk` lên 30 để dùng UPSERT — loại thêm thiết bị Android 10, không đáng cho một câu lệnh có cách thay thế.
+Constraints: APK ≤ 30 MB (NFR-P5).
+Consequences: Không thêm dependency; code review phải chặn câu UPSERT; test DAO kiểm tra ghi hai lần cùng (user, word) chỉ có một dòng.
 Status: Accepted

@@ -1,0 +1,29 @@
+@startuml
+!include ../_style.puml
+title Trạng thái lượt thi thử (exam attempt)
+
+state "Đang làm bài\n(đồng hồ đếm ngược)" as DangLam
+state "Bị gián đoạn\n(thoát app, đồng hồ vẫn tính\ntheo thời điểm bắt đầu)" as GianDoan
+state "Đã nộp\n(chờ chấm)" as DaNop
+state "Đã chấm và lưu\n(lịch sử thi thử)" as DaLuu
+state "Lỗi lưu\n(rollback)" as LoiLuu
+
+[*] --> DangLam : Bấm "Bắt đầu" — tạo lượt,\nlưu thời điểm bắt đầu
+DangLam --> DangLam : Trả lời / chuyển câu /\nđánh dấu xem lại\n(lưu câu trả lời ngay)
+DangLam --> GianDoan : Thoát app giữa bài
+GianDoan --> DangLam : Mở lại, còn giờ —\n"Bài thi đang dở — tiếp tục?"\n(AC-036.4)
+GianDoan --> DaNop : Mở lại khi quá giờ —\ntự nộp câu đã trả lời
+DangLam --> DaNop : Bấm "Nộp bài" (xác nhận\nnếu còn câu chưa làm)
+DangLam --> DaNop : Hết giờ — tự nộp\n(E01 20 phút, E02 15 phút)
+DaNop --> DaLuu : Chấm: câu chưa làm tính sai,\nđiểm = round(đúng/tổng × 100);\nlưu 1 giao dịch (BR-054, BR-055)
+DaNop --> LoiLuu : Lỗi ghi CSDL
+LoiLuu --> DaNop : Bấm "Thử lại"
+DaLuu --> [*] : Xem kết quả và giải thích
+
+note right of DaLuu
+  Từ gắn với câu sai về hộp 1;
+  tính là một hoạt động học
+  (BR-055, BR-032). Điểm không quy
+  đổi sang thang chính thức.
+end note
+@enduml

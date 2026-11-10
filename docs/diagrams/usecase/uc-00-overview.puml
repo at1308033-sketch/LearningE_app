@@ -1,0 +1,71 @@
+@startuml
+!include ../_style.puml
+title Sơ đồ use case tổng quát — LearningE
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Khách" as K
+actor "Người học" as N
+actor "Bộ hẹn giờ hệ thống\n(AlarmManager)" as T
+actor "Hệ điều hành Android\n(thông báo, TTS,\nchọn/lưu file)" as OS
+actor "Trình duyệt" as B
+
+rectangle "LearningE" {
+  package "Tài khoản & xác thực (F1)" as P1 {
+    usecase "UC-001 Đăng ký" as UC1
+    usecase "UC-002 Đăng nhập / đăng xuất" as UC2
+    usecase "UC-003 Thiết lập lần đầu" as UC3
+    usecase "UC-017 Đặt lại mật khẩu" as UC17
+    usecase "UC-016 Xem giới thiệu" as UC16
+    usecase "UC-015 Khởi tạo dữ liệu seed" as UC15
+  }
+  package "Từ vựng, flashcard & ôn tập (F2, F5)" as P2 {
+    usecase "UC-005 Xem chủ đề và từ vựng" as UC5
+    usecase "UC-006 Học từ mới bằng flashcard" as UC6
+    usecase "UC-007 Ôn tập thẻ đến hạn" as UC7
+    usecase "UC-013 Tra từ" as UC13
+  }
+  package "Luyện tập: quiz & ngữ pháp (F3, F5)" as P3 {
+    usecase "UC-008 Làm quiz chủ đề\nvà xem kết quả" as UC8
+    usecase "UC-009 Xem lịch sử quiz" as UC9
+    usecase "UC-012 Học ngữ pháp\nvà làm bài tập" as UC12
+  }
+  package "Bộ từ, sổ tay, import/export, ngôn ngữ (F5–F7)" as P4 {
+    usecase "UC-014 Quản lý sổ tay\nvà học sổ tay" as UC14
+    usecase "UC-018 Quản lý bộ từ vựng" as UC18
+    usecase "UC-019 Import từ vựng" as UC19
+    usecase "UC-020 Export từ vựng" as UC20
+    usecase "UC-021 Chọn ngôn ngữ nội dung" as UC21
+  }
+  package "Luyện thi (F7)" as P5 {
+    usecase "UC-022 Luyện thi\nTOEIC/IELTS/Aptis" as UC22
+  }
+  package "Tiến độ, nhắc học & cài đặt (F1, F4)" as P6 {
+    usecase "UC-010 Xem trang chủ, tiến độ,\nchuỗi ngày học" as UC10
+    usecase "UC-011 Nhận nhắc học" as UC11
+    usecase "UC-004 Quản lý hồ sơ & cài đặt" as UC4
+  }
+}
+
+K -- P1
+N -- P1
+N -- P2
+N -- P3
+N -- P4
+N -- P5
+N -- P6
+P1 -[hidden]right- P2
+P2 -[hidden]right- P3
+P3 -[hidden]right- P4
+P4 -[hidden]right- P5
+P5 -[hidden]right- P6
+P4 -- OS
+P6 -- OS
+P6 -- T
+P5 -- B
+note as NOTE1
+  Hệ điều hành Android còn cung cấp
+  TTS cho UC-005/UC-006 (phát âm).
+  Khách: UC-001, 002, 015, 016, 017.
+end note
+@enduml

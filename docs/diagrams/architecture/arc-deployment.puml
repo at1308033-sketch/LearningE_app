@@ -1,0 +1,47 @@
+@startuml
+!include ../_style.puml
+title Triển khai — một thiết bị Android, chạy ngoại tuyến hoàn toàn
+
+node "Máy phát triển của nhóm\n(Android Studio 2026.2, Gradle, JBR)" as DEV {
+  artifact "app-release.apk\n(R8, ký bằng keystore nhóm)" as APKB
+}
+
+node "Thiết bị Android (minSdk 29, targetSdk 37)" as DEVICE {
+  node "Tiến trình com.learninge.app" as PROC {
+    artifact "APK\n(classes.dex, res/, res/font/)" as APK
+    file "assets/seed/*.json\n(chủ đề, ngữ pháp, đề thi,\nngôn ngữ)" as SEED
+    component "LearningE\n(ui → domain → data)" as APP
+  }
+  folder "/data/data/com.learninge.app/" as SANDBOX {
+    database "databases/learninge.db\n(SQLite, 18 bảng)" as DB
+    file "shared_prefs/\n(user_id phiên)" as PREF
+  }
+  node "Dịch vụ hệ thống" as SYS {
+    component "TextToSpeech engine" as TTS
+    component "AlarmManager /\nNotificationManager" as AL
+    component "DocumentsUI (SAF)" as SAF
+  }
+  folder "Bộ nhớ chung / Drive\n(tệp CSV/JSON người dùng chọn)" as FILES
+  component "Trình duyệt mặc định" as BRW
+}
+
+cloud "Internet" as NET
+
+APKB ..> APK : cài APK (adb / tệp)
+APK --> APP
+SEED --> DB : nạp lần đầu (onCreate)
+APP --> DB : SQLiteOpenHelper
+APP --> PREF
+APP --> TTS
+APP --> AL
+APP --> SAF
+SAF --> FILES : đọc/ghi qua URI
+APP --> BRW : Intent ACTION_VIEW
+BRW ..> NET : trình duyệt tự tải trang
+
+note right of NET
+  App KHÔNG khai báo quyền INTERNET,
+  không gọi API, không SDK phân tích.
+  allowBackup = false (NFR-S4)
+end note
+@enduml

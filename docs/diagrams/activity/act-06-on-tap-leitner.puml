@@ -1,0 +1,54 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Ôn tập thẻ đến hạn theo Leitner 5 hộp (FLOW-004, FLOW-012, UC-007)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Bấm "Ôn tập" ở Trang chủ;
+|CSDL SQLite|
+:Lấy thẻ có ngày ôn tiếp ≤ hôm nay,
+sắp ngày ôn tiếp tăng dần rồi hộp
+tăng dần, tối đa 50 thẻ (BR-013);
+|Ứng dụng|
+if (Có thẻ đến hạn?) then (không)
+  :Nút Ôn tập vô hiệu: "Hôm nay
+  không có thẻ cần ôn" (AC-012.3);
+  stop
+else (có)
+endif
+note right
+  63 thẻ đến hạn → phiên đầu 50,
+  phiên sau 13
+end note
+repeat
+  :Hiện mặt trước thẻ;
+  |Người học|
+  :Chạm lật thẻ, nghe phát âm;
+  :Chọn "Đã nhớ" / "Chưa nhớ";
+  |Ứng dụng|
+  if (Đánh giá?) then (Đã nhớ)
+    :Hộp = min(hộp + 1, 5) (BR-011)
+    (vd hộp 3 → hộp 4);
+  else (Chưa nhớ)
+    :Hộp = 1 (BR-011);
+  endif
+  :Ngày ôn tiếp = hôm nay + khoảng hộp mới
+  hộp 1: 1 · 2: 2 · 3: 4 · 4: 7 · 5: 14 ngày (BR-012)
+  (vd 10/11 lên hộp 4 → ôn 17/11);
+  |CSDL SQLite|
+  :Cập nhật tiến độ thẻ;
+  |Ứng dụng|
+  if (Ghi thành công?) then (không)
+    :Rollback thẻ đó, báo lỗi,
+    cho đánh giá lại;
+  else (có)
+  endif
+repeat while (Còn thẻ trong phiên?) is (còn) not (hết)
+:Ghi hoạt động học, cập nhật
+chuỗi ngày (FLOW-008, BR-031, BR-032);
+:Hiện Kết quả phiên;
+stop
+@enduml

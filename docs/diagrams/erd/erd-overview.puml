@@ -1,0 +1,63 @@
+@startuml
+!include ../_style.puml
+title ERD tổng quan — 18 bảng SQLite của LearningE
+hide circle
+hide members
+
+package "Tài khoản & cài đặt" {
+  entity users
+  entity user_settings
+  entity seed_meta
+}
+package "Từ vựng & bộ từ" {
+  entity languages
+  entity decks
+  entity words
+  entity card_progress
+  entity favorites
+}
+package "Ngữ pháp, quiz & nhật ký" {
+  entity grammar_lessons
+  entity grammar_questions
+  entity grammar_progress
+  entity quiz_attempts
+  entity quiz_answers
+  entity study_log
+}
+package "Luyện thi" {
+  entity exam_tests
+  entity exam_questions
+  entity exam_attempts
+  entity exam_answers
+}
+
+users ||--|| user_settings
+users |o--o{ decks
+languages ||--o{ decks
+decks ||--o{ words
+users ||--o{ card_progress
+words ||--o{ card_progress
+users ||--o{ favorites
+words ||--o{ favorites
+grammar_lessons ||--o{ grammar_questions
+users ||--o{ grammar_progress
+grammar_lessons ||--o{ grammar_progress
+users ||--o{ quiz_attempts
+decks |o--o{ quiz_attempts
+grammar_lessons |o--o{ quiz_attempts
+quiz_attempts ||--o{ quiz_answers
+words |o--o{ quiz_answers
+grammar_questions |o--o{ quiz_answers
+exam_tests ||--o{ exam_questions
+words |o--o{ exam_questions
+users ||--o{ exam_attempts
+exam_tests ||--o{ exam_attempts
+exam_attempts ||--o{ exam_answers
+exam_questions ||--o{ exam_answers
+users ||--o{ study_log
+
+note bottom of seed_meta
+  Độc lập, không có khóa ngoại
+  (seed_version cho onUpgrade)
+end note
+@enduml

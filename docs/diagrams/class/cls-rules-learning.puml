@@ -1,0 +1,51 @@
+@startuml
+!include ../_style.puml
+set separator none
+title domain.rules (Java thuần) — Leitner, chuỗi ngày, sinh câu hỏi, chấm điểm
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "com.learninge.app.domain.rules" {
+  class LeitnerScheduler {
+    +{static} INTERVAL_DAYS = {1, 2, 4, 7, 14}
+    +rate(CardProgress p, boolean remembered,\n     LocalDate today) : CardProgress
+    +dueCards(List<CardProgress> all, LocalDate today,\n     int limit) : List<CardProgress>
+  }
+  class StreakCalculator {
+    +next(StreakState s, LocalDate studyDate) : StreakState
+  }
+  class StreakState <<value>> {
+    +int currentStreak
+    +int longestStreak
+    +LocalDate lastStudyDate
+  }
+  class QuizGenerator {
+    +generate(List<Word> words, Language lang,\n     boolean ttsReady, Random rnd) : List<Question>
+  }
+  class AnswerChecker {
+    +check(Question q, String answer) : boolean
+    +score(int correct, int total) : int
+  }
+  class Question <<value>> {
+    +String type
+    +String prompt
+    +List<String> options
+    +String correctAnswer
+  }
+}
+
+LeitnerScheduler -[hidden]down- QuizGenerator
+StreakCalculator -[hidden]down- AnswerChecker
+StreakCalculator ..> StreakState
+QuizGenerator ..> Question : tạo
+AnswerChecker ..> Question
+
+legend bottom
+  <b>LeitnerScheduler</b> — BR-011: Đã nhớ → hộp = min(hộp + 1, 5), thẻ Mới → hộp 2; Chưa nhớ → hộp 1.
+  BR-012: ngày ôn tiếp = hôm nay + khoảng của hộp. BR-013: đến hạn khi ngày ôn ≤ hôm nay, tối đa 50 thẻ.
+  <b>StreakCalculator</b> — BR-031: lastStudyDate = D−1 → chuỗi + 1; < D−1 → chuỗi = 1; = D → giữ nguyên.
+  <b>QuizGenerator</b> — BR-020, BR-024: 10 câu, xoay vòng dạng câu, bỏ câu nghe khi ttsReady = false.
+  <b>AnswerChecker</b> — score = round(đúng / tổng × 100) (BR-054); so sánh sau chuẩn hóa (BR-022, BR-025).
+  Không import android.*; "hôm nay" và Random truyền qua tham số để unit test (NFR-M2).
+endlegend
+@enduml

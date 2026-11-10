@@ -1,0 +1,78 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Làm quiz chủ đề, chấm điểm, đưa từ sai về ôn sớm (FLOW-005, UC-008)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Tab Luyện tập: chọn chủ đề
+(hoặc bộ), bấm "Bắt đầu quiz";
+|Ứng dụng|
+if (Chủ đề có ≥ 4 từ?) then (không)
+  :Báo không đủ từ để tạo quiz;
+  stop
+else (có)
+endif
+|CSDL SQLite|
+:Lấy từ của chủ đề và tiến độ thẻ;
+|Ứng dụng|
+:Sinh 10 câu (2 × số từ nếu < 5 từ
+đã học), ưu tiên từ Đang học,
+xoay vòng dạng câu (BR-020);
+if (Máy có giọng TTS?) then (không)
+  :Thay câu "nghe chọn từ" bằng
+  trắc nghiệm nghĩa (AC-013.3);
+else (có)
+endif
+:Đáp án nhiễu: 3 từ cùng chủ đề
+(thiếu thì cùng cấp độ),
+không trùng nghĩa (BR-024);
+repeat
+  :Hiện câu hỏi hiện tại;
+  |Người học|
+  if (Bấm thoát?) then (có)
+    if (Xác nhận "Thoát bây giờ sẽ
+không lưu kết quả"?) then (có)
+      |Ứng dụng|
+      :Không lưu lượt làm (AC-013.4);
+      stop
+    else (không)
+    endif
+  else (không)
+  endif
+  |Người học|
+  :Trả lời (chọn / điền / sắp xếp);
+  |Ứng dụng|
+  if (Câu điền từ để trống?) then (có)
+    :Báo "Vui lòng nhập câu trả lời",
+    không chấm;
+  else (không)
+    if (Đúng? (điền từ: bỏ khoảng trắng,\nkhông phân biệt hoa thường — BR-025)) then (đúng)
+      :Hiện đúng;
+    else (sai)
+      :Hiện sai và đáp án đúng; không
+      trừ điểm, không khóa bài (BR-022);
+    endif
+  endif
+repeat while (Còn câu chưa trả lời?) is (còn) not (hết)
+:Điểm = round(đúng / tổng × 100)
+(vd 7/10 → 70 — BR-023);
+|CSDL SQLite|
+:Trong 1 giao dịch: lưu lượt làm
++ câu trả lời; từ sai về hộp 1,
+ôn ngày mai; từ Mới sai → tạo
+tiến độ hộp 1 (BR-021); ghi hoạt
+động học (BR-032, FLOW-008);
+|Ứng dụng|
+if (Lưu thành công?) then (không)
+  :Rollback; báo "Đã có lỗi khi
+  lưu kết quả" + nút "Thử lại";
+  stop
+else (có)
+  :Hiện Kết quả: điểm, câu sai,
+  lượt làm vào Lịch sử quiz;
+  stop
+endif
+@enduml

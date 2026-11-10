@@ -1,0 +1,48 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Export bộ từ ra CSV/JSON (FLOW-016, UC-020)
+
+|Người học|
+|Ứng dụng|
+|Hệ điều hành Android|
+|CSDL SQLite|
+|Người học|
+start
+:Mở một bộ (kể cả bộ có sẵn);
+|Ứng dụng|
+if (Bộ có ≥ 1 từ?) then (không)
+  :Nút Export vô hiệu: "Bộ chưa
+  có từ để xuất";
+  stop
+else (có)
+endif
+|Người học|
+:Bấm "Export", chọn CSV hoặc JSON;
+|Hệ điều hành Android|
+:Mở trình lưu file
+(ACTION_CREATE_DOCUMENT),
+tên gợi ý <tên bộ>_<yyyyMMdd>
+(vd Từ mới_20261120.csv — BR-051);
+if (Đã chọn nơi lưu?) then (không)
+  |Ứng dụng|
+  :Hủy, không tạo file;
+  stop
+else (có)
+endif
+|CSDL SQLite|
+:Đọc các từ của bộ (chỉ nội dung
+từ, không tiến độ / tài khoản);
+|Ứng dụng|
+:Ghi file trên luồng nền theo định
+dạng BR-048 (CSV) / BR-049 (JSON);
+if (Ghi thành công?) then (có)
+  :Báo "Đã xuất x từ";
+  stop
+else (không: lỗi ghi, bộ nhớ đầy)
+  |Hệ điều hành Android|
+  :Xóa file dở dang;
+  |Ứng dụng|
+  :Báo "Không thể xuất file";
+  stop
+endif
+@enduml

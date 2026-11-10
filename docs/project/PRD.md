@@ -23,6 +23,10 @@ Người học cơ bản thiếu một công cụ ôn tập ngắn, không cần
 | Nộp đúng hạn | Báo cáo + slide + mã nguồn trên GitHub | Trước ngày nộp (mốc tạm 2026-12-20) |
 
 ## Phạm vi sơ bộ
+
+<!-- diagram:usecase/uc-00-overview.puml -->
+![Sơ đồ use case tổng quát — phạm vi chức năng của LearningE](../diagrams/usecase/uc-00-overview.png)
+<!-- /diagram -->
 ### In-scope
 - F1 Tài khoản cục bộ (đăng ký, đăng nhập, đăng xuất, hồ sơ cơ bản).
 - F2 Từ vựng theo chủ đề + flashcard (thuộc/chưa thuộc, yêu thích, phát âm TextToSpeech).
@@ -38,6 +42,10 @@ Server/API, đồng bộ đám mây, đăng nhập mạng xã hội, vai trò ad
 - Người chấm: giảng viên môn Lập trình Android.
 
 ## Ràng buộc (ngân sách, thời gian, pháp lý, công nghệ bắt buộc)
+
+<!-- diagram:architecture/arc-deployment.puml -->
+![Sơ đồ triển khai: ứng dụng chạy ngoại tuyến trên một thiết bị Android](../diagrams/architecture/arc-deployment.png)
+<!-- /diagram -->
 - Java native, XML + Material Components, SQLite bằng `SQLiteOpenHelper` (D2); offline hoàn toàn.
 - Figma dựng trước khi code giao diện.
 - 4 thành viên, 0đ, khoảng 6 tuần.
@@ -83,7 +91,7 @@ Server/API và đồng bộ đám mây; đăng nhập Google/Facebook; vai trò 
 | REQ-002 | Thiết lập lần đầu: cấp độ, mục tiêu hằng ngày, giờ nhắc học | Must | nhóm trưởng (PRD (nghiên cứu người dùng) I1) | US-006 |
 | REQ-003 | Từ vựng theo chủ đề + flashcard + phát âm + yêu thích | Must | Nhóm (F2) | US-007..US-011 |
 | REQ-004 | Ôn tập ngắt quãng theo Leitner 5 hộp | Must | nhóm trưởng (Glossary (kiến thức miền) §2) | US-012 |
-| REQ-005 | Quiz theo chủ đề: 4 dạng câu hỏi, chấm điểm, lịch sử | Must | Nhóm (F3) | US-013..US-015 |
+| REQ-005 | Quiz theo chủ đề: 5 dạng câu hỏi (BR-020), chấm điểm, lịch sử | Must | Nhóm (F3) | US-013..US-015 |
 | REQ-006 | Trang chủ hôm nay, thống kê tiến độ, chuỗi ngày học | Must | Nhóm (F4) | US-016..US-018 |
 | REQ-007 | Nhắc học hằng ngày bằng thông báo cục bộ | Must | Nhóm (F4) | US-019 |
 | REQ-008 | Bài ngữ pháp + bài tập ngữ pháp | Must | Nhóm (F5) | US-020, US-021 |
@@ -111,7 +119,7 @@ Vai trò duy nhất: **Người học** (đã hoặc chưa đăng nhập).
 #### US-002 (REQ-001): Là người học, tôi muốn đăng nhập và đăng xuất để dùng đúng dữ liệu của mình
 - AC-002.1: Given đúng tên đăng nhập và mật khẩu, When bấm Đăng nhập, Then vào Trang chủ trong ≤ 1 giây và phiên đăng nhập được ghi nhớ đến khi đăng xuất (BR-004).
 - AC-002.2 (ngoại lệ): Given sai tên đăng nhập hoặc mật khẩu, When bấm Đăng nhập, Then hiện thông báo chung "Tên đăng nhập hoặc mật khẩu không đúng" (không nói rõ sai phần nào).
-- AC-002.3 (ngoại lệ): Given sai liên tiếp 5 lần, When đăng nhập lần thứ 6, Then khóa đăng nhập tài khoản đó 60 giây và hiện thời gian còn lại (BR-003).
+- AC-002.3 (ngoại lệ): Given một tên đăng nhập đã bị sai mật khẩu 4 lần liên tiếp, When nhập sai lần thứ 5, Then khóa ngay đăng nhập tên đăng nhập đó 60 giây và hiện thời gian còn lại (BR-003); lần sai thứ 1–4 chưa khóa.
 - AC-002.4: Given đang đăng nhập, When bấm Đăng xuất và xác nhận, Then quay về màn hình Đăng nhập; mở lại app vẫn ở màn hình Đăng nhập.
 #### US-003 (REQ-001): Là người học, tôi muốn xem và sửa hồ sơ, cài đặt để điều chỉnh việc học
 - AC-003.1: Given đã đăng nhập, When mở tab Tôi, Then thấy tên hiển thị, cấp độ, mục tiêu hằng ngày, giờ nhắc học, công tắc nhắc học.
@@ -120,7 +128,7 @@ Vai trò duy nhất: **Người học** (đã hoặc chưa đăng nhập).
 - AC-004.1: Given nhập đúng mật khẩu hiện tại và mật khẩu mới hợp lệ (khác mật khẩu cũ), When lưu, Then mật khẩu mới có hiệu lực ở lần đăng nhập sau.
 - AC-004.2 (ngoại lệ): Given mật khẩu hiện tại sai, When lưu, Then báo "Mật khẩu hiện tại không đúng", không đổi gì.
 #### US-005 (REQ-001): Là người học, tôi muốn xóa tài khoản để xóa toàn bộ dữ liệu của tôi khỏi máy
-- AC-005.1: Given đã đăng nhập, When chọn Xóa tài khoản, nhập lại mật khẩu đúng và xác nhận, Then xóa tài khoản và mọi dữ liệu thuộc người dùng đó (tiến độ thẻ, lượt quiz, sổ tay, yêu thích, nhật ký học — BR-005), hủy lịch nhắc, về màn hình Đăng nhập.
+- AC-005.1: Given đã đăng nhập, When chọn Xóa tài khoản, nhập lại mật khẩu đúng và xác nhận, Then xóa tài khoản và mọi dữ liệu thuộc người dùng đó (cài đặt, tiến độ thẻ, yêu thích, bộ từ riêng và các từ trong bộ, lượt quiz và câu trả lời, lượt thi thử và câu trả lời, nhật ký học — BR-005), hủy lịch nhắc, về màn hình Đăng nhập.
 - AC-005.2 (ngoại lệ): Given bấm Hủy ở hộp xác nhận, Then không xóa gì.
 
 ### F1 — Thiết lập lần đầu (REQ-002)
@@ -157,7 +165,7 @@ Vai trò duy nhất: **Người học** (đã hoặc chưa đăng nhập).
 
 ### F3 — Quiz (REQ-005)
 #### US-013 (REQ-005): Là người học, tôi muốn làm quiz theo chủ đề để tự kiểm tra
-- AC-013.1: Given chọn một chủ đề có ≥ 4 từ, When bấm "Bắt đầu quiz", Then tạo bài 10 câu ngẫu nhiên trộn 4 dạng: trắc nghiệm nghĩa, nghe chọn từ, điền từ, sắp xếp câu (BR-020).
+- AC-013.1: Given chọn một chủ đề có ≥ 4 từ, When bấm "Bắt đầu quiz", Then tạo bài 10 câu ngẫu nhiên trộn 5 dạng: trắc nghiệm Anh→Việt, trắc nghiệm Việt→Anh, nghe chọn từ, điền từ, sắp xếp câu (BR-020).
 - AC-013.2: When trả lời một câu, Then hiện ngay đúng/sai và đáp án đúng; không trừ điểm, không khóa bài (BR-022).
 - AC-013.3 (ngoại lệ): Given máy không có giọng TTS, Then không sinh câu dạng "nghe chọn từ" mà thay bằng trắc nghiệm nghĩa.
 - AC-013.4 (ngoại lệ): Given thoát giữa bài, Then hỏi xác nhận; nếu thoát thì không lưu lượt làm.
@@ -192,7 +200,7 @@ Vai trò duy nhất: **Người học** (đã hoặc chưa đăng nhập).
 - AC-020.1: When mở tab Luyện tập → Ngữ pháp, Then thấy ≥ 8 bài, mỗi bài có tên, cấp độ, trạng thái đã đọc/chưa đọc.
 - AC-020.2: When mở một bài, Then thấy công thức, cách dùng, ví dụ (có nút phát âm), lỗi thường gặp; đọc đến cuối bài thì bài được đánh dấu "đã đọc".
 #### US-021 (REQ-008): Là người học, tôi muốn làm bài tập sau mỗi bài ngữ pháp
-- AC-021.1: Given bài có ≥ 5 câu hỏi, When bấm "Làm bài tập", Then làm 5–10 câu trắc nghiệm, mỗi câu sai có giải thích; kết quả lưu vào lịch sử quiz (BR-023).
+- AC-021.1: Given bài có ≥ 5 câu hỏi (BR-056), When bấm "Làm bài tập", Then làm 5–10 câu trắc nghiệm (loại câu GRAMMAR), mỗi câu sai có giải thích; kết quả lưu vào lịch sử quiz (BR-023). Bài có < 5 câu thì ẩn nút và báo "Bài này chưa có bài tập".
 
 ### F5 — Tra từ & sổ tay (REQ-009, REQ-010)
 #### US-022 (REQ-009): Là người học, tôi muốn tra từ nhanh
@@ -320,7 +328,7 @@ Bổ sung :
 ## Câu hỏi mở
 | ID | Câu hỏi | Ảnh hưởng nếu chưa rõ | Ai trả lời | Hạn |
 |---|---|---|---|---|
-| PQ-1 | Figma hiện có những màn hình nào? | **Đã trả lời:** Figma rỗng, người thiết kế thiết kế toàn bộ 25 màn hình ở phase 3 | Phan Anh Tuấn | Đóng 09/11 |
+| PQ-1 | Figma hiện có những màn hình nào? | **Đã trả lời:** Figma rỗng, người thiết kế thiết kế toàn bộ 32 màn hình (33 mã SCR, sau thay đổi phạm vi/thay đổi phạm vi) ở phase 3 | Phan Anh Tuấn | Đóng 09/11 |
 | PQ-2 | Danh sách chủ đề và bài ngữ pháp cụ thể | **Đã chốt:** §Nội dung seed | nhóm trưởng/người phân tích theo ủy quyền | Đóng 09/11 |
 | PQ-3 | Có làm REQ-014 (quên mật khẩu bằng câu hỏi bảo mật) không? | **Đã trả lời:** có, REQ-014 thành Must, US-027 | Phan Anh Tuấn | Đóng 09/11 |
 | PQ-4 | Giảng viên có yêu cầu số màn hình / chức năng tối thiểu không? | **Đã trả lời:** không có mức tối thiểu, làm càng đủ càng tốt → REQ-013 lên Should, REQ-015 lên Could | Phan Anh Tuấn | Đóng 09/11 |

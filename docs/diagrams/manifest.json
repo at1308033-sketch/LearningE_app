@@ -1,0 +1,302 @@
+[
+ {
+  "file": "usecase/uc-00-overview.puml",
+  "caption": "Sơ đồ use case tổng quát của ứng dụng LearningE theo nhóm chức năng",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-01-tai-khoan-xac-thuc.puml",
+  "caption": "Sơ đồ use case nhóm Tài khoản và xác thực",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-02-tu-vung-flashcard-on-tap.puml",
+  "caption": "Sơ đồ use case nhóm Từ vựng, flashcard và ôn tập",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-03-quiz-ngu-phap.puml",
+  "caption": "Sơ đồ use case nhóm Luyện tập: quiz và ngữ pháp",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-04-bo-tu-import-export.puml",
+  "caption": "Sơ đồ use case nhóm Bộ từ, sổ tay, import/export và ngôn ngữ nội dung",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-05-luyen-thi.puml",
+  "caption": "Sơ đồ use case nhóm Luyện thi TOEIC/IELTS/Aptis",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-06-tien-do-nhac-hoc-cai-dat.puml",
+  "caption": "Sơ đồ use case nhóm Tiến độ, nhắc học và cài đặt",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "activity/act-01-dang-ky.puml",
+  "caption": "Sơ đồ hoạt động đăng ký tài khoản",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-001"
+ },
+ {
+  "file": "activity/act-03-dang-nhap-dang-xuat.puml",
+  "caption": "Sơ đồ hoạt động mở ứng dụng, đăng nhập (khóa tạm 60 giây) và đăng xuất",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-001"
+ },
+ {
+  "file": "activity/act-02-thiet-lap-lan-dau.puml",
+  "caption": "Sơ đồ hoạt động thiết lập lần đầu",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-002"
+ },
+ {
+  "file": "activity/act-05-hoc-tu-moi-flashcard.puml",
+  "caption": "Sơ đồ hoạt động học từ mới bằng flashcard và cập nhật chuỗi ngày học",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-004"
+ },
+ {
+  "file": "activity/act-07-lam-quiz.puml",
+  "caption": "Sơ đồ hoạt động làm quiz chủ đề, chấm điểm và đưa từ sai về ôn sớm",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-005"
+ },
+ {
+  "file": "activity/act-12-nhac-hoc-hang-ngay.puml",
+  "caption": "Sơ đồ hoạt động nhắc học hằng ngày",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-007"
+ },
+ {
+  "file": "activity/act-06-on-tap-leitner.puml",
+  "caption": "Sơ đồ hoạt động ôn tập thẻ đến hạn theo Leitner 5 hộp",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-012"
+ },
+ {
+  "file": "activity/act-04-quen-mat-khau.puml",
+  "caption": "Sơ đồ hoạt động đặt lại mật khẩu bằng câu hỏi bảo mật",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-013"
+ },
+ {
+  "file": "activity/act-08-quan-ly-bo-tu.puml",
+  "caption": "Sơ đồ hoạt động tạo và sửa bộ từ vựng",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-014"
+ },
+ {
+  "file": "activity/act-09-import-tu-vung.puml",
+  "caption": "Sơ đồ hoạt động import từ vựng CSV/JSON có xem trước",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-015"
+ },
+ {
+  "file": "activity/act-10-export-tu-vung.puml",
+  "caption": "Sơ đồ hoạt động export bộ từ ra CSV/JSON",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-016"
+ },
+ {
+  "file": "activity/act-11-lam-bai-thi-thu.puml",
+  "caption": "Sơ đồ hoạt động làm bài thi thử có đồng hồ",
+  "doc": "project/Use-Cases.md",
+  "heading": "FLOW-017"
+ },
+ {
+  "file": "sequence/seq-login-pbkdf2.puml",
+  "caption": "Sơ đồ tuần tự đăng nhập với PBKDF2 và khóa tạm",
+  "doc": "project/Use-Cases.md",
+  "heading": "Tương tác hệ thống"
+ },
+ {
+  "file": "state/st-01-the-leitner.puml",
+  "caption": "Sơ đồ trạng thái thẻ học theo Leitner 5 hộp",
+  "doc": "project/SRS.md",
+  "heading": "Trạng thái & chuyển trạng thái"
+ },
+ {
+  "file": "state/st-02-tai-khoan.puml",
+  "caption": "Sơ đồ trạng thái tài khoản và khóa tạm",
+  "doc": "project/SRS.md",
+  "heading": "Trạng thái & chuyển trạng thái"
+ },
+ {
+  "file": "state/st-03-luot-thi-thu.puml",
+  "caption": "Sơ đồ trạng thái lượt thi thử",
+  "doc": "project/SRS.md",
+  "heading": "Trạng thái & chuyển trạng thái"
+ },
+ {
+  "file": "erd/erd-overview.puml",
+  "caption": "Tổng quan quan hệ giữa 18 bảng SQLite",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "ERD"
+ },
+ {
+  "file": "erd/erd-account-settings.puml",
+  "caption": "ERD nhóm tài khoản và cài đặt",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "Thực thể"
+ },
+ {
+  "file": "erd/erd-vocabulary.puml",
+  "caption": "ERD nhóm từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "Thực thể"
+ },
+ {
+  "file": "erd/erd-grammar-quiz-log.puml",
+  "caption": "ERD nhóm ngữ pháp, quiz và nhật ký học",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "Thực thể"
+ },
+ {
+  "file": "erd/erd-exam.puml",
+  "caption": "ERD nhóm luyện thi",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "Thực thể"
+ },
+ {
+  "file": "architecture/arc-components.puml",
+  "caption": "Sơ đồ thành phần 3 tầng và dịch vụ Android",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Sơ đồ tổng quan"
+ },
+ {
+  "file": "architecture/arc-packages.puml",
+  "caption": "Sơ đồ gói com.learninge.app",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Bản đồ gói mã nguồn"
+ },
+ {
+  "file": "class/cls-arch-review-feature.puml",
+  "caption": "Sơ đồ lớp theo tầng cho tính năng Ôn tập",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Thành phần / service"
+ },
+ {
+  "file": "sequence/seq-review-load-rate.puml",
+  "caption": "Sơ đồ tuần tự ôn tập Leitner: lấy thẻ đến hạn và chấm thẻ",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Luồng dữ liệu chính"
+ },
+ {
+  "file": "sequence/seq-review-finish-streak.puml",
+  "caption": "Sơ đồ tuần tự kết thúc phiên: ghi nhật ký và chuỗi ngày trong một giao dịch",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Luồng dữ liệu chính"
+ },
+ {
+  "file": "class/cls-model-account-vocabulary.puml",
+  "caption": "Sơ đồ lớp miền: tài khoản, bộ từ, từ, tiến độ",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Lược đồ lớp"
+ },
+ {
+  "file": "class/cls-model-assessment.puml",
+  "caption": "Sơ đồ lớp miền: ngữ pháp, quiz, thi thử",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Lược đồ lớp"
+ },
+ {
+  "file": "class/cls-rules-learning.puml",
+  "caption": "Lớp quy tắc thuần Java: Leitner, chuỗi ngày, sinh câu hỏi, chấm điểm",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Lược đồ lớp"
+ },
+ {
+  "file": "class/cls-rules-security-io.puml",
+  "caption": "Lớp quy tắc thuần Java: băm mật khẩu, chuẩn hóa, mã hóa CSV/JSON",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Xác thực & phân quyền"
+ },
+ {
+  "file": "architecture/arc-deployment.puml",
+  "caption": "Sơ đồ triển khai trên một thiết bị Android ngoại tuyến",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Triển khai"
+ },
+ {
+  "file": "class/cls-core-infrastructure.puml",
+  "caption": "Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode, DatabaseHelper",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "1. Quy ước chung"
+ },
+ {
+  "file": "class/cls-services-account-progress.puml",
+  "caption": "Service tài khoản, học, tiến độ, nhắc học, ngôn ngữ",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3. Service"
+ },
+ {
+  "file": "class/cls-services-content.puml",
+  "caption": "Service bộ từ, quiz, thi thử, import/export",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3. Service"
+ },
+ {
+  "file": "sequence/seq-exam-start-answer.puml",
+  "caption": "Sơ đồ tuần tự thi thử: bắt đầu/tiếp tục lượt thi và lưu đáp án",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3.5"
+ },
+ {
+  "file": "sequence/seq-exam-submit.puml",
+  "caption": "Sơ đồ tuần tự thi thử: nộp bài, chấm điểm, đưa từ sai về hộp 1",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3.5"
+ },
+ {
+  "file": "sequence/seq-import-commit.puml",
+  "caption": "Sơ đồ tuần tự import CSV: ghi các dòng hợp lệ trong một giao dịch",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3.6"
+ },
+ {
+  "file": "sequence/seq-reminder.puml",
+  "caption": "Sơ đồ tuần tự nhắc học hằng ngày qua AlarmManager và BootReceiver",
+  "doc": "engineering/INTEGRATION-DOCUMENTATION.md",
+  "heading": "3. Nhắc học"
+ },
+ {
+  "file": "sequence/seq-import-preview.puml",
+  "caption": "Sơ đồ tuần tự import CSV: chọn tệp qua SAF và xem trước",
+  "doc": "engineering/INTEGRATION-DOCUMENTATION.md",
+  "heading": "4. Storage Access Framework"
+ },
+ {
+  "file": "architecture/arc-navigation-auth-home-learn.puml",
+  "caption": "Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học",
+  "doc": "engineering/UI-UX-SPECIFICATION.md",
+  "heading": "Sitemap"
+ },
+ {
+  "file": "architecture/arc-navigation-practice-search-me.puml",
+  "caption": "Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi",
+  "doc": "engineering/UI-UX-SPECIFICATION.md",
+  "heading": "Sitemap"
+ },
+ {
+  "file": "usecase/uc-00-overview.puml",
+  "caption": "Sơ đồ use case tổng quát — phạm vi chức năng của LearningE",
+  "doc": "project/PRD.md",
+  "heading": "Phạm vi sơ bộ"
+ },
+ {
+  "file": "architecture/arc-deployment.puml",
+  "caption": "Sơ đồ triển khai: ứng dụng chạy ngoại tuyến trên một thiết bị Android",
+  "doc": "project/PRD.md",
+  "heading": "Ràng buộc"
+ }
+]

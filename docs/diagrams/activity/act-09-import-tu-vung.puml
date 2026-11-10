@@ -1,0 +1,77 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Import từ vựng CSV/JSON có xem trước (FLOW-015, UC-019)
+
+|Người học|
+|Ứng dụng|
+|Hệ điều hành Android|
+|CSDL SQLite|
+|Người học|
+start
+:Bấm "Import" trong "Bộ của tôi";
+|Hệ điều hành Android|
+:Mở trình chọn file
+(ACTION_OPEN_DOCUMENT:
+text/csv, application/json);
+if (Đã chọn file?) then (không)
+  |Ứng dụng|
+  :Hủy, không làm gì;
+  stop
+else (có)
+endif
+|Ứng dụng|
+:Đọc file trên luồng nền;
+if (Đọc được file?) then (không)
+  :Báo "Không đọc được file,
+  vui lòng chọn lại";
+  stop
+else (có)
+endif
+if (≤ 1 MB và ≤ 2000 dòng?\n(BR-050)) then (không)
+  :Báo "File quá lớn
+  (tối đa 1 MB, 2000 dòng)";
+  stop
+else (có)
+endif
+if (UTF-8 và đúng tiêu đề / cấu trúc?\nCSV: term,reading,meaning,example,\nexample_translation (BR-048)\nJSON: mảng words (BR-049)) then (không)
+  :Báo "Sai định dạng" (hoặc
+  "File phải lưu dạng UTF-8");
+  stop
+else (có)
+endif
+:Phân loại từng dòng: hợp lệ /
+trùng (trong file hoặc bộ đích) /
+lỗi (thiếu term, meaning, quá dài)
+kèm số dòng và lý do;
+:Màn hình xem trước: tổng, hợp lệ,
+trùng, lỗi, 5 dòng đầu (AC-032.1);
+if (Có dòng hợp lệ?) then (không)
+  :Báo "Không có dòng hợp lệ
+  để nhập", không ghi gì;
+  stop
+else (có)
+endif
+|Người học|
+:Chọn bộ đích (bộ mới hoặc
+bộ của tôi), bấm "Nhập";
+|Ứng dụng|
+if (Bộ đích mới?) then (có)
+  :Tên = tên file bỏ đuôi,
+  trùng thì thêm " (2)";
+else (không)
+endif
+|CSDL SQLite|
+:Chèn mọi dòng hợp lệ
+trong 1 giao dịch (BR-050);
+|Ứng dụng|
+if (Chèn thành công?) then (không)
+  :Rollback toàn bộ; báo "Đã có lỗi
+  khi lưu dữ liệu", về xem trước;
+  stop
+else (có)
+  :Báo "Đã nhập x từ, bỏ qua y"
+  (vd 100 dòng: 90 hợp lệ, 6 trùng,
+  4 lỗi → nhập 90, bỏ qua 10);
+  stop
+endif
+@enduml

@@ -1,0 +1,79 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Làm bài thi thử có đồng hồ (FLOW-017, UC-022)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Luyện tập → "Luyện thi" → chọn
+kỳ thi → chọn đề thi thử;
+|Ứng dụng|
+if (Có bài thi đang dở\ncủa đề này?) then (có)
+  :Hỏi "Bài thi đang dở — tiếp tục?",
+  khôi phục câu đang làm và đồng hồ
+  theo thời điểm bắt đầu (AC-036.4);
+else (không)
+  :Hiện thông tin đề: số câu, thời gian
+  (E01: 30 câu / 20 phút,
+  E02: 20 câu / 15 phút — BR-054);
+  |Người học|
+  :Bấm "Bắt đầu";
+  |CSDL SQLite|
+  :Tạo lượt thi, lưu
+  thời điểm bắt đầu;
+endif
+|Ứng dụng|
+:Chạy đồng hồ đếm ngược;
+repeat
+  if (Hết giờ?) then (có)
+    :Tự nộp; báo "Hết giờ! Bài
+    của bạn đã được nộp";
+  else (không)
+    |Người học|
+    :Trả lời, chuyển câu,
+    đánh dấu xem lại;
+    |CSDL SQLite|
+    :Lưu câu trả lời ngay
+    (để tiếp tục nếu thoát app);
+    |Ứng dụng|
+    if (Bấm "Nộp bài"?) then (có)
+      if (Còn câu chưa làm?) then (có)
+        |Người học|
+        if (Xác nhận nộp?) then (có)
+          |Ứng dụng|
+          :Nộp bài;
+        else (không)
+          |Ứng dụng|
+          :Tiếp tục làm bài;
+        endif
+      else (không)
+        :Nộp bài;
+      endif
+    else (không)
+    endif
+  endif
+  |Ứng dụng|
+repeat while (Đã nộp bài?) is (chưa) not (rồi)
+:Chấm điểm: câu chưa làm tính sai,
+điểm = round(đúng / tổng × 100)
+(vd 24/30 → 80 — BR-054);
+|CSDL SQLite|
+:Trong 1 giao dịch: lưu lượt thi vào
+lịch sử thi thử (tách quiz chủ đề),
+từ gắn câu sai về hộp 1, ghi
+hoạt động học (BR-055, BR-032);
+|Ứng dụng|
+if (Lưu thành công?) then (không)
+  :Rollback; báo "Đã có lỗi khi
+  lưu kết quả" + "Thử lại";
+  stop
+else (có)
+  :Hiện điểm, thời gian làm, từng câu
+  với đáp án đúng và giải thích,
+  "Điểm luyện tập, không quy đổi
+  sang thang điểm chính thức";
+  stop
+endif
+@enduml

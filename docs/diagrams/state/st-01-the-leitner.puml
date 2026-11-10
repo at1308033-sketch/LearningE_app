@@ -1,0 +1,43 @@
+@startuml
+!include ../_style.puml
+title Trạng thái thẻ học (tiến độ người dùng – từ) theo Leitner 5 hộp
+
+state "Mới\n(chưa có bản ghi tiến độ)" as Moi
+
+state "Có bản ghi tiến độ (BR-015)" as CoTienDo {
+  state "Đang học (BR-014)" as DangHoc {
+    state "Hộp 1\nôn sau 1 ngày" as H1
+    state "Hộp 2\nôn sau 2 ngày" as H2
+    state "Hộp 3\nôn sau 4 ngày" as H3
+    state "Hộp 4\nôn sau 7 ngày" as H4
+  }
+  state "Đã thuộc (BR-014)" as DaThuoc {
+    state "Hộp 5\nôn sau 14 ngày" as H5
+  }
+}
+
+[*] --> Moi
+Moi --> H2 : Đã nhớ lần đầu
+Moi --> H1 : Chưa nhớ lần đầu /\nsai quiz, sai thi thử
+H1 --> H2 : Đã nhớ
+H2 --> H3 : Đã nhớ
+H3 --> H4 : Đã nhớ
+H4 --> H5 : Đã nhớ
+H5 --> H5 : Đã nhớ\n(hộp = min(hộp+1, 5))
+H1 --> H1 : Chưa nhớ / sai
+H2 --> H1 : Chưa nhớ / sai
+H3 --> H1 : Chưa nhớ / sai
+H4 --> H1 : Chưa nhớ / sai
+H5 --> H1 : Chưa nhớ / sai
+CoTienDo --> [*] : Xóa tài khoản (BR-005) /\nxóa từ hoặc xóa bộ (BR-045)
+
+legend bottom left
+  Mỗi lần đánh giá: ngày ôn tiếp =
+  ngày đánh giá + khoảng của hộp mới
+  (BR-012; vd 10/11 lên hộp 4 → 17/11).
+  Đến hạn khi ngày ôn tiếp ≤ hôm nay
+  (BR-013). "Sai" = câu quiz sai (BR-021)
+  hoặc câu thi thử sai (BR-055):
+  về hộp 1, ôn ngày mai.
+endlegend
+@enduml

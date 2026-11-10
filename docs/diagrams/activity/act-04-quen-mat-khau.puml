@@ -1,0 +1,71 @@
+@startuml
+!include ../_style.puml
+title Hoạt động — Quên mật khẩu, đặt lại bằng câu hỏi bảo mật (FLOW-013, UC-017)
+
+|Người học|
+|Ứng dụng|
+|CSDL SQLite|
+|Người học|
+start
+:Bấm "Quên mật khẩu?"
+ở màn hình Đăng nhập;
+repeat
+  :Nhập tên đăng nhập;
+  |Ứng dụng|
+  :Tìm tài khoản trong CSDL;
+backward:Báo "Không tìm thấy tài khoản";
+repeat while (Tài khoản tồn tại?) is (không) not (có)
+if (Đang bị khóa đặt lại?\n(BR-008)) then (có)
+  :Báo thời gian chờ;
+  stop
+else (không)
+endif
+:Hiện câu hỏi bảo mật
+của tài khoản;
+repeat
+  |Người học|
+  :Nhập câu trả lời;
+  |Ứng dụng|
+  :Chuẩn hóa (bỏ khoảng trắng đầu/cuối,
+  chữ thường, bỏ dấu), băm, so sánh
+  (BR-007: " Hà Nội " ≡ "ha noi");
+  if (Trả lời đúng?) then (có)
+  else (không)
+    |CSDL SQLite|
+    :Tăng đếm sai trả lời;
+    |Ứng dụng|
+    if (Sai đủ 3 lần liên tiếp?) then (có)
+      |CSDL SQLite|
+      :Khóa đặt lại 5 phút
+      (sai lúc 10:00, thử lại từ 10:05);
+      |Ứng dụng|
+      :Báo "Bạn đã trả lời sai quá nhiều lần.
+      Thử lại sau 5 phút", về Đăng nhập;
+      stop
+    else (không)
+      :Báo "Câu trả lời không đúng";
+    endif
+  endif
+repeat while (Trả lời đúng?) is (chưa) not (rồi)
+|CSDL SQLite|
+:Đặt đếm sai trả lời về 0;
+repeat
+  |Người học|
+  :Nhập mật khẩu mới + xác nhận;
+  |Ứng dụng|
+backward:Báo lỗi tại trường sai;
+repeat while (Hợp lệ? (8–64 ký tự,\ncó chữ và số, khớp)) is (không) not (có)
+|CSDL SQLite|
+:Lưu mật khẩu băm mới (BR-002),
+đếm sai đăng nhập về 0;
+|Ứng dụng|
+if (Lưu thành công?) then (không)
+  :Rollback; báo "Đã có lỗi khi lưu
+  dữ liệu, vui lòng thử lại";
+  stop
+else (có)
+  :Về Đăng nhập, báo
+  "Đã đặt lại mật khẩu";
+  stop
+endif
+@enduml

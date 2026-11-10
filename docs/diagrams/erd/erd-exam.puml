@@ -1,0 +1,75 @@
+@startuml
+!include ../_style.puml
+title ERD — Luyện thi (đề, câu hỏi, lượt thi, câu trả lời)
+hide circle
+
+entity "users" as users #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+entity "words" as words #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+
+entity "exam_tests" as et {
+  * id : INTEGER <<PK>>
+  --
+  code : TEXT <<UK>> -- E01, E02
+  exam_tag : TEXT
+  title : TEXT
+  part_label : TEXT
+  question_count : INTEGER
+  duration_sec : INTEGER
+  description : TEXT
+  sort_order : INTEGER
+}
+entity "exam_questions" as eq {
+  * id : INTEGER <<PK>>
+  --
+  * test_id : INTEGER <<FK>>
+  number : INTEGER
+  passage : TEXT
+  question : TEXT
+  options_json : TEXT
+  correct_index : INTEGER
+  explanation : TEXT
+  word_id : INTEGER <<FK>> -- SET NULL
+  .. UNIQUE(test_id, number) ..
+}
+entity "exam_attempts" as ea {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>>
+  * test_id : INTEGER <<FK>>
+  * status : TEXT -- IN_PROGRESS | SUBMITTED
+  started_at : INTEGER
+  submitted_at : INTEGER
+  score : INTEGER
+  correct_count : INTEGER
+  total_count : INTEGER
+  duration_sec : INTEGER
+}
+entity "exam_answers" as ean {
+  * attempt_id : INTEGER <<PK, FK>>
+  * question_id : INTEGER <<PK, FK>>
+  --
+  selected_index : INTEGER -- NULL = chưa làm
+  flagged : INTEGER
+}
+
+et ||--o{ eq : "gồm"
+words |o--o{ eq : "gắn từ"
+users ||--o{ ea : "thi"
+et ||--o{ ea : "được thi"
+ea ||--o{ ean : "gồm"
+eq ||--o{ ean : "được trả lời"
+
+note right of ea
+  Tối đa 1 lượt IN_PROGRESS
+  mỗi (user, test) — AC-036.4
+  idx_exam_attempts_user
+  (user_id, test_id, status)
+end note
+legend bottom
+  * = NOT NULL · Bảng xám = tham chiếu · FK user/attempt: ON DELETE CASCADE
+endlegend
+@enduml

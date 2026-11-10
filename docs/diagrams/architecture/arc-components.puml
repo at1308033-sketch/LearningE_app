@@ -1,0 +1,72 @@
+@startuml
+!include ../_style.puml
+title Thành phần hệ thống — 3 tầng MVVM và dịch vụ Android (DEC-001)
+skinparam componentStyle rectangle
+
+package "Tầng giao diện (ui.*)" {
+  [AuthActivity\nSplash, Đăng nhập, Đăng ký,\nQuên mật khẩu, Thiết lập] as AA
+  [MainActivity\nBottomNavigationView +\nNavHostFragment] as MA
+  [Fragment SCR-05..SCR-33\n+ Adapter] as FR
+  [ViewModel + LiveData\n(SavedStateHandle)] as VM
+  [TtsHelper] as TH
+}
+
+package "Tầng nghiệp vụ (domain)" {
+  [Service\nAuth, Deck, Study, Quiz, Exam,\nImportExport, Progress, Reminder] as SVC
+  [LanguageRegistry] as LR
+  [domain.rules (Java thuần)\nLeitnerScheduler, StreakCalculator,\nQuizGenerator, AnswerChecker, CsvCodec,\nPasswordHasher, TextNormalizer] as RULE
+}
+
+package "Tầng dữ liệu (data)" {
+  [Repository\nUser, Deck, Progress,\nQuiz, Exam, Language] as REPO
+  [DAO (data.dao)] as DAO
+  [DatabaseHelper\n+ SeedLoader] as DBH
+  [SessionStore] as SS
+  [data.io\nJsonCodec (org.json)] as DIO
+}
+
+package "core" {
+  [ServiceLocator] as SL
+  [AppExecutors\ndbWrite · dbRead · io · main] as EX
+}
+
+package "Nền tảng Android" {
+  database "SQLite\nlearninge.db" as SQL
+  [SharedPreferences] as SP
+  [assets/seed/*.json] as SEED
+  [TextToSpeech] as TTS
+  [AlarmManager +\nNotificationManager] as AL
+  [Storage Access Framework\n(ContentResolver)] as SAF
+  [Trình duyệt mặc định\n(Intent ACTION_VIEW)] as BRW
+  [reminder.ReminderReceiver\nreminder.BootReceiver] as RCV
+}
+
+AA --> VM
+MA --> FR
+FR --> VM
+FR --> TH
+TH --> TTS
+FR --> BRW
+VM --> SVC : gọi qua EX
+SVC --> RULE
+SVC --> LR
+SVC --> REPO
+SVC --> SS
+SVC --> AL
+SVC --> SAF
+SVC --> DIO
+REPO --> DAO
+DAO --> DBH
+DBH --> SQL
+SEED --> DBH : nạp lần đầu
+SS --> SP
+AL --> RCV
+RCV --> SVC
+SL ..> SVC : khởi tạo
+SL ..> REPO
+VM ..> EX
+
+legend bottom
+  Không có quyền INTERNET, không máy chủ (NFR-A1). ViewModel gọi Service trên AppExecutors (db: dbRead/dbWrite, tệp SAF: io), trả Result<T> qua LiveData.postValue.
+endlegend
+@enduml

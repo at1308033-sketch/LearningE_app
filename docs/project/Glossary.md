@@ -78,7 +78,7 @@
 ### 5. Ràng buộc kỹ thuật của miền trên Android
 | Chủ đề | Ghi chú cho lập trình viên |
 |---|---|
-| TextToSpeech | `android.speech.tts.TextToSpeech`, `Locale.US`/`Locale.UK`; phải kiểm tra `LANG_MISSING_DATA`/`LANG_NOT_SUPPORTED` và báo người dùng tải gói giọng; giọng offline tùy máy |
+| TextToSpeech | `android.speech.tts.TextToSpeech`, locale lấy từ ngôn ngữ của bộ (`language.ttsLocale`: en-US, ja-JP, zh-CN, ko-KR…), không cố định một locale; phải kiểm tra `LANG_MISSING_DATA`/`LANG_NOT_SUPPORTED` và báo người dùng tải gói giọng; giọng offline tùy máy |
 | Thông báo nhắc học | Android 13+ cần quyền runtime `POST_NOTIFICATIONS`; lên lịch bằng `AlarmManager` (inexact) hoặc `WorkManager`. Báo thức chính xác (`SCHEDULE_EXACT_ALARM`) bị hạn chế từ Android 14, không cần cho nhắc học. Cần đặt lại lịch sau khi máy khởi động lại (`BOOT_COMPLETED`) nếu dùng AlarmManager |
 | Lưu mật khẩu cục bộ | Không lưu mật khẩu dạng rõ; băm có salt (ví dụ PBKDF2 qua `javax.crypto.SecretKeyFactory`) |
 | Seed dữ liệu | Nạp lúc tạo CSDL (`SQLiteOpenHelper.onCreate`) từ file trong `assets/` (JSON/CSV/SQL); nâng phiên bản qua `onUpgrade` |

@@ -6,10 +6,11 @@
 ```text
 app/src/main/java/com/learninge/app/
 ├── LearningEApp.java          # Application: khởi tạo core.ServiceLocator
-├── core/                      # ServiceLocator, AppExecutors, Clock
+├── core/                      # ServiceLocator, AppExecutors (main/dbRead/dbWrite/io), Clock, Result<T>, ErrorCode
 ├── data/
 │   ├── db/                    # DatabaseHelper, SeedLoader, DbContract (tên bảng/cột)
 │   ├── dao/                   # một DAO mỗi bảng chính
+│   ├── io/                    # JsonCodec, đọc/ghi tệp SAF (dùng org.json)
 │   ├── repo/                  # gom DAO theo nghiệp vụ, mở giao dịch
 │   └── model/                 # POJO: User, Deck, Word, CardProgress…
 ├── domain/                    # Service: AuthService, DeckService, StudyService…
@@ -59,9 +60,12 @@ app/src/androidTest/java/…     # instrumented (DAO) và Espresso
 - Kiểm tra layout ở 360 dp và 412 dp, xoay màn hình, theme tối, cỡ chữ 200%.
 
 ## 5. Dữ liệu và luồng
-- Không truy cập CSDL trên luồng giao diện (StrictMode bản debug sẽ báo); dùng `AppExecutors`.
+- Không truy cập CSDL trên luồng giao diện (StrictMode bản debug sẽ báo); dùng `AppExecutors`: `dbRead` để đọc, `dbWrite` để ghi, `io` cho đọc/ghi tệp SAF, `main` chỉ để đẩy kết quả lên giao diện.
 - Chỉ SQL có tham số `?`; không nối chuỗi người dùng nhập vào câu SQL.
 - Ghi nhiều bảng trong một giao dịch.
+- **Không dùng UPSERT** (`INSERT … ON CONFLICT DO UPDATE`): cần SQLite 3.24, chỉ có từ Android 11 (API 30) trong khi `minSdk` là 29 (thấp hơn API 30). Ghi "có thì sửa, chưa có thì thêm" bằng `UPDATE`; nếu 0 dòng bị ảnh hưởng thì `INSERT`, cùng một giao dịch. `INSERT OR IGNORE` và `INSERT OR REPLACE` được dùng.
+- `java.time` (`LocalDate`, `Instant`, `Clock`) có sẵn từ Android 8.0 (API 26) nên dùng trực tiếp với `minSdk` 29; không dùng `Calendar`/`SimpleDateFormat` cho ngày học.
+- Mã dùng `org.json` (ví dụ `JsonCodec`) đặt ở `data.io`, không đặt ở `domain.rules`: `org.json` của Android chỉ là bản giả khi chạy unit test trên JVM. Muốn test lớp đó bằng `testDebugUnitTest` thì thêm `testImplementation` của `org.json:json` vào version catalog khi có test cần (thống nhất trong nhóm trước khi thêm).
 - Không lưu mật khẩu dạng rõ; không ghi mật khẩu, câu trả lời bảo mật, tên người dùng vào log.
 
 ## 6. Kiểm thử
@@ -78,7 +82,7 @@ app/src/androidTest/java/…     # instrumented (DAO) và Espresso
 
 ## 8. Định nghĩa hoàn thành (Definition of Done)
 Một task chỉ xong khi đủ các mục sau:
-- [ ] Đạt tiêu chí chấp nhận của US liên quan, có ảnh chụp/GIF trên emulator API 34 trong PR.
+- [ ] Đạt tiêu chí chấp nhận của US liên quan, có ảnh chụp/GIF trên emulator API 33 trong PR.
 - [ ] Một thành viên khác review và duyệt PR (không tự merge).
 - [ ] `./gradlew lint testDebugUnitTest assembleDebug` pass trên CI.
 - [ ] Quy tắc mới/sửa trong `domain.rules` có unit test, độ phủ gói không giảm dưới 80%.

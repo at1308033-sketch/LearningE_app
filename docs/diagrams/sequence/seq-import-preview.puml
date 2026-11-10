@@ -1,0 +1,52 @@
+@startuml
+!include ../_style.puml
+title Import CSV (1/2): chọn tệp qua SAF và xem trước (FN-019, FLOW-015)
+autonumber
+skinparam maxMessageSize 220
+
+actor "Người học" as U
+participant "MyDecksFragment\n(SCR-26)" as MD
+participant "SAF\n(trình chọn tệp)" as SAF
+participant "ImportPreviewFragment\n+ ViewModel (SCR-28)" as IP
+participant "ImportExportService" as S
+participant "ContentResolver" as CR
+participant "CsvCodec" as C
+
+U -> MD : Bấm "Import"
+MD -> SAF : launcher OpenDocument(text/csv,\ntext/comma-separated-values, text/plain, application/json)
+SAF -> U : Trình chọn tệp hệ thống
+alt Hủy chọn
+  SAF --> MD : uri = null → kết thúc, không làm gì
+else Đã chọn tệp
+  SAF --> MD : uri
+  MD -> IP : navigate(uri) (Safe Args)
+  group Luồng nền AppExecutors.io
+    IP -> S : preview(uri)
+    S -> CR : query(uri, OpenableColumns.SIZE)
+    alt > 1 MB
+      S --> IP : Result.error(FILE_TOO_LARGE)
+    else Kích thước hợp lệ
+      S -> CR : openInputStream(uri)
+      CR --> S : InputStream
+      S -> C : parse(in)
+      note right of C
+        Kiểm tra tiêu đề term,reading,meaning,
+        example,example_translation; ký tự U+FFFD
+        → không phải UTF-8; ≤ 2000 dòng; lỗi từng
+        dòng kèm số dòng; trùng trong tệp (BR-048, BR-050)
+      end note
+      alt Sai tiêu đề / không phải UTF-8
+        C --> S : FormatException
+        S --> IP : Result.error(FILE_FORMAT, lý do)
+      else > 2000 dòng
+        S --> IP : Result.error(FILE_TOO_LARGE)
+      else Hợp lệ
+        C --> S : ImportPreview
+        S --> IP : Result.ok(ImportPreview)
+      end
+    end
+    note over S, CR : IOException / quyền URI bị thu hồi → Result.error(IO)
+  end
+  IP -> U : Tổng dòng, hợp lệ, trùng, lỗi (số dòng + lý do), 5 dòng đầu, chọn bộ đích
+end
+@enduml
