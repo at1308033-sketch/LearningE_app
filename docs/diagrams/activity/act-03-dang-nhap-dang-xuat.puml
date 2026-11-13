@@ -1,69 +1,87 @@
 @startuml
 !include ../_style.puml
-title Hoạt động — Mở app, đăng nhập (khóa tạm 60 giây), đăng xuất (FLOW-001, UC-002)
+skinparam dpi 120
+title Hoạt động — Mở app, đăng nhập online (khóa tăng dần), phiên hết hạn (UNAUTHENTICATED), đăng xuất (FLOW-001, UC-002, CR-007)
 
 |Người học|
 |Ứng dụng|
-|CSDL SQLite|
+|Hệ thống máy chủ LearningE (6 microservice)|
 |Ứng dụng|
 start
 :Màn hình chờ: kiểm tra
 dữ liệu seed (FLOW-010);
-if (Có phiên đăng nhập\nhợp lệ? (BR-004)) then (không)
+if (Có token trong TokenStore?\n(BR-004)) then (không)
   :Hiện màn hình Đăng nhập;
   repeat
     |Người học|
-    :Nhập tên đăng nhập,
-    mật khẩu; bấm Đăng nhập;
+    :Nhập email, mật khẩu;
+    :Bấm Đăng nhập;
     |Ứng dụng|
-    if (Tên này đang\nbị khóa tạm?) then (có)
-      :Báo "Thử lại sau x giây",
-      nút Đăng nhập vô hiệu
-      đến hết giờ (BR-003);
+    if (Máy còn dữ liệu chờ đẩy\ncủa tài khoản khác?) then (có)
+      :Cảnh báo thay đổi sẽ mất (BR-073),\nchờ xác nhận;
+    else (không)
+    endif
+    if (Có mạng?) then (không)
+      :Báo "Cần kết nối mạng\nđể đăng nhập" (AC-002.7);
+      stop
+    else (có)
+    endif
+    :gRPC AuthService/Login (EP-03)\nqua edge → auth;
+    |Hệ thống máy chủ LearningE (6 microservice)|
+    if (Vượt 5 yêu cầu/phút/IP\nhoặc email đang khóa?) then (có)
+      :RESOURCE_EXHAUSTED (error-code\nRATE_LIMITED / ACCOUNT_LOCKED)\n+ retry-after-seconds (không chạy PBKDF2);
+      |Ứng dụng|
+      :Báo "Thử lại sau x giây",\nnút Đăng nhập vô hiệu đến hết giờ;
       stop
     else (không)
     endif
-    |CSDL SQLite|
-    :Lấy salt, mật khẩu
-    băm, đếm sai;
-    |Ứng dụng|
-    :Băm mật khẩu nhập với
-    salt, so sánh (BR-002);
+    |Hệ thống máy chủ LearningE (6 microservice)|
+    :Băm PBKDF2, so sánh hằng thời gian
+    (email lạ: băm salt giả, vẫn đếm sai);
     if (Đúng thông tin?) then (không)
-      |CSDL SQLite|
-      :Đếm sai + 1;
+      :Đếm sai + 1; đủ 5 lần: khóa 60 s,
+      mỗi lần khóa sau gấp đôi, tối đa 1 giờ
+      (BR-003); 24 giờ không sai: bậc về 0;
+      :UNAUTHENTICATED\n(error-code INVALID_CREDENTIALS);
       |Ứng dụng|
-      if (Đếm sai = 5?) then (có)
-        |CSDL SQLite|
-        :Khóa tên này 60 giây
-        (sai lúc 10:00:00 →
-        thử lại từ 10:01:00);
-        |Ứng dụng|
-        :Báo "Bạn đã nhập sai
-        quá nhiều lần. Thử lại
-        sau 60 giây";
-        stop
-      else (không)
-      endif
-      :Báo "Tên đăng nhập hoặc
-      mật khẩu không đúng";
+      :Báo "Email hoặc mật khẩu\nkhông đúng";
     else (có)
+      |Hệ thống máy chủ LearningE (6 microservice)|
+      :Đặt đếm sai và bậc khóa = 0,
+      cấp token (SHA-256 lưu server, hạn 30 ngày);
     endif
   repeat while (Đúng thông tin?) is (không) not (có)
-  |CSDL SQLite|
-  :Đặt đếm sai = 0;
   |Ứng dụng|
-  :Lưu mã người dùng vào
-  SharedPreferences;
+  :Lưu token vào TokenStore;
+  if (Máy chưa có dữ liệu\ntài khoản này?) then (có)
+    :Kéo toàn bộ dữ liệu\n(FLOW-018, act-14);
+  else (không)
+    :Đẩy bản ghi chờ rồi kéo từ\ncursor đã lưu (UC-023);
+  endif
 else (có)
+  :Vào thẳng Trang chủ, không cần mạng\n(NFR-N1, BR-004);
 endif
-:Vào Trang chủ (≤ 1 giây);
+:Vào Trang chủ;
+note right
+  Bất kỳ RPC nhận UNAUTHENTICATED (edge không xác thực được
+  token qua auth: hết hạn / bị thu hồi):
+  xóa token, giữ dữ liệu dirty, về SCR-02 điền sẵn email,
+  "Phiên đăng nhập đã hết hạn" (BR-059).
+end note
 |Người học|
 :Bấm "Đăng xuất" (tab Tôi);
 if (Xác nhận?) then (có)
   |Ứng dụng|
-  :Xóa phiên, hủy lịch nhắc,
-  về màn hình Đăng nhập;
+  if (Còn bản ghi chờ đẩy và có mạng?) then (có)
+    :Đẩy lần cuối (EP-11, BR-073);
+    if (Đẩy thành công?) then (không)
+      :Hỏi: ở lại hay đăng xuất\nvà mất thay đổi chưa đẩy;
+    else (có)
+    endif
+  else (không)
+  endif
+  :gRPC AuthService/Logout (EP-04): auth\nthu hồi token của máy này (BR-058);
+  :Xóa token + dữ liệu người dùng,\nhủy lịch nhắc, về màn hình Đăng nhập;
 else (không)
 endif
 stop

@@ -5,16 +5,16 @@
 **Mục đích:** sơ đồ màn hình và điều hướng, hệ thống thiết kế (màu, chữ, khoảng cách, component), đặc tả từng màn hình kèm link Figma, bố cục màn hình mới, ánh xạ token sang code.
 
 ## Sơ đồ màn hình & điều hướng
-> Cấu trúc màn hình/trang và điều hướng. Mã màn hình và flow theo Use-Cases (luồng) §Bản đồ màn hình (32 màn hình / 33 mã SCR, SCR-11 gộp vào SCR-09; đã gồm thay đổi phạm vi, thay đổi phạm vi).
+> Cấu trúc màn hình/trang và điều hướng. Mã màn hình và flow theo Use-Cases (luồng) §Bản đồ màn hình (34 màn hình / 35 mã SCR, SCR-11 gộp vào SCR-09; đã gồm thay đổi phạm vi, thay đổi phạm vi, thay đổi phạm vi). Ngữ pháp (SCR-16/17) và Dark mode là **Won't** ở thay đổi phạm vi — giữ trong sơ đồ nhưng đánh dấu "không làm trong phiên bản này".
 
 ## Sitemap
 
 <!-- diagram:architecture/arc-navigation-auth-home-learn.puml -->
-![Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học](../diagrams/architecture/arc-navigation-auth-home-learn.png)
+![Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học (công tắc Lưới | Bản đồ, lối vào SCR-34)](../diagrams/architecture/arc-navigation-auth-home-learn.png)
 <!-- /diagram -->
 
 <!-- diagram:architecture/arc-navigation-practice-search-me.puml -->
-![Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi](../diagrams/architecture/arc-navigation-practice-search-me.png)
+![Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi (SCR-34 Bảng xếp hạng, SCR-35 Đồng bộ)](../diagrams/architecture/arc-navigation-practice-search-me.png)
 <!-- /diagram -->
 ```mermaid
 flowchart TD
@@ -26,10 +26,11 @@ flowchart TD
   S04 --> NAV[[Thanh tab dưới]]
   S01 --> NAV
   S02 --> NAV
+  NAV -. 401 phiên hết hạn .-> S02
   NAV --> T1[Tab Trang chủ: SCR-05]
   NAV --> T2[Tab Học: SCR-06 Chủ đề]
   NAV --> T3[Tab Luyện tập: SCR-12 Chọn quiz]
-  NAV --> T4[Tab Tra từ: SCR-18]
+  NAV --> T4[Tab Tra từ: SCR-18 - Could]
   NAV --> T5[Tab Tôi: SCR-22]
   T1 --> S09[SCR-09 Flashcard]
   T2 --> S07[SCR-07 Danh sách từ] --> S08[SCR-08 Chi tiết từ]
@@ -37,8 +38,9 @@ flowchart TD
   S09 --> S10[SCR-10 Kết quả phiên]
   T3 --> S13[SCR-13 Làm quiz] --> S14[SCR-14 Kết quả quiz]
   T3 --> S15[SCR-15 Lịch sử quiz]
-  T3 --> S16[SCR-16 Danh sách ngữ pháp] --> S17[SCR-17 Chi tiết bài] --> S13
-  T4 --> S08
+  T3 -.-> S16[SCR-16 Danh sách ngữ pháp - không làm trong bản này] -.-> S17[SCR-17 Chi tiết bài - không làm trong bản này] -.-> S13
+  T4 -.-> S08
+  T2 --> S06M[SCR-06 chế độ Bản đồ: công tắc Lưới-Bản đồ] --> S07
   T2 --> S26[SCR-26 Bộ của tôi] --> S27[SCR-27 Tạo-sửa bộ]
   S26 --> S19[SCR-19 Chi tiết bộ] --> S20[SCR-20 Thêm-sửa từ]
   S26 --> S28[SCR-28 Xem trước import]
@@ -46,42 +48,47 @@ flowchart TD
   T4 --> S19
   S19 --> S09
   T5 --> S21[SCR-21 Tiến độ]
+  T5 --> S34[SCR-34 Bảng xếp hạng tuần]
+  T1 --> S34
+  T5 --> S35[SCR-35 Trạng thái đồng bộ]
+  NAV -. Đang ngoại tuyến .-> S35
   T5 --> S23[SCR-23 Đổi mật khẩu]
   T5 --> S24[SCR-24 Giới thiệu]
   T3 --> S30[SCR-30 Luyện thi] --> S31[SCR-31 Làm bài thi thử] --> S32[SCR-32 Kết quả thi thử]
   S30 --> S33[SCR-33 Tài nguyên chính thức]
   S30 --> S19
+  S34 -. ngoại tuyến, dùng dữ liệu đã lưu .-> S35
 ```
 
 ## Danh sách màn hình
 | ID | Màn hình | Vai trò truy cập | Flow liên quan |
 |---|---|---|---|
 | SCR-01 | Màn hình chờ (logo, nạp seed lần đầu) | Mọi người | FLOW-001, FLOW-010 |
-| SCR-02 | Đăng nhập | Khách | FLOW-001 |
-| SCR-03 | Đăng ký (gồm câu hỏi bảo mật) | Khách | FLOW-001 |
+| SCR-02 | Đăng nhập (tài khoản trên máy chủ; trạng thái không có mạng, lỗi máy chủ, phiên hết hạn — thay đổi phạm vi) | Khách | FLOW-001, FLOW-018 |
+| SCR-03 | Đăng ký (gồm câu hỏi bảo mật; trạng thái online như SCR-02) | Khách | FLOW-001 |
 | SCR-04 | Thiết lập lần đầu (3 bước: cấp độ, mục tiêu, nhắc học) | Người học | FLOW-002 |
-| SCR-05 | Trang chủ (chào, chuỗi ngày, mục tiêu hôm nay, thẻ cần ôn, Học tiếp) | Người học | FLOW-004, FLOW-008 |
-| SCR-06 | Danh sách chủ đề (lưới 2 cột, lọc cấp độ) | Người học | FLOW-003 |
+| SCR-05 | Trang chủ (chào, huy hiệu chuỗi ngày pixel, mục tiêu hôm nay, thẻ cần ôn, Học tiếp, **thẻ lối vào Bảng xếp hạng tuần**) | Người học | FLOW-004, FLOW-008, FLOW-020 |
+| SCR-06 | Danh sách chủ đề: **công tắc Lưới \| Bản đồ** (mặc định Lưới, nhớ lựa chọn); Lưới 2 cột + lọc cấp độ; Bản đồ 15 công trình pixel khóa theo cấp độ + thẻ "Đang học … Học tiếp" (REQ-024, Could) | Người học | FLOW-003, FLOW-022 |
 | SCR-07 | Danh sách từ của chủ đề (nút Học từ mới, Làm quiz) | Người học | FLOW-003, FLOW-004 |
 | SCR-08 | Chi tiết từ | Người học | FLOW-003, FLOW-011 |
 | SCR-09 | Flashcard (học mới / ôn tập / sổ tay) | Người học | FLOW-004, FLOW-012 |
-| SCR-10 | Kết quả phiên học | Người học | FLOW-004 |
+| SCR-10 | Kết quả phiên học (ăn mừng pixel: ngọn lửa, cúp, confetti; thẻ đã ôn, % đúng, chuỗi, XP; thẻ đã đổi hộp +/−; nút Xong) | Người học | FLOW-004 |
 | SCR-11 | (Gộp vào SCR-09: ôn tập dùng chung màn hình flashcard) | — | FLOW-004 |
 | SCR-12 | Luyện tập: chọn chủ đề làm quiz + lối vào Ngữ pháp, Lịch sử | Người học | FLOW-005 |
 | SCR-13 | Làm quiz (5 dạng câu hỏi chủ đề + trắc nghiệm ngữ pháp) | Người học | FLOW-005, FLOW-006 |
 | SCR-14 | Kết quả quiz | Người học | FLOW-005 |
 | SCR-15 | Lịch sử quiz | Người học | FLOW-005 |
-| SCR-16 | Danh sách bài ngữ pháp | Người học | FLOW-006 |
-| SCR-17 | Chi tiết bài ngữ pháp | Người học | FLOW-006 |
-| SCR-18 | Tra từ (tab Kết quả / Yêu thích / Sổ tay) | Người học | FLOW-011 |
+| SCR-16 | Danh sách bài ngữ pháp — **Không làm trong phiên bản này** (Won't) | Người học | FLOW-006 |
+| SCR-17 | Chi tiết bài ngữ pháp — **Không làm trong phiên bản này** (Won't) | Người học | FLOW-006 |
+| SCR-18 | Tra từ (tab Kết quả / Yêu thích / Sổ tay) — **Could** (hạ xuống ở thay đổi phạm vi) | Người học | FLOW-011 |
 | SCR-19 | Chi tiết bộ: tóm tắt bộ, danh sách từ, Học / Quiz / Export, FAB thêm từ (Sổ tay của tôi là bộ mặc định) | Người học | FLOW-011, FLOW-004, FLOW-014 |
 | SCR-20 | Thêm / sửa từ trong bộ | Người học | FLOW-011, FLOW-014 |
-| SCR-21 | Tiến độ (thống kê, biểu đồ 7 ngày) | Người học | FLOW-008 |
-| SCR-22 | Tôi: hồ sơ & cài đặt | Người học | FLOW-009 |
+| SCR-21 | Tiến độ (ngọn lửa pixel theo chuỗi + tiến độ giai đoạn, 5 rương Leitner + nút Ôn N thẻ đến hạn, biểu đồ 7 ngày, thống kê) | Người học | FLOW-008 |
+| SCR-22 | Tôi: hồ sơ & cài đặt; lối vào **Tiến độ (SCR-21), Bảng xếp hạng (SCR-34), Đồng bộ (SCR-35)**, Đổi mật khẩu, Giới thiệu | Người học | FLOW-009, FLOW-019, FLOW-020 |
 | SCR-23 | Đổi mật khẩu | Người học | FLOW-009 |
 | SCR-24 | Giới thiệu (nhóm, nguồn dữ liệu, giấy phép) | Mọi người | — |
 | SCR-25 | Quên mật khẩu (2 bước) | Khách | FLOW-013 |
-| SCR-26 | Bộ của tôi: danh sách bộ (tên, ngôn ngữ, số từ, thẻ đến hạn), nút Tạo bộ, Import | Người học | FLOW-014, FLOW-015 |
+| SCR-26 | Bộ của tôi: **mục "Yêu thích" (bộ ảo chỉ đọc) ghim đầu**, danh sách bộ (tên, ngôn ngữ, số từ, thẻ đến hạn), nút Tạo bộ, Import | Người học | FLOW-014, FLOW-015 |
 | SCR-27 | Tạo / sửa bộ: tên, mô tả, ngôn ngữ | Người học | FLOW-014 |
 | SCR-28 | Xem trước import: số dòng hợp lệ/trùng/lỗi, 5 dòng đầu, chọn bộ đích | Người học | FLOW-015 |
 | SCR-29 | Export: chọn CSV/JSON (bottom sheet) → trình lưu file hệ thống | Người học | FLOW-016 |
@@ -89,7 +96,9 @@ flowchart TD
 | SCR-31 | Làm bài thi thử: đồng hồ đếm ngược, bảng số câu, đánh dấu xem lại | Người học | FLOW-017 |
 | SCR-32 | Kết quả thi thử: điểm, thời gian, từng câu + giải thích, ghi chú "không quy đổi điểm chính thức" | Người học | FLOW-017 |
 | SCR-33 | Tài nguyên chính thức: liên kết ETS/IELTS/British Council | Người học | FLOW-017 |
-SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có màn hình riêng: **24 màn hình thực tế** cần thiết kế (SCR-04 có 3 bước, SCR-25 có 2 bước, SCR-13 có 5 dạng câu hỏi chủ đề và dạng ngữ pháp). thay đổi phạm vi thêm 8 màn hình (SCR-26..SCR-33) → **32 màn hình**; SCR-19/SCR-20 đổi từ "Sổ tay" thành "Chi tiết bộ"/"Thêm-sửa từ" dùng cho mọi bộ (sổ tay là bộ mặc định). Tab Học có 2 mục con: Chủ đề có sẵn / Bộ của tôi; tab Luyện tập thêm lối vào Luyện thi.
+| SCR-34 | Bảng xếp hạng tuần: top 50 theo XP tuần, dòng "Bạn" ghim, hạng/avatar/XP/chuỗi, đếm ngược hết tuần; ngoại tuyến hiện bản lưu + "Cập nhật lúc …" | Người học (cần đăng nhập) | FLOW-020 |
+| SCR-35 | Trạng thái đồng bộ: lần đồng bộ cuối, số thay đổi chờ đẩy, lỗi gần nhất, nút "Đồng bộ ngay"; 5 trạng thái chờ đẩy / đang đồng bộ / đã đồng bộ / lỗi / ngoại tuyến | Người học (cần đăng nhập) | FLOW-019 |
+SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có màn hình riêng: **24 màn hình thực tế** cần thiết kế (SCR-04 có 3 bước, SCR-25 có 2 bước, SCR-13 có 5 dạng câu hỏi chủ đề và dạng ngữ pháp). thay đổi phạm vi thêm 8 màn hình (SCR-26..SCR-33) → 32 màn hình; thay đổi phạm vi thêm SCR-34, SCR-35 → **34 màn hình** (SCR-16/17 vẫn tính nhưng không làm ở phiên bản này); SCR-19/SCR-20 đổi từ "Sổ tay" thành "Chi tiết bộ"/"Thêm-sửa từ" dùng cho mọi bộ (sổ tay là bộ mặc định). Tab Học có 2 mục con: Chủ đề có sẵn / Bộ của tôi; tab Luyện tập thêm lối vào Luyện thi.
 
 ## Điều hướng chính
 - **Thanh tab dưới (5 tab)**: Trang chủ (SCR-05) · Học (SCR-06) · Luyện tập (SCR-12) · Tra từ (SCR-18) · Tôi (SCR-22). Hiện ở 5 màn hình gốc của tab; ẩn ở màn hình con (SCR-07 trở đi) để có thêm chỗ cho nội dung.
@@ -97,12 +106,26 @@ SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có 
 - **Phiên học / quiz** (SCR-09, SCR-13) mở toàn màn hình, nút Đóng (×) ở góc trái; thoát giữa quiz hỏi xác nhận (FLOW-005).
 - **Luồng chưa đăng nhập** (SCR-01 → SCR-02/03/04/25) tách khỏi luồng chính; sau khi đăng nhập xóa ngăn xếp để nút back không quay lại màn hình đăng nhập.
 - **Lối tắt**: Trang chủ → "Ôn tập" (SCR-09 nguồn ôn tập), "Học tiếp" (SCR-07 chủ đề gần nhất); Kết quả phiên/quiz → "Về trang chủ", "Làm quiz chủ đề này"; thông báo nhắc học → SCR-05.
+- **Vị trí SCR-34 Bảng xếp hạng tuần (quyết định, thay đổi phạm vi)**: đặt trong **tab Tôi › Bảng xếp hạng** (2 lần chạm) và thêm **thẻ lối vào ở Trang chủ** (dòng phụ "Bảng xếp hạng tuần · Hạng 7 · 340 XP", 1 lần chạm). Lý do: thanh tab đã đủ 5 mục (giới hạn Material 3) nên không thêm tab; tab Luyện tập xoay quanh làm bài (quiz/thi thử) trong khi bảng xếp hạng là thông tin về bản thân và tiến độ — cùng nhóm với Tiến độ (SCR-21) và màu Tiến độ; thẻ ở Trang chủ giữ động lực hằng ngày mà không thêm tab; độ sâu ≤ 3 lần chạm.
+- **SCR-35 Trạng thái đồng bộ**: tab Tôi › **Đồng bộ** (2 lần chạm); ngoài ra chạm vào thanh "Đang ngoại tuyến" hoặc Snackbar lỗi đồng bộ cũng mở SCR-35. Cả SCR-34 và SCR-35 cần tài khoản đăng nhập; chưa đăng nhập không thấy mục này (phiên hết hạn xem bên dưới).
+- **Yêu thích (quyết định, thay đổi phạm vi)**: nút trái tim ở SCR-07 và SCR-08 (theo đề xuất người phân tích); mục "Yêu thích" trong SCR-26 mở SCR-19 đã lọc (chỉ đọc, Học/Quiz được) — cách vào: Học › Bộ của tôi › Yêu thích (3 lần chạm). Nhờ vậy việc xem từ yêu thích **không còn phụ thuộc tab Tra từ (SCR-18, Could)**.
+- **Công tắc Lưới | Bản đồ** ở SCR-06 (REQ-024): hai nút icon trong tab Học, mặc định Lưới, lựa chọn được nhớ theo người dùng; bản đồ mở tự cuộn tới chủ đề đang học, thẻ docked "Đang học … Học tiếp" mở SCR-07; chạm công trình khóa chỉ hiện Snackbar giải thích. Cả hai chế độ dẫn tới cùng SCR-07 và cùng chiều sâu.
+- **Phiên hết hạn / mất mạng**: 401 từ máy chủ đưa về SCR-02 (xóa ngăn xếp), **giữ dữ liệu chưa đồng bộ**; mất mạng chỉ hiện Offline banner, không đổi điều hướng (offline-first, NFR-N1).
+- **Won't / Could**: lối vào Ngữ pháp (thẻ ở SCR-12) ẩn ở bản này, SCR-16/17 không làm; Dark mode không làm; tab Tra từ (SCR-18) ở mức Could — nếu cắt, thanh tab còn 4 mục và tìm kiếm chuyển thành ô tìm trong tab Học.
 - **Độ sâu tối đa**: 3 lần chạm từ tab gốc đến bất kỳ nội dung nào (ví dụ Học → Chủ đề → Từ).
 
 ## Hệ thống thiết kế
 > Design system **v2**: màu thương hiệu, màu theo nhóm tính năng, nền trang trí, bộ minh họa, typography, component.
-> Nền tảng: Material Design 3 (Material Components for Android, theme `Theme.Material3.DayNight.NoActionBar`). Token định nghĩa một lần, có bản sáng và tối (REQ-013), cùng tên ở Figma (Variables), mockup HTML và code (`values/colors.xml`, `values-night/colors.xml`, `themes.xml`).
-> Mockup trực quan của toàn bộ hệ thống và 32 màn hình: `docs/design/mockups/index.html` (mở bằng trình duyệt). Minh họa SVG gốc: `docs/design/illustrations/`. v1 (một màu xanh `#2F5BEA`) được giữ trong lịch sử tài liệu để rollback.
+> Nền tảng: Material Design 3 (Material Components for Android, theme `Theme.Material3.DayNight.NoActionBar`). Token định nghĩa một lần, có bản sáng và tối (bản tối chỉ là token tham chiếu: dark mode REQ-013 đã chuyển sang Won't ở thay đổi phạm vi, không làm trong phiên bản này), cùng tên ở Figma (Variables), mockup HTML và code (`values/colors.xml`, `values-night/colors.xml`, `themes.xml`).
+> Mockup trực quan của toàn bộ hệ thống và 34 màn hình (thêm SCR-34, SCR-35 ở thay đổi phạm vi): `docs/design/mockups/index.html` (mở bằng trình duyệt). Sprite pixel gốc: `docs/design/pixel/`. Minh họa SVG gốc: `docs/design/illustrations/`. v1 (một màu xanh `#2F5BEA`) được giữ trong lịch sử tài liệu để rollback.
+
+| Mục | Nội dung |
+|---|---|
+| Người dùng & tâm thế | Học sinh, sinh viên Việt (16–25 tuổi) học tiếng Anh A1–B1 trên điện thoại 10–15 phút mỗi ngày, hay nản sau vài ngày — cần cảm giác vui, tiến bộ nhìn thấy được, không áp lực |
+| 3 từ khóa + biểu hiện cụ thể | **Thân thiện** (nhân vật sinh viên Việt, bo 16–28 dp, Baloo 2 tròn) · **Năng động** (chàm + san hô + vàng, mỗi khu vực một màu, gradient hero, lớp game pixel: ngọn lửa, rương, bản đồ) · **Rõ ràng** (một hành động chính mỗi màn hình, nội dung học luôn trên nền trắng, trang trí chỉ ở góc/hero) |
+| Ý tưởng thị giác (che logo vẫn nhận ra) | Hệ "chàm + san hô + vàng" với mỗi khu vực tính năng một màu và nền hình khối; điểm nhận diện riêng của LearningE là **ngọn lửa pixel biết cười lớn dần theo chuỗi ngày, 5 rương Leitner nhiều màu và bản đồ công trình pixel** đặt trên giao diện phẳng |
+| Điều KHÔNG làm (mặc định bị cấm + lý do) | Một màu xanh/chàm duy nhất trên nền xám; emoji làm icon; ảnh stock; font hệ thống không lý do; pixel hóa cả app (chỉ phần tử trò chơi, icon chủ đề và minh họa; icon UI, chữ, nút, form, thẻ giữ phẳng); chữ nằm trong sprite; gradient/khử răng cưa trong sprite; màu là cách phân biệt duy nhất (đúng/sai, hộp 1–5) |
+| Tham chiếu (≤ 6, chỉ cơ chế tương tác) | Quizlet / AnkiDroid (lật thẻ, Leitner), Duolingo (chuỗi ngày, bảng xếp hạng tuần, bản đồ chặng), Material 3 (m3.material.io), concept Figma "Pixel art CR" của nhóm (Vinh). Chỉ định hướng cơ chế; không sao chép bố cục/hình |
 
 ## Visual direction
 **Thân thiện · Năng động · Rõ ràng.**
@@ -162,28 +185,44 @@ Quy tắc: (1) màu tính năng chỉ làm **điểm nhận diện** (hero, huy 
 | Vòng viền | Vòng tròn viền 6 dp trắng 8 % | `shape oval` + `stroke` |
 | Khối vuông bo | Vuông bo 30 %, xoay 20° | `shape rectangle` + `android:rotation` |
 | Chấm bi | Lưới chấm 3 dp, bước 12 dp; trắng 35 % trên hero hoặc màu nhóm 35 % trên nền sáng; ô tối đa 80 × 60 dp | VectorDrawable `bg_dots.xml` (nhiều `circle` path) + `tint` |
-| Blob tint | Hình blob nền màu `*_container` sau minh họa | Có sẵn trong mỗi SVG minh họa |
+| Blob tint | Hình blob nền màu `*_container` sau minh họa (bản pixel: blob răng cưa theo lưới, không viền) | Có sẵn trong mỗi SVG minh họa |
 | Sóng đáy | Đường cong đáy hero nối sang nền | VectorDrawable `bg_wave.xml` |
 | Điểm sáng | Chấm tròn 10–14 dp màu `sun`/`accent` | `shape oval` |
 
 Quy tắc: trang trí chỉ ở góc/cạnh, **không nằm sau chữ**; độ phủ trắng tối đa 8 % trong vùng có chữ (chữ trắng trên hero + lớp 8 % vẫn ≥ 4.67:1 — đã tính); tối đa 3 hình trang trí mỗi hero; tắt hết trang trí động khi bật "Xóa hiệu ứng".
 
-## Illustration system & rules
-Bộ 13 minh họa SVG tự vẽ, cùng một phong cách phẳng (flat), lưu tại `docs/design/illustrations/`:
-`welcome-student` (SCR-01, 02, 24, avatar SCR-22) · `onboarding-level` (SCR-04 bước 1, header SCR-06/26) · `onboarding-goal` (SCR-04 bước 2, SCR-03) · `onboarding-reminder` (SCR-04 bước 3) · `reminder-bell` (SCR-25) · `streak-mascot` (SCR-05, 21) · `celebration` (SCR-10, 14) · `grammar-book` (SCR-12, 16) · `empty-search` (SCR-18 rỗng) · `empty-decks` (SCR-26 rỗng, SCR-27) · `import-file` (SCR-28, trạng thái import) · `exam-prep` (SCR-12, 30) · `resources-globe` (SCR-33).
+## Illustration & icon system (phong cách, lưới, quy tắc nhân vật, ràng buộc kỹ thuật, giấy phép)
+> **Đổi phong cách:** 15 icon chủ đề và 13 minh họa chuyển từ phẳng (flat, đường cong) sang **pixel-art**, đồng bộ với lớp game (mục Pixel layer). Icon giao diện (Lucide), thanh điều hướng, chữ, nút, form, thẻ **giữ phẳng**. Tên tệp, vị trí dùng và màu nền ô chủ đề không đổi; bản phẳng cũ còn trong lịch sử git để rollback.
 
-Quy tắc phong cách:
-- Khung `viewBox 0 0 240 200`, nền là một **blob** màu `*_container` của khu vực dùng, kèm 1–2 điểm sáng (sao 4 cánh `sun`/`accent`) và một ô chấm bi màu nhóm.
-- Nhân vật: đầu tròn, thân bo, không có mũi, mắt chấm `illu_ink`, má hồng `illu_cheek` 55 %, tóc đen `illu_hair` (4 kiểu: ngắn, dài, búi, mái lệch), 3 tông da; quần `illu_pants`; áo dùng màu thương hiệu hoặc màu tính năng. Đa dạng giới tính và tông da, trang phục học sinh/sinh viên thường ngày; không mô phỏng người thật, nhân vật hay logo có bản quyền.
-- Đối tượng (sách, thẻ, kính lúp, chuông, bia, cúp, điện thoại, tệp) vẽ khối phẳng, không viền đen, bóng đổ là elip `outline` dưới chân.
-- Kỹ thuật (để chuyển sang VectorDrawable): chỉ `path/rect/circle/ellipse/polygon/line/g`, tô đơn sắc (có `fill-opacity`/`stroke-opacity`), nét `stroke` bo tròn; không filter, mask, clip-path, `<text>`, ảnh nhúng hay tham chiếu ngoài. Nhập bằng Android Studio *Vector Asset → Local file (SVG)*, đặt tên `ill_<tên>.xml` (vd `ill_welcome_student.xml`).
-- Kích thước hiển thị: 200–260 dp ở màn hình chờ/onboarding/rỗng; 96–150 dp trong hero; `contentDescription` mô tả ngắn hoặc `importantForAccessibility="no"` nếu chỉ trang trí.
-- Bản tối: giữ nguyên minh họa (blob nền sáng đóng vai "đèn"), không đổi màu nhân vật.
-- Giấy phép: minh họa do nhóm tự vẽ, ghi nguồn ở SCR-24 Giới thiệu.
+Bộ 13 minh họa SVG pixel tự vẽ, lưu tại `docs/design/illustrations/`:
+`welcome-student` (SCR-01, 02, 24, avatar SCR-22) · `onboarding-level` (SCR-04 bước 1, header SCR-06/26) · `onboarding-goal` (SCR-04 bước 2, SCR-03) · `onboarding-reminder` (SCR-04 bước 3) · `reminder-bell` (SCR-25) · `streak-mascot` (SCR-05, 21) · `celebration` (SCR-14, 32) · `grammar-book` (SCR-12, 16; giữ dù ngữ pháp là Won't) · `empty-search` (SCR-18 rỗng) · `empty-decks` (SCR-26 rỗng, SCR-27) · `import-file` (SCR-28, trạng thái import) · `exam-prep` (SCR-12, 30) · `resources-globe` (SCR-33).
+
+### Quy tắc pixel chung (icon chủ đề + minh họa)
+| Quy tắc | Icon chủ đề | Minh họa |
+|---|---|---|
+| Lưới (`viewBox`, 1 đơn vị = 1 pixel nghệ thuật) | `0 0 16 16` | `0 0 60 50` |
+| dp mỗi pixel | **3 dp** (hiển thị 48 dp); 24 dp trong danh sách (1,5 dp/px, vẫn đọc được — đã kiểm ở mockup); 40 dp ở thẻ "Học tiếp" | **4 dp** (hiển thị 240 × 200 dp); cỡ nhỏ hơn dùng chiều rộng bội số 30 dp (120 × 100, 150 × 125, 90 × 75 dp…) để cạnh pixel khớp |
+| Viền | 1 px `illu_ink #1E1B3A` quanh mỗi khối (khối chồng nhau có viền riêng) | Như icon; blob nền, bóng đổ, chấm bi, dấu cộng sáng **không** viền |
+| Bảng màu | 3–5 màu/đối tượng từ token v2 + `px_*` (mục Pixel layer) + `illu_*`; điểm sáng 1–3 px trắng/`#FFF1D6`/màu pha 30 % trắng | Như icon; bóng tay áo/vật = pha 30 % `illu_ink`, cổ áo = pha 30 % trắng; không màu ngoài bảng |
+| Khử răng cưa / gradient | Không (mỗi pixel một màu đặc), `shape-rendering="crispEdges"` | Như icon |
+| Chữ trong hình | Không | Không (dấu "?" trong `empty-search` là hình pixel) |
+
+### Minh họa — bố cục và nhân vật
+- Khung 60 × 50 px; nền là **blob pixel** màu `*_container` của khu vực (Học `#DDF7F3`, Bộ từ `#FCE7F3`, Tra từ/Luyện thi `#E0ECFF`, Luyện tập `#F3E8FF`, Tiến độ/chuỗi `#FFF1D6`, thương hiệu `#ECEBFF`), kèm 1–2 **dấu cộng pixel** (`sun` 5 × 5 tâm trắng, `accent` 3 × 3), một ô chấm bi 1 px màu nhóm (bước 2 px) và bóng đổ 2 hàng `outline #DDDBEE` dưới chân.
+- Nhân vật dựng từ kiểu avatar pixel (`avatar-head-1…5`, `avatar.svg`) phóng lên khung chibi 16 × 29 px: đầu 12 px, mắt 1 × 2 px `illu_ink`, má `illu_cheek`, miệng 2 px, tóc `illu_hair` 4 kiểu (ngắn, dài, búi, mái lệch), kính tùy chọn, 3 tông da `illu_skin_1…3`, áo màu thương hiệu/tính năng, quần `illu_pants`, giày `illu_ink`; tư thế tay: buông, giơ hai tay, chỉ, vẫy, cầm vật. Đa dạng giới tính và tông da; không mô phỏng người thật, nhân vật hay logo có bản quyền.
+- `streak-mascot` dùng đúng sprite `flame-stage4` (24 × 30 px) để trùng nhận diện với SCR-21; `celebration` dùng `trophy.svg`.
+- Đối tượng (sách, thẻ, kính lúp, chuông, bia, cúp, điện thoại, tệp, quả địa cầu, đồng hồ) vẽ khối pixel có viền ink.
+
+### Ràng buộc kỹ thuật và chuyển sang Android
+- SVG chỉ có `<path fill d>` (cho phép `<rect>`), **mỗi màu một path**, `d` chỉ gồm hình chữ nhật trục `M x y h w v h h -w z` đã gộp, **tọa độ nguyên**; không stroke, gradient, filter, mask, clip, `<text>`, ảnh nhúng, tham chiếu ngoài. Giới hạn **≤ 30 path/icon** (thực tế 4–13), **≤ 60 path/minh họa** (thực tế 8–19).
+- Nhập bằng Android Studio *Vector Asset → Local file (SVG)*: icon → `ic_topic_t01_family.xml` … (`48dp`, viewport 16 × 16); minh họa → `ill_<tên>.xml` (`240dp × 200dp`, viewport 60 × 50). `ImageView` đặt đúng kích thước bội số (không co giãn lẻ), `scaleType="fitXY"`, không `tint`. VectorDrawable vẽ hình chữ nhật khớp lưới nên không nhòe; mockup dùng `crispEdges` + `image-rendering: pixelated`.
+- Hiển thị: 200–240 dp ở màn hình chờ/onboarding/rỗng; 90–150 dp trong hero.
+- Truy cập (không đổi): `contentDescription` mô tả ngắn hoặc `importantForAccessibility="no"` nếu chỉ trang trí; icon chủ đề luôn đi kèm tên chủ đề.
+- Bản tối: giữ nguyên hình (viền ink tách hình khỏi nền tối nếu sau này bật lại).
+- Giấy phép: icon và minh họa do nhóm tự vẽ (sinh từ lưới pixel), ghi nguồn ở SCR-24 Giới thiệu.
 
 ### Icon chủ đề (15 chủ đề nạp sẵn)
-Thay biểu tượng ký tự Unicode bằng bộ icon tự vẽ cùng phong cách minh họa, lưu tại `docs/design/icons/topics/`: `viewBox 0 0 48 48`, khối phẳng bo tròn, 2–3 màu bảng v2 + một màu đậm điểm xuyết, nét ≥ 1,5; cùng ràng buộc kỹ thuật VectorDrawable như minh họa. Hiển thị 40–48 dp trong ô vuông bo góc 12 dp với màu nền riêng mỗi chủ đề; vẫn đọc được ở 24 dp (danh sách tiến độ). Dữ liệu: cột `decks.icon` lưu tên tệp không đuôi (`t01-family` … `t15-health`), trường `icon` trong file seed; bộ không có icon riêng (`NULL`) dùng icon mặc định theo kỳ thi/ngôn ngữ. Icon chỉ trang trí, luôn đi kèm tên chủ đề (`importantForAccessibility="no"`). Icon giao diện (nút, thanh điều hướng, component) vẫn theo phong cách Lucide, không thay.
-
+Bộ icon **pixel 16 × 16** tự vẽ, lưu tại `docs/design/icons/topics/` (giữ tên tệp): T01 cha/mẹ + con + tim · T02 đồng hồ báo thức · T03 tam giác/vuông/tròn · T04 người vẫy tay · T05 bát phở + đũa + hơi · T06 mặt chó · T07 ngôi nhà (cùng kiểu công trình bản đồ, mái `px_roof_t07`) · T08 ba lô · T09 áo phông + túi mua sắm tim · T10 mặt trời + mây + mưa · T11 xe buýt + nhà cao tầng · T12 bóng đá + nốt nhạc · T13 cặp công tác · T14 vali + ghim vị trí · T15 tim đỏ chữ thập trắng. Hiển thị 48 dp (3 dp/px) trong ô 64 dp bo 18 dp với màu nền riêng mỗi chủ đề (không đổi); 24 dp trong ô 32 dp ở danh sách tiến độ. Dữ liệu: cột `decks.icon` lưu tên tệp không đuôi (`t01-family` … `t15-health`), trường `icon` trong file seed; bộ không có icon riêng (`NULL`) dùng icon mặc định theo kỳ thi/ngôn ngữ. Icon chỉ trang trí, luôn đi kèm tên chủ đề (`importantForAccessibility="no"`). Icon giao diện (nút, thanh điều hướng, component) vẫn theo phong cách Lucide phẳng.
 | Chủ đề | Tệp → VectorDrawable | Màu nền ô (sáng / tối) |
 |---|---|---|
 | T01 Gia đình | `t01-family.svg` → `ic_topic_t01_family` | `topic_tile_t01` #FFE8E0 / #4A2418 |
@@ -201,6 +240,95 @@ Thay biểu tượng ký tự Unicode bằng bộ icon tự vẽ cùng phong cá
 | T13 Công việc & nghề nghiệp | `t13-work-jobs.svg` → `ic_topic_t13_work_jobs` | `topic_tile_t13` #F3ECE4 / #3A2F26 |
 | T14 Du lịch | `t14-travel.svg` → `ic_topic_t14_travel` | `topic_tile_t14` #D8F3F6 / #123A40 |
 | T15 Sức khỏe | `t15-health.svg` → `ic_topic_t15_health` | `topic_tile_t15` #FDE8E8 / #5C1D1D |
+
+## Pixel layer
+Lớp game pixel-art của LearningE (ý tưởng từ concept Figma "LearningE – Pixel art CR concept" của Nguyễn Đức Quang Vinh; vẽ lại bằng bảng màu v2). **Chỉ dành cho phần tử trò chơi**: bản đồ chủ đề (SCR-06), ngọn lửa chuỗi ngày + 5 rương Leitner (SCR-21), màn ăn mừng (SCR-10), huy hiệu chuỗi (SCR-05), huy chương/avatar ở bảng xếp hạng (SCR-34). Từ 11/11/2026 **icon chủ đề và 13 minh họa** cũng là pixel-art (mục Illustration & icon system). Flashcard, quiz, form, icon giao diện, chữ, nút, thẻ giữ phong cách **phẳng** — không pixel hóa. Mockup: `index.html#px` (panel đầy đủ), `#scr-06-map`, `#scr-10`, `#scr-21`, `#scr-34`. Sprite SVG: `docs/design/pixel/`.
+
+### Lưới và quy tắc vẽ
+| Quy tắc | Giá trị |
+|---|---|
+| Lưới nguyên | 1 pixel nghệ thuật = **4 dp** (bản đồ, linh vật, cúp, avatar, công trình, cảnh vật) · **3 dp** (rương, sao, avatar đầu) · **2 dp** (huy hiệu ngọn lửa nhỏ, huy chương). Kích thước hiển thị = số pixel × hệ số; không bao giờ co giãn lẻ |
+| Khử răng cưa / gradient | Không có trong sprite (mỗi pixel một màu đặc); `shape-rendering="crispEdges"` trong SVG, `filterBitmap=false` với PNG |
+| Viền | 1 pixel màu `illu_ink #1E1B3A` quanh mọi sprite (ao nước dùng `px_water_dark`; sao rỗng dùng `px_stone`) — viền ink bảo đảm sprite tách khỏi mọi nền (≥ 3:1 với nền sáng) |
+| Bảng màu | Token v2 (`illu_ink`, `accent`, `sun`, `feat_streak_decor`, `streak_container`, `primary` + bóng/sáng, `illu_hair`, `illu_skin_1…3`, `outline`) + token `px_*` mới bên dưới. Không màu ngoài bảng |
+| Chữ | **Không bao giờ nằm trong sprite**; tên chủ đề, số, "Hộp 3", "x/20 từ" là `TextView` đặt cạnh/dưới sprite (nền `surface`, tương phản ≥ 4.5:1) |
+| Bản tối | Không có (dark mode = Won't). Sprite có viền ink nên vẫn đọc được trên `surface` tối nếu sau này bật lại |
+| Độ phức tạp | Mỗi sprite một `<path>` cho mỗi màu, chỉ gồm hình chữ nhật (đã gộp): 2–13 path (< 30 giới hạn VectorDrawable) |
+
+### Token pixel mới (chỉ dùng trong sprite/bản đồ, không làm chữ)
+| Nhóm | Token → giá trị |
+|---|---|
+| Địa hình | `px_grass #86D06E` · `px_grass_dark #6BBB5A` · `px_grass_light #A5E08F` · `px_dirt #E0B97E` · `px_dirt_dark #BE9253` · `px_dirt_light #EBCB98` · `px_water #7DD3FC` · `px_water_dark #38A8E0` · `px_water_light #BAE6FD` · `px_stone #B3AFCB` |
+| Cây | `px_leaf #3E9B4F` · `px_leaf_dark #2D7A3E` · `px_leaf_light #5DB86A` · `px_trunk #8B5E3C` · `px_trunk_dark #6B4527` |
+| Nhà | `px_wall #FFF1D6` · `px_wall_dark #EAD3A8` · `px_door #8B5E3C` · `px_window #7DD3FC` · `px_brick #C98B62` · khóa: mái `#B3AFCB`, tường `#EDEBF7`, ổ khóa `sun` |
+| Mái 15 chủ đề (`px_roof_t01…t15`; bóng = pha 30 % `illu_ink`, sáng = pha 30 % trắng) | T01 `#FF7A59` · T02 `#2563EB` · T03 `#DB2777` · T04 `#14B8A6` · T05 `#FFB020` · T06 `#65A30D` · T07 `#6C4BF0` · T08 `#C2410C` · T09 `#9333EA` · T10 `#38BDF8` · T11 `#5A5775` · T12 `#22C55E` · T13 `#A16207` · T14 `#06B6D4` · T15 `#C62828` |
+| Ngọn lửa tắt | thân `#B3AFCB`, trong `#DDDBEE`, lõi `#F0EFFA` (= `px_stone`, `outline`, `surface_variant`) |
+| Huy chương | vàng `sun`/`feat_streak_decor`, bạc `#DDDBEE`/`#B3AFCB`, đồng `#C98B62`/`#A0643C` |
+
+### Danh mục sprite (tệp trong `docs/design/pixel/`)
+| Sprite | Tệp | Canvas (px) | Hiển thị | Dùng ở |
+|---|---|---|---|---|
+| Ngọn lửa 5 giai đoạn × 2 khung | `flame-stage0…4.svg` + `flame-stage0…4-b.svg` | 24 × 30 | 96 × 120 dp (4 dp) | SCR-21 hero, SCR-10 |
+| Huy hiệu ngọn lửa nhỏ (bật/tắt) | `flame-badge.svg`, `flame-badge-off.svg` | 10 × 13 | 20 × 26 dp (2 dp) | SCR-05 chip chuỗi, SCR-21 thang giai đoạn, SCR-34 dòng chuỗi |
+| Rương Leitner hộp 1…5 | `chest-1…5.svg` | 16 × 14 | 48 × 42 dp (3 dp) | SCR-10, SCR-21 |
+| Cúp | `trophy.svg` | 20 × 20 | 80 × 80 dp (4 dp; 40 dp ở dòng lối vào SCR-05; 60 dp ở SCR-34) | SCR-10, SCR-34, SCR-05 |
+| Sao đầy / rỗng | `star.svg`, `star-empty.svg` | 9 × 9 | 27 × 27 dp (3 dp) | Nhãn công trình (BR-072) |
+| Huy chương hạng 1–3 | `medal-1…3.svg` | 12 × 14 | 24 × 28 dp (2 dp) | SCR-34 |
+| Avatar người học (thân) | `avatar.svg` | 12 × 16 | 48 × 64 dp (4 dp) | SCR-06 bản đồ (đánh dấu chủ đề đang học) |
+| Avatar đầu (5 biến thể tóc/da/áo) | `avatar-head-1…5.svg` | 12 × 12 | 36 × 36 dp (3 dp) | SCR-34 |
+| Công trình chủ đề (mái theo `px_roof_tNN`) | `building-t01-family.svg` … `building-t15-health.svg` | 16 × 16 | 64 × 64 dp (4 dp) | SCR-06 bản đồ |
+| Công trình khóa | `building-locked.svg` | 16 × 16 | 64 × 64 dp | Chủ đề chưa đủ cấp độ |
+| Cây, ao, bụi, đá | `tree.svg`, `pond.svg`, `bush.svg`, `rock.svg` | 11 × 12 · 16 × 10 · 9 × 7 · 7 × 5 | 4 dp | Địa hình |
+| Confetti | `confetti.svg` | 90 × 34 | 360 × 136 dp (4 dp) | SCR-10 |
+| Địa hình bản đồ | `map-terrain.svg` (nguồn xuất PNG) | 90 × 576 | 360 × 2304 dp (4 dp) | SCR-06 bản đồ, cuộn dọc |
+
+Bản đồ: 15 công trình theo thứ tự seed T01…T15 trên đường đất uốn lượn, cách nhau 36 pixel (144 dp), xen kẽ trái/phải; nhãn đặt dưới công trình (tên + 3 sao + "x/20 từ"). Công trình mở khi cấp độ người học đạt cấp của chủ đề (A1 → T01–T07; A2 → T08–T12; B1 → T13–T15). Màn hình tự cuộn tới chủ đề đang học; avatar đứng cạnh công trình đó.
+
+### FlameStage (BR-070, US-045)
+| Giai đoạn | Chuỗi ngày (`streak`) | Sprite | Mô tả |
+|---|---|---|---|
+| 0 — tắt | 0 | `flame-stage0` | Than xám, mắt nhắm, khói; chữ "Chưa có chuỗi — học hôm nay để thắp lửa" |
+| 1 | 1–2 | `flame-stage1` | Tia lửa nhỏ, 2 mắt chấm |
+| 2 | 3–6 | `flame-stage2` | Lửa vừa, một lưỡi phụ bên trái, mắt + miệng cười |
+| 3 | 7–29 | `flame-stage3` | Lửa lớn, má hồng |
+| 4 | ≥ 30 | `flame-stage4` | Lửa lớn nhất, 3 lưỡi + tia sáng quanh thân |
+
+Hàm thuần `FlameStage.of(streak)` (unit test biên 0, 1, 2, 3, 6, 7, 29, 30). Mốc tiếp theo hiển thị bằng thang 4 huy hiệu (1 · 3 · 7 · 30 ngày) và thanh "5/7 ngày — còn 2 ngày nữa để lên giai đoạn 3".
+
+### Rương Leitner (BR-071)
+| Hộp | Khoảng ôn | Rương (thân · bóng · sáng) |
+|---|---|---|
+| 1 | 1 ngày | Đỏ `#C62828` · `#8F1D1D` · `#FF7A7A` |
+| 2 | 2 ngày | Cam `#FF7A59` · `#C2410C` · `#FFB59E` |
+| 3 | 4 ngày | Xanh ngọc `#14B8A6` · `#0F766E` · `#5EEAD4` |
+| 4 | 7 ngày | Chàm `#5146E0` · `#2A2180` · `#A5A0FF` |
+| 5 | 14 ngày | Vàng `#FFC93C` · `#A84B05` · `#FFF1D6` |
+
+Số trên mỗi rương = số thẻ của người dùng ở hộp đó. Màu **không** là cách duy nhất phân biệt: luôn kèm nhãn chữ "Hộp k" và khoảng ôn (SCR-21). Ở SCR-10, dưới mỗi rương có chip chênh lệch so với trước phiên (`+1` nền `success_container`, `−3` nền `surface_variant`, `0` chữ phụ) — dấu +/− là chữ nên không dựa vào màu.
+
+### Sao chủ đề (BR-072)
+1★ khi ≥ 1/3 số từ ở hộp 5 ("đã thuộc"), 2★ khi ≥ 2/3, 3★ khi 100 %. Sao đầy = `star.svg`, sao rỗng = `star-empty.svg`; luôn kèm số "x/20 từ" bằng chữ (seed 20 từ/chủ đề  C4).
+
+### Hoạt ảnh
+| Hiệu ứng | Quy tắc |
+|---|---|
+| Ngọn lửa | 2 khung (`flame-stageN` ↔ `flame-stageN-b`), đổi mỗi **400 ms**, lặp khi màn hình hiển thị; dừng ở khung 1 khi `View` không hiển thị |
+| Confetti SCR-10 | Rơi theo bước nguyên (1 pixel = 4 dp), **≤ 1,2 s**, chỉ chạy một lần khi vào màn hình |
+| Avatar bản đồ | Đứng yên (không nảy) để tiết kiệm pin |
+| Tôn trọng **"Xóa hiệu ứng"** / reduce motion (`Settings.Global.ANIMATOR_DURATION_SCALE == 0`) | Tắt hoạt ảnh lửa (chỉ khung 1) và confetti (hiện tĩnh hoặc ẩn); không có chuyển động nào là thông tin duy nhất |
+
+### Truy cập (accessibility)
+- Sprite trang trí: `importantForAccessibility="no"`. Phần tử bấm được là **nhóm công trình + nhãn** (vùng ≥ 48 dp; thực tế sprite 64 × 64 dp + nhãn cao ≥ 56 dp), `contentDescription` đầy đủ, ví dụ: "Gia đình, A1, đã thuộc 20 trên 20 từ, 3 sao" · "Nhà cửa & đồ dùng, A1, đã thuộc 8 trên 20 từ, 1 sao, chủ đề đang học" · "Trường học, A2, đang khóa, mở ở cấp A2".
+- Ngọn lửa: "Chuỗi 5 ngày, giai đoạn 2, còn 2 ngày nữa lên giai đoạn 3"; rương: "Hộp 3, 6 thẻ, ôn lại sau 4 ngày" (+ ", tăng 1" ở SCR-10); bảng xếp hạng: "Hạng 7, Bạn, 340 XP, chuỗi 5 ngày".
+- Công tắc Lưới/Bản đồ: hai nút icon 48 × 40 dp (vùng chạm mở rộng 48 × 48 bằng `TouchDelegate`), `contentDescription` "Xem dạng lưới" / "Xem dạng bản đồ", `stateDescription` "đang chọn".
+- Bản đồ cung cấp thứ tự duyệt TalkBack theo thứ tự chủ đề (T01 → T15), không theo vị trí không gian.
+
+### Giao hàng trên Android (DEC-017: VectorDrawable + PNG nodpi, không thư viện game)
+- **Sprite** (flame, chest, trophy, star, medal, avatar, building, cây/ao…): nhập SVG bằng *Vector Asset → Local file (SVG)*, đặt tên `px_<tên>.xml` (vd `px_flame_stage_2.xml`, `px_flame_stage_2_b.xml`, `px_chest_3.xml`, `px_building_t01.xml`). Mỗi SVG chỉ có `<path fill d>` toàn hình chữ nhật (lệnh `M h v z`), **≤ 13 path (≤ 30)**, không filter/mask/text/gradient. Khai báo `android:width/height` = số pixel × hệ số dp (vd 24 × 30 px × 4 = `96dp × 120dp`); `ImageView` đặt đúng kích thước đó, `scaleType="fitXY"`, không `tint`.
+- **Ngọn lửa động**: `AnimationDrawable` 2 khung × 400 ms, `oneShot=false`; `start()` ở `onStart`, `stop()` ở `onStop` và khi "Xóa hiệu ứng".
+- **Bản đồ**: xuất `map-terrain.svg` ra **PNG 90 × 576 px (1 px nghệ thuật = 1 px ảnh)**, đặt ở `res/drawable-nodpi/px_map_terrain.png`, `android:filter="false"` (`BitmapDrawable.setFilterBitmap(false)`). Hiển thị bằng một `View` tùy biến vẽ PNG với **hệ số nguyên** `k = max(1, round(4 × density))` pixel màn hình mỗi pixel ảnh (vd mật độ 2,625 → k = 10 → 900 px trên màn 945 px; dải thừa tô `px_grass`); công trình/avatar/nhãn đặt theo lưới `k` để cạnh pixel khớp. Công trình là VectorDrawable đặt đè (trạng thái mở/khóa đổi drawable), không nướng vào PNG.
+- **Confetti**: `confetti.svg` → `px_confetti.xml`, dịch chuyển bằng `ValueAnimator` bước nguyên (≤ 1,2 s).
+- Hiệu năng (NFR-P6): vẽ bản đồ ≤ 16 ms/khung; PNG 90 × 576 px nhỏ hơn 100 KB; không giữ nhiều bitmap lớn.
 
 ## Typography
 Hai họ chữ (SIL OFL 1.1, đủ dấu tiếng Việt), đóng gói `.ttf` trong `res/font/`: **Baloo 2** (SemiBold, Bold, ExtraBold) cho tiêu đề và số lớn — tròn, vui, tạo cá tính; **Lexend** (Regular, Medium, SemiBold, Bold) cho nội dung, nút, nhãn — thiết kế để đọc dễ và nhanh, hợp ứng dụng học ngôn ngữ. Phiên âm IPA dùng **Noto Sans** (OFL). Đổi từ Be Vietnam Pro ngày 10/11/2026 vì giao diện cần cá tính hơn. Đơn vị `sp` (NFR-X1). Style Android: `@style/TextAppearance.LearningE.<Tên>`.
@@ -272,25 +400,46 @@ Tên component trong Figma = tên trong UI-UX-SPECIFICATION; cột "Android" là
 | Timer chip | Icon đồng hồ + mm:ss (số đều độ rộng) | Bình thường (`feat_exam_container` / `feat_exam`), Sắp hết giờ < 2 phút (`error_container` / `error`) | `Chip` + `CountDownTimer` |
 | Question cell | Ô 44 dp bo 10, lưới 6 cột | Chưa làm (viền outline), Đã làm (`feat_exam_container`), Đánh dấu (viền 2.5 dp `feat_streak_decor`), Đang xem (nền `feat_exam`, chữ trắng) — kèm chú thích chữ | `RecyclerView` lưới |
 | Import summary | 3 Stat card: hợp lệ (success_container), trùng (viền), lỗi (error_container) + danh sách dòng lỗi + bảng 5 dòng đầu | — | Dùng lại Stat card |
+| View toggle | Công tắc 2 nút icon "Lưới" / "Bản đồ" (48 × 40 dp, viền `outline` 1.5 dp, bo 12; nút chọn nền `*_container` của khu vực) đặt cạnh bộ lọc cấp độ ở SCR-06; nhớ lựa chọn, mặc định Lưới | Chọn, Không chọn, Focus | `MaterialButtonToggleGroup` (singleSelection) |
+| Map label | Thẻ nổi trên bản đồ: tên chủ đề, 3 sao pixel, "x/20 từ"; khóa: nền `surface_variant` + icon khóa + "Mở ở cấp A2"; đang học: viền `feat_learn` 2 dp | Mở, Đang học, Khóa, Hoàn thành (3 sao) | `LinearLayout` nền `surface` bo 12 dp + `PixelStarsView` |
+| Chest column | Rương pixel 48 × 42 dp + số thẻ (Baloo 2 20 sp) + nhãn "Hộp k" (+ khoảng ôn ở SCR-21, + chip chênh lệch ở SCR-10) | Mặc định, Có chênh lệch | `LinearLayout` dọc, 5 cột đều nhau |
+| Rank row | Hạng (số Baloo 2 hoặc huy chương pixel cho hạng 1–3) + avatar đầu 36 dp + biệt danh + huy hiệu lửa nhỏ + "N ngày" + XP bên phải; dòng của người dùng nền `primary_container` + nhãn "Bạn" | Thường, Của tôi, Đang tải (khung xương), Lỗi | `RecyclerView` item, cao ≥ 56 dp |
+| Pinned rank bar | Thanh ghim đáy SCR-34: nền `primary`, chữ `on_primary` (6.36:1), "Bạn · Hạng 7 · 340 XP · Còn 22 XP để lên hạng 6"; luôn hiện kể cả ngoài top 50 | Trong top 50, Ngoài top 50 (hạng thật) | `MaterialCardView` neo đáy |
+| Offline banner | Thanh 32 dp dưới thanh trạng thái, nền `surface_variant`, icon wifi-off + "Đang ngoại tuyến · sẽ đồng bộ khi có mạng" (12 sp SemiBold, `on_surface` 15:1); tự ẩn khi có mạng; không chắn nút, đẩy nội dung xuống; hiện ở mọi màn hình cần mạng (SCR-05, 21, 22, 34, 35) | Ẩn, Ngoại tuyến | `include` dùng chung + `ConnectivityManager.NetworkCallback` |
+| Sync status card | Vòng tròn 56 dp (icon theo trạng thái) + tiêu đề + mô tả: Chờ đẩy (`primary_container`), Đang đồng bộ (thanh tiến trình), Đã đồng bộ (`success_container`), Lỗi (`error_container` + chữ lỗi), Ngoại tuyến (`surface_variant`) | 5 trạng thái | `MaterialCardView` |
+| Inline network alert | Thẻ cảnh báo trong form (SCR-02/03/25): icon wifi-off + "Không có kết nối mạng" + hướng dẫn; nút chính đổi thành "Thử lại"; giữ dữ liệu đã nhập | Mất mạng, Lỗi máy chủ (error), Phiên hết hạn (info) | Feedback banner (Cảnh báo) |
+
+## Token → mã nguồn (cùng tên ở Figma / mockup / code)
+Bảng ánh xạ đầy đủ nằm ở UI-UX-SPECIFICATION §"Ánh xạ token". Tóm tắt: màu `@color/<token>` trong `values/colors.xml` (và `values-night/colors.xml` chỉ khi dark mode được bật lại — hiện Won't); mockup dùng biến CSS cùng tên (`--primary`, `--learn`, …); Figma dùng biến `color/<token>` (hai collection Color Light / Color Dark). Token pixel `px_*` chỉ tồn tại trong SVG/VectorDrawable sprite (`docs/design/pixel/`) và PNG bản đồ, không đưa vào theme. Dimension `space_*`, `radius_*` → `@dimen`; kiểu chữ `type/*` → `TextAppearance.LearningE.*`; kích thước pixel = số pixel × 4/3/2 dp (xem mục Pixel layer).
 
 ## Motion
 - Lật flashcard 350 ms `FastOutSlowIn` (AC-009.2 ≤ 400 ms); phản hồi đúng/sai đổi màu 200 ms; ô từ di chuyển 150 ms.
 - Vòng điểm chạy 0 → điểm trong 600 ms; cột biểu đồ mọc 300 ms; thanh mục tiêu trên hero chạy 400 ms khi mở Trang chủ.
 - Minh họa: xuất hiện fade + trượt lên 8 dp trong 250 ms (màn hình rỗng, kết quả); confetti ở SCR-10 tối đa 1,2 s.
 - Chuyển màn hình: Material shared axis X; bottom sheet trượt lên 250 ms.
-- Tôn trọng cài đặt "Xóa hiệu ứng" của hệ thống: tắt lật, confetti, trượt minh họa; đổi trạng thái ngay.
+- Pixel layer: ngọn lửa 2 khung đổi mỗi 400 ms; confetti pixel ≤ 1,2 s (một lần); avatar bản đồ đứng yên; chi tiết ở mục "Pixel layer".
+- Tôn trọng cài đặt "Xóa hiệu ứng" của hệ thống: tắt lật, confetti, ngọn lửa động, trượt minh họa; đổi trạng thái ngay.
+
+## Kết quả 4 phép thử bản sắc (che logo · hoán đổi · một màu · bảng màu)
+Tự đánh giá của người thiết kế ngày 2026-11-10 trên mockup (chưa kiểm với người dùng thật):
+| Phép thử | Kết quả |
+|---|---|
+| Che logo | Đạt: hero gradient chàm, minh họa sinh viên Việt, ngọn lửa/rương/bản đồ pixel và Baloo 2 nhận ra ngay là LearningE |
+| Hoán đổi (đặt màn hình vào app học tiếng Anh khác) | Đạt: nhóm màu theo khu vực + nhân vật tự vẽ + lớp pixel không lẫn với Duolingo/Quizlet |
+| Một màu | Đạt: chuyển về một màu chủ đạo vẫn còn phân biệt bằng hình khối/icon/nhãn chữ; không có thông tin chỉ nằm ở màu |
+| Bảng màu | Đạt: 109 cặp chữ/nền thấp nhất 4.56:1; token pixel chỉ dùng cho hình, không làm chữ |
 
 ## Đặc tả giao diện
 > Mockup chi tiết, responsive, motion, a11y — sẵn sàng để code.
 
-Nguồn thiết kế v2: mockup độ trung thực cao `docs/design/mockups/index.html` — trang tự chứa (chỉ tải font Google Fonts), gồm phần trình bày design system v2 và **46 khung 360 × 800 dp** cho 32 màn hình, các trạng thái và 2 bản tối. Mỗi khung có `id`, mở trực tiếp bằng `index.html#scr-xx` (vd `#scr-09-back`). Minh họa SVG gốc: `docs/design/illustrations/`. Token: UI-UX-SPECIFICATION (hệ thống thiết kế) v2.
-Figma https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App vẫn giữ 30 khung v1 (trang Screens) để đối chiếu/rollback; dựng lại v2 trên Figma theo mục "Định hướng hình ảnh v2" bên dưới.
+Nguồn thiết kế v2 + thay đổi phạm vi: mockup độ trung thực cao `docs/design/mockups/index.html` — trang tự chứa (chỉ tải font Google Fonts), gồm phần trình bày design system v2, **panel Pixel layer** (`#px`) và **55 khung 360 × 800 dp** cho 34 màn hình, các trạng thái và 2 bản tối (tham chiếu, Won't). Mỗi khung có `id`, mở trực tiếp bằng `index.html#scr-xx` (vd `#scr-09-back`, `#scr-06-map`, `#scr-34`, `#scr-35-error`). Minh họa SVG gốc: `docs/design/illustrations/`; sprite pixel SVG: `docs/design/pixel/`. Token: UI-UX-SPECIFICATION (hệ thống thiết kế) v2 + mục Pixel layer.
+Figma https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App vẫn giữ 30 khung v1 (trang Screens) để đối chiếu/rollback. **Figma V2 chưa có các khung thay đổi phạm vi** (Figma ngoài tầm với của phiên thiết kế này — hết hạn mức MCP): phải nhập sau bằng plugin html.to.design từ `index.html` (khung `#scr-05`, `#scr-06`, `#scr-06-map`, `#scr-10`, `#scr-21`, `#scr-34`, `#scr-34-offline`, `#scr-35*`, `#scr-02-offline`, panel `#px`), rồi thay màu cứng bằng biến và dựng lại component; concept gốc của Vinh: file Figma "LearningE – Pixel art CR concept".
 
 ## Design Brief
-- **Sản phẩm:** LearningE — ứng dụng Android học tiếng Anh ngoại tuyến cho người mới học (A1–B1), giao diện tiếng Việt.
+- **Sản phẩm:** LearningE — ứng dụng Android học tiếng Anh theo hướng Duolingo: học **offline-first**, có tài khoản trên máy chủ, đồng bộ tiến độ đa thiết bị, bảng xếp hạng XP tuần và lớp game pixel-art; giao diện tiếng Việt.
 - **Mục tiêu thiết kế:** học 10–15 phút mỗi ngày thấy vui và có động lực; mỗi khu vực tính năng nhận ra ngay bằng màu; nội dung học (từ, thẻ, câu hỏi) luôn là tâm điểm.
 - **Cảm giác:** thân thiện, năng động, rõ ràng — màu thương hiệu chàm + điểm nhấn san hô/vàng, nền có hình khối trang trí, minh họa nhân vật sinh viên tự vẽ (UI-UX-SPECIFICATION (hệ thống thiết kế) v2).
-- **Ràng buộc:** dựng được bằng XML Material 3 (shape drawable, VectorDrawable); tương phản chữ ≥ 4,5:1; vùng chạm ≥ 48 dp; chạy tốt từ 360 dp.
+- **Ràng buộc:** dựng được bằng XML Material 3 (shape drawable, VectorDrawable, PNG `nodpi` cho bản đồ); tương phản chữ ≥ 4,5:1; vùng chạm ≥ 48 dp; chạy tốt từ 360 dp; mọi màn hình có dữ liệu mạng phải có trạng thái ngoại tuyến/lỗi.
 
 ## Tham chiếu
 - Mockup v2 (nguồn thiết kế hiện hành): `docs/design/mockups/index.html` — mỗi màn hình có neo `#scr-xx`.
@@ -303,34 +452,36 @@ Figma https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobil
 | SCR-01 Màn hình chờ | mockup: SCR-01 `#scr-01` | `welcome-student` · thương hiệu | 360–412 dp, dọc | Logo, chữ | Vòng tiến trình khi nạp seed (FLOW-010) | Chữ trắng trên gradient thương hiệu ≥ 5.38:1 (UI-UX-SPECIFICATION (hệ thống thiết kế) v2) |
 | SCR-02 Đăng nhập | mockup: SCR-02 `#scr-02` | `welcome-student` · thương hiệu | 360–412 dp | Text field, Button Filled, liên kết Text | — | Ô mật khẩu có nút hiện/ẩn với `contentDescription` "Hiện mật khẩu" |
 | SCR-02 Lỗi / khóa tạm | mockup: SCR-02 `#scr-02-locked` | `welcome-student` · thương hiệu + error | 360–412 dp | Text field State=Error, thẻ cảnh báo, Button vô hiệu | Đếm ngược mỗi giây | Thông báo lỗi đọc được bởi TalkBack (`setError`, live region) |
+| SCR-02 Không có mạng | mockup: SCR-02 `#scr-02-offline` | `welcome-student` · thương hiệu + cảnh báo | 360–412 dp | Text field, Inline network alert, Button "Thử lại" | — | Thẻ cảnh báo là `role=alert` (live region); dữ liệu đã nhập được giữ |
 | SCR-03 Đăng ký | mockup: SCR-03 `#scr-03` | `onboarding-goal` · thương hiệu | 360–412 dp, cuộn dọc | Top app bar, 6 Text field (có Dropdown câu hỏi bảo mật), Button | — | Gợi ý định dạng dưới trường; lỗi tại đúng trường (AC-001.3) |
 | SCR-25 Quên mật khẩu bước 1 | mockup: SCR-25 `#scr-25-step1` | `reminder-bell` · thương hiệu | 360–412 dp | Top app bar, Text field, Button | — | — |
 | SCR-25 Quên mật khẩu bước 2 | mockup: SCR-25 `#scr-25-step2` | — · thương hiệu + error | 360–412 dp | Thẻ câu hỏi, Text field Error, Button | — | Số lần thử còn lại nằm trong chữ lỗi, không chỉ màu |
 | SCR-04 Thiết lập bước 1 (cấp độ) | mockup: SCR-04 `#scr-04-step1` | `onboarding-level` · Học | 360–412 dp | Stepper, Answer option (chọn 1), Button | Chuyển bước shared axis X | Nhóm lựa chọn là `RadioGroup` ngữ nghĩa |
 | SCR-04 Thiết lập bước 2 (mục tiêu) | mockup: SCR-04 `#scr-04-step2` | `onboarding-goal` · Tiến độ | 360–412 dp | Stepper, Answer option, Button | Như trên | Như trên |
 | SCR-04 Thiết lập bước 3 (nhắc học) | mockup: SCR-04 `#scr-04-step3` | `onboarding-reminder` · Luyện tập | 360–412 dp | Thẻ giờ (mở TimePicker), List item + công tắc, Button | Như trên | Xin `POST_NOTIFICATIONS` khi bật công tắc |
-| SCR-05 Trang chủ | mockup: SCR-05 `#scr-05`, `#scr-05-dark` | `streak-mascot` · thương hiệu (thẻ chính) + Học (thứ cấp) + Luyện thi (dòng phụ) | 360–412 dp; nút chính nằm trên nếp gấp | Phân cấp 1 hành động: (1) lời chào + huy hiệu chuỗi ở đầu; (2) **thẻ chính "Phiên học hôm nay"** nền gradient: tổng số thẻ + thời gian ước tính, 2 chip (thẻ cần ôn, từ mới), mục tiêu ngày + Progress bar, linh vật, **một** nút Filled 56 dp "Bắt đầu học" (ôn tập trước, rồi từ mới); (3) thẻ thứ cấp "Học tiếp chủ đề" (icon chủ đề, tiến độ, mũi tên); (4) dòng phụ viền mảnh "Thử một đề luyện thi"; Bottom navigation. Không còn hàng thống kê (đã có ở SCR-21) và 4 lối tắt trùng thanh điều hướng | Số liệu cập nhật không animation | Huy hiệu chuỗi có `contentDescription` "Chuỗi 5 ngày học"; nút chính đọc "Bắt đầu học, 16 thẻ, khoảng 8 phút" |
-| SCR-06 Danh sách chủ đề | mockup: SCR-06 `#scr-06` | `onboarding-level` · Học | Lưới 2 cột (360 dp) / 2 cột rộng hơn (412 dp) | Filter chip, Topic card, Bottom navigation | Ripple khi chạm | Mỗi thẻ đọc "Gia đình, A1, đã thuộc 24 trên 30 từ" |
+| SCR-05 Trang chủ | mockup: SCR-05 `#scr-05`, `#scr-05-dark` (tham chiếu, Won't) | `streak-mascot` + huy hiệu pixel · thương hiệu (thẻ chính) + Học (thứ cấp) + Luyện thi + Tiến độ (dòng phụ) | 360–412 dp; nút chính nằm trên nếp gấp | Phân cấp 1 hành động: (1) lời chào + **huy hiệu chuỗi ngày pixel** (ngọn lửa 10 × 13 px × 2 dp + "5 ngày", nền `feat_streak_decor`) ở đầu; (2) **thẻ chính "Phiên học hôm nay"** nền gradient: tổng số thẻ + thời gian ước tính, 2 chip (thẻ cần ôn, từ mới), mục tiêu ngày + Progress bar, linh vật, **một** nút Filled 56 dp "Bắt đầu học"; (3) thẻ thứ cấp "Học tiếp chủ đề" (icon chủ đề, tiến độ x/20 từ); (4) dòng phụ viền mảnh "Thử một đề luyện thi"; (5) dòng phụ viền mảnh **"Bảng xếp hạng tuần"** (cúp pixel 2 dp, "Hạng 7 · 340 XP · còn 3 ngày") mở SCR-34; Bottom navigation. Ngoại tuyến: thanh Offline banner, dòng xếp hạng hiện bản lưu | Số liệu cập nhật không animation | Huy hiệu chuỗi có `contentDescription` "Chuỗi 5 ngày học, mở Tiến độ"; nút chính đọc "Bắt đầu học, 16 thẻ, khoảng 8 phút"; dòng xếp hạng đọc "Bảng xếp hạng tuần, hạng 7, 340 XP" |
+| SCR-06 Danh sách chủ đề — chế độ Lưới (mặc định) | mockup: SCR-06 `#scr-06` | `onboarding-level` · Học | Lưới 2 cột (360 dp) / 2 cột rộng hơn (412 dp) | Filter chip, **View toggle Lưới \| Bản đồ** (cạnh bộ lọc), Topic card, Bottom navigation | Ripple khi chạm | Mỗi thẻ đọc "Gia đình, A1, đã thuộc 16 trên 20 từ"; công tắc: "Xem dạng lưới" / "Xem dạng bản đồ", `stateDescription` "đang chọn"; lựa chọn được nhớ (cài đặt người dùng) |
+| SCR-06 Chủ đề — chế độ **Bản đồ** | mockup: SCR-06 `#scr-06-map` | Pixel layer: 15 công trình + địa hình + avatar · Học | 360–412 dp; bản đồ cuộn dọc (90 px × 4 dp = 360 dp rộng; mở khóa theo cấp độ) | Hero Học thu gọn + segmented, View toggle, địa hình pixel, Công trình pixel (64 dp) + Map label, Avatar pixel, thẻ **"Đang học … Học tiếp"** (docked trên Bottom navigation, 76 dp) | Tự cuộn tới chủ đề đang học khi mở; avatar đứng yên; không hoạt ảnh bản đồ | Nhóm công trình + nhãn là một vùng bấm ≥ 48 dp: "Gia đình, A1, đã thuộc 20 trên 20 từ, 3 sao" · "Trường học, A2, đang khóa, mở ở cấp A2"; thứ tự TalkBack T01 → T15; chữ nằm ngoài sprite |
 | SCR-07 Danh sách từ | mockup: SCR-07 `#scr-07` | — · Học | 360–412 dp | Top app bar, thẻ tóm tắt, Button Filled + Outlined, Word row, Status chip | — | Nút yêu thích là toggle có trạng thái đọc được |
 | SCR-08 Chi tiết từ | mockup: SCR-08 `#scr-08` | — · Học (thẻ tint + trang trí) | 360–412 dp | Top app bar, thẻ từ, 3 nút tròn (loa, yêu thích, sổ tay), thẻ nghĩa/ví dụ/trạng thái | — | Nút tròn 48 dp; IPA dùng font Noto Sans |
 | SCR-09 Flashcard mặt trước | mockup: SCR-09 `#scr-09-front` | — · Học (tròn tint, chấm bi trên thẻ) | Chỉ dọc | Thanh tiến độ phiên, Flashcard Side=Front | Lật thẻ rotationY 350 ms; tắt khi "Xóa hiệu ứng" | Thẻ là nút "Lật thẻ"; TalkBack đọc từ + phiên âm |
-| SCR-09 Flashcard mặt sau | mockup: SCR-09 `#scr-09-back`, `#scr-09-dark` | — · Học | Chỉ dọc | Flashcard Side=Back, Button Danger "Chưa nhớ", Button Success "Đã nhớ" | Nút đánh giá hiện sau khi lật | Nút có chữ, không chỉ màu đỏ/xanh |
-| SCR-10 Kết quả phiên | mockup: SCR-10 `#scr-10` | `celebration` · Tiến độ + Học | 360–412 dp | 3 ô số liệu, Button Filled + Text | Hiệu ứng confetti nhẹ (tùy chọn, tắt khi "Xóa hiệu ứng") | — |
-| SCR-12 Luyện tập | mockup: SCR-12 `#scr-12` | `grammar-book`, `exam-prep` · Luyện tập (+ thẻ Luyện thi) | 360–412 dp | 2 thẻ lối tắt (Ngữ pháp, Lịch sử), hàng chủ đề + Button Tonal, Bottom navigation | — | — |
+| SCR-09 Flashcard mặt sau | mockup: SCR-09 `#scr-09-back`, `#scr-09-dark` (tham chiếu, **Won't**) | — · Học | Chỉ dọc | Flashcard Side=Back, Button Danger "Chưa nhớ", Button Success "Đã nhớ" | Nút đánh giá hiện sau khi lật | Nút có chữ, không chỉ màu đỏ/xanh |
+| SCR-10 Kết quả phiên | mockup: SCR-10 `#scr-10` | Pixel: ngọn lửa theo `FlameStage` + cúp + confetti · Tiến độ + Học | 360–412 dp, cuộn dọc | Cảnh ăn mừng (ngọn lửa 96 × 120 dp + cúp 80 dp + confetti pixel), tiêu đề + chip "+29 XP", 3 ô số liệu (**Thẻ đã ôn · Trả lời đúng % · Chuỗi ngày**), thẻ **"Thẻ đã đổi hộp"** (5 rương Leitner với số thẻ sau phiên + chip chênh lệch +/−), Button Filled **"Xong"** + Text "Học tiếp chủ đề" | Confetti ≤ 1,2 s một lần; lửa 2 khung 400 ms; **tắt khi "Xóa hiệu ứng"** | Đọc "Tuyệt vời, Minh. Đã ôn 16 thẻ, đúng 81 phần trăm, chuỗi 6 ngày, cộng 29 XP"; mỗi rương "Hộp 3, 7 thẻ, tăng 1"; +/− là chữ, không chỉ màu |
+| SCR-12 Luyện tập | mockup: SCR-12 `#scr-12` | `grammar-book`, `exam-prep` · Luyện tập (+ thẻ Luyện thi) | 360–412 dp | 2 thẻ lối tắt (Ngữ pháp **— Won't, ẩn ở bản này**, Lịch sử), hàng chủ đề + Button Tonal, Bottom navigation | — | — |
 | SCR-13 Quiz trắc nghiệm (đã trả lời sai) | mockup: SCR-13 `#scr-13-mcq` | — · Luyện tập + success/error | Chỉ dọc | Thanh tiến độ, Answer option Wrong/Correct/Default, thẻ phản hồi, Button | Đổi màu đáp án 200 ms | Đúng/sai có icon ✓/✗ và chữ "Chưa đúng" |
 | SCR-13 Quiz điền từ | mockup: SCR-13 `#scr-13-fill` | — · Luyện tập | Chỉ dọc | Thẻ câu, Text field Focused, Button "Kiểm tra" | — | Bàn phím tự mở, `imeOptions=actionDone` |
 | SCR-13 Quiz sắp xếp câu (đúng) | mockup: SCR-13 `#scr-13-reorder` | — · Luyện tập + success | Chỉ dọc | Dòng đáp án + kho từ (Filter chip), thẻ phản hồi Success, Button Success | Ô từ di chuyển 150 ms | Mỗi ô từ là nút đọc được |
 | SCR-14 Kết quả quiz | mockup: SCR-14 `#scr-14` | `celebration` · Luyện tập | 360–412 dp | Vòng điểm, thẻ câu sai, Button Filled + Text | Vòng điểm chạy 0 → điểm trong 600 ms | Điểm đọc "80 điểm, 8 trên 10 câu đúng" |
 | SCR-15 Lịch sử quiz | mockup: SCR-15 `#scr-15` | — · Luyện tập (huy hiệu theo nguồn: Học/Luyện thi/Bộ từ) | 360–412 dp | Top app bar, thẻ lượt làm | — | Màu điểm (xanh/cam/đỏ) luôn kèm con số |
-| SCR-16 Danh sách ngữ pháp | mockup: SCR-16 `#scr-16` | `grammar-book` · Luyện tập | 360–412 dp | Top app bar, thẻ bài + Level badge | — | — |
-| SCR-17 Chi tiết bài ngữ pháp | mockup: SCR-17 `#scr-17` | — · Luyện tập (thẻ công thức trong hero) | 360–412 dp, cuộn dọc | Thẻ công thức, cách dùng, ví dụ (nút loa), lỗi thường gặp, Button | — | Đánh dấu "đã đọc" khi cuộn tới cuối (FLOW-006) |
-| SCR-18 Tra từ (có kết quả) | mockup: SCR-18 `#scr-18` | — · thương hiệu | 360–412 dp | Search bar, Filter chip (Kết quả/Yêu thích/Sổ tay), Word row, Bottom navigation | Debounce 250 ms | Số kết quả đọc qua live region |
-| SCR-18 Tra từ (không có kết quả) | mockup: SCR-18 `#scr-18-empty` | `empty-search` · thương hiệu | 360–412 dp | Search bar, Empty state, Button Tonal | — | — |
-| SCR-21 Tiến độ | mockup: SCR-21 `#scr-21` | `streak-mascot` · Tiến độ | 360–412 dp, cuộn dọc | Stat card, biểu đồ cột 7 ngày, thẻ trạng thái từ, Progress bar theo chủ đề | Cột mọc lên 300 ms | Biểu đồ có `contentDescription` liệt kê số hoạt động từng ngày |
+| SCR-16 Danh sách ngữ pháp — **Không làm trong phiên bản này** (REQ-008 Won't, thay đổi phạm vi C1; giữ khung để truy vết) | mockup: SCR-16 `#scr-16` | `grammar-book` · Luyện tập | 360–412 dp | Top app bar, thẻ bài + Level badge | — | — |
+| SCR-17 Chi tiết bài ngữ pháp — **Không làm trong phiên bản này** (Won't) | mockup: SCR-17 `#scr-17` | — · Luyện tập (thẻ công thức trong hero) | 360–412 dp, cuộn dọc | Thẻ công thức, cách dùng, ví dụ (nút loa), lỗi thường gặp, Button | — | Đánh dấu "đã đọc" khi cuộn tới cuối (FLOW-006) |
+| SCR-18 Tra từ (có kết quả) — **Could** (REQ-009 hạ xuống Could, thay đổi phạm vi C7) | mockup: SCR-18 `#scr-18` | — · thương hiệu | 360–412 dp | Search bar, Filter chip (Kết quả/Yêu thích/Sổ tay), Word row, Bottom navigation | Debounce 250 ms | Số kết quả đọc qua live region |
+| SCR-18 Tra từ (không có kết quả) — **Could** | mockup: SCR-18 `#scr-18-empty` | `empty-search` · thương hiệu | 360–412 dp | Search bar, Empty state, Button Tonal | — | — |
+| SCR-21 Tiến độ | mockup: SCR-21 `#scr-21` | Pixel: ngọn lửa `FlameStage` + 5 rương + huy hiệu lửa · Tiến độ | 360–412 dp, cuộn dọc | Hero Tiến độ: "Chuỗi hiện tại **N ngày liên tiếp**" + **ngọn lửa pixel lớn** (96 × 120 dp, giai đoạn theo chuỗi) + kỷ lục; thẻ **giai đoạn ngọn lửa** (thanh "5/7 ngày — còn 2 ngày nữa lên giai đoạn 3" + thang 4 huy hiệu 1/3/7/30); thẻ **"Rương ôn tập"**: 5 rương (3 dp) với số thẻ mỗi hộp + khoảng ôn 1/2/4/7/14 ngày + Button Filled **"Ôn N thẻ đến hạn"** (mở SCR-09 nguồn ôn tập; vô hiệu khi N = 0); biểu đồ cột 7 ngày; (cuộn) Stat card, trạng thái từ, theo chủ đề | Cột mọc lên 300 ms; lửa 2 khung 400 ms (tắt khi "Xóa hiệu ứng") | Lửa: "Chuỗi 5 ngày, giai đoạn 2, còn 2 ngày nữa lên giai đoạn 3"; rương: "Hộp 1, 12 thẻ, ôn lại sau 1 ngày"; biểu đồ có `contentDescription` liệt kê số hoạt động từng ngày |
 | SCR-22 Tôi — hồ sơ & cài đặt | mockup: SCR-22 `#scr-22` | `welcome-student` (avatar) · thương hiệu; huy hiệu mục theo nhóm | 360–412 dp | Thẻ hồ sơ, List item (6 + 2), Bottom navigation | — | "Xóa tài khoản" màu error + hộp thoại xác nhận nhập mật khẩu |
 | SCR-23 Đổi mật khẩu | mockup: SCR-23 `#scr-23` | — · thương hiệu | 360–412 dp | Top app bar, 3 Text field, Button | — | — |
 | SCR-24 Giới thiệu | mockup: SCR-24 `#scr-24` | `welcome-student` · thương hiệu | 360–412 dp | Top app bar, thẻ thông tin | — | — |
-| SCR-26 Bộ của tôi | mockup: SCR-26 `#scr-26`, `#scr-26-empty` | `onboarding-level` (header tab Học), `empty-decks` (rỗng) · Học + Bộ từ | 360–412 dp | Deck card, Segmented control (Chủ đề có sẵn / Bộ của tôi), nút Import (Tonal) + Tạo bộ (Outlined), Empty state | — | Thẻ bộ đọc "tên, ngôn ngữ, x từ, y thẻ cần ôn" |
+| SCR-26 Bộ của tôi | mockup: SCR-26 `#scr-26`, `#scr-26-empty` | `onboarding-level` (header tab Học), `empty-decks` (rỗng) · Học + Bộ từ | 360–412 dp | **Deck card "Yêu thích" (bộ ảo, màu Bộ từ, icon trái tim, khóa chỉ đọc) ghim đầu danh sách**, Deck card, Segmented control (Chủ đề có sẵn / Bộ của tôi), nút Import (Tonal) + Tạo bộ (Outlined), Empty state | — | Thẻ bộ đọc "tên, ngôn ngữ, x từ, y thẻ cần ôn" |
 | SCR-27 Tạo/sửa bộ | mockup: SCR-27 `#scr-27`, `#scr-27-edit` | `empty-decks` · Bộ từ | 360–412 dp | Text field (tên, mô tả), Dropdown ngôn ngữ, Button | — | Ô ngôn ngữ khóa khi bộ đã có từ, có chữ giải thích |
 | SCR-19 Chi tiết bộ (thay "Sổ tay"; Sổ tay của tôi là bộ mặc định) | mockup: SCR-19 `#scr-19` | — · Bộ từ | 360–412 dp | Thẻ tóm tắt bộ + Học / Quiz / Export, Word row, FAB "Thêm từ" | — | Bộ có sẵn ẩn nút sửa/xóa |
 | SCR-20 Thêm/sửa từ (thay "Thêm từ vào sổ tay") | mockup: SCR-20 `#scr-20` | — · Bộ từ | 360–412 dp | Text field: từ, cách đọc (nhãn theo ngôn ngữ), nghĩa, ví dụ, bản dịch ví dụ | — | Nhãn "cách đọc" đổi theo BR-052 |
@@ -340,8 +491,10 @@ Figma https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobil
 | SCR-31 Làm bài thi thử | mockup: SCR-31 `#scr-31`, `#scr-31-grid`, `#scr-31-warning` | — · Luyện thi (+ Tiến độ cho Đánh dấu, error khi < 2 phút) | Chỉ dọc | Thanh đồng hồ (Timer chip), bảng số câu, Answer option, nút Đánh dấu / Trước / Sau / Nộp | Đồng hồ đổi màu error khi < 2 phút | Đồng hồ thông báo TalkBack mỗi 5 phút và lúc còn 1 phút |
 | SCR-32 Kết quả thi thử | mockup: SCR-32 `#scr-32` | `celebration` · Luyện thi | 360–412 dp | Vòng điểm, thời gian, danh sách câu (đúng/sai + giải thích), ghi chú điểm luyện tập | — | — |
 | SCR-33 Tài nguyên chính thức | mockup: SCR-33 `#scr-33` | `resources-globe` · Luyện thi | 360–412 dp | List item có icon mở ngoài | — | Nút đọc "Mở trang … trong trình duyệt" |
+| SCR-34 Bảng xếp hạng tuần | mockup: SCR-34 `#scr-34`, `#scr-34-offline` | Pixel: cúp, huy chương 1–3, avatar đầu, huy hiệu lửa · Tiến độ | 360–412 dp; danh sách cuộn, thanh "Bạn" ghim đáy | Hero Tiến độ (app bar "Bảng xếp hạng" + "Tuần 46 · 09/11 – 15/11", chip đếm ngược "Kết thúc sau 3 ngày 04:12", cúp), dòng "Top 50 theo XP tuần · Cập nhật lúc …", Rank row × tối đa 50, Pinned rank bar, Offline banner | Danh sách mở không animation; đếm ngược cập nhật mỗi phút | Mỗi dòng: "Hạng 7, Bạn, 340 XP, chuỗi 5 ngày"; thanh ghim `role=status`; huy chương có chữ hạng trong mô tả, không chỉ hình |
+| SCR-35 Trạng thái đồng bộ | mockup: SCR-35 `#scr-35` (chờ đẩy), `#scr-35-ok`, `#scr-35-syncing`, `#scr-35-error`, `#scr-35-offline` | — · thương hiệu (+ success / error / surface_variant theo trạng thái) | 360–412 dp | Top app bar "Đồng bộ", Sync status card, thẻ chi tiết (Lần đồng bộ cuối · Thay đổi chờ đẩy · Lỗi gần nhất · Máy chủ — bản debug), Button Filled **"Đồng bộ ngay"** ("Thử lại" khi lỗi; vô hiệu khi đang đồng bộ/ngoại tuyến), Feedback banner Thông tin | Spinner/thanh tiến trình khi đang đồng bộ; tắt khi "Xóa hiệu ứng" | Trạng thái là chữ + icon (không chỉ màu); tiêu đề trạng thái là live region; nút vô hiệu có chữ giải thích |
 
-Màn hình không vẽ riêng (dùng lại khung trên): ôn tập và học sổ tay dùng SCR-09; bài tập ngữ pháp dùng SCR-13 dạng trắc nghiệm; hộp thoại (xác nhận thoát quiz, đăng xuất, xóa tài khoản) dùng `MaterialAlertDialog` mặc định với chữ trong SRS §Ngoại lệ.
+Màn hình không vẽ riêng (dùng lại khung trên): trạng thái online của SCR-03/SCR-25 (cùng mẫu SCR-02 `#scr-02-offline`, xem mục thay đổi phạm vi bên dưới); ôn tập và học sổ tay dùng SCR-09; bài tập ngữ pháp dùng SCR-13 dạng trắc nghiệm; hộp thoại (xác nhận thoát quiz, đăng xuất, xóa tài khoản) dùng `MaterialAlertDialog` mặc định với chữ trong SRS §Ngoại lệ.
 
 ## Bố cục chi tiết màn hình mới
 Đã vẽ trong mockup v2 (`index.html#scr-26` … `#scr-33`); nội dung dưới đây là đặc tả gốc, màu và trang trí theo UI-UX-SPECIFICATION (hệ thống thiết kế) v2 (khu vực Bộ từ / Luyện thi). Khung 360 × 800 dp, nền `background`, lề 16 dp (`space_4`), khoảng giữa khối 10–16 dp. Thứ tự liệt kê là từ trên xuống. Khi dựng lại trên Figma: đặt khung ở hàng y = 3600 trang Screens, tên `SCR-xx <tên>`.
@@ -356,7 +509,7 @@ Màn hình không vẽ riêng (dùng lại khung trên): ôn tập và học s�
 **SCR-26 Bộ của tôi** (tab Học, thanh tab dưới đang chọn "Học")
 1. Tiêu đề "Học" (title-l) + Filter chip 2 lựa chọn: "Chủ đề có sẵn" / "Bộ của tôi" (đang chọn).
 2. Hàng 2 nút: Button Tonal "Import" (icon plus) · Button Outlined "Tạo bộ".
-3. Danh sách Deck card: "Sổ tay của tôi" (Default, 14 từ, 5 cần ôn) · "Từ vựng công việc" (Mine, EN, 24 từ) · "Tiếng Nhật cơ bản" (Builtin, JA, 20 từ, ẩn huy hiệu).
+3. Danh sách Deck card: **"Yêu thích" (bộ ảo, 9 từ, chỉ đọc — mở SCR-19 đã lọc)** · "Sổ tay của tôi" (Default, 14 từ, 5 cần ôn) · "Từ vựng công việc" (Mine, EN, 24 từ) · "Tiếng Nhật cơ bản" (Builtin, JA, 20 từ, ẩn huy hiệu).
 4. Trạng thái rỗng (khung phụ): icon notebook 56 dp, "Bạn chưa có bộ từ nào", nút "Tạo bộ đầu tiên".
 
 **SCR-27 Tạo / sửa bộ**
@@ -372,6 +525,8 @@ Giữ bố cục cũ, đổi: tiêu đề = tên bộ; thẻ tóm tắt có 3 n�
 
 **SCR-20 Thêm/sửa từ (cập nhật khung 14-778)**
 Đổi nhãn: "Từ *", "Cách đọc" (chữ phụ đổi theo ngôn ngữ: "Phiên âm (IPA)" / "Cách đọc (kana/romaji)" / "Pinyin" / "Romaja"), "Nghĩa *", "Ví dụ", "Bản dịch ví dụ". Khung phụ lỗi: "Từ này đã có trong bộ".
+
+**Yêu thích**: nút trái tim ở SCR-07 (mỗi Word row) và SCR-08 (nút tròn) là nơi bật/tắt; mục **"Yêu thích"** là *bộ ảo chỉ đọc* ghim đầu danh sách SCR-26, mở SCR-19 đã lọc các từ có trái tim (Học / Quiz dùng được; không sửa/xóa/thêm từ; trạng thái rỗng "Chưa có từ yêu thích — bấm trái tim khi xem từ"). Tab Yêu thích trong Tra từ (SCR-18, Could) chỉ là lối tắt tới cùng danh sách.
 
 **SCR-28 Xem trước import**
 1. Top app bar "Xem trước import"; dòng phụ tên tệp "tu_vung_cong_viec.csv · 102 dòng".
@@ -410,6 +565,63 @@ Top app bar "Tài nguyên chính thức"; 3 List item có icon mở ngoài: "TOE
 **Sửa khung cũ** (đã làm trong mockup v2)
 - SCR-01 và SCR-24: tên ứng dụng **LearningE**.
 - 2 khung bản tối `#scr-05-dark`, `#scr-09-dark`: cùng tên token, giá trị Color Dark.
+
+## Màn hình mới và cập nhật  (online + lớp pixel)
+Khung 360 × 800 dp, nền `background`, lề 16 dp. Quy tắc pixel: UI-UX-SPECIFICATION (hệ thống thiết kế) §Pixel layer (lưới 1 px = 4/3/2 dp, chữ ngoài sprite, không gradient). Thứ tự liệt kê từ trên xuống.
+
+**Pattern chung "Đang ngoại tuyến"** (mọi màn hình cần mạng: SCR-05, 21, 22, 34, 35)
+1. Thanh **Offline banner** 32 dp ngay dưới thanh trạng thái: icon wifi-off 16 dp + "Đang ngoại tuyến · sẽ đồng bộ khi có mạng" (caption SemiBold), nền `surface_variant`, chữ `on_surface` (14,5:1). Không chặn tương tác; nội dung bị đẩy xuống 32 dp. Hiện khi `NetworkCallback.onLost`, ẩn ngay khi `onAvailable` (kèm đồng bộ ngầm). Không dùng Snackbar cho trạng thái này (không biến mất trước khi hết mạng).
+2. Tính năng học (SCR-06…10, 13, 14, 26…32) **hoạt động bình thường** khi ngoại tuyến (NFR-N1): không hiện lỗi; chỉ SCR-34 (bảng xếp hạng), SCR-35 (đồng bộ ngay), tải nội dung mới và đăng nhập/đăng ký lần đầu cần mạng.
+3. Màn hình cần mạng khi ngoại tuyến: hiện **dữ liệu đã lưu** + dòng "Dữ liệu đã lưu · Cập nhật lúc HH:mm hôm nay"; nút hành động cần mạng vô hiệu kèm chữ giải thích (không để nút bấm không phản hồi).
+4. Lỗi tạm thời (timeout 10 s kết nối / 15 s đọc, NFR-N2): Snackbar "Không kết nối được máy chủ" + "Thử lại"; dữ liệu cục bộ không bị ảnh hưởng.
+
+**Trạng thái online của SCR-02 / SCR-03 / SCR-25** (mockup `#scr-02-offline`; SCR-03 và SCR-25 dùng cùng mẫu)
+| Trạng thái | Hiển thị | Hành vi |
+|---|---|---|
+| Không có mạng | Inline network alert (Feedback banner Cảnh báo, icon wifi-off) đầu thẻ form: "Không có kết nối mạng — Đăng nhập cần Internet. Bật Wi-Fi hoặc dữ liệu di động rồi thử lại." Nút chính đổi thành **"Thử lại"** (icon refresh) | Giữ nguyên dữ liệu đã nhập; không xóa mật khẩu; tự bỏ cảnh báo khi có mạng trở lại |
+| Đang gửi (loading) | Nút chính chuyển trạng thái đang xử lý (spinner thay chữ, vô hiệu), các trường bị khóa; hết giờ 10 s → thành lỗi máy chủ | Chặn bấm đúp |
+| Lỗi máy chủ (5xx, timeout) | Feedback banner Lỗi (`error_container`): "Máy chủ đang bận. Dữ liệu của bạn không bị mất — thử lại sau ít phút." + nút "Thử lại" | Giữ dữ liệu nhập; không đếm vào giới hạn đăng nhập |
+| Sai thông tin / bị giới hạn | Như SCR-02 `#scr-02-locked` (lỗi tại trường, khóa tạm 5 lần/phút BR-057..061, đếm ngược mỗi giây) | — |
+| **Phiên hết hạn (401)** | Màn hình đăng nhập SCR-02 với Feedback banner Thông tin (`primary_container`): "Phiên đăng nhập đã hết hạn. Đăng nhập lại để tiếp tục — dữ liệu chưa đồng bộ vẫn được giữ trên máy." Email điền sẵn | Xóa ngăn xếp; **không xóa dữ liệu chưa đẩy**; sau đăng nhập lại đồng bộ tiếp (BR-057..061) |
+
+**SCR-06 chế độ Bản đồ** (`#scr-06-map`)
+1. Hero Học thu gọn (không minh họa): tiêu đề "Học" + segmented "Chủ đề có sẵn / Bộ của tôi".
+2. Hàng công cụ: chữ phụ "15 chủ đề · mở khóa theo cấp độ" + **View toggle** (Lưới | Bản đồ, đang chọn Bản đồ). Ở chế độ Lưới, toggle nằm bên phải hàng chip cấp độ (`#scr-06`); chip lọc bị ẩn ở chế độ Bản đồ.
+3. Vùng bản đồ (cuộn dọc, rộng 360 dp): địa hình pixel + 15 công trình, xen kẽ trái/phải, cách 144 dp; mỗi công trình có **Map label** bên dưới: tên chủ đề (13 sp SemiBold), 3 sao pixel (BR-072), "x/20 từ". Trạng thái: Hoàn thành (3 sao), Đang học (viền `feat_learn` 2 dp + avatar pixel + thẻ "Bạn ở đây"), Mở chưa học (0 sao), **Khóa** (công trình xám có ổ khóa + "Mở ở cấp A2").
+4. Thẻ docked **"Đang học · Nhà cửa & đồ dùng · 8/20 từ · 1 sao"** + Button Filled "Học tiếp" 44 dp (mở SCR-07 của chủ đề), nằm sát trên Bottom navigation, bo 20 dp phía trên.
+5. Trạng thái: đang tải (khung xương xám, không pixel), rỗng không có (luôn 15 chủ đề), lỗi tải nội dung (Snackbar + "Thử lại", bản đồ vẫn hiện từ seed). Chạm công trình khóa → Snackbar "Hoàn thành cấp A1 hoặc đổi cấp độ trong Hồ sơ để mở chủ đề này".
+
+**SCR-10 Kết quả phiên** (`#scr-10`)
+1. Nền tint `streak_container`, bo dưới 36 dp. Cảnh ăn mừng 124 dp: confetti pixel 90 × 34 px phía sau; ngọn lửa theo `FlameStage` (chuỗi hiện tại) bên trái, cúp 80 dp bên phải, cùng đáy.
+2. "Tuyệt vời, Minh!" (headline) + "Bạn đã ôn xong 16 thẻ đến hạn." + chip "+29 XP" (BR-065..067).
+3. 3 ô số liệu: Thẻ đã ôn · Trả lời đúng (%) · Chuỗi ngày.
+4. Thẻ **"Thẻ đã đổi hộp"** + chú thích "13 lên hộp · 3 về hộp 1": 5 cột (rương 48 × 42 dp, số thẻ sau phiên, chip chênh lệch `+1` / `−3` / `0`, nhãn "Hộp k").
+5. Button Filled "Xong" (về nơi bắt đầu phiên) + Text "Học tiếp chủ đề". Khi **chuỗi lên giai đoạn mới**: thêm dòng "Ngọn lửa đã lên giai đoạn 3!" dưới tiêu đề. Khi ngoại tuyến: XP hiển thị "+29 XP (sẽ được tính khi đồng bộ)".
+
+**SCR-21 Tiến độ** (`#scr-21`): bố cục trong bảng trên. Trạng thái: chuỗi 0 → ngọn lửa tắt (giai đoạn 0) + "Chưa có chuỗi — học hôm nay để thắp lửa"; chưa có thẻ trong rương → số 0 và nút "Ôn 0 thẻ đến hạn" vô hiệu kèm chữ "Hôm nay không có thẻ đến hạn".
+
+**SCR-34 Bảng xếp hạng tuần** (`#scr-34`, `#scr-34-offline`) — vào từ Tôi › Bảng xếp hạng và thẻ lối vào ở Trang chủ (UI-UX-SPECIFICATION (sơ đồ màn hình))
+1. Hero Tiến độ: nút quay lại, "Bảng xếp hạng" + phụ đề "Tuần 46 · 09/11 – 15/11", chip đếm ngược "Kết thúc sau 3 ngày 04:12" (thứ Hai 00:00 → Chủ nhật 23:59, giờ Việt Nam, BR-065..069), cúp pixel 60 dp.
+2. Dòng chú thích "Top 50 theo XP tuần · Cập nhật lúc 20:41 hôm nay".
+3. Danh sách Rank row: hạng 1–3 dùng huy chương pixel (vàng/bạc/đồng), 4+ dùng số; avatar đầu pixel; biệt danh công khai (3–20 ký tự); huy hiệu lửa + "N ngày"; XP bên phải. Dòng của người dùng nền `primary_container` + nhãn "Bạn".
+4. **Pinned rank bar** đáy: "Bạn · Hạng 7 · Còn 22 XP để lên hạng 6 · 340 XP"; nếu ngoài top 50 vẫn hiện hạng thật (vd "Hạng 128").
+5. Trạng thái: đang tải (5 dòng khung xương); **ngoại tuyến** — Offline banner + dữ liệu đã lưu + "Dữ liệu đã lưu · Cập nhật lúc 20:41 hôm nay" (lần tải thành công gần nhất, NFR-N1); chưa có dữ liệu lưu → Empty state "Cần Internet để xem bảng xếp hạng" + nút "Thử lại"; tuần mới chưa có XP → Empty state "Tuần mới vừa bắt đầu — học một phiên để lên bảng"; lỗi máy chủ → Snackbar + "Thử lại" (giữ bản lưu); hòa hạng xếp theo thời điểm đạt XP sớm hơn (BR-069).
+
+**SCR-35 Trạng thái đồng bộ** (`#scr-35`, `-ok`, `-syncing`, `-error`, `-offline`) — vào từ Tôi › Đồng bộ
+1. Top app bar "Đồng bộ".
+2. Sync status card (vòng tròn 56 dp + tiêu đề + mô tả):
+| Trạng thái | Icon · màu | Tiêu đề / mô tả | Nút chính |
+|---|---|---|---|
+| Chờ đẩy | cloud · `primary_container` | "Có thay đổi chờ đẩy lên" — tự đồng bộ khi mở app, sau mỗi phiên học, khi có mạng | "Đồng bộ ngay" (bật) |
+| Đang đồng bộ | refresh · `primary_container` + thanh tiến trình | "Đang đồng bộ…" — "Đẩy 12/20 bản ghi" | "Đang đồng bộ…" (vô hiệu) |
+| Đã đồng bộ | cloud-check · `success_container` / `success` | "Đã đồng bộ" — dữ liệu khớp máy chủ | "Đồng bộ ngay" (bật) |
+| Lỗi | alert · `error_container` / `error` | "Đồng bộ chưa thành công" — dữ liệu vẫn an toàn trên máy | "Thử lại" (bật) |
+| Ngoại tuyến | cloud-off · `surface_variant` + Offline banner | "Đang ngoại tuyến" — vẫn học bình thường | "Đồng bộ ngay" (vô hiệu) |
+3. Thẻ chi tiết: **Lần đồng bộ cuối** (vd "20:41 (2 phút trước)"), **Thay đổi chờ đẩy** (số bản ghi `dirty`, "3 → 0" khi đang đẩy), **Lỗi gần nhất** (chữ lỗi cụ thể, đỏ khi đang ở trạng thái lỗi), **Máy chủ** (chỉ bản debug, cấu hình địa chỉ).
+4. Button "Đồng bộ ngay" 56 dp; Feedback banner Thông tin: "Dữ liệu chưa đồng bộ luôn được giữ trên máy; đăng xuất không làm mất chúng cho tới khi đẩy xong."
+5. Truy cập: tiêu đề trạng thái là live region; nút vô hiệu có chữ giải thích cạnh/dưới; spinner có `contentDescription` "Đang đồng bộ".
+
+**Won't / Could**: Ngữ pháp SCR-16/17 và các lối vào (thẻ Ngữ pháp ở SCR-12) — *Không làm trong phiên bản này* (khung giữ để truy vết, gắn nhãn đỏ trong mockup). Dark mode (`#scr-05-dark`, `#scr-09-dark`, mọi `values-night`) — *Không làm trong phiên bản này*; pixel layer chỉ có bản sáng. Tra từ SCR-18 — Could (làm nếu còn thời gian sau M4).
 
 ## Ánh xạ token (variable Figma → token code)
 Giá trị đầy đủ (sáng · tối) và tỷ lệ tương phản: UI-UX-SPECIFICATION (hệ thống thiết kế) v2 §Color tokens. Gói Figma Starter chỉ cho 1 mode mỗi collection, nên màu sáng và tối là 2 collection cùng tên biến: **Color Light** và **Color Dark** — cập nhật giá trị v2 vào cả hai, thêm nhóm biến `feat/*` và `hero/*`.
@@ -467,9 +679,10 @@ Không dùng: app là Android View + XML, Code Connect của Figma không hỗ t
 2. **Thanh trạng thái** trong Figma chỉ để minh họa; code dùng edge-to-edge (`WindowCompat.setDecorFitsSystemWindows(window, false)`) và đệm theo insets.
 3. **Bottom navigation** hiện ở 5 màn hình gốc của tab, ẩn ở màn hình con (UI-UX-SPECIFICATION (sơ đồ màn hình) §Điều hướng).
 4. **Trạng thái rỗng, lỗi, đang tải** cho mọi danh sách: dùng layout `include` chung (icon + tiêu đề + mô tả + nút), chữ lấy từ SRS §Ngoại lệ.
-5. **Dark mode (REQ-013, Should)**: mockup có 2 khung tối (`#scr-05-dark`, `#scr-09-dark`). Khi hiện thực, map token ở bảng trên vào `values-night/colors.xml`; người kiểm thử kiểm tra tương phản theo UI-UX-SPECIFICATION (hệ thống thiết kế) §Color tokens (109 cặp, thấp nhất 4.56:1).
-6. **Việc còn lại trong Figma**: dựng lại 46 khung v2 theo mockup (mục "Định hướng hình ảnh v2"), nối prototype giữa các khung, điền trang Foundations bằng bảng màu/typography v2. người thiết kế (Vinh) làm trực tiếp trên Figma.
-7. **thay đổi phạm vi / thay đổi phạm vi**: SCR-26..SCR-33 và SCR-19/SCR-20 cập nhật đã có trong mockup v2; lập trình viên dựng theo mockup + UI-UX-SPECIFICATION (hệ thống thiết kế) v2, không cần chờ khung Figma.
+5. **Dark mode (REQ-013) — Won't từ thay đổi phạm vi, không làm trong phiên bản này**: mockup giữ 2 khung tối (`#scr-05-dark`, `#scr-09-dark`) làm tham chiếu; không tạo `values-night`. Nếu làm lại sau: map token ở bảng trên vào `values-night/colors.xml`, người kiểm thử kiểm tương phản (109 cặp, thấp nhất 4.56:1).
+6. **Việc còn lại trong Figma**: dựng lại 55 khung (46 khung v2 + 9 khung thay đổi phạm vi) theo mockup (mục "Định hướng hình ảnh v2"), nối prototype giữa các khung, điền trang Foundations bằng bảng màu/typography v2. người thiết kế (Vinh) làm trực tiếp trên Figma.
+7. **thay đổi phạm vi**: sprite pixel là `docs/design/pixel/*.svg` → VectorDrawable `px_*` (UI-UX-SPECIFICATION (hệ thống thiết kế) §Giao hàng trên Android); bản đồ là PNG `drawable-nodpi` xuất từ `map-terrain.svg`; `FlameStage.of`, sao chủ đề, đếm rương là hàm thuần có unit test; hoạt ảnh tôn trọng "Xóa hiệu ứng". lập trình viên dựng theo mockup `#scr-06-map`, `#scr-10`, `#scr-21`, `#scr-34`, `#scr-35*`.
+8. **thay đổi phạm vi / thay đổi phạm vi**: SCR-26..SCR-33 và SCR-19/SCR-20 cập nhật đã có trong mockup v2; lập trình viên dựng theo mockup + UI-UX-SPECIFICATION (hệ thống thiết kế) v2, không cần chờ khung Figma.
 
 ## Định hướng hình ảnh v2
 - **Ý tưởng**: thương hiệu chàm `#5146E0` + điểm nhấn san hô `#FF7A59` và vàng `#FFC93C`; mỗi khu vực một màu (Học teal, Luyện tập tím, Luyện thi xanh dương, Bộ từ hồng, Tiến độ hổ phách); đầu màn hình là hero gradient có hình khối trang trí; minh họa nhân vật học sinh Việt ở màn hình chờ, onboarding, trạng thái rỗng, kết quả và luyện thi. Chi tiết, quy tắc và tương phản: UI-UX-SPECIFICATION (hệ thống thiết kế) v2.
@@ -480,7 +693,7 @@ Không dùng: app là Android View + XML, Code Connect của Figma không hỗ t
 - **Dựng trên Android**:
   - Màu: `values/colors.xml` + `values-night/colors.xml` theo bảng token; `ThemeOverlay.LearningE.<Nhóm>` cho từng khu vực (gán ở layout gốc).
   - Nền hero: `res/drawable/bg_hero_<nhóm>.xml` = `<shape>` + `<gradient android:startColor android:endColor android:angle="315">` + `<corners android:bottomLeftRadius="28dp" android:bottomRightRadius="28dp">`; vòng tròn mờ = `<shape android:shape="oval">` màu `#14FFFFFF` đặt lệch ra ngoài trong `FrameLayout` (`clipChildren`); chấm bi, sóng đáy = VectorDrawable.
-  - Minh họa: Android Studio *File → New → Vector Asset → Local file (SVG)*, chọn SVG trong `docs/design/illustrations/`, đặt tên `ill_<tên>`; hiển thị bằng `ImageView` (`android:importantForAccessibility="no"` nếu chỉ trang trí). SVG đã giới hạn ở path/rect/circle/ellipse/polygon/line/g, tô đơn sắc, không filter/mask/text nên chuyển đổi không mất chi tiết.
+  - Minh họa: Android Studio *File → New → Vector Asset → Local file (SVG)*, chọn SVG trong `docs/design/illustrations/`, đặt tên `ill_<tên>`; hiển thị bằng `ImageView` (`android:importantForAccessibility="no"` nếu chỉ trang trí). Từ thay đổi phạm vi (11/11/2026) minh họa và icon chủ đề là pixel-art: SVG chỉ gồm `<path>` hình chữ nhật một màu, tọa độ nguyên (lưới 60 × 50 → 240 × 200 dp; icon 16 × 16 → 48 dp), không filter/mask/text nên chuyển đổi không mất chi tiết; quy tắc ở UI-UX-SPECIFICATION (hệ thống thiết kế) §Illustration & icon system.
   - Feature badge: `FrameLayout` 40 dp nền `shape` bo 12 dp màu `feat_*` + `ImageView` icon 20 dp tint `on_feat_*`.
   - Font: Baloo 2 (tiêu đề, số lớn) + Lexend (nội dung) + Noto Sans (IPA) trong `res/font/`.
 
@@ -494,4 +707,15 @@ Kiểm tra bản mockup v2 ngày 2026-11-10 (`docs/design/mockups/index.html`):
 | Bố cục trang | Đo `scrollWidth` ở 360, 390, 768, 1440 px | Không cuộn ngang ở mọi độ rộng |
 | Minh họa | 13 tệp SVG parse XML, chỉ dùng phần tử VectorDrawable hỗ trợ (không filter/mask/clip/text/ảnh nhúng) | Đạt; chưa thử nhập Vector Asset trong Android Studio |
 | Rà mắt | Xem SCR-05 Trang chủ và SCR-30 Luyện thi trong trình duyệt | Có hero màu, linh vật, màu theo nhóm tính năng; chữ rõ |
+
+Kiểm tra bổ sung thay đổi phạm vi (2026-11-10, render bằng Playwright + Edge, 1440 × 900, dsf 2, chờ `document.fonts.ready`; ảnh chụp từng khung đã xem):
+| Hạng mục | Cách kiểm | Kết quả |
+|---|---|---|
+| Khung mới/cập nhật | Chụp `#scr-05`, `#scr-06`, `#scr-06-map`, `#scr-10`, `#scr-21`, `#scr-34`, `#scr-34-offline`, `#scr-35`, `#scr-35-ok/-syncing/-error/-offline`, `#scr-02-offline` và panel `#px` | 14 khung + panel hiển thị đúng; sửa lặp: sao pixel, tên nhãn bị cắt, thẻ "Đang học" lộ nhãn dưới, thanh offline xuống dòng |
+| Số khung | Đếm `.phone` | 55 khung (46 cũ + 9 mới) |
+| Cuộn ngang | `scrollWidth` ở 360, 390, 768, 1440 px | Không cuộn ngang |
+| Tương phản chữ mới | Tính WCAG cho 20 cặp (tag "Bạn ở đây" 5,47; thanh ghim 6,36; chip +1 4,57; chip −/nhãn phụ 6,03; Won't 4,79; Offline banner 14,48; chữ ink trên hero vàng 9,02, trên chip hero 6,68…) | Thấp nhất 4,57:1 — đạt AA |
+| Sprite | 51 SVG chỉ `<path>`+`<svg>`, không filter/text; đếm path | 2–13 path mỗi sprite (< 30); chưa thử nhập Vector Asset trong Android Studio |
+| Số liệu mẫu | Đối chiếu PRD §Seed | Dùng 20 từ/chủ đề (x/20) cho SCR-05/06/21 + khung mới; các khung SCR-07/08/09… cũ có thể còn "/30" cần rà (xem câu hỏi mở) |
+
 Còn lại: dựng lại trên Figma từ mockup (T-102); kiểm tra lại TC-NFR-X1 trên thiết bị khi có code giao diện.

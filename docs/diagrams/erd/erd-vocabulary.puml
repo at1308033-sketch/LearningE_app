@@ -1,6 +1,6 @@
 @startuml
 !include ../_style.puml
-title ERD — Từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ
+title ERD — Từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ (có cột đồng bộ — CR-006)
 hide circle
 
 entity "users" as users #F4F4F8 {
@@ -21,6 +21,7 @@ entity "languages" as lang {
 entity "decks" as decks {
   * id : INTEGER <<PK>>
   --
+  * uuid : TEXT <<UK>> -- code (bộ có sẵn) | UUID v4
   code : TEXT <<UK>> -- T01, X01, J01 | NULL
   owner_user_id : INTEGER <<FK>> -- NULL = có sẵn
   * name : TEXT
@@ -33,12 +34,17 @@ entity "decks" as decks {
   is_default : INTEGER -- 1 = Sổ tay của tôi
   sort_order : INTEGER
   created_at : INTEGER
-  .. UNIQUE(owner_user_id, name_norm) ..
+  * updated_at : INTEGER
+  * deleted : INTEGER -- tombstone
+  * dirty : INTEGER
+  server_seq : INTEGER
+  .. UNIQUE(owner_user_id, name_norm) WHERE deleted = 0 ..
 }
 
 entity "words" as words {
   * id : INTEGER <<PK>>
   --
+  * uuid : TEXT <<UK>> -- uid T01-0007 | UUID v4
   * deck_id : INTEGER <<FK>>
   * term : TEXT
   reading : TEXT
@@ -51,7 +57,11 @@ entity "words" as words {
   search_meaning : TEXT
   sort_order : INTEGER
   created_at : INTEGER
-  .. UNIQUE(deck_id, search_term) ..
+  * updated_at : INTEGER
+  * deleted : INTEGER
+  * dirty : INTEGER
+  server_seq : INTEGER
+  .. UNIQUE(deck_id, search_term) WHERE deleted = 0 ..
 }
 
 entity "card_progress" as cp {
@@ -64,7 +74,10 @@ entity "card_progress" as cp {
   first_learned_date : TEXT
   last_reviewed_at : INTEGER
   review_count : INTEGER
-  .. UNIQUE(user_id, word_id) ..
+  * updated_at : INTEGER
+  * dirty : INTEGER
+  server_seq : INTEGER
+  .. UNIQUE(user_id, word_id); khóa đồng bộ = words.uuid ..
 }
 
 entity "favorites" as fav {
@@ -72,6 +85,10 @@ entity "favorites" as fav {
   * word_id : INTEGER <<PK, FK>>
   --
   created_at : INTEGER
+  * updated_at : INTEGER
+  * deleted : INTEGER -- bỏ thích = tombstone
+  * dirty : INTEGER
+  server_seq : INTEGER
 }
 
 users |o--o{ decks : "sở hữu"
@@ -84,6 +101,7 @@ words ||--o{ fav : "được thích"
 
 legend bottom
   * = NOT NULL · Bảng xám = tham chiếu · mọi FK tới users/decks/words: ON DELETE CASCADE
+  Cột đồng bộ: uuid, updated_at (epoch ms), deleted, dirty, server_seq (DATA_MODEL §A); idx_*_dirty WHERE dirty = 1
   Index: idx_decks_owner(owner_user_id, sort_order) · idx_words_deck(deck_id, sort_order)
   idx_words_search(search_term) · idx_progress_due(user_id, next_review_date)
 endlegend

@@ -1,6 +1,7 @@
 @startuml
 !include ../_style.puml
-title Ôn tập Leitner (2/2): kết thúc phiên — ghi study_log và chuỗi ngày trong 1 giao dịch (FLOW-008)
+skinparam dpi 110
+title Ôn tập Leitner (2/2): kết thúc phiên — study_log, chuỗi ngày, xp_events (dirty) trong 1 giao dịch, rồi đồng bộ → xp.recorded → gamification (FLOW-008, CR-007)
 autonumber
 skinparam maxMessageSize 220
 
@@ -9,8 +10,15 @@ participant "FlashcardViewModel" as VM
 participant "StudyService" as S
 participant "ProgressService" as P
 participant "StreakCalculator" as SC
-participant "ProgressRepository\n→ StudyLogDao, SettingsDao" as R
+participant "XpService" as X
+participant "ProgressRepository\n→ StudyLogDao, SettingsDao,\nXpEventDao" as R
 database "SQLite" as DB
+participant "SyncScheduler\n+ SyncManager" as SS
+participant "edge → sync :50053" as SY
+database "sync.db\nxp_events · outbox" as SDB
+participant "relay (sync)" as RL
+participant "gamification :50055" as GM
+database "MongoDB learninge_game\nxp_events · weekly_xp" as MDB
 
 F -> VM : (thẻ cuối đã chấm)
 group Luồng nền AppExecutors.dbWrite
@@ -18,28 +26,42 @@ group Luồng nền AppExecutors.dbWrite
   S -> P : completeSession(REVIEW, today)
   P -> R : runInTransaction(…)
   R -> DB : beginTransaction()
-  R -> DB : INSERT INTO study_log(user_id, activity_type='REVIEW',\nref_id, study_date, created_at)
+  R -> DB : INSERT INTO study_log(uuid, user_id, activity_type='REVIEW',\nref_uuid, study_date, created_at, updated_at, dirty = 1)
   R -> DB : SELECT current_streak, longest_streak, last_study_date\nFROM user_settings WHERE user_id = ?
   P -> SC : next(StreakState, today)
   SC --> P : StreakState mới (BR-031)
   R -> DB : UPDATE user_settings SET current_streak, longest_streak,\nlast_study_date WHERE user_id = ?
+  S -> X : record(CARD_SESSION, remembered, forgotten)
+  X -> X : xp_local = 2 × đã nhớ + 1 × chưa nhớ (BR-065)
+  R -> DB : INSERT INTO xp_events(uuid, source_type = 'CARD_SESSION', ref_uuid,\ncorrect_count, wrong_count, total_count, xp_local, xp_awarded = NULL,\noccurred_at, local_date, updated_at, dirty = 1)
   alt Thành công
     R -> DB : setTransactionSuccessful(); endTransaction()
     P --> S : StreakState
-    S --> VM : Result.ok(SessionSummary: đã nhớ, chưa nhớ, chuỗi)
+    S --> VM : Result.ok(SessionSummary: đã nhớ, chưa nhớ, chuỗi, XP tạm tính, chênh lệch rương)
   else SQLiteException
-    R -> DB : endTransaction() → rollback cả study_log và chuỗi
+    R -> DB : endTransaction() → rollback cả study_log, chuỗi và xp_events
     S --> VM : Result.error(DB)
   end
 end
 VM -> F : LiveData.postValue → luồng main
 alt OK
-  F -> F : Điều hướng SCR-10 Kết quả phiên
+  F -> F : Điều hướng SCR-10 Kết quả phiên (ngọn lửa, cúp, rương +/−)
+  F -> SS : requestSync(SESSION_END) — đẩy card_progress, study_log, xp_events (UC-023)
 else DB
   F -> F : Snackbar "Đã có lỗi khi lưu dữ liệu, vui lòng thử lại"
 end
+== Sau đó: đồng bộ nền (không chặn UI) ==
+SS -> SY : SyncService/Push — lô dirty gồm xp_events (xp_awarded = NULL), study_log, card_progress
+SY -> SDB : BEGIN IMMEDIATE; XpValidator tính xp_awarded (BR-065..BR-068, trần 500 XP/ngày);\nINSERT xp_events + INSERT outbox xp.recorded (gamification, insight) + progress.changed; COMMIT
+SY --> SS : PushResponse: xp_events APPLIED kèm xp_awarded → app ghi đè xp_awarded cục bộ
+RL -> SDB : đọc dòng outbox chưa phát (≤ 200/lô, theo id)
+RL -> GM : EventSink/Publish(batch) + x-internal-auth, deadline 3 s
+GM -> MDB : upsert xp_events theo _id = uuid; tính lại weekly_xp (user, tuần), user_stats.total_xp
+GM --> RL : ack event_id (kể cả bản trùng)
+RL -> SDB : published_at = now cho các dòng được ack
 note over S, P
-  card_progress đã được ghi từng thẻ ở phần 1/2
-  (mỗi lần rate là một câu lệnh độc lập).
+  card_progress đã được ghi từng thẻ ở phần 1/2 (updated_at = giờ máy, dirty = 1).
+  XP hiển thị là xp_local; khi đồng bộ, sync tính xp_awarded (trần 500 XP/ngày, BR-068), app ghi đè giá trị đó.
+  Mongo/gamification ngừng: outbox giữ sự kiện, relay xả lại khi đích SERVING (≤ 60 s, NFR-N6); app không bị ảnh hưởng.
 end note
 @enduml

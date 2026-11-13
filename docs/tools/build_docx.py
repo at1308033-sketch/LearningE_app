@@ -26,7 +26,7 @@ OUT = DOCS / "export"
 DEFAULT = [
     "project/PRD.md", "project/SRS.md", "project/Use-Cases.md", "project/Business-Rules.md",
     "project/Glossary.md", "project/PROJECT-PLAN.md",
-    "engineering/SYSTEM-BLUEPRINT.md", "engineering/DATABASE-DESIGN.md", "engineering/API-SPECIFICATION.md",
+    "engineering/SYSTEM-BLUEPRINT.md", "engineering/DATABASE-DESIGN.md", "engineering/API-SPECIFICATION.md", "engineering/GRPC-API.md", "engineering/SECURITY-THREAT-MODEL.md",
     "engineering/ARCHITECTURE-DECISIONS.md", "engineering/UI-UX-SPECIFICATION.md",
     "engineering/INTEGRATION-DOCUMENTATION.md", "engineering/CODING-STANDARDS.md",
     "quality/TESTING-STRATEGY.md", "quality/TEST-CASES.md",

@@ -1,19 +1,23 @@
 @startuml
 !include ../_style.puml
-title Use case chi tiết — Tiến độ, nhắc học & cài đặt (F1, F4)
+title Use case chi tiết — Tiến độ, nhắc học & cài đặt (F1, F4, CR-007)
 left to right direction
 
 actor "Người học" as N
+actor "Hệ thống máy chủ LearningE\n(6 microservice)" as SV
 actor "Bộ hẹn giờ hệ thống\n(AlarmManager)" as T
 actor "Hệ điều hành Android\n(thông báo, khởi động máy)" as OS
 
 rectangle "LearningE" {
-  usecase "UC-010 Xem trang chủ, tiến độ,\nchuỗi ngày học (BR-033)" as UC10
+  usecase "UC-010 Xem trang chủ, tiến độ,\nchuỗi ngày (BR-033)" as UC10
+  usecase "Ngọn lửa, huy hiệu, 5 rương Leitner,\nmàn ăn mừng (BR-070, BR-071)" as PIX
+  usecase "UC-024 Xem bảng xếp hạng tuần\n(SCR-34)" as UC24
+  usecase "UC-027 Trạng thái đồng bộ\n(SCR-35)" as UC27
   usecase "UC-011 Nhận nhắc học\n(BR-030)" as UC11
   usecase "Đặt lại lịch nhắc\n(đổi giờ / khởi động lại máy)" as SCH
   usecase "UC-004 Quản lý hồ sơ & cài đặt" as UC4
-  usecase "Đổi mật khẩu\n(BR-002)" as PWD
-  usecase "Xóa tài khoản\n(BR-005)" as DEL
+  usecase "Đổi mật khẩu (trên máy chủ,\nBR-002, BR-058)" as PWD
+  usecase "Xóa tài khoản: máy chủ xóa\nmọi dữ liệu (BR-005)" as DEL
   usecase "Đăng xuất (UC-002)" as OUT
   usecase "UC-016 Xem giới thiệu" as UC16
 }
@@ -22,13 +26,19 @@ N -- UC10
 N -- UC4
 N -- UC11
 T -- UC11
+PWD -- SV
+DEL -- SV
+UC24 -- SV
 
+UC10 ..> PIX : <<include>>
 UC11 ..> UC10 : mở Trang chủ\n(khi chạm thông báo, không bắt buộc)
 UC4 <.. PWD : <<extend>>
 UC4 <.. DEL : <<extend>>\n[nhập lại mật khẩu đúng]
 UC4 <.. OUT : <<extend>>
 UC4 <.. UC16 : <<extend>>
 UC4 <.. SCH : <<extend>>\n[đổi giờ nhắc]
+UC4 <.. UC24 : <<extend>>\n[tab Tôi → Bảng xếp hạng]
+UC4 <.. UC27 : <<extend>>\n[tab Tôi → Đồng bộ]
 UC11 -- OS
 SCH -- OS
 @enduml

@@ -2,6 +2,10 @@
 !include ../_style.puml
 title Use case chi tiết — Từ vựng, flashcard & ôn tập (F2, F5)
 left to right direction
+skinparam usecase<<Could>> {
+  BackgroundColor #FFF8DB
+  BorderColor #E0B100
+}
 
 actor "Người học" as N
 actor "Hệ điều hành Android\n(TextToSpeech)" as OS
@@ -13,8 +17,8 @@ rectangle "LearningE" {
   usecase "UC-006 Học từ mới\nbằng flashcard" as UC6
   usecase "UC-007 Ôn tập thẻ đến hạn" as UC7
   usecase "Đánh giá thẻ Leitner\n(BR-011, BR-012; FLOW-012)" as RATE
-  usecase "Ghi hoạt động học,\ncập nhật chuỗi ngày\n(BR-031, BR-032; FLOW-008)" as LOG
-  usecase "UC-013 Tra từ" as UC13
+  usecase "Ghi hoạt động học, chuỗi ngày,\ntạo xp_event, đánh dấu dirty\n(BR-031, BR-032, BR-065; FLOW-008)" as LOG
+  usecase "UC-013 Tra từ" as UC13 <<Could>>
   usecase "Thêm vào sổ tay\n(UC-014)" as ADD
 }
 
@@ -34,5 +38,6 @@ TTS -- OS
 note as NOTE1
   Mở từ danh sách từ của chủ đề
   khi còn từ Mới (BR-010, AC-009.4).
+  UC-013 [Could] (CR-006 C7) hiển thị màu vàng.
 end note
 @enduml

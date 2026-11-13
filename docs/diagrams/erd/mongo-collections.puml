@@ -1,0 +1,118 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title MongoDB — 3 database, mỗi database thuộc đúng một dịch vụ: learninge_content · learninge_game · learninge_insight (DATA_MODEL §B4, CR-007)
+hide circle
+
+package "learninge_content — dịch vụ content (nạp bằng tools/content-import, idempotent theo code)" as C {
+  entity "manifest" as man {
+    * _id : string = "global"
+    --
+    * content_version : long
+    * languages : array<{code, name_vi, tts_locale,\nreading_label, sort_order}>
+    * updated_at : date
+  }
+  entity "decks" as dk {
+    * _id : string -- mã bộ "T01"
+    --
+    * name, language_code, sort_order
+    level, icon, exam_tag
+    * version : int
+    * word_count : int
+    * updated_at : date
+  }
+  entity "words" as wd {
+    * _id : string -- uid "T01-0007"
+    --
+    * deck_code : string
+    * term, meaning_vi : string
+    reading, example, part_of_speech
+    * sort_order : int
+    * deleted : bool
+  }
+  entity "exams" as ex {
+    * _id : string -- mã đề "E01"
+    --
+    * title, question_count, duration_sec
+    * version : int
+    * questions : array (nhúng, ≤ 50)\n{number, question, options[4],\ncorrect_index, explanation, word_uid}
+  }
+}
+
+package "learninge_game — dịch vụ gamification (dựng lại được từ sync.ExportXpEvents)" as G {
+  entity "xp_events" as gx {
+    * _id : string -- uuid sự kiện XP
+    --
+    * user_id : string
+    * source_type, xp_awarded : int
+    * local_date, week_start : string
+    * server_seq : long
+    * event_id, received_at
+  }
+  entity "weekly_xp" as wx {
+    * _id : string -- "week_start:user_id"
+    --
+    * week_start, user_id
+    * xp : int -- Σ ngày min(500, …)
+    * reached_at : date
+  }
+  entity "user_stats" as gs {
+    * _id : string -- user_id
+    --
+    nickname : string
+    current_streak, longest_streak : int
+    total_xp : long
+    profile_version, streak_version : long
+  }
+  entity "deleted_users" as du {
+    * _id : string -- user_id
+    --
+    * deleted_at : date -- tombstone, không TTL
+  }
+}
+
+package "learninge_insight — dịch vụ insight (chỉ dữ liệu đã khử định danh: user_hmac)" as I {
+  entity "audit_events" as ae {
+    * _id : string -- event_id
+    --
+    * type, source : string
+    user_hmac : string
+    * occurred_at : date -- **TTL 90 ngày**
+  }
+  entity "request_logs" as rl {
+    * _id : objectId
+    --
+    * request_id, rpc, code, duration_ms
+    user_hmac, client_version
+    * ts : date -- **TTL 7 ngày**
+  }
+  entity "analytics_daily" as ad {
+    * _id : string -- "yyyy-MM-dd"
+    --
+    dau, new_users, cards_reviewed, xp_total
+    quiz_count, exam_count, push_count
+    login_failed, locks
+  }
+  entity "analytics_daily_users" as adu {
+    * _id : {d: ngày, u: user_hmac}
+    --
+    * expire_at : date -- **TTL 35 ngày**
+  }
+}
+
+man ||--o{ dk : "liệt kê"
+man ||--o{ ex : "liệt kê"
+dk ||--o{ wd : "deck_code"
+wx }o..|| gs : "user_id"
+gx }o..|| gs : "user_id"
+gx ..> wx : tính lại sau xp.recorded\n(không $inc)
+ae ..> ad : cộng dồn theo ngày\n(chỉ khi chèn mới, E11000 → bỏ)
+ad .. adu : DAU
+
+legend bottom
+  Chỉ ghi qua outbox/relay (EventSink.Publish, giao ít nhất một lần, upsert theo event_id) hoặc nạp nội dung; không dùng transaction/change stream (chạy trên Mongo đơn lẻ hoặc Atlas).
+  Validator $jsonSchema + index (kể cả TTL) tạo idempotent lúc khởi động (ensure_schema). Mỗi dịch vụ một user readWrite + collMod chỉ trên database của mình (LEARNINGE_MONGO_URI, LEARNINGE_MONGO_DB).
+  Không có email, hash, token, câu trả lời bảo mật trong Mongo; user.deleted lan tới game (xóa + deleted_users) và insight (xóa theo user_hmac).
+  Chỉ mục chính: words(deck_code, sort_order) · weekly_xp(week_start, xp -1, reached_at, user_id) · xp_events(user_id, week_start, local_date) · audit_events(type, occurred_at) · request_logs(user_hmac).
+endlegend
+@enduml

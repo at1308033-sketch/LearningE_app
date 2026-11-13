@@ -1,6 +1,6 @@
 @startuml
 !include ../_style.puml
-title Bản đồ màn hình (2/2) — tab Luyện tập, Tra từ và Tôi
+title Bản đồ màn hình (2/2) — tab Luyện tập, Tra từ và Tôi (CR-006: SCR-34, SCR-35; SCR-16/17 Won't, SCR-18 Could)
 skinparam rectangle {
   BackgroundColor #FFFFFF
   BorderColor #5146E0
@@ -13,8 +13,8 @@ skinparam frame {
 frame "Tab Luyện tập" {
   rectangle "SCR-12\nChọn quiz" as S12
   rectangle "SCR-15\nLịch sử quiz" as S15
-  rectangle "SCR-16\nDanh sách ngữ pháp" as S16
-  rectangle "SCR-17\nChi tiết bài" as S17
+  rectangle "SCR-16\nDanh sách ngữ pháp\n[Won't]" as S16 #E6E6EC
+  rectangle "SCR-17\nChi tiết bài\n[Won't]" as S17 #E6E6EC
   rectangle "SCR-30\nLuyện thi" as S30
   rectangle "SCR-33\nTài nguyên chính thức" as S33
 }
@@ -27,7 +27,7 @@ frame "Toàn màn hình (ẩn thanh tab)" {
 }
 
 frame "Tab Tra từ" {
-  rectangle "SCR-18\nTra từ\n(Kết quả / Yêu thích / Sổ tay)" as S18
+  rectangle "SCR-18\nTra từ [Could]\n(Kết quả / Yêu thích / Sổ tay)" as S18 #FFF8DB
   rectangle "SCR-08\nChi tiết từ" as S08
   rectangle "SCR-19\nChi tiết bộ" as S19
 }
@@ -37,9 +37,12 @@ frame "Tab Tôi" {
   rectangle "SCR-21\nTiến độ" as S21
   rectangle "SCR-23\nĐổi mật khẩu" as S23
   rectangle "SCR-24\nGiới thiệu" as S24
+  rectangle "SCR-34\nBảng xếp hạng tuần\n(cần mạng; ngoại tuyến: bản lưu)" as S34
+  rectangle "SCR-35\nTrạng thái đồng bộ\n(Đồng bộ ngay)" as S35
 }
 
 rectangle "Trình duyệt\n(ứng dụng khác)" as BRW
+rectangle "SCR-02\nĐăng nhập" as S02
 
 S12 --> S13 : source=DECK, refId
 S12 --> S15
@@ -60,4 +63,9 @@ S18 --> S19 : deckId
 S22 --> S21
 S22 --> S23
 S22 --> S24
+S22 --> S34 : Bảng xếp hạng
+S22 --> S35 : Đồng bộ
+S34 ..> S35 : mất mạng, dùng dữ liệu đã lưu
+S35 ..> S02 : UNAUTHENTICATED (phiên hết hạn)
+S22 ..> S02 : đăng xuất
 @enduml

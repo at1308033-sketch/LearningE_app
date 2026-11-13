@@ -1,41 +1,62 @@
 @startuml
 !include ../_style.puml
-title Hoạt động — Đăng ký tài khoản (FLOW-001, UC-001)
+title Hoạt động — Đăng ký tài khoản trên máy chủ (FLOW-001, UC-001, CR-007: gRPC qua edge → auth)
 
 |Người học|
 start
 :Mở Đăng ký từ\nmàn hình Đăng nhập;
+|Ứng dụng|
 repeat
-  :Nhập tên hiển thị, tên đăng nhập,
+  |Người học|
+  :Nhập email, biệt danh, tên hiển thị,
   mật khẩu, xác nhận mật khẩu,
   câu hỏi bảo mật + câu trả lời;
   :Bấm "Đăng ký";
   |Ứng dụng|
-  :Kiểm tra dữ liệu
-  (SRS §Validation);
-  |CSDL SQLite|
-  :Tìm tên đăng nhập
-  (không phân biệt hoa thường);
-  |Ứng dụng|
+  :Kiểm tra định dạng ở app
+  (SRS §Validation, BR-060, BR-061);
 backward:Báo lỗi tại trường sai,\ngiữ dữ liệu (trừ mật khẩu);
-repeat while (Hợp lệ và tên chưa dùng?\n(BR-001)) is (không) not (có)
-:Tạo salt 16 byte; băm mật khẩu
-và câu trả lời bảo mật bằng
-PBKDF2 (BR-002, BR-007);
-|CSDL SQLite|
-:Lưu người dùng và bộ mặc định
-"Sổ tay của tôi" (BR-046)
-trong 1 giao dịch;
-|Ứng dụng|
-if (Ghi CSDL thành công?) then (không)
-  :Rollback; báo "Không thể tạo
-  tài khoản, vui lòng thử lại";
+repeat while (Hợp lệ?) is (không) not (có)
+if (Có mạng?) then (không)
+  :Báo "Không kết nối được máy chủ,\nvui lòng thử lại" (AC-001.5);
   stop
 else (có)
-  :Lưu phiên (mã người dùng)
-  vào SharedPreferences (BR-004);
-  :Chuyển sang Thiết lập lần đầu
-  (FLOW-002);
-  stop
 endif
+:gRPC AuthService/Register (EP-02)\nqua edge → auth;
+|Hệ thống máy chủ LearningE (6 microservice)|
+:edge: kiểm x-client-version, giới hạn
+10 yêu cầu/giờ/IP; auth: kiểm tra lại dữ liệu;
+if (Email hoặc biệt danh\nđã dùng? (BR-001, BR-061)) then (có)
+  :ALREADY_EXISTS\n(error-code EMAIL_TAKEN / NICKNAME_TAKEN);
+  |Ứng dụng|
+  :Báo lỗi dưới đúng trường,
+  giữ dữ liệu (trừ mật khẩu);
+  stop
+else (không)
+endif
+|Hệ thống máy chủ LearningE (6 microservice)|
+:Băm PBKDF2 mật khẩu và câu trả lời
+(salt 16 byte — BR-002, BR-007);
+:Một giao dịch SQLite (auth.db): tạo users,
+security_answers, auth_tokens (token 256 bit,
+lưu SHA-256 — BR-057) và outbox user.registered;
+if (Ghi CSDL thành công?) then (không)
+  :Rollback, trả INTERNAL / UNAVAILABLE;
+  |Ứng dụng|
+  :Báo "Máy chủ đang gặp sự cố,\nvui lòng thử lại sau";
+  stop
+else (có)
+  :OK AuthSession (token, user);
+:Relay đẩy user.registered → sync tạo bộ\n"Sổ tay của tôi" (UUIDv5, bất đồng bộ, BR-046);
+endif
+|Ứng dụng|
+:Lưu token + mã người dùng vào\nTokenStore, tạo users + sync_state cục bộ;
+:Kéo dữ liệu ban đầu (UC-023: bộ "Sổ tay");
+:Chuyển sang Thiết lập lần đầu\n(FLOW-002);
+stop
+note right
+  DEADLINE_EXCEEDED (10 s), UNAVAILABLE, INTERNAL, RESOURCE_EXHAUSTED:
+  không đổi gì ở máy; RESOURCE_EXHAUSTED báo
+  "Thử lại sau x giây" (trailer retry-after-seconds).
+end note
 @enduml

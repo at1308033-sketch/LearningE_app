@@ -1,0 +1,91 @@
+@startuml
+!include ../_style.puml
+title ERD app — Quiz, nhật ký học và sự kiện XP (có cột đồng bộ; ngữ pháp đã gỡ — CR-006 C1)
+hide circle
+
+entity "users" as users #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+entity "decks" as decks #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+entity "words" as words #F4F4F8 {
+  * id : INTEGER <<PK>>
+}
+
+entity "quiz_attempts" as qa {
+  * id : INTEGER <<PK>>
+  --
+  * uuid : TEXT <<UK>>
+  * user_id : INTEGER <<FK>>
+  * source_type : TEXT -- CHECK = 'DECK'
+  deck_id : INTEGER <<FK>> -- SET NULL
+  score : INTEGER -- 0..100
+  correct_count : INTEGER
+  total_count : INTEGER
+  duration_sec : INTEGER
+  created_at : INTEGER
+  * updated_at : INTEGER
+  * dirty : INTEGER
+  server_seq : INTEGER
+}
+entity "quiz_answers" as qn {
+  * id : INTEGER <<PK>>
+  --
+  * attempt_id : INTEGER <<FK>>
+  question_type : TEXT
+  word_id : INTEGER <<FK>> -- SET NULL
+  prompt : TEXT
+  user_answer : TEXT
+  correct_answer : TEXT
+  is_correct : INTEGER
+  .. chỉ ở máy, không đồng bộ ..
+}
+entity "study_log" as sl {
+  * id : INTEGER <<PK>>
+  --
+  * uuid : TEXT <<UK>>
+  * user_id : INTEGER <<FK>>
+  activity_type : TEXT
+  ref_uuid : TEXT -- decks.uuid / uuid lượt quiz, thi
+  study_date : TEXT -- yyyy-MM-dd
+  created_at : INTEGER
+  * updated_at : INTEGER
+  * dirty : INTEGER
+  server_seq : INTEGER
+}
+entity "xp_events" as xp {
+  * id : INTEGER <<PK>>
+  --
+  * uuid : TEXT <<UK>>
+  * user_id : INTEGER <<FK>>
+  * source_type : TEXT -- CARD_SESSION | QUIZ | EXAM
+  ref_uuid : TEXT
+  correct_count : INTEGER
+  wrong_count : INTEGER
+  total_count : INTEGER -- = correct + wrong
+  xp_local : INTEGER -- tạm tính trên máy
+  xp_awarded : INTEGER -- server tính, NULL khi chưa đẩy
+  occurred_at : INTEGER
+  local_date : TEXT
+  * updated_at : INTEGER
+  * dirty : INTEGER
+  server_seq : INTEGER
+}
+
+users ||--o{ qa : "làm"
+decks |o--o{ qa : "nguồn"
+qa ||--o{ qn : "gồm"
+words |o--o{ qn
+users ||--o{ sl : "ghi"
+users ||--o{ xp : "nhận XP"
+qa .. xp : ref_uuid
+sl .. qa : ref_uuid
+
+legend bottom
+  * = NOT NULL · Bảng xám = tham chiếu (chi tiết ở ERD khác)
+  question_type: MCQ_TERM_MEANING, MCQ_MEANING_TERM, LISTEN, FILL, REORDER
+  activity_type: LEARN, REVIEW, QUIZ, EXAM (GRAMMAR_READ bỏ theo C1) · Chỉ đẩy tóm tắt lượt quiz, quiz_answers không đồng bộ
+  Index: idx_attempts_user_time(user_id, created_at DESC) · idx_log_user_date(user_id, study_date) · idx_*_dirty WHERE dirty = 1
+endlegend
+@enduml

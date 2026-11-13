@@ -3,6 +3,11 @@
 set separator none
 title Lớp miền (data.model) — ngữ pháp, quiz, thi thử
 hide empty methods
+skinparam class<<Won't>> {
+  BackgroundColor #E6E6EC
+  BorderColor #9A98AD
+  FontColor #7A7890
+}
 skinparam classAttributeIconSize 0
 
 package "com.learninge.app.data.model" {
@@ -15,7 +20,7 @@ package "com.learninge.app.data.model" {
   class Word <<tham chiếu>> {
     +long id
   }
-  class GrammarLesson {
+  class GrammarLesson <<Won't>> {
     +long id
     +String code
     +String title
@@ -23,7 +28,7 @@ package "com.learninge.app.data.model" {
     +String formula
     +String usage
   }
-  class GrammarQuestion {
+  class GrammarQuestion <<Won't>> {
     +long id
     +long lessonId
     +String question
@@ -31,7 +36,7 @@ package "com.learninge.app.data.model" {
     +int correctIndex
     +String explanation
   }
-  class GrammarProgress {
+  class GrammarProgress <<Won't>> {
     +long userId
     +long lessonId
     +long readAt

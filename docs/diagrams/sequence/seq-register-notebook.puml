@@ -1,0 +1,50 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title Đăng ký và bộ "Sổ tay của tôi" (CR-007, FN-001, BR-043, BR-046): auth ghi outbox user.registered → sync tạo bộ mặc định UUIDv5 idempotent
+autonumber
+skinparam maxMessageSize 200
+
+actor "Người học" as U
+participant "RegisterFragment\n+ AuthService (app)\n+ AuthRemote" as APP
+participant "edge :50051" as E
+participant "auth :50052" as A
+database "auth.db" as ADB
+participant "relay (auth)" as RL
+participant "sync :50053\n(EventSink)" as S
+database "sync.db" as SDB
+participant "gamification ·\ninsight" as GI
+participant "SyncManager (app)" as SM
+
+U -> APP : Điền form, bấm Đăng ký (đã kiểm định dạng ở app)
+APP -> E : AuthService/Register {email, nickname, display_name, password,\nsecurity_question_id, security_answer}; deadline 10 s (không thử lại)
+E -> E : giới hạn 10 yêu cầu/giờ/IP; kiểm x-client-version
+E -> A : AuthBackend/Register + x-internal-auth
+A -> A : kiểm tra lại; PBKDF2 (mật khẩu, câu trả lời) trong spawn_blocking
+A -> ADB : BEGIN IMMEDIATE; kiểm email/nickname (trùng → ALREADY_EXISTS · EMAIL_TAKEN / NICKNAME_TAKEN)
+A -> ADB : INSERT users, security_answers, auth_tokens (SHA-256);\nINSERT outbox user.registered — 3 dòng: sync, gamification, insight; COMMIT
+A --> E : AuthSession {token, user{id = users.uuid}}
+E --> APP : OK
+APP -> APP : lưu token (TokenStore); tạo users + sync_state cục bộ
+APP -> U : sang Thiết lập lần đầu (FLOW-002)
+
+== Bất đồng bộ — không chặn đăng ký, chịu được sync ngừng (outbox giữ sự kiện, ≤ 60 s sau khi sync sống lại) ==
+RL -> S : EventSink/Publish(user.registered {user_id}) + x-internal-auth
+S -> SDB : kiểm purged_users (đã bị xóa → bỏ qua, vẫn ack)
+S -> SDB : INSERT OR IGNORE decks "Sổ tay của tôi"\nuuid = UUIDv5(NS_LEARNINGE, "notebook:" + user_id), is_default = 1;\ncấp server_seq mới (sync_seq)
+S --> RL : ack event_id (nhận trùng không tạo bản thứ hai)
+RL -> GI : Publish(user.registered): gamification upsert user_stats (nickname);\ninsight audit + new_users (chỉ user_hmac)
+
+== Lần Pull kế tiếp mang bộ về máy ==
+APP -> SM : requestSync(REGISTER)
+SM -> E : SyncService/Pull {since = 0, limit = 500}
+E -> S : SyncBackend/Pull + x-user-id
+S --> SM : changes (có bộ "Sổ tay của tôi" nếu event đã được xử lý)
+SM -> SM : ghi 1 giao dịch (decks → words…)
+
+note over APP, SM
+  App không bắt buộc có bộ này ngay: màn "Lưu vào bộ" ẩn mục Sổ tay khi chưa có. Nếu app cần tạo cục bộ trước (offline ngay sau đăng ký)
+  phải dùng cùng uuid tất định tính từ user_id server trả về → Push thành duplicate, không sinh bản trùng.
+  user_settings không tạo lúc đăng ký: sync tạo lười khi app đẩy settings lần đầu (mặc định BR-006 giữ ở app).
+end note
+@enduml

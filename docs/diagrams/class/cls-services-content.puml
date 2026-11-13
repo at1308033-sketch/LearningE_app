@@ -23,7 +23,7 @@ package "com.learninge.app.domain" {
   }
   class QuizService {
     +createDeckQuiz(deckId) : Result<Quiz>
-    +createGrammarQuiz(lessonId) : Result<Quiz>
+    +createGrammarQuiz(lessonId)  // [Won't] CR-006 C1 : Result<Quiz>
     +check(Question q, String answer) : Result<AnswerFeedback>
     +submit(Quiz quiz, List<String> answers, int durationSec) : Result<QuizResult>
     +history() : Result<List<QuizAttemptSummary>>

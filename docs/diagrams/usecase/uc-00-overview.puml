@@ -1,17 +1,27 @@
 @startuml
 !include ../_style.puml
-title Sơ đồ use case tổng quát — LearningE
+title Sơ đồ use case tổng quát — LearningE (client–server, CR-007)
 left to right direction
+skinparam dpi 100
 skinparam packageStyle rectangle
+skinparam usecase<<Won't>> {
+  BackgroundColor #E6E6EC
+  BorderColor #9A98AD
+  FontColor #7A7890
+}
+skinparam usecase<<Could>> {
+  BackgroundColor #FFF8DB
+  BorderColor #E0B100
+}
 
 actor "Khách" as K
 actor "Người học" as N
+actor "Hệ thống máy chủ LearningE\n(6 microservice)" as SV
 actor "Bộ hẹn giờ hệ thống\n(AlarmManager)" as T
 actor "Hệ điều hành Android\n(thông báo, TTS,\nchọn/lưu file)" as OS
 actor "Trình duyệt" as B
 
-rectangle "LearningE" {
-  package "Tài khoản & xác thực (F1)" as P1 {
+  package "Tài khoản & xác thực (F1)\ntrên máy chủ" as P1 {
     usecase "UC-001 Đăng ký" as UC1
     usecase "UC-002 Đăng nhập / đăng xuất" as UC2
     usecase "UC-003 Thiết lập lần đầu" as UC3
@@ -23,29 +33,35 @@ rectangle "LearningE" {
     usecase "UC-005 Xem chủ đề và từ vựng" as UC5
     usecase "UC-006 Học từ mới bằng flashcard" as UC6
     usecase "UC-007 Ôn tập thẻ đến hạn" as UC7
-    usecase "UC-013 Tra từ" as UC13
+    usecase "UC-013 Tra từ" as UC13 <<Could>>
+    usecase "UC-026 Chế độ bản đồ" as UC26 <<Could>>
   }
   package "Luyện tập: quiz & ngữ pháp (F3, F5)" as P3 {
     usecase "UC-008 Làm quiz chủ đề\nvà xem kết quả" as UC8
     usecase "UC-009 Xem lịch sử quiz" as UC9
-    usecase "UC-012 Học ngữ pháp\nvà làm bài tập" as UC12
+    usecase "UC-012 Học ngữ pháp\nvà làm bài tập" as UC12 <<Won't>>
   }
-  package "Bộ từ, sổ tay, import/export, ngôn ngữ (F5–F7)" as P4 {
+  package "Bộ từ, sổ tay, import/export (F5–F7)" as P4 {
     usecase "UC-014 Quản lý sổ tay\nvà học sổ tay" as UC14
     usecase "UC-018 Quản lý bộ từ vựng" as UC18
-    usecase "UC-019 Import từ vựng" as UC19
-    usecase "UC-020 Export từ vựng" as UC20
+    usecase "UC-019 Import từ vựng (CSV)" as UC19
+    usecase "UC-020 Export từ vựng (CSV)" as UC20
     usecase "UC-021 Chọn ngôn ngữ nội dung" as UC21
   }
   package "Luyện thi (F7)" as P5 {
     usecase "UC-022 Luyện thi\nTOEIC/IELTS/Aptis" as UC22
   }
   package "Tiến độ, nhắc học & cài đặt (F1, F4)" as P6 {
-    usecase "UC-010 Xem trang chủ, tiến độ,\nchuỗi ngày học" as UC10
+    usecase "UC-010 Xem trang chủ, tiến độ,\nchuỗi ngày, ngọn lửa, rương" as UC10
     usecase "UC-011 Nhận nhắc học" as UC11
     usecase "UC-004 Quản lý hồ sơ & cài đặt" as UC4
   }
-}
+  package "Đồng bộ, xếp hạng & nội dung (CR-007)" as P7 {
+    usecase "UC-023 Đồng bộ dữ liệu" as UC23
+    usecase "UC-024 Xem bảng xếp hạng tuần\nvà nhận XP" as UC24
+    usecase "UC-027 Xem trạng thái đồng bộ\nvà đồng bộ ngay" as UC27
+    usecase "UC-025 Cập nhật nội dung\ntừ server" as UC25 <<Could>>
+  }
 
 K -- P1
 N -- P1
@@ -54,18 +70,29 @@ N -- P3
 N -- P4
 N -- P5
 N -- P6
-P1 -[hidden]right- P2
-P2 -[hidden]right- P3
-P3 -[hidden]right- P4
-P4 -[hidden]right- P5
-P5 -[hidden]right- P6
-P4 -- OS
-P6 -- OS
-P6 -- T
-P5 -- B
+N -- P7
+SV -- P1
+SV -- P7
+P1 -[hidden]down- P2
+P2 -[hidden]down- P3
+P3 -[hidden]down- P4
+P4 -[hidden]down- P5
+P5 -[hidden]down- P6
+P6 -[hidden]down- P7
+OS -- P4
+OS -- P6
+T -- P6
+B -- P5
 note as NOTE1
-  Hệ điều hành Android còn cung cấp
-  TTS cho UC-005/UC-006 (phát âm).
+  Hệ thống máy chủ LearningE (6 microservice) là tác nhân hệ thống ngoài
+  (gRPC qua edge): xác thực, đồng bộ, bảng xếp hạng, nội dung.
+  Hệ điều hành cung cấp thêm TTS cho UC-005/006.
   Khách: UC-001, 002, 015, 016, 017.
 end note
+legend right
+  |= Ký hiệu |= Ý nghĩa |
+  | trắng/tím | Must / Should |
+  | <back:#FFF8DB>  vàng  </back> | <<Could>> |
+  | <back:#E6E6EC>  xám  </back> | <<Won't>> — không làm ở bản này |
+endlegend
 @enduml

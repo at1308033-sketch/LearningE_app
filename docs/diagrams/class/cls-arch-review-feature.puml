@@ -1,7 +1,7 @@
 @startuml
 !include ../_style.puml
 set separator none
-title Lớp theo tầng — tính năng Ôn tập (flashcard Leitner) từ giao diện tới CSDL
+title Lớp theo tầng — tính năng Ôn tập (flashcard Leitner) từ giao diện tới CSDL, kèm móc đồng bộ (CR-006)
 skinparam classAttributeIconSize 0
 hide empty members
 
@@ -33,23 +33,38 @@ package "domain (tầng nghiệp vụ)" {
     +Result<TodaySummary> today()
     +Result<Boolean> hasMetGoalToday()
   }
+  class XpService {
+    +record(source, correct, wrong) : Result<XpEvent>
+    -- xp_local theo BR-065..BR-067;\nxp_awarded do server ghi đè --
+  }
   package "domain.rules (Java thuần)" {
     class LeitnerScheduler
     class StreakCalculator
+    class ChestCounts
+  }
+}
+
+package "sync (đồng bộ)" {
+  class SyncScheduler {
+    +requestSync(String reason)
+  }
+  class SyncManager {
+    +sync(String reason) : Result<SyncSummary>
   }
 }
 
 package "data (tầng dữ liệu)" {
   class ProgressRepository {
     +List<Card> listDue(long userId, LocalDate today, int limit)
-    +void saveProgress(CardProgress)
+    +void saveProgress(CardProgress)  // updated_at = now, dirty = 1
     +void runInTransaction(Runnable)
   }
   class CardProgressDao
   class StudyLogDao
+  class XpEventDao
   class SettingsDao
   class DatabaseHelper
-  class SessionStore {
+  class TokenStore {
     +long currentUserId()
   }
 }
@@ -74,25 +89,32 @@ FlashcardFragment --> FlashcardViewModel
 FlashcardViewModel --> StudyService
 FlashcardViewModel ..> AppExecutors : chạy trên dbRead/dbWrite
 FlashcardViewModel ..> Result
+FlashcardViewModel ..> SyncScheduler : requestSync(SESSION_END)\nsau finishSession
 StudyService --> LeitnerScheduler
 StudyService --> ProgressService
+StudyService --> XpService
 ProgressService --> StreakCalculator
 StudyService --> ProgressRepository
 ProgressService --> ProgressRepository
-StudyService --> SessionStore : userId
+XpService --> ProgressRepository
+StudyService --> TokenStore : userId
 ProgressRepository --> CardProgressDao
 ProgressRepository --> StudyLogDao
+ProgressRepository --> XpEventDao
 ProgressRepository --> SettingsDao
 CardProgressDao --> DatabaseHelper
 StudyLogDao --> DatabaseHelper
+XpEventDao --> DatabaseHelper
 SettingsDao --> DatabaseHelper
+SyncScheduler --> SyncManager
+SyncManager --> ProgressRepository : bản ghi dirty = 1
 ServiceLocator ..> StudyService : tạo
 ServiceLocator ..> FlashcardViewModel : ViewModelProvider.Factory
 
 note right of ProgressRepository
-  Mở beginTransaction /
-  setTransactionSuccessful /
-  endTransaction cho thao tác
-  nhiều bảng (NFR-A3)
+  Mở beginTransaction / setTransactionSuccessful /
+  endTransaction cho thao tác nhiều bảng (NFR-A3).
+  Mỗi ghi study_log, card_progress, xp_events đặt
+  updated_at = now và dirty = 1 (hộp thư đi cho UC-023).
 end note
 @enduml

@@ -1,0 +1,56 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 120
+title Hoạt động — Đăng nhập trên máy thứ hai, kéo toàn bộ dữ liệu (FLOW-018, US-038)
+
+|Người học|
+|Ứng dụng (máy B)|
+|Hệ thống máy chủ LearningE (6 microservice)|
+|Người học|
+start
+:Đăng nhập thành công trên máy B\nchưa có dữ liệu tài khoản (FLOW-001 phần B);
+|Ứng dụng (máy B)|
+:Lưu token; tạo users + sync_state (pull_cursor = 0);
+:Hiện "Đang tải dữ liệu của bạn";
+repeat
+  :gRPC SyncService/Pull {since = cursor, limit = 500}\n(EP-12) qua edge → sync;
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  if (Token hợp lệ?\n(edge hỏi auth.ValidateToken)) then (không)
+    :UNAUTHENTICATED;
+    |Ứng dụng (máy B)|
+    :Về SCR-02 (BR-059);
+    stop
+  else (có)
+    |Hệ thống máy chủ LearningE (6 microservice)|
+    :Trả một trang ≤ 500 bản ghi (server_seq > cursor);
+  endif
+  |Ứng dụng (máy B)|
+  if (Nhận được trang?) then (mất mạng /\nDEADLINE_EXCEEDED / UNAVAILABLE)
+    if (UNAVAILABLE và chưa thử đủ 3 lần?\n(2 s, 4 s, 8 s)) then (có)
+      :Chờ rồi gọi lại trang;
+    else (không)
+      :Giữ các trang đã ghi; hiện "Đang ngoại tuyến"\nvà "Dữ liệu chưa tải đủ";
+      :Vào Trang chủ với dữ liệu một phần,\nkéo tiếp từ cursor ở lần sau;
+      stop
+    endif
+  else (OK)
+  endif
+  :Một giao dịch: ghi trang (decks → words →\nfavorites, card_progress, study_log…), lưu cursor;
+  if (Ghi thành công?) then (không)
+    :Rollback trang, giữ cursor cũ;
+    :Báo "Đã có lỗi khi lưu dữ liệu"\nhoặc "Bộ nhớ máy đã đầy";
+    stop
+  else (có)
+  endif
+repeat while (has_more?) is (còn trang) not (hết)
+:Tính lại chuỗi ngày, 5 rương Leitner,\náp cấp độ và mục tiêu kéo về;
+|Người học|
+:Trang chủ máy B hiện đúng tiến độ,\nchuỗi ngày, bộ từ, yêu thích của máy A\n(≤ 10 s qua Wi-Fi, ≈ 2.000 bản ghi = 4 trang);
+stop
+note right
+  Máy B đã có dữ liệu của chính tài khoản này:
+  đẩy bản ghi chờ trước, rồi kéo từ cursor (FLOW-019).
+  Tài khoản mới: chỉ kéo về bộ "Sổ tay của tôi" (do sync tạo qua
+  outbox user.registered, có thể đến sau lần kéo đầu) và cài đặt.
+end note
+@enduml

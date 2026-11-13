@@ -1,0 +1,31 @@
+@startuml
+!include ../_style.puml
+title Trạng thái token phiên đăng nhập (opaque 256 bit, hạn 30 ngày — BR-057..BR-059)
+
+state "Không có token\n(chưa đăng nhập)" as KhongCo
+state "Hợp lệ\n(auth.db lưu SHA-256(token), expires_at = tạo + 30 ngày;\nedge cache ValidateToken ≤ 60 s)" as HopLe
+state "Hết hạn\n(quá expires_at, không gia hạn trượt)" as HetHan
+state "Bị thu hồi\n(revoked_at đặt)" as ThuHoi
+state "App giữ token cũ\nchờ gặp UNAUTHENTICATED" as ChoGap401
+
+[*] --> KhongCo
+KhongCo --> HopLe : Đăng ký / đăng nhập / đặt lại mật khẩu thành công\n(EP-02, EP-03, EP-09; app lưu vào TokenStore)
+HopLe --> HopLe : Mỗi RPC hợp lệ cập nhật last_used_at (edge → auth.ValidateToken);\nđổi mật khẩu (EP-07) cấp token mới cho máy gọi
+HopLe --> HetHan : Quá 30 ngày
+HopLe --> ThuHoi : Đăng xuất (EP-04): token của máy này
+HopLe --> ThuHoi : Đổi / đặt lại mật khẩu, xóa tài khoản:\nmọi token của người dùng (BR-058)
+
+HetHan --> ChoGap401 : App ngoại tuyến vẫn cho học (NFR-N1)
+ThuHoi --> ChoGap401 : Máy khác vẫn giữ token cũ
+ChoGap401 --> KhongCo : RPC kế tiếp nhận gRPC UNAUTHENTICATED\n(error-code UNAUTHENTICATED): xóa token, giữ dữ liệu dirty, về SCR-02 (BR-059)
+HetHan --> KhongCo : Đăng xuất cục bộ
+
+KhongCo --> HopLe : Đăng nhập lại cùng tài khoản:\nđẩy tiếp bản ghi dirty (khác tài khoản: cảnh báo mất, BR-073)
+HopLe --> [*] : Xóa tài khoản (CASCADE auth_tokens)
+
+note bottom of HopLe
+  Edge đổi token thành x-user-id; mọi dịch vụ lọc theo x-user-id
+  (không đọc user_id từ message — chống IDOR). Token thu hồi → edge xóa
+  cache của user; token thô không vào mạng nội bộ, không ghi log.
+end note
+@enduml

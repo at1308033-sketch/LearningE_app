@@ -1,0 +1,77 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title Đăng nhập online (CR-007): app gọi AuthService/Login (EP-03) qua edge → auth, PBKDF2, khóa tăng dần, cấp token (FN-002, BR-002..BR-004, BR-057)
+autonumber
+skinparam maxMessageSize 200
+
+actor "Người học" as U
+participant "LoginFragment\n(SCR-02)" as F
+participant "AuthService (app)\n+ AuthRemote\n(luồng io)" as S
+participant "GrpcClient\n+ GrpcErrorMapper" as G
+participant "TokenStore" as TS
+participant "edge :50051" as E
+participant "auth :50052\n(AuthBackend,\nLockPolicy)" as A
+participant "PasswordHasher\n(PBKDF2)" as PH
+database "auth.db\nusers · auth_attempts ·\nauth_tokens · outbox" as DB
+participant "relay → insight\n(EventSink)" as RL
+participant "SyncManager" as SM
+
+U -> F : Nhập email, mật khẩu; bấm Đăng nhập
+F -> S : login(email, password) — chạy trên AppExecutors.io()
+alt Không có mạng (NetworkMonitor)
+  S --> F : Failure(NETWORK_OFFLINE)
+  F -> U : "Cần kết nối mạng để đăng nhập"
+else Có mạng
+  S -> G : AuthService/Login {email, password, device_name}\nmetadata x-request-id, x-client-version; deadline 10 s
+  G -> E : gRPC (h2, TLS) — không gửi authorization (RPC công khai)
+  E -> E : xóa x-user-id / x-internal-* do client gửi; kiểm x-client-version;\ncửa sổ trượt 5 yêu cầu/phút/IP (NFR-S8)
+  alt Vượt giới hạn IP
+    E --> G : RESOURCE_EXHAUSTED · error-code RATE_LIMITED · retry-after-seconds
+  else Trong giới hạn
+    E -> A : AuthBackend/Login + x-internal-auth + x-request-id,\ndeadline = còn lại − 100 ms (trần 8 s)
+    A -> A : interceptor x-internal-auth (hằng thời gian)
+    A -> DB : SELECT users WHERE email = ? (hoặc auth_attempts theo HMAC email nếu không có)
+    DB --> A : hàng / rỗng
+    alt Đang khóa tăng dần (locked_until > now)
+      A --> E : RESOURCE_EXHAUSTED · ACCOUNT_LOCKED · retry-after-seconds (không chạy PBKDF2)
+    else Không khóa
+      A -> PH : verify(password, salt, hash) — spawn_blocking, tối đa 4 phép đồng thời
+      note right of PH
+        PBKDF2-HMAC-SHA256 120.000 vòng; email không
+        tồn tại vẫn băm với salt giả (thời gian tương đương);
+        so sánh hằng thời gian (subtle)
+      end note
+      PH --> A : true / false
+      alt Sai thông tin
+        A -> DB : BEGIN; đếm sai + 1 (5 lần liên tiếp → khóa 60 s × 2^(k-1), tối đa 1 giờ — BR-003);\nINSERT outbox auth.login_failed (+ auth.locked khi khóa); COMMIT
+        A --> E : UNAUTHENTICATED · INVALID_CREDENTIALS (hoặc RESOURCE_EXHAUSTED · ACCOUNT_LOCKED ở lần thứ 5)
+      else Đúng thông tin
+        A -> A : TokenService.issue(): 32 byte từ OS RNG → base64url
+        A -> DB : BEGIN; INSERT auth_tokens(token_hash = SHA-256, expires_at = now + 30 ngày);\nreset bộ đếm sai; COMMIT
+        A --> E : AuthSession {token, expires_at_ms, user}
+      end
+    end
+    E --> G : chuyển nguyên AuthSession hoặc Status + trailer error-code
+  end
+  G --> S : Result.Success / Failure(ErrorCode) — GrpcErrorMapper (mã gRPC, error-code)
+  RL -> RL : (bất đồng bộ) Publish auth.login_failed / auth.locked → insight
+  alt OK
+    S -> TS : save(token, expires_at, userId) — SharedPreferences riêng tư, không log
+    S -> S : tạo users + sync_state (pull_cursor = 0) nếu máy chưa có
+    S --> F : Success
+    F -> SM : requestSync(LOGIN) — kéo dữ liệu máy khác (FLOW-018)
+    F -> U : Mở MainActivity → Trang chủ (SCR-05)
+  else UNAUTHENTICATED · INVALID_CREDENTIALS
+    F -> U : "Email hoặc mật khẩu không đúng"
+  else RESOURCE_EXHAUSTED (ACCOUNT_LOCKED / RATE_LIMITED)
+    F -> U : "Thử lại sau x giây" (retry-after-seconds); khóa nút đến hết giờ
+  else DEADLINE_EXCEEDED / UNAVAILABLE (auth ngừng: SERVICE_UNAVAILABLE)
+    F -> U : "Máy chủ đang gặp sự cố, vui lòng thử lại sau"
+  end
+end
+note over S, G
+  Service không ném exception: mọi lỗi trả Result.Failure(ErrorCode).
+  Không thử lại Login/Register (NFR-N2, tránh đếm sai khóa tăng dần). Log server không ghi mật khẩu.
+end note
+@enduml

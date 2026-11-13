@@ -1,0 +1,62 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 120
+title Hoạt động — Cập nhật nội dung từ máy chủ [Could] (FLOW-021, UC-025, CR-007: ContentService → content)
+
+|Ứng dụng (nền)|
+|Hệ thống máy chủ LearningE (6 microservice)|
+|SQLite máy|
+|Ứng dụng (nền)|
+start
+:Mở app có mạng, sau đồng bộ (UC-023);
+note right
+  Seed trong APK vẫn là bản nền để dùng ngoại tuyến.
+  Mục nội dung bị gỡ trên server: ẩn khỏi danh sách.
+  content/MongoDB ngừng → UNAVAILABLE: giữ seed + bản đã tải.
+end note
+:gRPC ContentService/GetManifest\n{if_version = content_version đã cài} (EP-14) qua edge → content;
+|Hệ thống máy chủ LearningE (6 microservice)|
+if (if_version khớp content_version?) then (có)
+  :OK not_modified = true;
+  |Ứng dụng (nền)|
+  :Nội dung đã mới nhất;
+  stop
+else (không)
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :OK {content_version, languages, decks[], exams[]}
+  (nguồn: MongoDB learninge_content);
+endif
+|Ứng dụng (nền)|
+if (Lấy được manifest?\n(không lỗi mạng, UNAUTHENTICATED, UNAVAILABLE)) then (không)
+  :Giữ nội dung hiện có,\nthử lại lần mở app sau;
+  stop
+else (có)
+endif
+|SQLite máy|
+:Đọc content_version cục bộ (global, deck:*, exam:*);
+|Ứng dụng (nền)|
+:Chọn bộ/đề có version lớn hơn bản đã cài;
+repeat
+  :gRPC ContentService/GetDeck {code} (EP-15)\nhoặc GetExam {code} (EP-16);
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :Trả deck + words (uid ổn định, deleted)\nhoặc exam + questions;
+  |Ứng dụng (nền)|
+  if (Tải đủ, đúng định dạng?) then (không)
+    :Bỏ toàn bộ lần cập nhật;
+    stop
+  else (có)
+  endif
+repeat while (Còn mục cần tải?) is (còn) not (hết)
+|SQLite máy|
+:Một giao dịch dbWrite: ghi decks, words, exam_tests,\nexam_questions; từ bị gỡ → ẩn, giữ tiến độ;\ncập nhật content_version (BR-075);
+if (Ghi thành công?) then (không)
+  :Rollback; giữ nguyên nội dung cũ;
+  |Ứng dụng (nền)|
+  :Ghi lỗi gần nhất ở SCR-35:\n"Chưa cập nhật được nội dung mới";
+  stop
+else (có)
+  |Ứng dụng (nền)|
+  :Bộ/đề mới hiện ở SCR-06, tiến độ giữ nguyên;
+  stop
+endif
+@enduml

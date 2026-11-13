@@ -1,71 +1,74 @@
 @startuml
 !include ../_style.puml
-title Hoạt động — Quên mật khẩu, đặt lại bằng câu hỏi bảo mật (FLOW-013, UC-017)
+skinparam dpi 120
+title Hoạt động — Quên mật khẩu, đặt lại bằng câu hỏi bảo mật trên máy chủ (FLOW-013, UC-017, CR-007)
 
 |Người học|
 |Ứng dụng|
-|CSDL SQLite|
+|Hệ thống máy chủ LearningE (6 microservice)|
 |Người học|
 start
 :Bấm "Quên mật khẩu?"
 ở màn hình Đăng nhập;
-repeat
-  :Nhập tên đăng nhập;
-  |Ứng dụng|
-  :Tìm tài khoản trong CSDL;
-backward:Báo "Không tìm thấy tài khoản";
-repeat while (Tài khoản tồn tại?) is (không) not (có)
-if (Đang bị khóa đặt lại?\n(BR-008)) then (có)
-  :Báo thời gian chờ;
-  stop
-else (không)
-endif
-:Hiện câu hỏi bảo mật
-của tài khoản;
-repeat
-  |Người học|
-  :Nhập câu trả lời;
-  |Ứng dụng|
-  :Chuẩn hóa (bỏ khoảng trắng đầu/cuối,
-  chữ thường, bỏ dấu), băm, so sánh
-  (BR-007: " Hà Nội " ≡ "ha noi");
-  if (Trả lời đúng?) then (có)
-  else (không)
-    |CSDL SQLite|
-    :Tăng đếm sai trả lời;
-    |Ứng dụng|
-    if (Sai đủ 3 lần liên tiếp?) then (có)
-      |CSDL SQLite|
-      :Khóa đặt lại 5 phút
-      (sai lúc 10:00, thử lại từ 10:05);
-      |Ứng dụng|
-      :Báo "Bạn đã trả lời sai quá nhiều lần.
-      Thử lại sau 5 phút", về Đăng nhập;
-      stop
-    else (không)
-      :Báo "Câu trả lời không đúng";
-    endif
-  endif
-repeat while (Trả lời đúng?) is (chưa) not (rồi)
-|CSDL SQLite|
-:Đặt đếm sai trả lời về 0;
-repeat
-  |Người học|
-  :Nhập mật khẩu mới + xác nhận;
-  |Ứng dụng|
-backward:Báo lỗi tại trường sai;
-repeat while (Hợp lệ? (8–64 ký tự,\ncó chữ và số, khớp)) is (không) not (có)
-|CSDL SQLite|
-:Lưu mật khẩu băm mới (BR-002),
-đếm sai đăng nhập về 0;
+note right
+  Máy khác đang đăng nhập tài khoản này: token bị thu hồi,
+  lần gọi kế tiếp nhận UNAUTHENTICATED → đăng nhập lại (BR-059).
+  DEADLINE_EXCEEDED 10 s / UNAVAILABLE: giữ dữ liệu đã nhập (trừ mật khẩu).
+end note
 |Ứng dụng|
-if (Lưu thành công?) then (không)
-  :Rollback; báo "Đã có lỗi khi lưu
-  dữ liệu, vui lòng thử lại";
+if (Có mạng?) then (không)
+  :Báo "Cần kết nối mạng\nđể đặt lại mật khẩu";
   stop
 else (có)
-  :Về Đăng nhập, báo
-  "Đã đặt lại mật khẩu";
+endif
+|Người học|
+:Nhập email (SCR-25 bước 1);
+|Ứng dụng|
+:gRPC AuthService/GetResetQuestion (EP-08);
+|Hệ thống máy chủ LearningE (6 microservice)|
+if (Đang bị khóa đặt lại\nhoặc vượt 5 yêu cầu/phút/IP?) then (có)
+  :RESOURCE_EXHAUSTED (error-code RESET_LOCKED\n/ RATE_LIMITED) + retry-after-seconds;
+  |Ứng dụng|
+  :Báo "Thử lại sau x giây", về Đăng nhập;
+  stop
+else (không)
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :Trả câu hỏi bảo mật thật; email không tồn tại:
+  id giả = HMAC-SHA256(khóa server, email) mod 5 + 1
+  (BR-076, không lộ email nào có thật);
+endif
+|Ứng dụng|
+repeat
+  |Người học|
+  :Nhập câu trả lời, mật khẩu mới,\nxác nhận (SCR-25 bước 2);
+  |Ứng dụng|
+  :Kiểm tra mật khẩu mới ở app\n(8–64 ký tự, có chữ và số, khớp);
+  :gRPC AuthService/ResetPassword (EP-09);
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :Chuẩn hóa câu trả lời (BR-007), băm PBKDF2,
+  so sánh (email lạ: salt giả, vẫn đếm);
+  if (Trả lời đúng?) then (không)
+    :Đếm sai + 1; sai lần thứ 5 liên tiếp: khóa
+    60 s, gấp đôi mỗi lần, tối đa 1 giờ (BR-008);
+    :UNAUTHENTICATED (INVALID_SECURITY_ANSWER)\nhoặc RESOURCE_EXHAUSTED (RESET_LOCKED);
+    |Ứng dụng|
+    :Báo "Thông tin không khớp"\nhoặc "Thử lại sau x giây";
+  else (có)
+  endif
+repeat while (Trả lời đúng?) is (chưa) not (rồi)
+|Hệ thống máy chủ LearningE (6 microservice)|
+:Một giao dịch: lưu băm mật khẩu mới,
+đếm sai và bậc khóa = 0, thu hồi mọi token
+(BR-058), cấp token mới;
+if (Ghi CSDL thành công?) then (không)
+  :Rollback, mật khẩu cũ giữ nguyên,
+  INTERNAL / UNAVAILABLE;
+  |Ứng dụng|
+  :Báo "Máy chủ đang gặp sự cố,\nvui lòng thử lại sau";
+  stop
+else (có)
+  |Ứng dụng|
+  :Về Đăng nhập, báo "Đã đặt lại mật khẩu";
   stop
 endif
 @enduml

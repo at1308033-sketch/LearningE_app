@@ -1,0 +1,68 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title Bảng xếp hạng tuần (CR-007): LeaderboardService/GetWeekly EP-13 qua edge → gamification, lưu leaderboard_cache, dùng bản lưu khi mất mạng (FLOW-020, BR-065..BR-069)
+autonumber
+skinparam maxMessageSize 200
+
+actor "Người học" as U
+participant "LeaderboardFragment\n(SCR-34)" as F
+participant "LeaderboardService (app)\n+ LeaderboardRemote" as S
+participant "NetworkMonitor" as NM
+participant "edge :50051" as E
+participant "auth :50052" as A
+participant "gamification :50055\n(GamificationBackend,\nIsoWeek, Ranking)" as G
+database "MongoDB learninge_game\nweekly_xp · user_stats" as MDB
+database "SQLite máy\nleaderboard_cache" as DB
+
+U -> F : Mở SCR-34
+F -> S : load(week = current) — AppExecutors.io()
+S -> NM : isOnline()
+alt Có mạng
+  S -> E : LeaderboardService/GetWeekly {week = current}\nauthorization: Bearer, x-request-id; deadline 5 s
+  E -> A : ValidateToken(token_sha256) nếu cache trượt (≤ 60 s)
+  A --> E : user_id (hoặc UNAUTHENTICATED)
+  E -> G : GamificationBackend/GetWeekly + x-user-id + x-internal-auth; deadline ≤ 3 s
+  G -> G : week_start = thứ Hai tuần ISO theo Asia/Ho_Chi_Minh
+  G -> MDB : weekly_xp.find({week_start, xp > 0}).sort({xp: -1, reached_at: 1, user_id: 1}).limit(50)\n→ user_stats.find({_id: {$in: ids}}) lấy nickname, chuỗi ngày
+  alt Mongo trả lời
+    MDB --> G : XP tuần từng người (đã áp trần 500 XP/ngày)
+    G --> E : {entries[≤ 50], me} — chỉ nickname, không email / id người khác (hòa: đạt sớm hơn đứng trước, BR-069)
+    E --> S : OK
+    S -> DB : dbWrite: INSERT OR REPLACE leaderboard_cache(week_start, payload_json, fetched_at)\n(giữ 2 tuần gần nhất)
+    S --> F : Success(bảng, fromCache = false)
+    F -> U : Top 50 + dòng "Bạn" ghim (hạng, XP, chuỗi)
+  else Mongo ngừng (serverSelectionTimeout 2 s)
+    G --> E : UNAVAILABLE · SERVICE_UNAVAILABLE
+    E --> S : UNAVAILABLE · SERVICE_UNAVAILABLE
+    S -> DB : dbRead: SELECT payload_json, fetched_at
+    alt Có bản lưu
+      S --> F : Success(bản lưu, fromCache = true)
+      F -> U : "Máy chủ đang gặp sự cố" + "Cập nhật lúc hh:mm dd/MM"
+    else Chưa có bản lưu
+      S --> F : Failure(SERVER_UNAVAILABLE)
+      F -> U : "Cần kết nối mạng để xem bảng xếp hạng"
+    end
+  end
+  opt UNAUTHENTICATED (token hết hạn / bị thu hồi)
+    E --> S : UNAUTHENTICATED
+    S --> F : xóa token → về SCR-02 (BR-059)
+  end
+  opt DEADLINE_EXCEEDED
+    S -> DB : dùng bản lưu như trên (NETWORK_TIMEOUT)
+  end
+else Mất mạng
+  S -> DB : dbRead: SELECT payload_json, fetched_at
+  alt Có bản lưu
+    S --> F : Success(bản lưu, fromCache = true)
+    F -> U : Bản cũ + "Cập nhật lúc hh:mm dd/MM" + thanh "Đang ngoại tuyến"
+  else Chưa có bản lưu
+    S --> F : Failure(NETWORK_OFFLINE)
+    F -> U : "Cần kết nối mạng để xem bảng xếp hạng"
+  end
+end
+note over S, MDB
+  Bảng chỉ tính XP server đã nhận: sync tính xp_awarded → outbox xp.recorded → gamification tổng hợp weekly_xp
+  (xem seq-outbox-relay). XP trên máy chưa đồng bộ hiện thêm "x XP đang chờ đồng bộ". Giới hạn 120 yêu cầu/phút/token ở edge.
+end note
+@enduml

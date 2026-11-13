@@ -1,0 +1,56 @@
+@startuml
+!include ../_style.puml
+title Cập nhật nội dung từ máy chủ [Could] (CR-007): GetManifest EP-14, GetDeck/GetExam EP-15/16 qua edge → content, ghi 1 giao dịch (FLOW-021, BR-075)
+autonumber
+skinparam maxMessageSize 200
+
+participant "SyncScheduler" as SCH
+participant "ContentService\n(app, luồng io)\n+ ContentRemote" as S
+participant "edge :50051" as E
+participant "content :50054\n(ContentBackend)" as C
+database "MongoDB learninge_content\nmanifest · decks · words · exams" as MDB
+database "SQLite máy\ncontent_version · decks · words ·\nexam_tests · exam_questions" as DB
+
+SCH -> S : checkUpdate() — sau đồng bộ, mở app có mạng
+S -> DB : dbRead: content_version (global, deck:*, exam:*)
+DB --> S : phiên bản đã cài
+S -> E : ContentService/GetManifest {if_version = 12}\nauthorization: Bearer (ContentService cần token); deadline 15 s
+E -> E : ValidateToken (cache ≤ 60 s) → x-user-id; chuyển tiếp\nContentBackend/GetManifest + x-internal-auth
+E -> C : GetManifest {if_version = 12}
+C -> MDB : manifest.findOne(_id = global); decks / exams (version, word_count)
+alt MongoDB / content ngừng
+  MDB --> C : lỗi (serverSelectionTimeout 2 s)
+  C --> E : UNAVAILABLE · SERVICE_UNAVAILABLE
+  E --> S : UNAVAILABLE
+  S --> SCH : bỏ qua lần cập nhật, dùng seed + bản đã tải
+else if_version khớp content_version
+  C --> E : {not_modified = true}
+  E --> S : OK
+  S --> SCH : đã mới nhất
+else Có bản mới
+  C --> E : {content_version, languages, decks[], exams[]}
+  E --> S : OK
+  S -> S : chọn bộ/đề có version lớn hơn bản đã cài
+  loop Từng bộ / đề cần tải
+    S -> E : ContentService/GetDeck {code} hoặc GetExam {code}
+    E -> C : ContentBackend/GetDeck / GetExam — code khớp ^[A-Z][0-9]{2}$
+    C -> MDB : decks + words (hoặc exams kèm questions nhúng)
+    MDB --> C : nội dung
+    C --> E : {deck, words[uid, deleted]} / {exam, questions[]}
+    E --> S : OK (hoặc NOT_FOUND · error-code NOT_FOUND)
+  end
+  S -> S : ánh xạ message proto → model app; kiểm tra đủ và đúng định dạng (thiếu trường → BAD_RESPONSE)
+  alt Hợp lệ
+    S -> DB : dbWrite, 1 giao dịch: ghi decks/words/exam_*; từ bị gỡ → ẩn, giữ card_progress;\ncập nhật content_version (global + từng mục)
+    DB --> S : OK
+    S --> SCH : bộ/đề mới hiện ở SCR-06
+  else Lỗi tải / sai định dạng / lỗi ghi CSDL
+    S -> DB : rollback; sync_state.last_error_code (giữ nội dung cũ)
+    S --> SCH : "Chưa cập nhật được nội dung mới" (SCR-35), thử lại lần mở app sau
+  end
+end
+note over S, DB
+  Seed trong APK là bản nền ngoại tuyến. Lỗi mạng / UNAUTHENTICATED / UNAVAILABLE: bỏ qua lần cập nhật, không chặn người dùng.
+  Mục nội dung có uid ổn định (vd T01-0007) nên tiến độ thẻ và yêu thích không đổi. Nội dung nạp bằng tools/content-import (idempotent theo code).
+end note
+@enduml

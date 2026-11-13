@@ -1,0 +1,59 @@
+@startuml
+!include ../_style.puml
+title Use case chi tiết — Đồng bộ, bảng xếp hạng & nội dung từ máy chủ (CR-007)
+left to right direction
+skinparam dpi 105
+skinparam usecase<<Could>> {
+  BackgroundColor #FFF8DB
+  BorderColor #E0B100
+}
+
+actor "Người học" as N
+actor "Hệ thống máy chủ LearningE\n(6 microservice)" as SV
+actor "Hệ thống\n(app chạy nền)" as SYS
+
+rectangle "LearningE" {
+  usecase "UC-023 Đồng bộ dữ liệu\n(FN-023, FLOW-019)" as UC23
+  usecase "Đẩy bản ghi dirty\n(lô ≤ 500, BR-064)" as PUSH
+  usecase "Kéo bản ghi theo cursor\n(BR-063)" as PULL
+  usecase "Hợp nhất xung đột LWW\n(BR-062)" as LWW
+  usecase "Thử lại 2 s, 4 s, 8 s\n(BR-077)" as RETRY
+  usecase "UC-027 Xem trạng thái đồng bộ\nvà đồng bộ ngay (SCR-35)" as UC27
+  usecase "UC-024 Xem bảng xếp hạng tuần\nvà nhận XP (SCR-34)" as UC24
+  usecase "Tạo xp_event\nsau phiên/quiz/thi\n(BR-065..BR-067)" as XP
+  usecase "Xem bản lưu khi mất mạng\n(AC-042.4)" as CACHE
+  usecase "UC-025 Cập nhật nội dung\ntừ server (FLOW-021)" as UC25 <<Could>>
+  usecase "Tải bộ từ/đề thi mới,\nghi trong 1 giao dịch (BR-075)" as DL <<Could>>
+  usecase "UC-010 Xem trang chủ, tiến độ,\nngọn lửa, rương" as UC10
+}
+
+N -- UC24
+N -- UC27
+N -- UC10
+SYS -- UC23
+SYS -- UC25
+UC23 -- SV
+UC24 -- SV
+UC25 -- SV
+
+UC23 ..> PUSH : <<include>>
+UC23 ..> PULL : <<include>>
+PUSH ..> LWW : <<include>>
+UC23 <.. RETRY : <<extend>>\n[mất mạng / 5xx]
+UC27 ..> UC23 : <<include>>\n[bấm "Đồng bộ ngay"]
+UC24 <.. CACHE : <<extend>>\n[mất mạng / 5xx]
+UC24 ..> XP : <<include>>\n[XP tuần từ sự kiện đã đồng bộ]
+XP ..> UC23 : đẩy sự kiện
+UC25 ..> DL : <<include>>\n[content_version lớn hơn]
+UC10 ..> XP : XP tạm tính
+
+note bottom of LWW
+  Cùng bản ghi sửa trên 2 máy: bản có updated_at
+  (server ghi nhận) lớn hơn thắng; xóa là tombstone;
+  card_progress chỉ ghi khi updated_at lớn hơn.
+end note
+note bottom of UC24
+  Top 50 theo XP tuần (Asia/Ho_Chi_Minh),
+  sync tính XP, gamification tổng hợp, trần 500 XP/ngày (BR-068, BR-069).
+end note
+@enduml

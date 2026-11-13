@@ -7,7 +7,7 @@ Tài liệu liên quan: [SYSTEM-BLUEPRINT](SYSTEM-BLUEPRINT.md) · [Business-Rul
 ## 1. Quy ước chung
 
 <!-- diagram:class/cls-core-infrastructure.puml -->
-![Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode, DatabaseHelper](../diagrams/class/cls-core-infrastructure.png)
+![Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode (ánh xạ từ gRPC), DatabaseHelper, GrpcClient, interceptor, GrpcErrorMapper, RetryPolicy, *Remote, TokenStore, NetworkMonitor, SyncManager](../diagrams/class/cls-core-infrastructure.png)
 <!-- /diagram -->
 
 | Quy ước | Nội dung |
@@ -65,6 +65,18 @@ public final class Result<T> {
 
 <!-- diagram:class/cls-services-content.puml -->
 ![Service bộ từ, quiz, thi thử, import/export](../diagrams/class/cls-services-content.png)
+<!-- /diagram -->
+
+<!-- diagram:sequence/seq-sync-push-pull.puml -->
+![Sơ đồ tuần tự đồng bộ: Push EP-11 (LWW, stale, rejected) rồi Pull EP-12 theo cursor qua edge → sync](../diagrams/sequence/seq-sync-push-pull.png)
+<!-- /diagram -->
+
+<!-- diagram:sequence/seq-leaderboard.puml -->
+![Sơ đồ tuần tự bảng xếp hạng tuần: GetWeekly EP-13 qua edge → gamification (MongoDB) và bản lưu khi mất mạng](../diagrams/sequence/seq-leaderboard.png)
+<!-- /diagram -->
+
+<!-- diagram:sequence/seq-content-update.puml -->
+![Sơ đồ tuần tự cập nhật nội dung từ máy chủ: GetManifest EP-14, GetDeck EP-15, GetExam EP-16 qua edge → content](../diagrams/sequence/seq-content-update.png)
 <!-- /diagram -->
 
 ### 3.1 `AuthService` (F1)

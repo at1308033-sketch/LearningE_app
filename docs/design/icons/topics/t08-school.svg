@@ -1,10 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-<!-- T08 School / Trường học - tile light #FFF7CC, dark #463E10 -->
-<path d="M19,13 L19,10.5 C19,7.5 21,6 24,6 C27,6 29,7.5 29,10.5 L29,13" fill="none" stroke="#5146E0" stroke-width="2.6" stroke-linecap="round"/>
-<rect x="10" y="11" width="28" height="32" rx="9" fill="#2563EB"/>
-<path d="M10,21 C10,15 14,11 19,11 L29,11 C34,11 38,15 38,21 L38,22.5 L10,22.5Z" fill="#2A2180" fill-opacity="0.35"/>
-<rect x="21.8" y="19.5" width="4.4" height="6.5" rx="1.6" fill="#FFC93C"/>
-<rect x="15" y="29" width="18" height="11" rx="4" fill="#FFC93C"/>
-<rect x="15" y="32" width="18" height="2" fill="#FFB020"/>
-<rect x="12.8" y="24.5" width="2.4" height="12" rx="1.2" fill="#FFFFFF" fill-opacity="0.35"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="#1E1B3A" d="M1 5h1v9h-1zM2 4h1v1h-1zM2 14h12v1h-12zM3 3h1v1h-1zM4 1h1v1h-1zM4 2h8v1h-8zM5 0h6v1h-6zM7 10h2v1h-2zM11 1h1v1h-1zM12 3h1v1h-1zM13 4h1v1h-1zM14 5h1v9h-1z"/><path fill="#1E40AF" d="M2 13h12v1h-12zM13 7h1v6h-1z"/><path fill="#2563EB" d="M2 5h1v2h-1zM2 8h2v5h-2zM2 7h11v1h-11zM3 4h10v1h-10zM4 3h8v1h-8zM4 5h10v2h-10zM5 1h6v1h-6zM12 8h1v5h-1z"/><path fill="#A5A0FF" d="M3 5h1v2h-1z"/><path fill="#FFB020" d="M4 12h8v1h-8z"/><path fill="#FFC93C" d="M4 9h1v1h-1zM4 10h3v1h-3zM4 8h8v1h-8zM4 11h8v1h-8zM6 9h6v1h-6zM9 10h3v1h-3z"/><path fill="#FFF1D6" d="M5 9h1v1h-1z"/></svg>

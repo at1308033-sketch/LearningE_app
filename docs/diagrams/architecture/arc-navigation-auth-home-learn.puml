@@ -1,6 +1,6 @@
 @startuml
 !include ../_style.puml
-title Bản đồ màn hình (1/2) — luồng chưa đăng nhập, tab Trang chủ và tab Học
+title Bản đồ màn hình (1/2) — luồng chưa đăng nhập, tab Trang chủ và tab Học (CR-006: đăng nhập online, công tắc Lưới | Bản đồ, lối vào SCR-34)
 skinparam rectangle {
   BackgroundColor #FFFFFF
   BorderColor #5146E0
@@ -20,11 +20,12 @@ frame "AuthActivity (chưa đăng nhập)" {
 }
 
 frame "MainActivity — tab Trang chủ" {
-  rectangle "SCR-05\nTrang chủ" as S05
+  rectangle "SCR-05\nTrang chủ (ngọn lửa,\nthẻ XP, lối vào SCR-34)" as S05
 }
 
 frame "MainActivity — tab Học" {
-  rectangle "SCR-06\nChủ đề có sẵn" as S06
+  rectangle "SCR-06\nChủ đề — công tắc\nLưới | Bản đồ" as S06
+  rectangle "SCR-06 chế độ Bản đồ\n(15 công trình pixel,\nkhóa theo cấp độ) [Could]" as S06M
   rectangle "SCR-07\nDanh sách từ" as S07
   rectangle "SCR-08\nChi tiết từ" as S08
   rectangle "SCR-26\nBộ của tôi" as S26
@@ -33,6 +34,10 @@ frame "MainActivity — tab Học" {
   rectangle "SCR-19\nChi tiết bộ" as S19
   rectangle "SCR-20\nThêm/sửa từ" as S20
   rectangle "SCR-29\nExport" as S29
+}
+
+frame "Bảng xếp hạng (cần đăng nhập)" {
+  rectangle "SCR-34\nBảng xếp hạng tuần" as S34
 }
 
 frame "Toàn màn hình (ẩn thanh tab)" {
@@ -53,6 +58,8 @@ S02 --> S05 : xóa ngăn xếp
 S05 --> S09 : Ôn tập
 S05 --> S07 : Học tiếp
 S06 --> S07 : deckId
+S06 <--> S06M : công tắc, nhớ lựa chọn
+S06M --> S07 : công trình đã mở
 S07 --> S08 : wordId
 S07 --> S09 : Học từ mới
 S06 --> S26
@@ -65,4 +72,5 @@ S19 --> S29 : SAF lưu tệp
 S19 --> S09 : Học bộ
 S09 --> S10
 S10 --> S05 : Về trang chủ
+S05 --> S34 : thẻ XP tuần
 @enduml

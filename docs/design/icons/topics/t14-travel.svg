@@ -1,11 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-<!-- T14 Travel / Du lịch - tile light #D8F3F6, dark #123A40 -->
-<path d="M14,15 L14,11 C14,9.5 15,8.5 16.5,8.5 L21.5,8.5 C23,8.5 24,9.5 24,11 L24,15" fill="none" stroke="#FF7A59" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="11" cy="42" r="2.3" fill="#1E1B3A"/><circle cx="27" cy="42" r="2.3" fill="#1E1B3A"/>
-<rect x="6" y="14.5" width="26" height="26" rx="5" fill="#FF7A59"/>
-<rect x="12" y="14.5" width="3" height="26" fill="#2B2340" fill-opacity="0.25"/><rect x="23" y="14.5" width="3" height="26" fill="#2B2340" fill-opacity="0.25"/>
-<rect x="8.4" y="18" width="2.2" height="9" rx="1.1" fill="#FFFFFF" fill-opacity="0.45"/>
-<circle cx="35" cy="33" r="1.4" fill="#5146E0"/><circle cx="38.4" cy="29.4" r="1.4" fill="#5146E0"/><circle cx="40.4" cy="25.2" r="1.4" fill="#5146E0"/>
-<path d="M38,3 C34,3 31,6 31,10 C31,15 38,21.5 38,21.5 C38,21.5 45,15 45,10 C45,6 42,3 38,3Z" fill="#5146E0"/>
-<circle cx="38" cy="10" r="2.6" fill="#FFFFFF"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="#1E1B3A" d="M0 5h1v8h-1zM1 13h7v1h-7zM1 4h8v1h-8zM2 3h1v1h-1zM2 14h1v1h-1zM3 2h3v1h-3zM6 3h1v1h-1zM6 14h1v1h-1zM8 2h1v2h-1zM8 6h1v7h-1zM8 5h2v1h-2zM9 1h1v1h-1zM10 6h1v1h-1zM10 0h4v1h-4zM11 7h2v1h-2zM13 6h1v1h-1zM14 1h1v1h-1zM14 5h1v1h-1zM15 2h1v3h-1z"/><path fill="#2563EB" d="M9 3h1v1h-1zM9 2h2v1h-2zM9 4h2v1h-2zM10 13h1v1h-1zM10 1h4v1h-4zM10 5h4v1h-4zM11 6h2v1h-2zM12 12h1v1h-1zM13 10h1v1h-1zM13 2h2v1h-2zM13 4h2v1h-2zM14 3h1v1h-1z"/><path fill="#C2410C" d="M1 12h7v1h-7zM4 6h1v6h-1zM6 6h1v6h-1z"/><path fill="#FF7A59" d="M1 6h1v2h-1zM1 8h3v4h-3zM1 5h7v1h-7zM3 6h1v2h-1zM3 3h3v1h-3zM5 6h1v6h-1zM7 6h1v6h-1z"/><path fill="#FFF1D6" d="M2 6h1v2h-1z"/><path fill="#FFFFFF" d="M10 3h4v1h-4zM11 2h2v1h-2zM11 4h2v1h-2z"/></svg>

@@ -1,11 +1,12 @@
 @startuml
 !include ../_style.puml
 set separator none
-title Sơ đồ gói com.learninge.app và hướng phụ thuộc
+title Sơ đồ gói com.learninge.app (app) và cargo workspace LearningE_Server (crates + services) và hướng phụ thuộc (CR-007)
+skinparam dpi 100
 hide empty members
 hide circle
 
-package "com.learninge.app" {
+package "Repo app — module :app — com.learninge.app" as APP {
   class LearningEApp
   package "ui" {
     package "ui.auth" as uiauth {
@@ -14,16 +15,22 @@ package "com.learninge.app" {
   }
     package "ui.home · ui.learn · ui.practice\nui.search · ui.me" as uitabs {
   }
-    package "ui.study · ui.quiz\nui.deck · ui.exam" as uifeat {
+    package "ui.study · ui.quiz · ui.deck\nui.exam · ui.leaderboard · ui.sync" as uifeat {
   }
-    package "ui.common\n(TtsHelper, BarChartView,\nEmptyStateView)" as uicommon {
+    package "ui.common\n(TtsHelper, BarChartView,\nEmptyStateView, pixel views)" as uicommon {
   }
   }
-  package "domain\n(Service, LanguageRegistry)" as domain {
+  package "domain\n(Service, XpService,\nLeaderboardService, ContentService)" as domain {
   }
-  package "domain.rules\n(Java thuần, không android.*)" as rules {
+  package "domain.rules\n(Java thuần, không android.*:\nLeitner, Streak, QuizGenerator,\nFlameStage, ThemeStars, ChestCounts)" as rules {
+  }
+  package "sync\n(SyncManager, SyncScheduler,\nsync.mapper.*)" as sync {
   }
   package "data" {
+    package "data.remote — tầng gRPC (DEC-020)\n(GrpcClient, AuthRemote, SyncRemote,\nLeaderboardRemote, ContentRemote,\nAuth/RequestIdInterceptor, GrpcErrorMapper,\nRetryPolicy, TokenStore, NetworkMonitor,\nServerConfig)" as remote {
+  }
+    package "learninge.app.v1.*\n(stub sinh từ proto — Java lite,\nchỉ data.remote được import)" as stub {
+  }
     package "data.repo" as repo {
   }
     package "data.dao" as dao {
@@ -34,11 +41,35 @@ package "com.learninge.app" {
   }
     package "data.io\n(JsonCodec, org.json)" as dio {
   }
-    class SessionStore
   }
   package "core\n(ServiceLocator, AppExecutors\nmain/dbRead/dbWrite/io,\nResult<T>, ErrorCode)" as core {
   }
   package "reminder\n(ReminderReceiver, BootReceiver)" as reminder {
+  }
+}
+
+package "Repo LearningE_Server — cargo workspace (Rust 1.99.1)" as SRV {
+  package "proto/learninge/app/v1 + internal/v1\n(.proto — nguồn sự thật;\napp chép bản sao + proto.lock)" as protofiles {
+  }
+  package "crates/proto (learninge-proto)\nbuild.rs → tonic-prost-build" as cproto {
+  }
+  package "crates/common\n(config, tracing, AppError → Status + error-code,\ninternal_auth, SQLite + migrator,\noutbox + relay, events, health, shutdown)" as ccommon {
+  }
+  package "services/* — mỗi dịch vụ một crate thư viện serve() + main" as SVCS {
+  package "services/edge\n(forwarders, token cache,\nrate limit, GetMe composer)" as sedge {
+  }
+  package "services/auth\n(domain: PasswordHasher, LockPolicy,\nTokenService · store: auth.db)" as sauth {
+  }
+  package "services/sync\n(domain: LwwPolicy, XpValidator,\nStreakCalculator · store: sync.db)" as ssync {
+  }
+  package "services/content\n(store: Mongo)" as scontent {
+  }
+  package "services/gamification\n(IsoWeek, DailyCap, Ranking · Mongo)" as sgame {
+  }
+  package "services/insight\n(store: Mongo, TTL index)" as sinsight {
+  }
+  }
+  package "bin/learninge-server (--all)\ntools/content-import" as sbin {
   }
 }
 
@@ -51,18 +82,32 @@ uitabs ..> uicommon
 uifeat ..> uicommon
 domain ..> rules
 domain ..> repo
-domain ..> SessionStore
+domain ..> remote
+domain ..> sync
 domain ..> dio
+sync ..> remote
+sync ..> repo
 repo ..> dao
+repo ..> remote : (token, userId)
+remote ..> stub
 dao ..> db
 dao ..> model
 domain ..> model
 reminder ..> domain
 core ..> domain
 core ..> db
+stub ..> protofiles : bản sao learninge.app.v1\n(tools/sync-proto.ps1)
+remote ..> sedge : gRPC (h2/TLS) learninge.app.v1\n(hợp đồng API_CONTRACT, không phụ thuộc mã)
+
+protofiles ..> cproto : build.rs
+SVCS ..> cproto
+SVCS ..> ccommon
+sbin ..> SVCS
 
 legend bottom
-  Quy tắc: ui → domain → data; domain.rules không import android.*;
-  DAO không chứa quy tắc nghiệp vụ; ViewModel không giữ Context của Activity
+  Quy tắc app: ui → domain → data (gồm data.remote); chỉ data.remote import mã sinh từ proto và io.grpc.*; sync được domain gọi, không phụ thuộc ui;
+  domain.rules không import android.*; DAO không chứa quy tắc nghiệp vụ; ViewModel không giữ Context của Activity.
+  Quy tắc server: mỗi dịch vụ là crate thư viện có serve(config, shutdown) + main mỏng; grpc → domain → store; dịch vụ không import crate dịch vụ khác (chỉ qua proto);
+  user_id chỉ lấy từ metadata x-user-id do edge gắn sau khi qua interceptor x-internal-auth. common dùng được ở mọi tầng.
 endlegend
 @enduml

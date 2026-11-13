@@ -1,72 +1,73 @@
 @startuml
 !include ../_style.puml
-title Thành phần hệ thống — 3 tầng MVVM và dịch vụ Android (DEC-001)
+title Thành phần hệ thống — C4 mức container (CR-007): app Android (gRPC client) → edge → 5 dịch vụ Rust, SQLite theo dịch vụ, MongoDB, outbox relay (DEC-018..DEC-021)
 skinparam componentStyle rectangle
+skinparam dpi 110
 
-package "Tầng giao diện (ui.*)" {
-  [AuthActivity\nSplash, Đăng nhập, Đăng ký,\nQuên mật khẩu, Thiết lập] as AA
-  [MainActivity\nBottomNavigationView +\nNavHostFragment] as MA
-  [Fragment SCR-05..SCR-33\n+ Adapter] as FR
-  [ViewModel + LiveData\n(SavedStateHandle)] as VM
-  [TtsHelper] as TH
+actor "Người học" as U
+
+node "Điện thoại Android / emulator" as PH {
+  rectangle "App LearningE (Java 17, minSdk 29, MVVM 3 tầng)" as APP {
+    component "ui + domain + sync\nViewModel, Service, domain.rules,\nSyncManager, SyncScheduler" as CORE
+    component "data.remote (gRPC client)\nGrpcClient (1 ManagedChannel, grpc-okhttp),\nAuthRemote · SyncRemote · LeaderboardRemote ·\nContentRemote, GrpcErrorMapper, RetryPolicy,\nTokenStore, NetworkMonitor, ServerConfig" as REM
+    database "learninge.db\n(SQLite, 19 bảng,\nnguồn hiển thị, offline-first)" as LDB
+  }
+  rectangle "Dịch vụ Android" as AND {
+    component "TextToSpeech · AlarmManager +\nNotificationManager · SAF · Trình duyệt" as OS
+  }
 }
 
-package "Tầng nghiệp vụ (domain)" {
-  [Service\nAuth, Deck, Study, Quiz, Exam,\nImportExport, Progress, Reminder] as SVC
-  [LanguageRegistry] as LR
-  [domain.rules (Java thuần)\nLeitnerScheduler, StreakCalculator,\nQuizGenerator, AnswerChecker, CsvCodec,\nPasswordHasher, TextNormalizer] as RULE
+cloud "Lớp lộ ra Internet (DEC-023)\ntunnel / PaaS / reverse proxy\nTLS h2 kết thúc tại đây" as EXPO
+
+node "Máy chủ: docker compose (mạng bridge nội bộ — chỉ edge được publish)" as HOST {
+  component "edge :50051 (Rust · tonic) — cổng duy nhất publish\nHiện thực learninge.app.v1: AuthService, SyncService, LeaderboardService,\nContentService, Health · ValidateToken (cache 60 s) · rate limit · gắn x-user-id\nGetMe composer · gửi request_logs" as EDGE
+
+  component "auth :50052\nđăng ký, đăng nhập, token,\nkhóa tăng dần, PBKDF2" as AUTH
+  component "sync :50053\nPush/Pull, LWW, server_seq,\nXP (nguồn sự thật), chuỗi ngày" as SYNC
+  component "gamification :50055\nbảng xếp hạng tuần,\nGetStats" as GAME
+  component "insight :50056\naudit, request_logs,\nanalytics_daily" as INSI
+  component "content :50054\nmanifest, bộ từ,\nđề thi" as CONT
+
+  database "auth.db (SQLite WAL)\nusers, auth_tokens,\nsecurity_answers,\nauth_attempts, outbox" as ADB
+  database "sync.db (SQLite WAL)\ndecks, words, card_progress,\nxp_events, user_stats,\npurged_users, outbox" as SDB
+  database "MongoDB 8.0 (không publish)\nlearninge_content · learninge_game ·\nlearninge_insight (mỗi DB một user)" as MDB
 }
 
-package "Tầng dữ liệu (data)" {
-  [Repository\nUser, Deck, Progress,\nQuiz, Exam, Language] as REPO
-  [DAO (data.dao)] as DAO
-  [DatabaseHelper\n+ SeedLoader] as DBH
-  [SessionStore] as SS
-  [data.io\nJsonCodec (org.json)] as DIO
-}
+U --> CORE : học, ôn, quiz,\nxem xếp hạng
+CORE --> LDB
+CORE --> REM
+CORE --> OS
+REM --> EXPO : gRPC/TLS 443 (h2)\nBearer, x-request-id,\nx-client-version
+REM ..> EDGE : debug: h2c 10.0.2.2 / IP LAN :50051
+EXPO --> EDGE : h2c :50051
 
-package "core" {
-  [ServiceLocator] as SL
-  [AppExecutors\ndbWrite · dbRead · io · main] as EX
-}
+EDGE --> AUTH : AuthBackend\nTokenValidator
+EDGE --> SYNC : SyncBackend
+EDGE --> GAME : GamificationBackend
+EDGE --> CONT : ContentBackend
+EDGE ..> INSI : LogRequests (best-effort)
 
-package "Nền tảng Android" {
-  database "SQLite\nlearninge.db" as SQL
-  [SharedPreferences] as SP
-  [assets/seed/*.json] as SEED
-  [TextToSpeech] as TTS
-  [AlarmManager +\nNotificationManager] as AL
-  [Storage Access Framework\n(ContentResolver)] as SAF
-  [Trình duyệt mặc định\n(Intent ACTION_VIEW)] as BRW
-  [reminder.ReminderReceiver\nreminder.BootReceiver] as RCV
-}
+AUTH -[hidden]right- SYNC
+SYNC -[hidden]right- GAME
+GAME -[hidden]right- INSI
+INSI -[hidden]right- CONT
 
-AA --> VM
-MA --> FR
-FR --> VM
-FR --> TH
-TH --> TTS
-FR --> BRW
-VM --> SVC : gọi qua EX
-SVC --> RULE
-SVC --> LR
-SVC --> REPO
-SVC --> SS
-SVC --> AL
-SVC --> SAF
-SVC --> DIO
-REPO --> DAO
-DAO --> DBH
-DBH --> SQL
-SEED --> DBH : nạp lần đầu
-SS --> SP
-AL --> RCV
-RCV --> SVC
-SL ..> SVC : khởi tạo
-SL ..> REPO
-VM ..> EX
+AUTH --> ADB
+SYNC --> SDB
+GAME --> MDB
+INSI --> MDB
+CONT --> MDB
+
+AUTH .[norank].> SYNC : outbox relay\nuser.registered/deleted
+SYNC .[norank].> GAME : xp.recorded,\nprogress.changed,\nuser.deleted
+AUTH .[norank].> GAME : user.*
+AUTH .[norank].> INSI : user.*, auth.*
+SYNC .[norank].> INSI : xp.recorded,\nprogress.changed
 
 legend bottom
-  Không có quyền INTERNET, không máy chủ (NFR-A1). ViewModel gọi Service trên AppExecutors (db: dbRead/dbWrite, tệp SAF: io), trả Result<T> qua LiveData.postValue.
+  Chỉ edge :50051 được publish ra ngoài; 50052–50056 và MongoDB nằm trong mạng nội bộ (NFR-S9); dịch vụ nội bộ chỉ nhận lời gọi có metadata x-internal-auth. Nghiệp vụ, SQLite app và pixel layer không đổi so với CR-006.
+  Mũi tên liền = lời gọi đồng bộ (gRPC); đường đứt = bất đồng bộ qua outbox (ghi cùng giao dịch SQLite, relay giao ít nhất một lần, bên nhận idempotent theo event_id) hoặc best-effort.
+  SQLite là nguồn sự thật (auth.db, sync.db); MongoDB chỉ nhận qua outbox/nạp nội dung, mất Mongo thì auth, sync vẫn chạy (gamification rebuild từ sync.db).
+  Phiên bản cũ (CR-006, Javalin + REST /api/v1, 1 tiến trình, 1 SQLite) đã thay thế — xem docs/changes/CR-006-snapshot.
 endlegend
 @enduml

@@ -1,0 +1,86 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 120
+title Hoạt động — Đồng bộ đẩy/kéo và xung đột LWW (FLOW-019, UC-023, CR-007: gRPC SyncService)
+
+|Người học / Hệ thống|
+|Bộ đồng bộ (io)|
+|SQLite máy|
+|Hệ thống máy chủ LearningE (6 microservice)|
+|Người học / Hệ thống|
+start
+:Sự kiện kích hoạt (BR-077): đăng nhập xong, mở app\n(≤ 1 lần/5 phút), sau phiên học/quiz/thi,\nmạng có lại, bấm "Đồng bộ ngay";
+|Bộ đồng bộ (io)|
+if (Đang có lần đồng bộ khác chạy?) then (có)
+  :Gộp vào lần chạy tiếp theo;
+  stop
+else (không)
+endif
+if (Có mạng?) then (không)
+  :Giữ dữ liệu dirty, chạy lại khi\nNetworkMonitor báo có mạng;
+  stop
+else (có)
+endif
+|SQLite máy|
+:Đọc bản ghi dirty = 1\n(cha → con, lô ≤ 500, BR-064);
+|Bộ đồng bộ (io)|
+while (Còn bản ghi chờ đẩy?) is (còn)
+  :gRPC SyncService/Push {device_id, changes}\n(EP-11) qua edge → sync;
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  if (Token hợp lệ?\n(edge hỏi auth.ValidateToken)) then (không)
+    :UNAUTHENTICATED;
+    |Bộ đồng bộ (io)|
+    :Xóa token, giữ dirty, về SCR-02 (BR-059);
+    stop
+  else (có)
+  endif
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :Một giao dịch BEGIN IMMEDIATE (sync.db),
+  user_id lấy từ x-user-id do edge gắn;
+  :Từng bản ghi: bảng thường → ghi đè theo LWW;
+  :card_progress: chỉ ghi nếu updated_at lớn hơn;
+  :Bảng chỉ-thêm (study_log, quiz, exam, xp_events):\nchưa có uuid → chèn, đã có → duplicate;
+  :xp_events: sync tự tính xp_awarded, trần 500 XP/ngày;\nghi outbox xp.recorded cùng giao dịch (BR-065..BR-068);
+  :Bản ghi sai/không thuộc người dùng → rejected;
+  :Cấp server_seq cho bản ghi applied;
+  :OK results[]: applied / duplicate /\nstale + current / rejected;
+  |Bộ đồng bộ (io)|
+  if (Phản hồi?) then (UNAVAILABLE, DEADLINE_EXCEEDED,\nlỗi kết nối, INTERNAL)
+    if (Đã thử lại đủ 3 lần?\n(chờ 2 s, 4 s, 8 s)) then (rồi)
+      |SQLite máy|
+      :Ghi sync_state.last_error_code;
+      stop
+    else (chưa)
+    endif
+  else (OK hoặc RESOURCE_EXHAUSTED)
+    :RESOURCE_EXHAUSTED: chờ đúng retry-after-seconds rồi gửi lại;
+  endif
+  |SQLite máy|
+  :applied/duplicate → dirty = 0 WHERE uuid = ? AND\nupdated_at = ? (bản vừa sửa tiếp giữ dirty);
+  :stale → ghi đè bản thắng của server (current);
+  :rejected → bỏ dirty, ghi log lỗi;
+  |Bộ đồng bộ (io)|
+endwhile (hết)
+repeat
+  :gRPC SyncService/Pull {since = cursor, limit = 500}\n(EP-12) qua edge → sync;
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  :Đọc bản ghi của user_id có server_seq > cursor,\nsắp tăng dần, gồm tombstone;
+  :OK {changes, next_cursor, has_more};
+  |SQLite máy|
+  :1 giao dịch: UPDATE theo uuid, 0 dòng thì INSERT;
+  :Lưu pull_cursor = next_cursor (sau khi ghi xong trang);
+  |Bộ đồng bộ (io)|
+repeat while (has_more?) is (true) not (false)
+|SQLite máy|
+:Tính lại chuỗi ngày, rương; đặt last_sync_at;
+|Người học / Hệ thống|
+:SCR-35 cập nhật: số chờ đẩy = 0,\n"Đã hợp nhất x thay đổi từ máy khác";
+stop
+note right
+  Mất mạng giữa lúc kéo: giữ trang đã ghi,
+  tiếp tục từ cursor ở lần sau (BR-063).
+  Xóa bộ trên máy A = tombstone; máy B kéo về thì ẩn bộ.
+  PERMISSION_DENIED (ACCOUNT_DELETED): tài khoản đã bị xóa →
+  xóa dữ liệu cục bộ, báo, về SCR-02.
+end note
+@enduml

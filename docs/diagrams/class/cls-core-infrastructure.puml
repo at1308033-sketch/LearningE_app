@@ -1,8 +1,10 @@
 @startuml
 !include ../_style.puml
 set separator none
-title Lớp hạ tầng dùng chung — khởi tạo phụ thuộc, luồng nền, kết quả và CSDL
+title Lớp hạ tầng dùng chung — khởi tạo phụ thuộc, luồng nền, kết quả/mã lỗi, CSDL, tầng mạng gRPC và đồng bộ (CR-007)
 skinparam classAttributeIconSize 0
+skinparam dpi 105
+left to right direction
 hide empty members
 
 class LearningEApp {
@@ -19,13 +21,16 @@ package "core" {
     +studyService() : StudyService
     +deckService() : DeckService
     +examService() : ExamService
+    +xpService() : XpService
+    +leaderboardService() : LeaderboardService
+    +syncManager() : SyncManager
     +executors() : AppExecutors
     +clock() : Clock
   }
   class AppExecutors {
     -ExecutorService dbWrite  // 1 luồng
     -ExecutorService dbRead   // pool 2 luồng
-    -ExecutorService io       // đọc/ghi tệp SAF
+    -ExecutorService io       // tệp SAF và mọi gọi mạng
     -Executor main            // Handler
     +dbWrite() : Executor
     +dbRead() : Executor
@@ -41,13 +46,8 @@ package "core" {
     +isOk() : boolean
   }
   enum ErrorCode {
+    -- dữ liệu / tệp --
     VALIDATION
-    USERNAME_TAKEN
-    INVALID_CREDENTIALS
-    LOCKED
-    WRONG_ANSWER
-    WRONG_PASSWORD
-    SAME_PASSWORD
     NOT_FOUND
     DUPLICATE
     READ_ONLY
@@ -60,12 +60,28 @@ package "core" {
     TTS_UNAVAILABLE
     PERMISSION_DENIED
     TIME_UP
+    -- mạng (ánh xạ từ mã gRPC + trailer error-code) --
+    NETWORK_OFFLINE
+    NETWORK_TIMEOUT
+    SERVER_UNAVAILABLE
+    UNAUTHENTICATED
+    ACCOUNT_DELETED
+    UPGRADE_REQUIRED
+    BAD_RESPONSE
+    -- xác thực từ server --
+    INVALID_CREDENTIALS
+    INVALID_SECURITY_ANSWER
+    ACCOUNT_LOCKED
+    RESET_LOCKED
+    RATE_LIMITED
+    EMAIL_TAKEN
+    NICKNAME_TAKEN
   }
 }
 
 package "data" {
   class DatabaseHelper {
-    +{static} DATABASE_VERSION = 1
+    +{static} DATABASE_VERSION
     +onConfigure(SQLiteDatabase)
     +onCreate(SQLiteDatabase)
     +onUpgrade(SQLiteDatabase, int, int)
@@ -74,10 +90,77 @@ package "data" {
     +load(SQLiteDatabase, AssetManager)
   }
   class DbContract
-  class SessionStore {
+}
+
+package "data.remote (gRPC, DEC-020)" {
+  class GrpcClient {
+    -ManagedChannel channel
+    +AuthServiceBlockingStub auth(Deadline)
+    +SyncServiceBlockingStub sync(Deadline)
+    +LeaderboardServiceBlockingStub leaderboard(Deadline)
+    +ContentServiceBlockingStub content(Deadline)
+    +shutdown()
+    -- OkHttpChannelBuilder (grpc-okhttp), TLS mặc định;\nplaintext chỉ debug + host danh sách trắng;\nmọi lời gọi trên luồng io, deadline mỗi RPC --
+  }
+  class AuthInterceptor <<ClientInterceptor>> {
+    authorization: Bearer (trừ RPC công khai)
+  }
+  class RequestIdInterceptor <<ClientInterceptor>> {
+    x-request-id (UUID), x-client-version
+  }
+  class GrpcErrorMapper {
+    +map(StatusRuntimeException) : Failure
+    -- (mã gRPC, trailer error-code) → ErrorCode --
+  }
+  class RetryPolicy {
+    +call(Supplier<T>, idempotent) : Result<T>
+    -- chờ 2 s, 4 s, 8 s ±20% (BR-077);\nkhông thử lại Register, Login,\nChangePassword, ResetPassword, DeleteAccount --
+  }
+  class AuthRemote {
+    +register(...) / login(...) / logout()
+    +getMe() / updateMe(...)
+    +changePassword(...) / getResetQuestion(...) / resetPassword(...)
+    +deleteAccount(password)
+  }
+  class SyncRemote {
+    +push(deviceId, changes) : Result<PushResult>
+    +pull(since, limit) : Result<PullPage>
+  }
+  class LeaderboardRemote {
+    +getWeekly(week) : Result<Leaderboard>
+  }
+  class ContentRemote {
+    +getManifest(ifVersion) : Result<Manifest>
+    +getDeck(code) / getExam(code)
+  }
+  class TokenStore {
     +currentUserId() : long
-    +save(long userId)
+    +token() : String
+    +save(token, expiresAt, userId)
     +clear()
+    -- SharedPreferences MODE_PRIVATE,\nkhông log; Should: AES-GCM + Keystore --
+  }
+  class NetworkMonitor {
+    +LiveData<Boolean> online
+    +isOnline() : boolean
+    -- registerDefaultNetworkCallback;\ncó mạng lại → channel.resetConnectBackoff() --
+  }
+  class ServerConfig {
+    +host() / port() / tls()
+    -- BuildConfig.GRPC_HOST / GRPC_PORT / GRPC_TLS;\ndebug ghi đè được --
+  }
+}
+
+package "sync" {
+  class SyncManager {
+    -AtomicBoolean running
+    +sync(reason) : Result<SyncSummary>
+    -pushDirty() : Result<Void>
+    -pullAll() : Result<Void>
+  }
+  class SyncScheduler {
+    +requestSync(reason)
+    -- đăng nhập, foreground ≤ 1 lần/5 phút,\ncuối phiên, mạng có lại, "Đồng bộ ngay" --
   }
 }
 
@@ -86,8 +169,29 @@ SQLiteOpenHelper <|-- DatabaseHelper
 LearningEApp ..> ServiceLocator : init
 ServiceLocator *-- AppExecutors
 ServiceLocator *-- DatabaseHelper
-ServiceLocator *-- SessionStore
+ServiceLocator *-- GrpcClient
+ServiceLocator *-- TokenStore
+ServiceLocator *-- SyncManager
 DatabaseHelper --> SeedLoader : onCreate
 DatabaseHelper ..> DbContract
 Result --> ErrorCode
+GrpcClient --> AuthInterceptor
+GrpcClient --> RequestIdInterceptor
+GrpcClient --> ServerConfig
+AuthInterceptor --> TokenStore : authorization: Bearer
+AuthRemote --> GrpcClient
+SyncRemote --> GrpcClient
+LeaderboardRemote --> GrpcClient
+ContentRemote --> GrpcClient
+AuthRemote --> RetryPolicy
+SyncRemote --> RetryPolicy
+RetryPolicy --> GrpcErrorMapper
+SyncManager --> SyncRemote
+SyncManager --> NetworkMonitor
+SyncScheduler --> SyncManager
+
+note bottom of AppExecutors
+  Không gọi mạng trên main (StrictMode detectNetwork ở debug)
+  và không giữ giao dịch CSDL trong lúc chờ mạng.
+end note
 @enduml

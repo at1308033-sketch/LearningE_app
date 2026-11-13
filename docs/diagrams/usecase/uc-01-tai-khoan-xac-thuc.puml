@@ -1,22 +1,28 @@
 @startuml
 !include ../_style.puml
-title Use case chi tiết — Tài khoản & xác thực (F1)
+title Use case chi tiết — Tài khoản & xác thực trên máy chủ (F1, CR-007)
 left to right direction
 
 actor "Khách" as K
 actor "Người học" as N
+actor "Hệ thống máy chủ LearningE\n(6 microservice)" as SV
 actor "Hệ điều hành Android" as OS
 
 rectangle "LearningE" {
   usecase "UC-015 Khởi tạo dữ liệu seed\n(lần mở app đầu tiên)" as UC15
-  usecase "UC-001 Đăng ký" as UC1
+  usecase "UC-001 Đăng ký\n(email, biệt danh; cần mạng)" as UC1
   usecase "Chọn câu hỏi bảo mật\nvà câu trả lời (BR-007, BR-009)" as SQ
   usecase "UC-003 Thiết lập lần đầu" as UC3
   usecase "Xin quyền thông báo\n(Android 13+)" as PERM
-  usecase "UC-002 Đăng nhập / đăng xuất" as UC2
-  usecase "Khóa tạm đăng nhập 60 giây\n(BR-003)" as LOCK
-  usecase "UC-017 Đặt lại mật khẩu" as UC17
-  usecase "Khóa đặt lại 5 phút\n(BR-008)" as RLOCK
+  usecase "UC-002 Đăng nhập / đăng xuất\n(cần mạng, nhận token — BR-057)" as UC2
+  usecase "Khóa tăng dần đăng nhập:\n5 lần sai → 60 s, gấp đôi mỗi lần,\ntối đa 1 giờ (BR-003)" as LOCK
+  usecase "Báo lỗi mạng / máy chủ\n(BR-078)" as NETERR
+  usecase "Phiên hết hạn (UNAUTHENTICATED):\nxóa token, giữ dữ liệu chờ đẩy\n(BR-059)" as EXP
+  usecase "Đăng nhập trên máy thứ hai:\nkéo toàn bộ dữ liệu (FLOW-018)" as UC2B
+  usecase "UC-023 Đồng bộ dữ liệu" as UC23
+  usecase "Đẩy lần cuối trước khi đăng xuất\n(BR-073)" as FLUSH
+  usecase "UC-017 Đặt lại mật khẩu\n(câu hỏi bảo mật, trên máy chủ)" as UC17
+  usecase "Khóa đặt lại tăng dần\n60 s, gấp đôi, tối đa 1 giờ (BR-008)" as RLOCK
   usecase "UC-016 Xem giới thiệu" as UC16
 }
 
@@ -26,17 +32,26 @@ K -- UC2
 K -- UC16
 N -- UC2
 N -- UC16
+UC1 -- SV
+UC2 -- SV
+UC17 -- SV
 
 UC1 ..> SQ : <<include>>
 UC1 ..> UC3 : <<include>>
 UC3 <.. PERM : <<extend>>\n[bật nhắc học]
 UC2 <.. LOCK : <<extend>>\n[sai 5 lần liên tiếp]
+UC2 <.. NETERR : <<extend>>\n[mất mạng / timeout / 5xx]
+UC2 <.. EXP : <<extend>>\n[token hết hạn / bị thu hồi]
 UC2 <.. UC17 : <<extend>>\n[bấm "Quên mật khẩu?"]
-UC17 <.. RLOCK : <<extend>>\n[sai 3 lần liên tiếp]
+UC2 <.. UC2B : <<extend>>\n[máy chưa có dữ liệu tài khoản]
+UC2B ..> UC23 : <<include>>
+UC2 ..> FLUSH : <<include>>\n[đăng xuất]
+UC17 <.. RLOCK : <<extend>>\n[sai 5 lần liên tiếp]
 PERM -- OS
 note as NOTE1
-  UC-017: Khách khởi động từ màn hình Đăng nhập
-  ("Quên mật khẩu?"). UC-003: chạy ngay sau UC-001,
-  tác nhân là Người học vừa đăng ký.
+  Mật khẩu chỉ được băm PBKDF2 trên máy chủ (BR-002);
+  máy chỉ giữ token opaque. Email không tồn tại được
+  xử lý và khóa giống email thật (BR-076).
+  UC-003 chạy ngay sau UC-001.
 end note
 @enduml

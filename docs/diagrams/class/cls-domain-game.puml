@@ -1,0 +1,82 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 112
+set separator none
+title Lớp quy tắc lớp game pixel — FlameStage, ThemeStars, ChestCounts, XpCalculator (BR-065..BR-072, DEC-017)
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "com.learninge.app.domain.rules (Java thuần, không android.*)" {
+  class FlameStage <<utility>> {
+    +{static} of(int streak) : int
+    -- s ≤ 0 → 0 (tắt); 1–2 → 1; 3–6 → 2;\n7–29 → 3; ≥ 30 → 4 (BR-070) --
+  }
+  class ThemeStars <<utility>> {
+    +{static} of(int totalWords, int masteredWords) : int
+    -- t = tổng từ, m = số từ hộp 5:\n3 sao: m = t; 2 sao: 3m ≥ 2t; 1 sao: 3m ≥ t;\nchủ đề 0 từ → 0 sao (số nguyên, BR-072) --
+  }
+  class ChestCounts <<value>> {
+    +int[5] perBox  // hộp 1..5
+    +{static} from(List<CardProgress>) : ChestCounts
+    +delta(ChestCounts before) : int[5]
+    -- số trên rương k = số card_progress chưa xóa\nở hộp k của người dùng (BR-071) --
+  }
+  class XpCalculator <<utility>> {
+    +{static} cardSession(int remembered, int forgotten) : int
+    +{static} quiz(int correct, int total) : int
+    +{static} exam(int correct) : int
+    +{static} applyDailyCap(int raw, int alreadyToday) : int
+    -- thẻ: +2 nhớ, +1 chưa nhớ (BR-065);\nquiz: +1/câu đúng, +5 nếu 100% (BR-066);\nthi: +1/câu đúng (BR-067); trần 500 XP/ngày (BR-068) --
+  }
+  class StreakCalculator {
+    +next(StreakState, LocalDate today) : StreakState
+  }
+  class LeitnerScheduler
+}
+
+package "domain" {
+  class ProgressService {
+    +today() : Result<TodaySummary>
+    +chests() : Result<ChestCounts>
+    +sessionSummary(...) : Result<SessionSummary>
+  }
+  class XpService {
+    +record(source, correct, wrong) : Result<XpEvent>
+  }
+  class DeckService {
+    +themesWithStars() : Result<List<ThemeCard>>
+  }
+}
+
+package "ui (không chứa quy tắc)" {
+  class "SCR-05 Trang chủ\nhuy hiệu chuỗi ngày" as S05
+  class "SCR-21 Tiến độ\nngọn lửa 5 giai đoạn + 5 rương" as S21
+  class "SCR-10 Kết quả phiên\ncúp, confetti, rương +/−" as S10
+  class "SCR-06 Học\nLưới (sao) | Bản đồ (sao, khóa)" as S06
+}
+
+class "SessionSummary <<value>>" as SessionSummary {
+  +int remembered / forgotten
+  +int streak
+  +int xpLocal
+  +int[5] chestDelta
+}
+
+ProgressService ..> FlameStage : giai đoạn từ chuỗi hiện tại
+ProgressService ..> ChestCounts
+ProgressService --> StreakCalculator
+ProgressService ..> SessionSummary
+XpService ..> XpCalculator : xp_local (hiện ngay);\nserver tính lại xp_awarded
+DeckService ..> ThemeStars
+S05 ..> ProgressService : FlameStage
+S21 ..> ProgressService : FlameStage, ChestCounts
+S10 ..> SessionSummary : chestDelta
+S06 ..> DeckService : ThemeStars
+S06 ..> "BR-074: khóa theo cấp độ" : công trình khóa/mở
+
+note bottom of XpCalculator
+  Cùng công thức ở server (gói leaderboard, JUnit 5):
+  server là nguồn đúng, app chỉ tạm tính xp_local để hiện ngay.
+  Unit test biên FlameStage: 0, 1, 2, 3, 6, 7, 29, 30.
+end note
+@enduml

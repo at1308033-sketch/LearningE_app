@@ -24,6 +24,10 @@ group Luồng nền AppExecutors.dbWrite
       S -> DD : insert(Deck: tên tệp bỏ đuôi, trùng → " (2)")
       DD -> DB : INSERT INTO decks …
     end
+    note right of S
+      CR-006: bộ/từ của người dùng chèn với uuid v4,
+      updated_at = now, dirty = 1 (outbox cho UC-023)
+    end note
     S -> WD : compile "INSERT OR IGNORE INTO words(deck_id, term, …,\nsearch_term, …) VALUES (?, …)" (SQLiteStatement)
     loop Mỗi dòng hợp lệ (≤ 2000)
       WD -> DB : bind + executeInsert()

@@ -1,22 +1,22 @@
 @startuml
 !include ../_style.puml
-title Trạng thái tài khoản và khóa tạm (đăng nhập, đặt lại mật khẩu)
+title Trạng thái tài khoản và khóa tăng dần (đăng nhập, đặt lại mật khẩu)
 
 state "Chưa thiết lập" as ChuaThietLap
 state "Hoạt động" as HoatDong {
-  state "Bình thường\n(đếm sai đăng nhập < 5)" as BinhThuong
-  state "Khóa tạm đăng nhập\n60 giây (BR-003)" as KhoaTam
+  state "Bình thường\n(đếm sai đăng nhập < 5,\nbậc khóa k, 0 đến 7)" as BinhThuong
+  state "Khóa tăng dần đăng nhập\n60 s, nhân đôi mỗi bậc,\ntrần 1 giờ (BR-003, AC-002.8)" as KhoaTam
   [*] --> BinhThuong
-  BinhThuong --> BinhThuong : Sai mật khẩu (đếm + 1, < 5) /\nđăng nhập đúng hoặc đặt lại\nmật khẩu (đếm = 0)
-  BinhThuong --> KhoaTam : Sai mật khẩu\nlần thứ 5 liên tiếp
-  KhoaTam --> BinhThuong : Hết 60 giây
+  BinhThuong --> BinhThuong : Sai mật khẩu (đếm + 1, < 5) /\nđăng nhập đúng hoặc đặt lại mật khẩu\n(đếm = 0, bậc k = 0) /\n24 giờ không sai (bậc k = 0)
+  BinhThuong --> KhoaTam : Sai mật khẩu lần thứ 5\nliên tiếp (bậc k + 1;\ncả email không tồn tại)
+  KhoaTam --> BinhThuong : Hết thời gian khóa\n(đếm = 0, giữ bậc k)
   --
-  state "Cho phép đặt lại\n(đếm sai trả lời < 3)" as ChoDatLai
-  state "Khóa đặt lại mật khẩu\n5 phút (BR-008)" as KhoaDatLai
+  state "Cho phép đặt lại\n(đếm sai trả lời < 5,\nbậc khóa j, 0 đến 7)" as ChoDatLai
+  state "Khóa tăng dần đặt lại mật khẩu\n60 s, nhân đôi mỗi bậc,\ntrần 1 giờ (BR-008)" as KhoaDatLai
   [*] --> ChoDatLai
-  ChoDatLai --> ChoDatLai : Trả lời sai (< 3) /\ntrả lời đúng (đếm = 0)
-  ChoDatLai --> KhoaDatLai : Trả lời sai\nlần thứ 3 liên tiếp
-  KhoaDatLai --> ChoDatLai : Hết 5 phút
+  ChoDatLai --> ChoDatLai : Trả lời sai (< 5) /\nđặt lại thành công (đếm = 0, bậc j = 0) /\n24 giờ không sai (bậc j = 0)
+  ChoDatLai --> KhoaDatLai : Trả lời sai lần thứ 5\nliên tiếp (bậc j + 1;\ncả email không tồn tại)
+  KhoaDatLai --> ChoDatLai : Hết thời gian khóa\n(đếm = 0, giữ bậc j)
 }
 
 [*] --> ChuaThietLap : Đăng ký thành công\n(BR-001, BR-046)

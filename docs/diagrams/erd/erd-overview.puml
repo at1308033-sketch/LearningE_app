@@ -1,37 +1,70 @@
 @startuml
 !include ../_style.puml
-title ERD tổng quan — 18 bảng SQLite của LearningE
+left to right direction
+skinparam dpi 110
+title ERD tổng quan (CR-007) — 19 bảng SQLite của app (trái) và database theo dịch vụ của server: auth.db, sync.db, MongoDB (phải)
 hide circle
 hide members
 
-package "Tài khoản & cài đặt" {
-  entity users
-  entity user_settings
-  entity seed_meta
-}
-package "Từ vựng & bộ từ" {
-  entity languages
-  entity decks
-  entity words
-  entity card_progress
-  entity favorites
-}
-package "Ngữ pháp, quiz & nhật ký" {
-  entity grammar_lessons
-  entity grammar_questions
-  entity grammar_progress
-  entity quiz_attempts
-  entity quiz_answers
-  entity study_log
-}
-package "Luyện thi" {
-  entity exam_tests
-  entity exam_questions
-  entity exam_attempts
-  entity exam_answers
+package "APP — learninge.db (SQLite, 19 bảng)" as APP {
+  package "Tài khoản, cài đặt, đồng bộ" {
+    entity users
+    entity user_settings
+    entity sync_state
+    entity seed_meta
+    entity leaderboard_cache
+    entity content_version
+  }
+  package "Từ vựng & bộ từ" {
+    entity languages
+    entity decks
+    entity words
+    entity card_progress
+    entity favorites
+  }
+  package "Quiz, nhật ký & XP" {
+    entity quiz_attempts
+    entity quiz_answers
+    entity study_log
+    entity xp_events
+  }
+  package "Luyện thi" {
+    entity exam_tests
+    entity exam_questions
+    entity exam_attempts
+    entity exam_answers
+  }
 }
 
+package "SERVER (CR-007) — database theo dịch vụ: auth.db · sync.db (SQLite WAL, nguồn sự thật) + 3 database MongoDB (kho phụ)" as SRV {
+  package "auth.db — dịch vụ auth (7 bảng)" as AUTHDB {
+    entity "s.users" as s_users
+    entity "s.auth_tokens" as s_tokens
+    entity "s.security_answers" as s_sec
+    entity "s.auth_attempts" as s_att
+    entity "s.outbox (auth)" as s_aob
+    entity "s.server_meta · schema_version" as s_meta
+  }
+  package "sync.db — dịch vụ sync (14 bảng)" as SYNCDB {
+    entity "s.user_settings · user_stats" as s_set
+    entity "s.decks · words" as s_decks
+    entity "s.card_progress · favorites" as s_cp
+    entity "s.study_log · quiz_attempts\nexam_attempts" as s_log
+    entity "s.xp_events (nguồn sự thật XP)" as s_xp
+    entity "s.sync_seq · purged_users" as s_seq
+    entity "s.outbox (sync)" as s_sob
+  }
+  package "MongoDB (3 database, 12 collection)" as MONGO {
+    entity "learninge_content\nmanifest · decks · words · exams" as m_c
+    entity "learninge_game\nxp_events · weekly_xp ·\nuser_stats · deleted_users" as m_g
+    entity "learninge_insight\naudit_events · request_logs ·\nanalytics_daily · analytics_daily_users\n(TTL 90 ngày / 7 ngày / 35 ngày)" as m_i
+  }
+}
+
+' --- quan hệ trong app ---
 users ||--|| user_settings
+users ||--|| sync_state
+users ||--o{ leaderboard_cache
 users |o--o{ decks
 languages ||--o{ decks
 decks ||--o{ words
@@ -39,15 +72,10 @@ users ||--o{ card_progress
 words ||--o{ card_progress
 users ||--o{ favorites
 words ||--o{ favorites
-grammar_lessons ||--o{ grammar_questions
-users ||--o{ grammar_progress
-grammar_lessons ||--o{ grammar_progress
 users ||--o{ quiz_attempts
 decks |o--o{ quiz_attempts
-grammar_lessons |o--o{ quiz_attempts
 quiz_attempts ||--o{ quiz_answers
 words |o--o{ quiz_answers
-grammar_questions |o--o{ quiz_answers
 exam_tests ||--o{ exam_questions
 words |o--o{ exam_questions
 users ||--o{ exam_attempts
@@ -55,9 +83,30 @@ exam_tests ||--o{ exam_attempts
 exam_attempts ||--o{ exam_answers
 exam_questions ||--o{ exam_answers
 users ||--o{ study_log
+users ||--o{ xp_events
+
+' --- quan hệ trong server (khóa logic xuyên dịch vụ, không FK) ---
+s_users ||--o{ s_tokens
+s_users ||--|| s_sec
+s_users ||--o{ s_aob
+s_decks ||--o{ s_cp
+s_xp ||--o{ s_sob
+s_aob ..> s_decks : user.registered → bộ "Sổ tay"
+s_aob ..> m_g : user.*
+s_aob ..> m_i : user.*, auth.*
+s_sob ..> m_g : xp.recorded, progress.changed
+s_sob ..> m_i : xp.recorded, progress.changed
+
+' --- đồng bộ giữa app và server (gRPC learninge.app.v1 qua edge) ---
+APP ..> SRV : gRPC qua edge: SyncService push/pull (uuid + server_seq) → sync.db,\nLeaderboardService → learninge_game, ContentService → learninge_content, AuthService → auth.db
 
 note bottom of seed_meta
-  Độc lập, không có khóa ngoại
-  (seed_version cho onUpgrade)
+  seed_meta, content_version: không có khóa ngoại.
+  Không đồng bộ: languages, exam_*, quiz_answers, sync_state, leaderboard_cache.
 end note
+legend bottom
+  Đường chấm = luồng đồng bộ qua gRPC hoặc sự kiện outbox (không phải khóa ngoại). Ngữ pháp (grammar_*) đã gỡ khỏi lược đồ app (CR-006 C1).
+  Server CR-007: s.users.uuid là user_id logic ở sync.db/MongoDB. Chi tiết cột: erd-account-settings, erd-vocabulary, erd-quiz-log-xp, erd-exam (app);
+  erd-auth-db, erd-sync-db, mongo-collections (server). Bản CR-006 (1 SQLite 23 bảng + view weekly_xp) đã thay thế.
+endlegend
 @enduml

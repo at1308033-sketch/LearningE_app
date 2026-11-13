@@ -1,0 +1,36 @@
+@startuml
+!include ../_style.puml
+title Trạng thái một bản ghi đồng bộ trên máy (dirty, tombstone, LWW — BR-062..BR-064, DEC-014)
+
+state "Chờ đẩy\n(dirty = 1, updated_at = giờ máy)" as ChoDay
+state "Đang đẩy\n(nằm trong lô ≤ 500 của EP-11)" as DangDay
+state "Đã đồng bộ\n(dirty = 0, server_seq có giá trị)" as DaDongBo
+state "Tombstone chờ đẩy\n(deleted = 1, dirty = 1)" as TombChoDay
+state "Tombstone đã đồng bộ\n(deleted = 1, dirty = 0;\nserver giữ đến khi xóa tài khoản)" as TombXong
+
+[*] --> ChoDay : Tạo mới trên máy\n(uuid v4 do app sinh)
+[*] --> DaDongBo : Kéo về từ server (SyncService/Pull, EP-12),\nghi trang trong 1 giao dịch
+
+ChoDay --> DangDay : SyncManager gom lô\n(cha → con, có mạng)
+DangDay --> DaDongBo : applied / duplicate và updated_at\ncục bộ chưa đổi (nhận server_seq)
+DangDay --> DaDongBo : stale: card_progress thua LWW\n→ ghi đè bản thắng của server (current)
+DangDay --> ChoDay : Bản ghi bị sửa tiếp khi đang đẩy\n(updated_at đổi, giữ dirty)
+DangDay --> ChoDay : Lỗi mạng / DEADLINE_EXCEEDED / UNAVAILABLE /\nRESOURCE_EXHAUSTED (thử lại 2 s, 4 s, 8 s ở lần sau)
+DangDay --> DaDongBo : rejected (INVALID_RECORD…):\nbỏ cờ dirty, ghi log, không báo người dùng
+
+DaDongBo --> ChoDay : Sửa cục bộ\n(updated_at mới, dirty = 1)
+DaDongBo --> DaDongBo : Kéo về bản mới hơn của máy khác\n(LWW theo updated_at server ghi nhận)
+DaDongBo --> TombChoDay : Xóa cục bộ\n(không xóa cứng trước khi server xác nhận)
+ChoDay --> TombChoDay : Xóa trước khi kịp đẩy
+TombChoDay --> TombXong : Đẩy thành công
+TombXong --> DaDongBo : Máy khác tạo lại cùng uuid\n(bản có updated_at lớn hơn thắng)
+TombXong --> [*] : Xóa tài khoản\n(CASCADE trên server)
+
+note right of DangDay
+  Xác nhận chỉ xóa dirty khi
+  UPDATE … WHERE uuid = ? AND
+  updated_at = ? khớp (EP-11).
+  Xung đột: bản có updated_at lớn hơn
+  thắng; không tạo bản ghi trùng.
+end note
+@enduml

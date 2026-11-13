@@ -1,0 +1,156 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 110
+title ERD sync.db — SQLite của dịch vụ sync :50053 (dữ liệu học đồng bộ, XP nguồn sự thật, outbox; DATA_MODEL §B2, CR-007)
+hide circle
+
+entity "(user_id từ auth.users.uuid)\nkhóa logic, không phải bảng" as uref #F4F4F8 {
+  user_id : TEXT
+}
+
+entity "decks" as decks {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * name : TEXT
+  description : TEXT
+  * language_code : TEXT
+  icon : TEXT
+  is_default : INTEGER -- "Sổ tay của tôi" = 1
+  sort_order : INTEGER
+  * updated_at : INTEGER
+  * deleted : INTEGER -- tombstone
+  * server_seq : INTEGER
+}
+entity "words" as words {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * deck_uuid : TEXT -- kiểm trong code, không FK
+  * term : TEXT
+  reading : TEXT
+  part_of_speech : TEXT
+  * meaning_vi : TEXT
+  example : TEXT
+  example_translation : TEXT
+  * updated_at : INTEGER
+  * deleted : INTEGER
+  * server_seq : INTEGER
+}
+entity "card_progress" as cp {
+  * user_id : TEXT <<PK>>
+  * word_uid : TEXT <<PK>>
+  --
+  * box : INTEGER -- 1..5
+  * next_review_date : TEXT
+  * first_learned_date : TEXT
+  review_count : INTEGER
+  * updated_at : INTEGER -- lớn hơn thắng
+  * server_seq : INTEGER
+}
+entity "favorites" as fav {
+  * user_id : TEXT <<PK>>
+  * word_uid : TEXT <<PK>>
+  --
+  * updated_at : INTEGER
+  * deleted : INTEGER
+  * server_seq : INTEGER
+}
+entity "study_log" as sl {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * activity_type : TEXT -- LEARN | REVIEW | QUIZ | EXAM
+  * study_date : TEXT
+  * server_seq : INTEGER
+}
+entity "quiz_attempts" as qa {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * score : INTEGER -- 0..100
+  * total_count : INTEGER
+  * server_seq : INTEGER
+}
+entity "exam_attempts" as ea {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * test_code : TEXT
+  * score : INTEGER
+  * server_seq : INTEGER
+}
+entity "xp_events" as xp {
+  * uuid : TEXT <<PK>>
+  --
+  * user_id : TEXT
+  * source_type : TEXT -- CARD_SESSION | QUIZ | EXAM
+  * correct_count : INTEGER
+  * wrong_count : INTEGER
+  * xp_awarded : INTEGER -- sync tính, trần 500/ngày
+  * occurred_at : INTEGER
+  * local_date : TEXT
+  * week_start : TEXT
+  * server_seq : INTEGER
+}
+entity "user_settings" as us {
+  * user_id : TEXT <<PK>>
+  --
+  * level : TEXT -- A1 | A2 | B1
+  * daily_goal : INTEGER
+  * updated_at : INTEGER
+  * server_seq : INTEGER
+}
+entity "user_stats" as ust {
+  * user_id : TEXT <<PK>>
+  --
+  total_xp : INTEGER
+  current_streak : INTEGER
+  longest_streak : INTEGER
+  last_study_date : TEXT
+}
+entity "sync_seq" as sq {
+  * id : INTEGER <<PK>> -- luôn = 1
+  --
+  * value : INTEGER
+}
+entity "purged_users" as pu {
+  * user_id : TEXT <<PK>>
+  --
+  * purged_at : INTEGER -- chặn Push muộn: ACCOUNT_DELETED
+}
+entity "outbox" as ob {
+  * id : INTEGER <<PK>>
+  --
+  * event_id : TEXT -- UUIDv7, UNIQUE (event_id, destination)
+  * destination : TEXT -- gamification | insight
+  * type : TEXT -- xp.recorded, progress.changed
+  * payload : BLOB
+  published_at : INTEGER
+  attempts : INTEGER
+  dead_at : INTEGER
+}
+
+uref ||--o| us : "cài đặt (tạo lười)"
+uref ||--o| ust : "thống kê, chuỗi ngày"
+uref ||--o{ decks : "sở hữu"
+uref ||--o{ words : "sở hữu"
+uref ||--o{ cp : "học"
+uref ||--o{ fav : "đánh dấu"
+uref ||--o{ sl : "ghi"
+uref ||--o{ qa : "làm"
+uref ||--o{ ea : "thi"
+uref ||--o{ xp : "nhận XP"
+decks .. words : deck_uuid
+words .. cp : word_uid
+words .. fav : word_uid
+xp ||--o| ob : "xp.recorded\n(cùng giao dịch)"
+sq .. xp : cấp server_seq cho\nmọi bản ghi applied
+uref .. pu : user.deleted
+
+legend bottom
+  * = NOT NULL · Không có khóa ngoại giữa các bảng đồng bộ (bản ghi con có thể đến trước cha hoặc trỏ tới cha đã tombstone); user_id là khóa logic từ auth.db (database-per-service).
+  Mỗi bản ghi applied nhận server_seq mới từ sync_seq; Pull trả server_seq > cursor. Bảng chỉ-thêm: study_log, quiz_attempts, exam_attempts, xp_events · LWW: decks, words, favorites · card_progress: updated_at lớn hơn thắng.
+  Nhận user.registered → INSERT OR IGNORE bộ "Sổ tay của tôi" (UUIDv5); nhận user.deleted → xóa mọi dòng của user + ghi purged_users. Cột rút gọn; DDL đầy đủ ở DATA_MODEL §B2.
+endlegend
+@enduml

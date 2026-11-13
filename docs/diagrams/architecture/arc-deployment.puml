@@ -1,47 +1,62 @@
 @startuml
 !include ../_style.puml
-title Triển khai — một thiết bị Android, chạy ngoại tuyến hoàn toàn
+skinparam dpi 110
+title Triển khai (CR-007): docker compose — chỉ edge publish, TLS kết thúc ở lớp lộ ra Internet; nơi chạy chưa chốt (DEC-023, P1–P4)
 
-node "Máy phát triển của nhóm\n(Android Studio 2026.2, Gradle, JBR)" as DEV {
-  artifact "app-release.apk\n(R8, ký bằng keystore nhóm)" as APKB
+node "Điện thoại Android thật\n(minSdk 29)" as PH {
+  component "LearningE.apk (release: chỉ TLS)\ndata.remote → grpc-okhttp" as APP
+  database "learninge.db +\nshared_prefs (token)" as LDB
+}
+node "Emulator (API 29/33/37)\ndebug" as EMU {
+  component "LearningE.apk\n10.0.2.2:50051 (h2c)" as APP2
+}
+node "Điện thoại thứ hai\n(kịch bản 2 máy)" as PH2 {
+  component "LearningE.apk" as APP3
 }
 
-node "Thiết bị Android (minSdk 29, targetSdk 37)" as DEVICE {
-  node "Tiến trình com.learninge.app" as PROC {
-    artifact "APK\n(classes.dex, res/, res/font/)" as APK
-    file "assets/seed/*.json\n(chủ đề, ngữ pháp, đề thi,\nngôn ngữ)" as SEED
-    component "LearningE\n(ui → domain → data)" as APP
+cloud "Lớp lộ ra Internet — TLS h2 kết thúc tại đây\nP1: tunnel ngrok / Cloudflare Tunnel (laptop)\nP3: proxy công khai Railway\nP4: Caddy trên VPS (chỉ mở 443)\nBắt buộc HTTP/2 tới edge (SPIKE S-02)" as EXPO
+
+node "Máy chạy docker compose (P1 laptop · P3 Railway · P4 VPS 2 GB)\nimage ghim digest · USER 10001 · read_only · cap_drop ALL" as HOST {
+  component "edge\n:50051 (publish 127.0.0.1:50051)" as EDGE
+  node "Mạng bridge nội bộ — không publish cổng" as NET {
+    component "auth :50052" as AUTH
+    component "sync :50053" as SYNC
+    component "content :50054" as CONT
+    component "gamification :50055" as GAME
+    component "insight :50056" as INSI
+    database "mongo:8.0 --auth\n(không ports:)\n3 user readWrite + collMod" as MONGO
   }
-  folder "/data/data/com.learninge.app/" as SANDBOX {
-    database "databases/learninge.db\n(SQLite, 18 bảng)" as DB
-    file "shared_prefs/\n(user_id phiên)" as PREF
-  }
-  node "Dịch vụ hệ thống" as SYS {
-    component "TextToSpeech engine" as TTS
-    component "AlarmManager /\nNotificationManager" as AL
-    component "DocumentsUI (SAF)" as SAF
-  }
-  folder "Bộ nhớ chung / Drive\n(tệp CSV/JSON người dùng chọn)" as FILES
-  component "Trình duyệt mặc định" as BRW
+  database "volume auth-data\nauth.db (+ -wal)" as V1
+  database "volume sync-data\nsync.db (+ -wal)" as V2
+  database "volume mongo-data" as V3
 }
 
-cloud "Internet" as NET
+cloud "MongoDB Atlas (free) — P2\nthay container mongo:\nmongodb+srv, mỗi dịch vụ một user,\nTLS, IP allowlist cụ thể" as ATLAS
 
-APKB ..> APK : cài APK (adb / tệp)
-APK --> APP
-SEED --> DB : nạp lần đầu (onCreate)
-APP --> DB : SQLiteOpenHelper
-APP --> PREF
-APP --> TTS
-APP --> AL
-APP --> SAF
-SAF --> FILES : đọc/ghi qua URI
-APP --> BRW : Intent ACTION_VIEW
-BRW ..> NET : trình duyệt tự tải trang
+APP --> LDB
+APP --> EXPO : gRPC/TLS 443
+APP3 --> EXPO : gRPC/TLS 443
+EXPO --> EDGE : h2c :50051\n(EDGE_TRUST_PROXY=true)
+APP2 ..> EDGE : debug h2c
+APP ..> EDGE : dự phòng debug:\nIP LAN :50051
 
-note right of NET
-  App KHÔNG khai báo quyền INTERNET,
-  không gọi API, không SDK phân tích.
-  allowBackup = false (NFR-S4)
-end note
+EDGE --> AUTH : h2c +\nx-internal-auth
+EDGE --> SYNC
+EDGE --> CONT
+EDGE --> GAME
+EDGE --> INSI
+AUTH --> V1
+SYNC --> V2
+CONT --> MONGO
+GAME --> MONGO
+INSI --> MONGO
+MONGO --> V3
+MONGO ..> ATLAS : P2 (đổi LEARNINGE_MONGO_URI)
+
+legend bottom
+  Bí mật chỉ qua deploy/.env (không commit) / compose secrets / Variables nền tảng: LEARNINGE_INTERNAL_TOKEN, _SERVER_KEY (auth), _PSEUDONYM_KEY (auth, sync), LEARNINGE_MONGO_URI mỗi dịch vụ.
+  Outbox relay (auth, sync → sync, gamification, insight) chạy trong mạng nội bộ. healthcheck qua grpc.health.v1; edge depends_on service_healthy.
+  Cùng image và compose cho mọi phương án; chỉ đổi lớp lộ ra, nơi chạy Mongo, EDGE_TRUST_PROXY và BuildConfig.GRPC_HOST/PORT. Dev: cargo run -p <svc> hoặc learninge-server --all (nội bộ nghe 127.0.0.1).
+  Offline-first: học, ôn, quiz, thi thử chạy khi mất mạng. release bắt buộc GRPC_TLS=true; debug chỉ cho h2c tới host danh sách trắng.
+endlegend
 @enduml

@@ -1,0 +1,169 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+left to right direction
+set separator none
+title Cargo workspace LearningE_Server — crates proto · common · edge · auth · sync · content · gamification · insight (CR-007, DEC-018..DEC-022)
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "crates/proto (learninge-proto)" as proto {
+  interface "learninge.app.v1\nAuthService · SyncService ·\nLeaderboardService · ContentService" as AppV1 <<tonic trait>>
+  interface "learninge.internal.v1\nAuthBackend · TokenValidator · SyncBackend ·\nContentBackend · GamificationBackend ·\nInsightBackend · EventSink" as IntV1 <<tonic trait>>
+}
+
+package "crates/common" as common {
+  enum AppError <<thiserror>> {
+    mã nghiệp vụ CR-006
+    (EMAIL_TAKEN, ACCOUNT_LOCKED…)
+    From<AppError> for tonic::Status
+    → mã gRPC + trailer error-code
+  }
+  class InternalAuthInterceptor {
+    x-internal-auth = LEARNINGE_INTERNAL_TOKEN
+    so sánh hằng thời gian (subtle)
+  }
+  class SqliteDb {
+    1 kết nối ghi (Mutex) + spawn_blocking
+    BEGIN IMMEDIATE, WAL, quick_check
+  }
+  class Migrator
+  class OutboxWriter {
+    +enqueue(tx, Event, destinations)
+  }
+  class Relay {
+    mỗi destination một vòng lặp
+    lùi 1 s → 15 s, hỏi Health đích
+  }
+  class EventRoutes {
+    loại sự kiện → danh sách đích
+  }
+  interface Clock <<trait>>
+  class MongoDb {
+    ensure_schema (validator, index, TTL)
+  }
+}
+
+package "services/edge  :50051" as edge {
+  class EdgeServer {
+    hiện thực learninge.app.v1,
+    mỗi RPC một hàm chuyển tiếp
+  }
+  class TokenCache {
+    token_sha256 → user_id, user_hmac
+    TTL ≤ 60 s, xóa theo user
+  }
+  class RateLimiter
+  class MeComposer {
+    GetMe = auth.GetProfile +
+    sync.GetStreak và gamification.GetStats
+  }
+  class RequestLogQueue {
+    ≤ 1000 mục, best-effort
+  }
+}
+
+package "services/auth  :50052" as auth {
+  class AuthBackendImpl
+  class TokenValidatorImpl
+  class PasswordHasher {
+    PBKDF2 120.000 vòng,
+    ≤ 4 phép đồng thời
+  }
+  class TokenService {
+    256 bit, lưu SHA-256, 30 ngày
+  }
+  class LockPolicy {
+    5 lần sai → 60 s, ×2, ≤ 1 giờ
+  }
+  class AuthStore <<auth.db>>
+}
+
+package "services/sync  :50053" as sync {
+  class SyncBackendImpl
+  class SyncEventSink <<EventSink>> {
+    user.registered → bộ "Sổ tay" UUIDv5
+    user.deleted → purge + purged_users
+  }
+  class LwwPolicy
+  class XpValidator {
+    BR-065..BR-068, trần 500 XP/ngày
+  }
+  class StreakCalculator
+  class SyncStore <<sync.db>>
+}
+
+package "services/content  :50054" as content {
+  class ContentBackendImpl
+  class ContentStore <<learninge_content>>
+  class "tools/content-import" as CImp
+}
+
+package "services/gamification  :50055" as game {
+  class GamificationBackendImpl
+  class GameEventSink <<EventSink>>
+  class IsoWeek {
+    Asia/Ho_Chi_Minh
+  }
+  class DailyCap
+  class Ranking {
+    hòa → đạt sớm hơn
+  }
+  class GameStore <<learninge_game>>
+}
+
+package "services/insight  :50056" as insight {
+  class InsightBackendImpl
+  class InsightEventSink <<EventSink>>
+  class AnalyticsAggregator
+  class InsightStore <<learninge_insight>>
+}
+
+class "bin/learninge-server (chế độ gộp: all hoặc only edge,auth)" as Bin
+
+
+EdgeServer --> TokenCache
+EdgeServer --> RateLimiter
+EdgeServer --> MeComposer
+EdgeServer --> RequestLogQueue
+EdgeServer ..> AuthBackendImpl : gRPC h2c
+EdgeServer ..> SyncBackendImpl : gRPC h2c
+
+AuthBackendImpl --> PasswordHasher
+AuthBackendImpl --> LockPolicy
+AuthBackendImpl --> TokenService
+AuthBackendImpl --> AuthStore
+SyncBackendImpl --> LwwPolicy
+SyncBackendImpl --> XpValidator
+SyncBackendImpl --> StreakCalculator
+SyncBackendImpl --> SyncStore
+ContentBackendImpl --> ContentStore
+CImp --> ContentStore
+GamificationBackendImpl --> Ranking
+GamificationBackendImpl --> IsoWeek
+GameEventSink --> DailyCap
+GameEventSink --> GameStore
+InsightEventSink --> AnalyticsAggregator
+InsightEventSink --> InsightStore
+
+AuthStore --> SqliteDb
+SyncStore --> SqliteDb
+AuthStore ..> OutboxWriter : cùng giao dịch
+SyncStore ..> OutboxWriter : cùng giao dịch
+OutboxWriter --> EventRoutes
+Relay ..> IntV1 : EventSink.Publish
+AuthBackendImpl ..> IntV1 : implements
+EdgeServer ..> AppV1 : implements
+ContentStore --> MongoDb
+GameStore --> MongoDb
+InsightStore --> MongoDb
+SqliteDb --> Migrator
+EdgeServer ..> InternalAuthInterceptor
+AuthBackendImpl ..> AppError
+Bin ..> EdgeServer : serve()
+
+legend bottom
+  Mỗi dịch vụ: grpc (hiện thực trait sinh từ proto, đổi message ↔ kiểu miền, lỗi ↔ Status) → domain (Rust thuần, không I/O, nhận Clock) → store (rusqlite có ?, hoặc truy vấn Mongo có kiểu).
+  user_id chỉ lấy từ metadata x-user-id do edge gắn, sau interceptor x-internal-auth; dịch vụ không import crate của dịch vụ khác, chỉ qua proto. Relay chạy trong tiến trình của auth và sync.
+endlegend
+@enduml

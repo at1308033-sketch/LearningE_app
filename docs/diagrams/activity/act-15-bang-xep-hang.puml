@@ -1,0 +1,63 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 120
+title Hoạt động — Xem bảng xếp hạng tuần (FLOW-020, UC-024, CR-007: LeaderboardService → gamification)
+
+|Người học|
+|Ứng dụng|
+|Hệ thống máy chủ LearningE (6 microservice)|
+|Người học|
+start
+:Mở SCR-34 (thẻ XP ở Trang chủ\nhoặc tab Tôi → Bảng xếp hạng);
+note right
+  XP do sync tính (BR-068), gamification tổng hợp
+  qua outbox xp.recorded, trần 500 XP/ngày; sang tuần mới (thứ Hai 00:00
+  giờ VN) bảng bắt đầu lại từ 0.
+end note
+|Ứng dụng|
+if (Có mạng?) then (có)
+  :gRPC LeaderboardService/GetWeekly\n{week = current} (EP-13) qua edge → gamification;
+  |Hệ thống máy chủ LearningE (6 microservice)|
+  if (Token hợp lệ?\n(edge hỏi auth.ValidateToken)) then (không)
+    :UNAUTHENTICATED;
+    |Ứng dụng|
+    :Về SCR-02 (BR-059);
+    stop
+  else (có)
+    |Hệ thống máy chủ LearningE (6 microservice)|
+    :XP tuần = weekly_xp (MongoDB learninge_game)\ntheo tuần ISO (Asia/Ho_Chi_Minh), trần 500 XP/ngày;
+    :Xếp XP giảm dần; hòa: ai đạt sớm hơn đứng trước\n(BR-069); người 0 XP không có trong danh sách;
+    :200 {entries ≤ 50, me}\n(không trả email, id người khác);
+  endif
+  |Ứng dụng|
+  if (Nhận được phản hồi OK?) then (có)
+    :Lưu leaderboard_cache (2 tuần gần nhất)\nkèm fetched_at;
+    :Hiện top 50: hạng, biệt danh, XP tuần, chuỗi ngày;
+    if (XP tuần của tôi = 0?) then (có)
+      :Dòng "Bạn": "Chưa có hạng tuần này —\nhọc để nhận XP";
+    else (không)
+      :Dòng "Bạn" ghim: hạng, XP tuần, chuỗi;
+    endif
+    if (Còn XP chờ đồng bộ?) then (có)
+      :Hiện thêm "x XP đang chờ đồng bộ";
+    else (không)
+    endif
+    |Người học|
+    :Xem bảng xếp hạng, kéo để làm mới;
+    stop
+  else (DEADLINE_EXCEEDED / UNAVAILABLE\n— kể cả khi MongoDB ngừng)
+  endif
+else (không)
+endif
+|Ứng dụng|
+if (Có leaderboard_cache?) then (có)
+  :Hiện bản lưu kèm "Cập nhật lúc hh:mm dd/MM",\nthanh "Đang ngoại tuyến" (AC-042.4);
+  |Người học|
+  :Xem bản cũ;
+  stop
+else (không)
+  |Ứng dụng|
+  :Trạng thái rỗng: "Cần kết nối mạng\nđể xem bảng xếp hạng";
+  stop
+endif
+@enduml

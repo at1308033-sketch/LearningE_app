@@ -8,13 +8,10 @@ skinparam classAttributeIconSize 0
 package "com.learninge.app.data.model" {
   class User {
     +long id
-    +String username
+    +String serverUuid
+    +String email
+    +String nickname
     +String displayName
-    +String passwordHash
-    +String passwordSalt
-    +int securityQuestionId
-    +int failedLoginCount
-    +long loginLockedUntil
     +boolean onboarded
   }
   class Settings {
@@ -61,6 +58,8 @@ package "com.learninge.app.data.model" {
     +LocalDate nextReviewDate
     +LocalDate firstLearnedDate
     +int reviewCount
+    +long updatedAt
+    +boolean dirty
   }
   class Favorite {
     +long userId
@@ -71,8 +70,22 @@ package "com.learninge.app.data.model" {
     +long id
     +long userId
     +String activityType
-    +Long refId
+    +String uuid
+    +String refUuid
     +LocalDate studyDate
+    +long updatedAt
+    +boolean dirty
+  }
+  class XpEvent {
+    +String uuid
+    +long userId
+    +String sourceType
+    +int correctCount
+    +int wrongCount
+    +int xpLocal
+    +Integer xpAwarded
+    +long occurredAt
+    +boolean dirty
   }
 }
 
@@ -85,6 +98,7 @@ Word "1" -- "0..*" CardProgress : theo dõi <
 User "1" -- "*" Favorite
 Word "1" -- "*" Favorite
 User "1" -- "*" StudyLog : ghi >
+User "1" -- "*" XpEvent : nhận XP >
 
 note bottom of Deck
   ownerUserId = null → bộ có sẵn,
@@ -94,5 +108,10 @@ note bottom of CardProgress
   Không có bản ghi = Mới; hộp 1–4 = Đang học;
   hộp 5 = Đã thuộc (BR-014). Tối đa 1 bản ghi
   mỗi (user, word) — BR-015
+end note
+note bottom of User
+  CR-006: mật khẩu, câu hỏi bảo mật, đếm sai/khóa chuyển lên server;
+  máy chỉ giữ hồ sơ + token (TokenStore). Bảng đồng bộ có thêm
+  uuid, updatedAt, deleted, dirty, serverSeq (DATA_MODEL §A).
 end note
 @enduml

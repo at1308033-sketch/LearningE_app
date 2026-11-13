@@ -41,7 +41,7 @@ else Có thẻ
       S -> L : rate(progress, remembered, today)
       L --> S : CardProgress mới (hộp, next_review_date)
       S -> R : saveProgress(progress)
-      R -> DB : UPDATE card_progress …;\n0 dòng → INSERT (UNIQUE user_id, word_id)
+      R -> DB : UPDATE card_progress SET box, next_review_date, updated_at = now, dirty = 1 …;\n0 dòng → INSERT (UNIQUE user_id, word_id)
       alt Ghi thành công
         S --> VM : Result.ok(CardProgress)
       else SQLiteException

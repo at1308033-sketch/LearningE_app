@@ -1,0 +1,80 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title Đồng bộ (CR-007): SyncService/Push EP-11 (LWW, stale, rejected, outbox xp.recorded) rồi Pull EP-12 theo cursor (FLOW-019, DEC-014)
+autonumber
+skinparam maxMessageSize 200
+
+participant "SyncScheduler" as SS
+participant "SyncManager\n(luồng io)" as SM
+database "SQLite máy\n(dbRead / dbWrite)" as DB
+participant "SyncRemote +\nGrpcClient" as R
+participant "edge :50051" as E
+participant "auth :50052" as A
+participant "sync :50053\n(SyncBackend,\nLwwPolicy, XpValidator)" as S
+database "sync.db\n(WAL)" as SDB
+participant "relay (trong sync)\n→ gamification, insight" as RL
+
+SS -> SM : requestSync(reason) — AtomicBoolean: chỉ 1 lượt chạy
+SM -> DB : SELECT … WHERE dirty = 1 (cha → con, ≤ 500)
+DB --> SM : lô bản ghi (đã đổi id → uuid, deck_id → deck_uuid)
+loop Còn bản ghi dirty
+  SM -> R : push(device_id, changes)
+  R -> E : SyncService/Push + authorization: Bearer, x-request-id, x-client-version; deadline 20 s
+  E -> E : xóa x-user-id / x-internal-* của client; giới hạn 30 yêu cầu/phút/token
+  alt token_sha256 chưa có trong cache (≤ 60 s)
+    E -> A : TokenValidator/ValidateToken(token_sha256) + x-internal-auth
+    A --> E : user_id, user_hmac, expires_at_ms (hoặc UNAUTHENTICATED)
+  end
+  E -> S : SyncBackend/Push + x-user-id + x-internal-auth; deadline ≤ 18 s
+  S -> SDB : BEGIN IMMEDIATE (kiểm purged_users → ACCOUNT_DELETED)
+  loop Từng bản ghi
+    alt Bảng thường (settings, decks, words, favorites)
+      S -> SDB : ghi đè nếu updated_at lớn hơn (LWW) → applied
+    else card_progress
+      S -> SDB : chỉ ghi khi updated_at lớn hơn bản hiện có
+      SDB --> S : applied / stale (kèm bản thắng current)
+    else Bảng chỉ-thêm (study_log, quiz, exam, xp_events)
+      S -> SDB : chèn nếu chưa có uuid → applied; đã có → duplicate
+      S -> S : xp_events: XpValidator tính xp_awarded (BR-065..BR-068), trần 500 XP/ngày
+    else uuid của người khác, entity lạ, sai miền
+      S --> S : rejected (INVALID_RECORD / DECK_NOT_OWNED), không ghi, không lộ dữ liệu
+    end
+    S -> SDB : applied → cấp server_seq mới (sync_seq);\nxp_events applied → INSERT outbox xp.recorded (gamification, insight)
+  end
+  S -> SDB : INSERT outbox progress.changed (1 sự kiện/lô); COMMIT
+  S --> E : PushResponse {server_time_ms, results[]}
+  E --> R : chuyển nguyên
+  RL ->> RL : (bất đồng bộ, sau COMMIT) EventSink.Publish → gamification, insight
+  alt UNAVAILABLE / DEADLINE_EXCEEDED / lỗi kết nối
+    R --> SM : Failure — RetryPolicy: chờ 2 s, 4 s, 8 s rồi dừng (Push idempotent)
+    SM -> DB : sync_state.last_error_code, giữ dirty
+  else RESOURCE_EXHAUSTED (RATE_LIMITED)
+    R --> SM : chờ đúng retry-after-seconds
+  else UNAUTHENTICATED
+    R --> SM : xóa token, về SCR-02, giữ dirty (BR-059)
+  else PERMISSION_DENIED · ACCOUNT_DELETED
+    R --> SM : dừng đồng bộ, xóa dữ liệu cục bộ của user, báo, về SCR-02
+  else OK
+    R --> SM : Result.Success(results)
+    SM -> DB : dbWrite: applied/duplicate → dirty = 0 WHERE uuid = ? AND updated_at = ?;\nstale → ghi đè bản server; rejected → dirty = 0, ghi log
+  end
+end
+loop has_more = true
+  SM -> R : pull(since = pull_cursor, limit = 500)
+  R -> E : SyncService/Pull {since, limit}; deadline 15 s (ValidateToken như trên)
+  E -> S : SyncBackend/Pull + x-user-id
+  S -> SDB : SELECT … WHERE user_id = ? AND server_seq > ? ORDER BY server_seq
+  SDB --> S : trang (gồm tombstone)
+  S --> E : {changes, next_cursor, has_more}
+  E --> R : chuyển nguyên
+  R --> SM : Result.Success(page)
+  SM -> DB : dbWrite, 1 giao dịch: UPDATE theo uuid, 0 dòng → INSERT;\nstale về cha → con; lưu pull_cursor = next_cursor
+end
+SM -> DB : tính lại chuỗi ngày từ study_log; sync_state.last_sync_at = now
+SM --> SS : hoàn tất (LiveData cập nhật SCR-35)
+note over SM, SDB
+  Idempotent: gửi lại cùng lô cho cùng kết quả cuối (duplicate / ghi lại cùng giá trị).
+  updated_at của client lớn hơn server_time + 5 phút bị kẹp về server_time. user_id chỉ lấy từ x-user-id, không từ message.
+end note
+@enduml

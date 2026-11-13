@@ -1,25 +1,19 @@
 @startuml
 !include ../_style.puml
-title ERD — Tài khoản & cài đặt (users, user_settings, seed_meta)
+title ERD app — Tài khoản cục bộ, cài đặt, trạng thái đồng bộ, bản lưu xếp hạng, phiên bản nội dung (CR-006)
 hide circle
 left to right direction
 
 entity "users" as users {
   * id : INTEGER <<PK>>
   --
-  * username : TEXT <<UK>> -- chữ thường
+  * server_uuid : TEXT <<UK>> -- users.uuid của server
+  * email : TEXT <<UK>> -- chữ thường
+  nickname : TEXT -- công khai (BR-061)
   display_name : TEXT
-  * password_hash : TEXT -- hex
-  * password_salt : TEXT -- hex, 16 byte
-  security_question_id : INTEGER -- CHECK 1..5
-  * security_answer_hash : TEXT
-  * security_answer_salt : TEXT
-  failed_login_count : INTEGER
-  login_locked_until : INTEGER -- epoch ms
-  failed_reset_count : INTEGER
-  reset_locked_until : INTEGER -- epoch ms
   onboarded : INTEGER -- 0/1
   created_at : INTEGER
+  .. không còn password_hash/salt, câu hỏi bảo mật, đếm sai (chuyển lên server, DEC-013) ..
 }
 
 entity "user_settings" as us {
@@ -27,11 +21,39 @@ entity "user_settings" as us {
   --
   level : TEXT -- IN ('A1','A2','B1')
   daily_goal : INTEGER -- IN (5,10,15,20)
-  reminder_enabled : INTEGER -- 0/1
-  reminder_minute : INTEGER -- 0..1439
-  current_streak : INTEGER
+  reminder_enabled : INTEGER -- riêng từng máy
+  reminder_minute : INTEGER -- 0..1439, riêng từng máy
+  current_streak : INTEGER -- tính lại từ study_log
   longest_streak : INTEGER
   last_study_date : TEXT -- yyyy-MM-dd
+  updated_at : INTEGER -- đồng bộ
+  dirty : INTEGER -- đồng bộ
+}
+
+entity "sync_state" as ss {
+  * user_id : INTEGER <<PK, FK>>
+  --
+  * device_id : TEXT -- UUID v4 của máy
+  * pull_cursor : INTEGER -- server_seq đã kéo, ≥ 0
+  last_sync_at : INTEGER
+  last_attempt_at : INTEGER
+  last_error_code : TEXT
+  last_error_at : INTEGER
+}
+
+entity "leaderboard_cache" as lc {
+  * user_id : INTEGER <<PK, FK>>
+  * week_start : TEXT <<PK>> -- yyyy-MM-dd (thứ Hai)
+  --
+  payload_json : TEXT -- phản hồi EP-13
+  fetched_at : INTEGER
+}
+
+entity "content_version" as cv {
+  * item_key : TEXT <<PK>> -- global | deck:T01 | exam:E01
+  --
+  version : INTEGER
+  installed_at : INTEGER
 }
 
 entity "seed_meta" as sm {
@@ -41,11 +63,17 @@ entity "seed_meta" as sm {
 }
 
 users ||--|| us : "có (CASCADE)"
+users ||--|| ss : "trạng thái đồng bộ\n(CASCADE)"
+users ||--o{ lc : "bản lưu xếp hạng\n(2 tuần gần nhất)"
 
 note bottom of users
-  Cha của decks, card_progress, favorites,
-  grammar_progress, quiz_attempts, exam_attempts,
-  study_log (đều ON DELETE CASCADE — BR-005)
+  Cha của decks, card_progress, favorites, quiz_attempts,
+  exam_attempts, study_log, xp_events (ON DELETE CASCADE — BR-005).
+  Token phiên không nằm trong CSDL mà ở SharedPreferences (TokenStore).
+end note
+note bottom of cv
+  cv, sm không có khóa ngoại. Không đồng bộ:
+  sync_state, leaderboard_cache, content_version, seed_meta.
 end note
 legend right
   * = NOT NULL · <<PK>> khóa chính

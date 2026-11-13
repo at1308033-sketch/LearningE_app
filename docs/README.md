@@ -19,7 +19,9 @@ Danh mục đầy đủ tài liệu của dự án, chia 4 nhóm. **Thành viên
 | Tệp | Nội dung | Loại |
 |---|---|---|
 | [SYSTEM-BLUEPRINT.md](engineering/SYSTEM-BLUEPRINT.md) | Bản thiết kế tổng thể: tính năng, bản đồ gói mã, quy trình làm task, rubric; kiến trúc 3 tầng, lược đồ lớp, luồng dữ liệu, công nghệ | Tự sinh |
-| [DATABASE-DESIGN.md](engineering/DATABASE-DESIGN.md) | ERD, 18 bảng SQLite, ràng buộc, index, lưu giữ; định dạng dữ liệu nạp sẵn và import/export | Tự sinh |
+| [DATABASE-DESIGN.md](engineering/DATABASE-DESIGN.md) | ERD, lược đồ SQLite của ứng dụng và máy chủ, cột đồng bộ, ràng buộc, index; định dạng dữ liệu nạp sẵn và import/export | Tự sinh |
+| [GRPC-API.md](engineering/GRPC-API.md) | Hợp đồng gRPC máy chủ (`learninge.app.v1` + nội bộ): tài khoản, đồng bộ, bảng xếp hạng, nội dung; .proto, mã trạng thái + `error-code`, giới hạn, token | Tự sinh |
+| [SECURITY-THREAT-MODEL.md](engineering/SECURITY-THREAT-MODEL.md) | Phân tích mối đe dọa STRIDE, biện pháp, test bảo mật TC-SEC, rủi ro còn lại | Tự sinh |
 | [API-SPECIFICATION.md](engineering/API-SPECIFICATION.md) | App không có REST API: hợp đồng Service (phương thức, đầu vào/ra, mã lỗi), quy ước DAO, tham số điều hướng, định dạng tệp | Viết tay |
 | [CODING-STANDARDS.md](engineering/CODING-STANDARDS.md) | Cấu trúc mã, đặt tên, quy tắc Java/XML/CSDL, kiểm thử, Git/PR, Definition of Done | Viết tay |
 | [ARCHITECTURE-DECISIONS.md](engineering/ARCHITECTURE-DECISIONS.md) | Nhật ký quyết định (ADR): quyết định sản phẩm ban đầu, DEC-001..DEC-010 | Tự sinh |

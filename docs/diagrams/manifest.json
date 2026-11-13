@@ -1,13 +1,13 @@
 [
  {
   "file": "usecase/uc-00-overview.puml",
-  "caption": "Sơ đồ use case tổng quát của ứng dụng LearningE theo nhóm chức năng",
+  "caption": "Sơ đồ use case tổng quát của LearningE (client–server): nhóm chức năng, tác nhân Hệ thống máy chủ LearningE (6 microservice), UC-023..027; UC-012 Won't (xám), Could (vàng)",
   "doc": "project/Use-Cases.md",
   "heading": "Danh sách use case"
  },
  {
   "file": "usecase/uc-01-tai-khoan-xac-thuc.puml",
-  "caption": "Sơ đồ use case nhóm Tài khoản và xác thực",
+  "caption": "Sơ đồ use case nhóm Tài khoản và xác thực trên máy chủ (đăng nhập online, khóa tăng dần, phiên hết hạn UNAUTHENTICATED)",
   "doc": "project/Use-Cases.md",
   "heading": "Danh sách use case"
  },
@@ -19,7 +19,7 @@
  },
  {
   "file": "usecase/uc-03-quiz-ngu-phap.puml",
-  "caption": "Sơ đồ use case nhóm Luyện tập: quiz và ngữ pháp",
+  "caption": "Sơ đồ use case nhóm Luyện tập: quiz và ngữ pháp [Won't]",
   "doc": "project/Use-Cases.md",
   "heading": "Danh sách use case"
  },
@@ -37,19 +37,25 @@
  },
  {
   "file": "usecase/uc-06-tien-do-nhac-hoc-cai-dat.puml",
-  "caption": "Sơ đồ use case nhóm Tiến độ, nhắc học và cài đặt",
+  "caption": "Sơ đồ use case nhóm Tiến độ, nhắc học và cài đặt (ngọn lửa, rương, bảng xếp hạng, trạng thái đồng bộ)",
+  "doc": "project/Use-Cases.md",
+  "heading": "Danh sách use case"
+ },
+ {
+  "file": "usecase/uc-07-online-dong-bo-xep-hang.puml",
+  "caption": "Sơ đồ use case nhóm Đồng bộ, bảng xếp hạng và nội dung từ máy chủ",
   "doc": "project/Use-Cases.md",
   "heading": "Danh sách use case"
  },
  {
   "file": "activity/act-01-dang-ky.puml",
-  "caption": "Sơ đồ hoạt động đăng ký tài khoản",
+  "caption": "Sơ đồ hoạt động đăng ký tài khoản qua gRPC edge → auth (ALREADY_EXISTS, RESOURCE_EXHAUSTED, UNAVAILABLE; outbox user.registered → sync tạo Sổ tay)",
   "doc": "project/Use-Cases.md",
   "heading": "FLOW-001"
  },
  {
   "file": "activity/act-03-dang-nhap-dang-xuat.puml",
-  "caption": "Sơ đồ hoạt động mở ứng dụng, đăng nhập (khóa tạm 60 giây) và đăng xuất",
+  "caption": "Sơ đồ hoạt động mở ứng dụng, đăng nhập online (khóa tăng dần), phiên hết hạn (UNAUTHENTICATED) và đăng xuất",
   "doc": "project/Use-Cases.md",
   "heading": "FLOW-001"
  },
@@ -78,6 +84,30 @@
   "heading": "FLOW-007"
  },
  {
+  "file": "activity/act-13-dong-bo.puml",
+  "caption": "Sơ đồ hoạt động đồng bộ đẩy/kéo (SyncService gRPC) và xung đột LWW (FLOW-019)",
+  "doc": "project/Use-Cases.md",
+  "heading": "Luồng người dùng & luồng hệ thống"
+ },
+ {
+  "file": "activity/act-14-dang-nhap-may-thu-hai.puml",
+  "caption": "Sơ đồ hoạt động đăng nhập trên máy thứ hai, kéo toàn bộ dữ liệu (FLOW-018)",
+  "doc": "project/Use-Cases.md",
+  "heading": "Luồng người dùng & luồng hệ thống"
+ },
+ {
+  "file": "activity/act-15-bang-xep-hang.puml",
+  "caption": "Sơ đồ hoạt động xem bảng xếp hạng tuần (LeaderboardService → gamification, FLOW-020)",
+  "doc": "project/Use-Cases.md",
+  "heading": "Luồng người dùng & luồng hệ thống"
+ },
+ {
+  "file": "activity/act-16-cap-nhat-noi-dung.puml",
+  "caption": "Sơ đồ hoạt động cập nhật nội dung từ máy chủ (ContentService → content) [Could] (FLOW-021)",
+  "doc": "project/Use-Cases.md",
+  "heading": "Luồng người dùng & luồng hệ thống"
+ },
+ {
   "file": "activity/act-06-on-tap-leitner.puml",
   "caption": "Sơ đồ hoạt động ôn tập thẻ đến hạn theo Leitner 5 hộp",
   "doc": "project/Use-Cases.md",
@@ -85,7 +115,7 @@
  },
  {
   "file": "activity/act-04-quen-mat-khau.puml",
-  "caption": "Sơ đồ hoạt động đặt lại mật khẩu bằng câu hỏi bảo mật",
+  "caption": "Sơ đồ hoạt động quên mật khẩu: đặt lại bằng câu hỏi bảo mật trên máy chủ",
   "doc": "project/Use-Cases.md",
   "heading": "FLOW-013"
  },
@@ -114,8 +144,8 @@
   "heading": "FLOW-017"
  },
  {
-  "file": "sequence/seq-login-pbkdf2.puml",
-  "caption": "Sơ đồ tuần tự đăng nhập với PBKDF2 và khóa tạm",
+  "file": "sequence/seq-login-online.puml",
+  "caption": "Sơ đồ tuần tự đăng nhập online: app gọi AuthService/Login qua edge → auth, băm PBKDF2, khóa tăng dần, cấp token; lỗi là gRPC status + error-code",
   "doc": "project/Use-Cases.md",
   "heading": "Tương tác hệ thống"
  },
@@ -138,50 +168,80 @@
   "heading": "Trạng thái & chuyển trạng thái"
  },
  {
+  "file": "state/st-04-ban-ghi-dong-bo.puml",
+  "caption": "Sơ đồ trạng thái một bản ghi đồng bộ (dirty, tombstone, LWW)",
+  "doc": "project/SRS.md",
+  "heading": "Trạng thái & chuyển trạng thái"
+ },
+ {
+  "file": "state/st-05-token-phien.puml",
+  "caption": "Sơ đồ trạng thái token phiên đăng nhập (edge xác thực qua auth.ValidateToken)",
+  "doc": "project/SRS.md",
+  "heading": "Trạng thái & chuyển trạng thái"
+ },
+ {
   "file": "erd/erd-overview.puml",
-  "caption": "Tổng quan quan hệ giữa 18 bảng SQLite",
+  "caption": "Tổng quan quan hệ giữa 19 bảng SQLite của app và database theo dịch vụ của server: auth.db, sync.db, MongoDB (3 database)",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "ERD"
+ },
+ {
+  "file": "erd/erd-auth-db.puml",
+  "caption": "ERD auth.db (dịch vụ auth): users, auth_tokens, security_answers, auth_attempts, outbox",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "ERD"
+ },
+ {
+  "file": "erd/erd-sync-db.puml",
+  "caption": "ERD sync.db (dịch vụ sync): dữ liệu học đồng bộ, xp_events nguồn sự thật, sync_seq, purged_users, outbox",
+  "doc": "engineering/DATABASE-DESIGN.md",
+  "heading": "ERD"
+ },
+ {
+  "file": "erd/mongo-collections.puml",
+  "caption": "Các collection MongoDB: learninge_content, learninge_game, learninge_insight (kèm TTL)",
   "doc": "engineering/DATABASE-DESIGN.md",
   "heading": "ERD"
  },
  {
   "file": "erd/erd-account-settings.puml",
-  "caption": "ERD nhóm tài khoản và cài đặt",
+  "caption": "ERD app nhóm tài khoản, cài đặt, trạng thái đồng bộ, bản lưu xếp hạng và phiên bản nội dung",
   "doc": "engineering/DATABASE-DESIGN.md",
   "heading": "Thực thể"
  },
  {
   "file": "erd/erd-vocabulary.puml",
-  "caption": "ERD nhóm từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ",
+  "caption": "ERD app nhóm từ vựng, bộ từ, tiến độ thẻ và ngôn ngữ (cột đồng bộ)",
   "doc": "engineering/DATABASE-DESIGN.md",
   "heading": "Thực thể"
  },
  {
-  "file": "erd/erd-grammar-quiz-log.puml",
-  "caption": "ERD nhóm ngữ pháp, quiz và nhật ký học",
+  "file": "erd/erd-quiz-log-xp.puml",
+  "caption": "ERD app nhóm quiz, nhật ký học và sự kiện XP (ngữ pháp đã gỡ)",
   "doc": "engineering/DATABASE-DESIGN.md",
   "heading": "Thực thể"
  },
  {
   "file": "erd/erd-exam.puml",
-  "caption": "ERD nhóm luyện thi",
+  "caption": "ERD app nhóm luyện thi (exam_attempts có cột đồng bộ)",
   "doc": "engineering/DATABASE-DESIGN.md",
   "heading": "Thực thể"
  },
  {
   "file": "architecture/arc-components.puml",
-  "caption": "Sơ đồ thành phần 3 tầng và dịch vụ Android",
+  "caption": "Sơ đồ thành phần client–server (C4 mức container): app Android (gRPC client) → edge → 5 dịch vụ Rust, SQLite theo dịch vụ, MongoDB, outbox relay; chỉ edge lộ ra ngoài",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Sơ đồ tổng quan"
  },
  {
   "file": "architecture/arc-packages.puml",
-  "caption": "Sơ đồ gói com.learninge.app",
+  "caption": "Sơ đồ gói com.learninge.app (data.remote gRPC, stub proto) và cargo workspace LearningE_Server (crates proto/common, services edge/auth/sync/content/gamification/insight)",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Bản đồ gói mã nguồn"
  },
  {
   "file": "class/cls-arch-review-feature.puml",
-  "caption": "Sơ đồ lớp theo tầng cho tính năng Ôn tập",
+  "caption": "Sơ đồ lớp theo tầng cho tính năng Ôn tập, kèm XpService và móc đồng bộ",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Thành phần / service"
  },
@@ -193,19 +253,49 @@
  },
  {
   "file": "sequence/seq-review-finish-streak.puml",
-  "caption": "Sơ đồ tuần tự kết thúc phiên: ghi nhật ký và chuỗi ngày trong một giao dịch",
+  "caption": "Sơ đồ tuần tự kết thúc phiên: ghi nhật ký, chuỗi ngày và xp_events (dirty) trong một giao dịch, rồi đồng bộ → outbox xp.recorded → gamification/MongoDB",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Luồng dữ liệu chính"
+ },
+ {
+  "file": "sequence/seq-sync-push-pull.puml",
+  "caption": "Sơ đồ tuần tự đồng bộ: Push (LWW, stale, rejected, outbox) rồi Pull theo cursor qua edge → sync",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Luồng dữ liệu chính"
+ },
+ {
+  "file": "sequence/seq-outbox-relay.puml",
+  "caption": "Sơ đồ tuần tự outbox và relay: ghi sự kiện cùng giao dịch, giao ít nhất một lần, lùi dần và thử lại khi đích sống lại",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Luồng dữ liệu chính"
+ },
+ {
+  "file": "sequence/seq-register-notebook.puml",
+  "caption": "Sơ đồ tuần tự đăng ký và bộ \"Sổ tay của tôi\": auth ghi outbox user.registered, sync tạo bộ UUIDv5 idempotent",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Luồng dữ liệu chính"
  },
  {
   "file": "class/cls-model-account-vocabulary.puml",
-  "caption": "Sơ đồ lớp miền: tài khoản, bộ từ, từ, tiến độ",
+  "caption": "Sơ đồ lớp miền: tài khoản, bộ từ, từ, tiến độ, nhật ký, XP",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Lược đồ lớp"
  },
  {
   "file": "class/cls-model-assessment.puml",
-  "caption": "Sơ đồ lớp miền: ngữ pháp, quiz, thi thử",
+  "caption": "Sơ đồ lớp miền: ngữ pháp [Won't], quiz, thi thử",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Lược đồ lớp"
+ },
+ {
+  "file": "class/cls-server-modules.puml",
+  "caption": "Sơ đồ lớp cargo workspace server: crates proto, common và 6 dịch vụ edge, auth, sync, content, gamification, insight (struct/trait chính)",
+  "doc": "engineering/SYSTEM-BLUEPRINT.md",
+  "heading": "Lược đồ lớp"
+ },
+ {
+  "file": "class/cls-domain-game.puml",
+  "caption": "Lớp quy tắc lớp game pixel: FlameStage, ThemeStars, ChestCounts, XpCalculator",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Lược đồ lớp"
  },
@@ -217,19 +307,19 @@
  },
  {
   "file": "class/cls-rules-security-io.puml",
-  "caption": "Lớp quy tắc thuần Java: băm mật khẩu, chuẩn hóa, mã hóa CSV/JSON",
+  "caption": "Lớp quy tắc thuần Java: chuẩn hóa, mã hóa CSV/JSON (băm mật khẩu đã chuyển lên máy chủ)",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Xác thực & phân quyền"
  },
  {
   "file": "architecture/arc-deployment.puml",
-  "caption": "Sơ đồ triển khai trên một thiết bị Android ngoại tuyến",
+  "caption": "Sơ đồ triển khai docker compose: chỉ edge publish, TLS kết thúc ở lớp lộ ra, nơi chạy chưa chốt (P1 laptop + tunnel, P2 Atlas, P3 Railway, P4 VPS)",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Triển khai"
  },
  {
   "file": "class/cls-core-infrastructure.puml",
-  "caption": "Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode, DatabaseHelper",
+  "caption": "Lớp hạ tầng: ServiceLocator, AppExecutors, Result<T>, ErrorCode (ánh xạ từ gRPC), DatabaseHelper, GrpcClient, interceptor, GrpcErrorMapper, RetryPolicy, *Remote, TokenStore, NetworkMonitor, SyncManager",
   "doc": "engineering/API-SPECIFICATION.md",
   "heading": "1. Quy ước chung"
  },
@@ -264,6 +354,24 @@
   "heading": "3.6"
  },
  {
+  "file": "sequence/seq-sync-push-pull.puml",
+  "caption": "Sơ đồ tuần tự đồng bộ: Push EP-11 (LWW, stale, rejected) rồi Pull EP-12 theo cursor qua edge → sync",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3. Service"
+ },
+ {
+  "file": "sequence/seq-leaderboard.puml",
+  "caption": "Sơ đồ tuần tự bảng xếp hạng tuần: GetWeekly EP-13 qua edge → gamification (MongoDB) và bản lưu khi mất mạng",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3. Service"
+ },
+ {
+  "file": "sequence/seq-content-update.puml",
+  "caption": "Sơ đồ tuần tự cập nhật nội dung từ máy chủ: GetManifest EP-14, GetDeck EP-15, GetExam EP-16 qua edge → content",
+  "doc": "engineering/API-SPECIFICATION.md",
+  "heading": "3. Service"
+ },
+ {
   "file": "sequence/seq-reminder.puml",
   "caption": "Sơ đồ tuần tự nhắc học hằng ngày qua AlarmManager và BootReceiver",
   "doc": "engineering/INTEGRATION-DOCUMENTATION.md",
@@ -277,25 +385,25 @@
  },
  {
   "file": "architecture/arc-navigation-auth-home-learn.puml",
-  "caption": "Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học",
+  "caption": "Bản đồ màn hình: luồng chưa đăng nhập, tab Trang chủ và Học (công tắc Lưới | Bản đồ, lối vào SCR-34)",
   "doc": "engineering/UI-UX-SPECIFICATION.md",
   "heading": "Sitemap"
  },
  {
   "file": "architecture/arc-navigation-practice-search-me.puml",
-  "caption": "Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi",
+  "caption": "Bản đồ màn hình: tab Luyện tập, Tra từ và Tôi (SCR-34 Bảng xếp hạng, SCR-35 Đồng bộ)",
   "doc": "engineering/UI-UX-SPECIFICATION.md",
   "heading": "Sitemap"
  },
  {
   "file": "usecase/uc-00-overview.puml",
-  "caption": "Sơ đồ use case tổng quát — phạm vi chức năng của LearningE",
+  "caption": "Sơ đồ use case tổng quát — phạm vi chức năng của LearningE (online, backend 6 microservice gRPC; Won't/Could đánh dấu)",
   "doc": "project/PRD.md",
   "heading": "Phạm vi sơ bộ"
  },
  {
   "file": "architecture/arc-deployment.puml",
-  "caption": "Sơ đồ triển khai: ứng dụng chạy ngoại tuyến trên một thiết bị Android",
+  "caption": "Sơ đồ triển khai: app ngoại tuyến trên Android, đồng bộ qua gRPC/TLS với backend docker compose (nơi chạy chưa chốt, DEC-023)",
   "doc": "project/PRD.md",
   "heading": "Ràng buộc"
  }

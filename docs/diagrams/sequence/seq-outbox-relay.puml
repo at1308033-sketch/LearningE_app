@@ -1,0 +1,51 @@
+@startuml
+!include ../_style.puml
+skinparam dpi 105
+title Outbox và relay (CR-007, DEC-021): ghi sự kiện cùng giao dịch SQLite, giao ít nhất một lần, bên nhận idempotent, lùi dần khi đích ngừng
+autonumber
+skinparam maxMessageSize 200
+
+participant "Dịch vụ phát\n(auth hoặc sync)\nxử lý RPC" as P
+database "SQLite (auth.db / sync.db)\nbảng nghiệp vụ + outbox" as DB
+participant "Relay\n(tokio task, common::outbox)" as RL
+participant "Đích: EventSink\n(sync · gamification · insight)" as D
+database "Kho của đích\nSQLite sync.db / MongoDB" as DDB
+
+== 1. Ghi: một giao dịch, không ghi đồng thời SQLite và Mongo ==
+P -> DB : BEGIN IMMEDIATE
+P -> DB : thay đổi nghiệp vụ (vd INSERT xp_events, UPDATE users)
+P -> DB : INSERT outbox — mỗi (sự kiện, đích) một dòng:\nevent_id UUIDv7, destination, type, payload (Event protobuf, cắt theo đích)\nđịnh tuyến cố định common::events (vd xp.recorded → gamification, insight)
+P -> DB : COMMIT
+P -> RL : Notify (đánh thức ngay, không chờ chu kỳ 1 s)
+
+== 2. Phát: mỗi đích một vòng lặp, thứ tự theo id ==
+loop mỗi 1 s hoặc khi được đánh thức, cho từng destination
+  RL -> DB : SELECT … WHERE destination = ? AND published_at IS NULL\nAND dead_at IS NULL AND next_attempt_at ≤ now ORDER BY id LIMIT 200
+  DB --> RL : lô ≤ 200 dòng
+  RL -> D : EventSink/Publish(batch) + x-internal-auth + x-request-id; deadline 3 s
+  alt Đích nhận được
+    D -> DDB : upsert theo event_id / khóa tự nhiên\n(gamification: tính lại weekly_xp, không $inc; insight: insertOne _id = event_id, E11000 → không cộng dồn;\nsync: INSERT OR IGNORE, kiểm purged_users)
+    D --> RL : ack danh sách event_id đã xử lý (kể cả bản trùng)
+    RL -> DB : UPDATE outbox SET published_at = now WHERE id IN (ack)
+  else Lỗi tạm (UNAVAILABLE, DEADLINE_EXCEEDED, RESOURCE_EXHAUSTED, mất kết nối)
+    D --x RL : lỗi
+    RL -> DB : attempts + 1; next_attempt_at = now + min(1 s × 2^attempts, 15 s) ± 20%; last_error = mã gRPC\n(dừng lô ở dòng lỗi đầu tiên để giữ thứ tự)
+    loop trong lúc lùi: mỗi 1 s
+      RL -> D : grpc.health.v1/Health/Check (miễn x-internal-auth)
+    end
+    D --> RL : SERVING → attempts = 0, next_attempt_at = now cho đích này; xả ngay (NFR-N6: ≤ 60 s sau khi đích sống lại)
+  else Lỗi vĩnh viễn (INVALID_ARGUMENT, FAILED_PRECONDITION) sau 5 lần
+    RL -> DB : dead_at = now, log ERROR kèm event_id; không chặn các dòng sau (outbox requeue thủ công)
+  end
+end
+
+== 3. Dọn dẹp ==
+RL -> DB : mỗi giờ: xóa dòng đã phát > 7 ngày; đếm dòng chờ (> 10 000 → log WARN, chỉ số outbox_pending{destination})
+
+note over P, DDB
+  Bảo đảm: giao ít nhất một lần + bên nhận idempotent nên hiệu quả đúng một lần về trạng thái.
+  Thứ tự giữa các đích không bảo đảm; bên nhận chịu được sự kiện đến lệch (dùng *_version hoặc tính lại từ nguồn).
+  Payload không chứa email, hash, token, câu trả lời bảo mật; insight chỉ nhận user_hmac.
+  Mongo ngừng: auth, sync vẫn chạy (chỉ SQLite), outbox tích lũy; gamification rebuild từ sync.ExportXpEvents khi mất hẳn dữ liệu.
+end note
+@enduml

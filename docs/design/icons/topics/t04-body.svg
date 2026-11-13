@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-<!-- T04 The Body / Cơ thể người - tile light #DDF7F3, dark #133B38 -->
-<path d="M18.5,22.5 L11.5,14.5" stroke="#14B8A6" stroke-width="4.5" stroke-linecap="round"/>
-<path d="M29.5,22.5 L35.5,30.5" stroke="#14B8A6" stroke-width="4.5" stroke-linecap="round"/>
-<circle cx="10.4" cy="12.8" r="2.9" fill="#F5CBA7"/><circle cx="36.6" cy="32" r="2.9" fill="#F5CBA7"/>
-<rect x="18.5" y="30" width="5" height="12" rx="2.5" fill="#2A2180"/><rect x="24.5" y="30" width="5" height="12" rx="2.5" fill="#2A2180"/>
-<ellipse cx="20.3" cy="42.6" rx="4" ry="2.2" fill="#1E1B3A"/><ellipse cx="27.7" cy="42.6" rx="4" ry="2.2" fill="#1E1B3A"/>
-<rect x="22" y="15" width="4" height="5" rx="1.5" fill="#F5CBA7"/>
-<rect x="16.5" y="18.5" width="15" height="15" rx="6" fill="#14B8A6"/>
-<rect x="19" y="21.5" width="2.5" height="7" rx="1.25" fill="#FFFFFF" fill-opacity="0.4"/>
-<circle cx="24" cy="11" r="6.5" fill="#F5CBA7"/>
-<path d="M17.4,10.6 C17,3.6 31,3.4 30.6,10.6 C28,7.4 21,7 17.4,10.6Z" fill="#2B2340"/>
-<circle cx="21.7" cy="11.9" r="1.1" fill="#1E1B3A"/><circle cx="26.3" cy="11.9" r="1.1" fill="#1E1B3A"/>
-<path d="M22.2,14.4 Q24,15.8 25.8,14.4" fill="none" stroke="#1E1B3A" stroke-width="1.5" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="#0F766E" d="M3 9h1v2h-1z"/><path fill="#14B8A6" d="M2 9h1v2h-1zM2 8h10v1h-10zM3 7h9v1h-9zM4 9h7v1h-7zM5 10h5v1h-5zM11 5h2v2h-2zM12 4h2v1h-2z"/><path fill="#1E1B3A" d="M1 8h1v4h-1zM2 2h1v4h-1zM2 7h1v1h-1zM2 12h3v1h-3zM3 1h1v1h-1zM3 6h1v1h-1zM3 14h9v1h-9zM4 4h1v1h-1zM4 10h1v2h-1zM4 13h1v1h-1zM4 15h3v1h-3zM4 0h5v1h-5zM7 12h1v2h-1zM8 4h1v1h-1zM8 15h3v1h-3zM9 1h1v1h-1zM9 6h2v1h-2zM10 5h1v1h-1zM10 10h1v4h-1zM10 2h2v3h-2zM11 9h1v1h-1zM12 7h1v2h-1zM12 1h2v1h-2zM13 5h1v2h-1zM14 2h1v3h-1z"/><path fill="#2A2180" d="M5 12h2v2h-2zM5 11h5v1h-5zM8 12h2v2h-2z"/><path fill="#2B2340" d="M3 3h1v1h-1zM3 2h7v1h-7zM4 1h5v1h-5zM9 3h1v1h-1z"/><path fill="#E3A97F" d="M2 11h2v1h-2zM3 4h1v2h-1zM4 3h5v1h-5zM4 6h5v1h-5zM5 4h3v2h-3zM9 4h1v2h-1zM12 2h2v2h-2z"/><path fill="#FF9B7D" d="M4 5h1v1h-1zM8 5h1v1h-1z"/></svg>

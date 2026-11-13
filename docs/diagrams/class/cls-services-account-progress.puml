@@ -7,11 +7,11 @@ hide empty fields
 
 package "com.learninge.app.domain" {
   class AuthService {
-    +register(displayName, username, password, confirm, questionId, answer) : Result<User>
-    +login(username, password) : Result<User>
+    +register(email, nickname, displayName, password, confirm, questionId, answer) : Result<User>
+    +login(email, password) : Result<User>
     +logout() : Result<Void>
-    +getSecurityQuestion(username) : Result<Integer>
-    +resetPassword(username, answer, newPassword, confirm) : Result<Void>
+    +getSecurityQuestion(email) : Result<Integer>
+    +resetPassword(email, answer, newPassword, confirm) : Result<Void>
     +changePassword(current, newPassword, confirm) : Result<Void>
     +deleteAccount(password) : Result<Void>
     +currentUser() : Result<User>
@@ -28,6 +28,12 @@ package "com.learninge.app.domain" {
     +statistics() : Result<Statistics>
     +hasMetGoalToday() : Result<Boolean>
   }
+  class XpService {
+    +record(source, correct, wrong) : Result<XpEvent>
+  }
+  class LeaderboardService {
+    +weekly() : Result<LeaderboardView>
+  }
   class ReminderService {
     +schedule(int minuteOfDay) : Result<Void>
     +cancel() : Result<Void>
@@ -39,6 +45,9 @@ package "com.learninge.app.domain" {
 }
 
 AuthService --> ReminderService : đặt/hủy lịch
+AuthService ..> AuthRemote : gRPC AuthService (cần mạng)
+StudyService --> XpService : xp_events
+LeaderboardService ..> LeaderboardRemote : EP-13 GetWeekly + leaderboard_cache
 StudyService --> ProgressService : ghi study_log + chuỗi
 ReminderService --> ProgressService : hasMetGoalToday()
 @enduml

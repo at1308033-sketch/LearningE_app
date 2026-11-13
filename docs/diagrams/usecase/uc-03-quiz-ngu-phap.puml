@@ -1,7 +1,12 @@
 @startuml
 !include ../_style.puml
-title Use case chi tiết — Luyện tập: quiz & ngữ pháp (F3, F5)
+title Use case chi tiết — Luyện tập: quiz (F3) và ngữ pháp [Won't] (F5)
 left to right direction
+skinparam usecase<<Won't>> {
+  BackgroundColor #E6E6EC
+  BorderColor #9A98AD
+  FontColor #7A7890
+}
 
 actor "Người học" as N
 
@@ -10,11 +15,11 @@ rectangle "LearningE" {
   usecase "Sinh câu hỏi\n(BR-020, BR-024)" as GEN
   usecase "Chấm điểm, lưu lượt làm\n(BR-022, BR-023, BR-025)" as SCORE
   usecase "Đưa từ sai về hộp 1\n(BR-021)" as WRONG
-  usecase "Ghi hoạt động học\n(BR-032; FLOW-008)" as LOG
+  usecase "Ghi hoạt động học, tạo xp_event\n(BR-032, BR-066; FLOW-008)" as LOG
   usecase "UC-009 Xem lịch sử quiz" as UC9
   usecase "Xem lại câu sai\ncủa một lượt" as REV
-  usecase "UC-012 Học ngữ pháp\nvà làm bài tập" as UC12
-  usecase "Làm bài tập ngữ pháp\n(có giải thích)" as EX
+  usecase "UC-012 Học ngữ pháp\nvà làm bài tập" as UC12 <<Won't>>
+  usecase "Làm bài tập ngữ pháp\n(có giải thích)" as EX <<Won't>>
 }
 
 N -- UC8
@@ -29,4 +34,10 @@ UC9 <.. REV : <<extend>>
 UC12 <.. EX : <<extend>>\n[bài có bài tập]
 EX ..> SCORE : <<include>>
 UC12 ..> LOG : <<include>>
+
+note bottom of UC12
+  UC-012 [Won't]: hạ xuống ở CR-006 (C1), không làm ở bản này
+  (xám). Quiz chỉ còn nguồn DECK; mỗi lượt quiz tạo xp_event
+  và đánh dấu dirty để đồng bộ (UC-023).
+end note
 @enduml

@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-<!-- T13 Work & Jobs / Công việc & nghề nghiệp - tile light #F3ECE4, dark #3A2F26 -->
-<path d="M18,15 L18,11.5 C18,9.5 19.5,8 21.5,8 L26.5,8 C28.5,8 30,9.5 30,11.5 L30,15" fill="none" stroke="#5146E0" stroke-width="3" stroke-linecap="round"/>
-<rect x="5" y="14" width="38" height="27" rx="5" fill="#5146E0"/>
-<rect x="5" y="24" width="38" height="3.5" fill="#2A2180" fill-opacity="0.45"/>
-<rect x="20.5" y="21.5" width="7" height="8.5" rx="2" fill="#FFC93C"/>
-<rect x="9" y="17.5" width="10" height="2.6" rx="1.3" fill="#FFFFFF" fill-opacity="0.35"/>
-<polygon points="40,32 41.3,35.2 44.5,36.5 41.3,37.8 40,41 38.7,37.8 35.5,36.5 38.7,35.2" fill="#FF7A59"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 16 16" shape-rendering="crispEdges"><path fill="#1E1B3A" d="M0 5h1v9h-1zM1 4h14v1h-14zM1 14h14v1h-14zM4 2h1v2h-1zM5 1h6v1h-6zM6 3h4v1h-4zM7 9h2v1h-2zM11 2h1v2h-1zM15 5h1v9h-1z"/><path fill="#2A2180" d="M1 8h5v1h-5zM1 13h14v1h-14zM10 8h5v1h-5zM14 12h1v1h-1z"/><path fill="#5146E0" d="M1 6h1v2h-1zM1 9h5v2h-5zM1 12h13v1h-13zM1 5h14v1h-14zM1 11h14v1h-14zM3 7h12v1h-12zM4 6h11v1h-11zM10 9h5v2h-5z"/><path fill="#8B5E3C" d="M5 3h1v1h-1zM5 2h6v1h-6zM10 3h1v1h-1z"/><path fill="#A5A0FF" d="M2 7h1v1h-1zM2 6h2v1h-2z"/><path fill="#FFC93C" d="M6 9h1v1h-1zM6 8h4v1h-4zM6 10h4v1h-4zM9 9h1v1h-1z"/></svg>

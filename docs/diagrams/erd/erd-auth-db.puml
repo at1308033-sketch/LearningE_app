@@ -1,0 +1,97 @@
+@startuml
+!include ../_style.puml
+title ERD auth.db — SQLite của dịch vụ auth :50052 (tài khoản, phiên, khóa tăng dần, outbox; DATA_MODEL §B1, CR-007)
+hide circle
+left to right direction
+
+entity "users" as users {
+  * id : INTEGER <<PK>>
+  --
+  * uuid : TEXT <<UK>> -- user_id dùng ở mọi dịch vụ khác
+  * email : TEXT <<UK>> -- COLLATE NOCASE
+  * nickname : TEXT <<UK>> -- 3–20 ký tự, NOCASE, công khai
+  * display_name : TEXT
+  * password_hash : TEXT -- PBKDF2, hex
+  * password_salt : TEXT -- 16 byte, hex
+  failed_login_count : INTEGER
+  login_lock_count : INTEGER -- bậc khóa
+  login_locked_until : INTEGER
+  login_last_fail_at : INTEGER
+  failed_reset_count : INTEGER
+  reset_lock_count : INTEGER
+  reset_locked_until : INTEGER
+  reset_last_fail_at : INTEGER
+  * created_at : INTEGER
+  * updated_at : INTEGER
+}
+
+entity "auth_tokens" as at {
+  * id : INTEGER <<PK>>
+  --
+  * user_id : INTEGER <<FK>> -- ON DELETE CASCADE
+  * token_hash : TEXT <<UK>> -- SHA-256 hex (64 ký tự)
+  device_name : TEXT
+  * created_at : INTEGER
+  * expires_at : INTEGER -- +30 ngày
+  last_used_at : INTEGER
+  revoked_at : INTEGER
+}
+
+entity "security_answers" as sa {
+  * user_id : INTEGER <<PK, FK>>
+  --
+  * question_id : INTEGER -- 1..5
+  * answer_hash : TEXT
+  * answer_salt : TEXT
+  * updated_at : INTEGER
+}
+
+entity "auth_attempts" as aa {
+  * subject : TEXT <<PK>> -- HMAC email không tồn tại
+  * scope : TEXT <<PK>> -- LOGIN | RESET
+  --
+  failed_count : INTEGER
+  lock_count : INTEGER
+  locked_until : INTEGER
+  * last_fail_at : INTEGER
+}
+
+entity "outbox" as ob {
+  * id : INTEGER <<PK>> -- AUTOINCREMENT
+  --
+  * event_id : TEXT -- UUIDv7, UNIQUE (event_id, destination)
+  * destination : TEXT -- sync | gamification | insight
+  * aggregate : TEXT
+  * aggregate_id : TEXT
+  * type : TEXT -- user.registered, user.profile_changed,\nuser.deleted, auth.login_failed, auth.locked
+  * payload : BLOB -- learninge.internal.v1.Event, ≤ 64 KiB
+  * created_at : INTEGER
+  published_at : INTEGER -- NULL = chưa được ack
+  attempts : INTEGER
+  * next_attempt_at : INTEGER
+  last_error : TEXT
+  dead_at : INTEGER
+}
+
+entity "server_meta" as sm {
+  * key : TEXT <<PK>>
+  --
+  * value : TEXT -- vd dấu vân tay khóa HMAC
+}
+entity "schema_version" as sv {
+  * version : INTEGER <<PK>>
+  --
+  * applied_at : INTEGER
+}
+
+users ||--o{ at : "phiên"
+users ||--|| sa : "câu hỏi bảo mật"
+users ||--o{ ob : "sự kiện user.* (cùng giao dịch)"
+aa .. users : email không tồn tại\n(cùng thuật toán khóa)
+
+legend bottom
+  * = NOT NULL · STRICT tables · thời điểm = epoch ms UTC · chỉ SQLite này là nguồn sự thật tài khoản (ghi bằng 1 kết nối + BEGIN IMMEDIATE, WAL).
+  users.uuid là khóa logic dùng ở sync.db và MongoDB (không có FK xuyên dịch vụ); insight chỉ nhận user_hmac. Relay giao outbox tới sync, gamification, insight.
+  Chỉ mục: idx_tokens_user, idx_tokens_expiry, idx_attempts_last, idx_outbox_pending (destination, id) WHERE published_at IS NULL AND dead_at IS NULL.
+endlegend
+@enduml

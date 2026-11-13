@@ -1,6 +1,6 @@
 @startuml
 !include ../_style.puml
-title ERD — Luyện thi (đề, câu hỏi, lượt thi, câu trả lời)
+title ERD — Luyện thi (đề, câu hỏi, lượt thi, câu trả lời; exam_attempts có cột đồng bộ — CR-006)
 hide circle
 
 entity "users" as users #F4F4F8 {
@@ -38,6 +38,7 @@ entity "exam_questions" as eq {
 entity "exam_attempts" as ea {
   * id : INTEGER <<PK>>
   --
+  * uuid : TEXT <<UK>> -- UUID v4, khóa đồng bộ
   * user_id : INTEGER <<FK>>
   * test_id : INTEGER <<FK>>
   * status : TEXT -- IN_PROGRESS | SUBMITTED
@@ -47,6 +48,9 @@ entity "exam_attempts" as ea {
   correct_count : INTEGER
   total_count : INTEGER
   duration_sec : INTEGER
+  * updated_at : INTEGER -- epoch ms
+  * dirty : INTEGER -- chỉ lượt SUBMITTED mới dirty = 1
+  server_seq : INTEGER -- NULL = chưa lên server
 }
 entity "exam_answers" as ean {
   * attempt_id : INTEGER <<PK, FK>>
@@ -71,5 +75,6 @@ note right of ea
 end note
 legend bottom
   * = NOT NULL · Bảng xám = tham chiếu · FK user/attempt: ON DELETE CASCADE
+  exam_tests/exam_questions: nội dung chỉ đọc, cập nhật từ server (EP-16); exam_answers chỉ ở máy, không đồng bộ
 endlegend
 @enduml
