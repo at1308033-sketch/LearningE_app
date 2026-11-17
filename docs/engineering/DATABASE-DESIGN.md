@@ -578,7 +578,7 @@ Kiểu SQLite: `INTEGER`, `TEXT`. Thời điểm (`*_at`, `*_until`) = epoch mil
 | `auth_attempts` | subject, scope, failed_count, lock_count, locked_until, last_fail_at | PK(subject, scope); `subject` = HMAC-SHA256(khóa server, email chuẩn hóa) hex; **chỉ** cho email không tồn tại (BR-076) | Không (không có email rõ) |
 | `server_meta` | key, value | Chỉ `hmac_key_version`, `hmac_key_fingerprint` — **không lưu khóa** | Không |
 | `outbox` | id, event_id, destination, aggregate, aggregate_id, type, payload, created_at, published_at, attempts, next_attempt_at, last_error, dead_at | UNIQUE(event_id, destination) — §Outbox | Không (payload theo bên nhận, §Outbox) |
-| `schema_version` | version, applied_at | Theo dõi migration | Không |
+| `flyway_schema_history` (Flyway tự tạo; `schema_version` chỉ khi dùng migrator dự phòng — thay đổi phạm vi) | version, checksum, installed_on, success | Theo dõi migration | Không |
 
 **(B2) `sync.db`**
 | Bảng | Trường chính | Ràng buộc | PII? |
@@ -592,9 +592,9 @@ Kiểu SQLite: `INTEGER`, `TEXT`. Thời điểm (`*_at`, `*_until`) = epoch mil
 | `xp_events` | uuid, user_id, source_type, ref_uuid, counts, xp_awarded, occurred_at, received_at, local_date, week_start, server_seq | PK `uuid`; `xp_awarded` do `sync` tính (BR-065..BR-068, đã áp trần 500/ngày); **nguồn sự thật XP** | Không |
 | `sync_seq` | id (=1), value | Một dòng; bộ đếm `server_seq` toàn `sync.db` | Không |
 | `purged_users` | user_id, purged_at | Đánh dấu tài khoản đã xóa để chặn lô Push "đến muộn" ghi lại dữ liệu (§Toàn vẹn) | Không |
-| `outbox`, `schema_version` | như `auth.db` | Như `auth.db`; `destination` của `sync` chỉ là `gamification`, `insight` | Không |
+| `outbox`, `flyway_schema_history` | như `auth.db` | Như `auth.db`; `destination` của `sync` chỉ là `gamification`, `insight` | Không |
 
-**(B3) MongoDB** (driver `mongodb` chính thức; validator `$jsonSchema` mức `strict`/`error` — §Chi tiết B4)
+**(B3) MongoDB** (Spring Data MongoDB `MongoTemplate` trên driver Java chính thức `mongodb-driver-sync` — thay đổi phạm vi; validator `$jsonSchema` mức `strict`/`error` — §Chi tiết B4)
 | Database.collection | Trường chính | Ràng buộc | PII? |
 |---|---|---|---|
 | `learninge_content.manifest` | _id `"global"`, content_version, languages[], updated_at | Một tài liệu; ghi **cuối cùng** khi import (điểm "commit") | Không |
@@ -670,8 +670,8 @@ CREATE TABLE xp_events (
 
 `leaderboard_cache.payload`: đổi từ `payload_json TEXT` (JSON của REST) sang `payload BLOB` = bytes của message `learninge.app.v1.GetWeeklyResponse` (protobuf-lite `toByteArray()`/`parseFrom()`); app không còn `org.json` cho dữ liệu server. Mọi bảng khác của (A) **không đổi**.
 
-### (B1) `auth.db` — DDL (`LearningE_Server/migrations/auth/V001__init.sql`)
-SQLite bundled trong `rusqlite` (≥ 3.45; phiên bản chốt ở SPIKE S-01, ghi vào SYSTEM-BLUEPRINT (công nghệ)): dùng `STRICT`, UPSERT, `RETURNING`, index một phần. Thời điểm = epoch millis UTC (`INTEGER`).
+### (B1) `auth.db` — DDL (`LearningE_Server/auth/src/main/resources/db/migration/auth/V001__init.sql`, chạy bằng Flyway)
+SQLite đóng gói trong `org.xerial:sqlite-jdbc` 3.53.4.0 (SQLite 3.53.x ≥ 3.45; xác nhận ở SPIKE S-01', SYSTEM-BLUEPRINT (công nghệ)): dùng `STRICT`, UPSERT, `RETURNING`, index một phần. Thời điểm = epoch millis UTC (`INTEGER`).
 ```sql
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
@@ -735,10 +735,11 @@ CREATE TABLE outbox (
 CREATE INDEX idx_outbox_pending ON outbox(destination, id) WHERE published_at IS NULL AND dead_at IS NULL;
 CREATE INDEX idx_outbox_published ON outbox(published_at) WHERE published_at IS NOT NULL;
 
+-- thay đổi phạm vi: chỉ tạo khi dùng migrator dự phòng; với Flyway (mặc định) bỏ dòng dưới, lịch sử nằm ở flyway_schema_history
 CREATE TABLE schema_version (version INTEGER PRIMARY KEY, applied_at INTEGER NOT NULL) STRICT;
 ```
 
-### (B2) `sync.db` — DDL (`LearningE_Server/migrations/sync/V001__init.sql`)
+### (B2) `sync.db` — DDL (`LearningE_Server/sync/src/main/resources/db/migration/sync/V001__init.sql`, chạy bằng Flyway)
 ```sql
 CREATE TABLE user_settings (
   user_id TEXT PRIMARY KEY CHECK (length(user_id) = 36),
@@ -861,6 +862,7 @@ CREATE TABLE outbox (
 CREATE INDEX idx_outbox_pending ON outbox(destination, id) WHERE published_at IS NULL AND dead_at IS NULL;
 CREATE INDEX idx_outbox_published ON outbox(published_at) WHERE published_at IS NOT NULL;
 
+-- thay đổi phạm vi: chỉ tạo khi dùng migrator dự phòng; với Flyway (mặc định) bỏ dòng dưới, lịch sử nằm ở flyway_schema_history
 CREATE TABLE schema_version (version INTEGER PRIMARY KEY, applied_at INTEGER NOT NULL) STRICT;
 ```
 
@@ -919,7 +921,7 @@ CREATE INDEX idx_outbox_pending ON outbox(destination, id) WHERE published_at IS
 CREATE INDEX idx_outbox_published ON outbox(published_at) WHERE published_at IS NOT NULL;
 ```
 - **Một dòng cho mỗi (sự kiện, bên nhận)**: sự kiện có 3 bên nhận ghi 3 dòng cùng `event_id`. Nhờ vậy mỗi bên nhận có tiến độ, số lần thử và lỗi riêng; bên nhận chậm không chặn bên khác; payload được **cắt theo bên nhận** (bên `insight` không bao giờ nhận `user_id` hay nickname, chỉ `user_hmac`).
-- `event_id` = UUIDv7 (sắp theo thời gian, crate `uuid` feature `v7`), sinh **một lần** khi ghi; giữ nguyên qua mọi lần thử lại → là khóa idempotent ở bên nhận.
+- `event_id` = UUIDv7 (sắp theo thời gian, `UuidV7` tự hiện thực ở `common.id` theo RFC 9562 — JDK chưa có), sinh **một lần** khi ghi; giữ nguyên qua mọi lần thử lại → là khóa idempotent ở bên nhận.
 - `payload` = bytes của `learninge.internal.v1.Event` (API_CONTRACT §Webhook / sự kiện) — đã chứa lại `event_id`, `type`, `aggregate`, `aggregate_id`, `created_at_ms` để bên nhận không cần đọc cột.
 
 Danh mục sự kiện:
@@ -935,12 +937,12 @@ Danh mục sự kiện:
 
 `user_hmac` = 32 ký tự hex đầu của `HMAC-SHA256(LEARNINGE_PSEUDONYM_KEY, users.uuid)` — khóa bút danh **tách khỏi** `LEARNINGE_SERVER_KEY` (khóa câu hỏi giả chỉ `auth` giữ); **chỉ `auth`, `sync` giữ khóa bút danh**; `edge` nhận `user_hmac` qua `ValidateTokenResponse`; `gamification`, `insight`, `content` và MongoDB không bao giờ có khóa (THREAT_MODEL D-10).
 
-**Ngữ nghĩa relay** (crate `common::outbox`, chạy trong tiến trình của `auth` và `sync`):
-1. Ghi: thay đổi nghiệp vụ + các dòng `outbox` trong **cùng một giao dịch SQLite**; sau `COMMIT` báo `tokio::sync::Notify` để relay chạy ngay (không chờ chu kỳ).
+**Ngữ nghĩa relay** (`OutboxRelay` ở gói `common.outbox`, chạy trong tiến trình của `auth` và `sync` — `@Scheduled(fixedDelay = 1 s)` + luồng đánh thức):
+1. Ghi: thay đổi nghiệp vụ + các dòng `outbox` trong **cùng một giao dịch SQLite**; sau `COMMIT` (`TransactionSynchronization.afterCommit` hoặc ngay sau `TxRunner`) gọi `OutboxRelay.wakeUp()` (một `Semaphore`/`LockSupport.unpark`) để relay chạy ngay (không chờ chu kỳ).
 2. Đọc: mỗi `destination` một vòng lặp; mỗi 1 s (hoặc khi được báo) lấy `SELECT … WHERE destination = ? AND published_at IS NULL AND dead_at IS NULL AND next_attempt_at <= now ORDER BY id LIMIT 200`.
 3. Gửi: `EventSink.Publish` (deadline 3 s) tới địa chỉ bên nhận lấy từ cấu hình (`SYNC_ADDR`, `GAMIFICATION_ADDR`, `INSIGHT_ADDR`). Bên nhận trả danh sách `event_id` đã xử lý (kể cả bản trùng). Relay đặt `published_at = now` cho các id được ack trong một giao dịch.
 4. Lỗi tạm (`UNAVAILABLE`, `DEADLINE_EXCEEDED`, `RESOURCE_EXHAUSTED`, mất kết nối): `attempts += 1`, `next_attempt_at = now + min(1 s × 2^attempts, 15 s)` ± 20% nhiễu (**trần 15 s**, không phải 60 s — để NFR-N6 đạt), `last_error` = mã gRPC; giữ thứ tự theo `id` trong từng `destination` (dừng lô ở dòng lỗi đầu tiên). **Thử lại ngay khi đích sống lại:** trong lúc một `destination` đang lùi, vòng lặp hỏi `grpc.health.v1.Health/Check` của đích mỗi 1 s; trả `SERVING` → đặt `attempts = 0` và `next_attempt_at = now` cho các dòng chờ của `destination` đó rồi xả ngay.
-5. Lỗi vĩnh viễn (`INVALID_ARGUMENT`, `FAILED_PRECONDITION` — payload không giải mã được) sau 5 lần → `dead_at = now`, log `ERROR` kèm `event_id`; không chặn các dòng sau. Dòng "chết" xem lại thủ công (`learninge-server outbox requeue <event_id>`).
+5. Lỗi vĩnh viễn (`INVALID_ARGUMENT`, `FAILED_PRECONDITION` — payload không giải mã được) sau 5 lần → `dead_at = now`, log `ERROR` kèm `event_id`; không chặn các dòng sau. Dòng "chết" xem lại thủ công (`java -jar sync.jar --ops=outbox-requeue --event-id=<event_id>`, tương tự với `auth`).
 6. Bảo đảm: **giao ít nhất một lần** + bên nhận idempotent theo `event_id`/khóa tự nhiên ⇒ hiệu quả **đúng một lần** về trạng thái. Thứ tự giữa các bên nhận không bảo đảm; trong một bên nhận theo `id`, nhưng bên nhận vẫn phải chịu được sự kiện đến lệch thứ tự (vì thử lại) — dùng `*_version` hoặc tính lại từ nguồn.
 7. Dọn: dòng đã phát xóa sau 7 ngày (việc nền mỗi giờ). Số dòng chờ > 10 000 của một `destination` → log `WARN` mỗi phút; chỉ số `outbox_pending{destination}` trong log/health chi tiết.
 8. NFR-N6: khi bên nhận sống lại, tồn đọng 10 000 dòng xả hết trong ≤ 60 s (200 dòng/lô, không chờ chu kỳ khi lô đầy). Ngân sách: phát hiện đích sống lại ≤ 15 s (trần lùi; thường ≤ 1 s nhờ hỏi `Health`) + xả 50 lô; với trần lùi 60 s như bản trước, một đích ngừng lâu có thể chờ thêm tới 60 s trước lần thử đầu nên **không** đạt.
@@ -948,7 +950,7 @@ Danh mục sự kiện:
 ### (B4) MongoDB — collection, validator, index
 Kết nối: mỗi dịch vụ một chuỗi kết nối riêng, **cùng một tên biến ở mọi dịch vụ**: `LEARNINGE_MONGO_URI` + `LEARNINGE_MONGO_DB` (`learninge_content` / `learninge_game` / `learninge_insight`) — mỗi dịch vụ chỉ nhận URI của mình (thống nhất với SYSTEM-BLUEPRINT §Cấu hình, F-24; `content-import` dùng giá trị của `content`), **bật xác thực**, mỗi dịch vụ một user với **role tùy biến** trên đúng database của nó = `readWrite` + `collMod` (bootstrap validator cần `collMod`, không có trong `readWrite`); **không** cấp `dbAdmin`, `root`, `*AnyDatabase` cho user dịch vụ; user root chỉ dùng trong `mongo-init` (`content-import` dùng user của `content`; THREAT_MODEL TM-43). Không dùng transaction nhiều tài liệu hay change stream → không cần replica set (chạy được với `mongod` đơn lẻ; nếu chọn Atlas thì replica set có sẵn, không ảnh hưởng). `writeConcern: majority` (đơn lẻ = 1), `readConcern: local`. Mỗi database có tài liệu `_schema` trong collection `meta` (`{_id: "schema", version: 1}`) do bootstrap ghi.
 
-Bootstrap (chạy khi dịch vụ khởi động, idempotent — `common::mongo::ensure_schema`): collection chưa có → `createCollection` kèm validator; đã có → `collMod` validator; rồi `createIndexes` (Mongo bỏ qua index trùng định nghĩa). Mọi validator: `validationLevel: "strict"`, `validationAction: "error"`, `additionalProperties: false` (chặn trường lạ, chống lọt PII).
+Bootstrap (chạy khi dịch vụ khởi động, idempotent — `MongoSchemaInitializer` (`ApplicationRunner`) của mỗi dịch vụ dùng `MongoTemplate`/`IndexOperations`; **không** bật `auto-index-creation`, không `@Indexed(expireAfter)` — thay đổi phạm vi): collection chưa có → `createCollection` kèm validator; đã có → `collMod` validator; rồi `createIndexes` (Mongo bỏ qua index trùng định nghĩa). Mọi validator: `validationLevel: "strict"`, `validationAction: "error"`, `additionalProperties: false` (chặn trường lạ, chống lọt PII).
 
 **`learninge_content`**
 ```javascript
@@ -1136,7 +1138,7 @@ Tìm theo cách đọc/nghĩa (`LIKE '%' || ? || '%'`) không dùng được ind
   - **App — xóa cờ dirty:** `UPDATE <bảng> SET dirty = 0, server_seq = ? WHERE uuid = ? AND updated_at = ?` (không mất sửa đổi xảy ra trong lúc đang đẩy).
   - **PRAGMA app:** `setForeignKeyConstraintsEnabled(true)` trong `onConfigure`; giữ chế độ journal mặc định của Android.
   - **Server — nguyên tắc chung:** không giao dịch nào trải qua hai kho; không dịch vụ nào ghi đồng thời SQLite và MongoDB trong một yêu cầu (chống dual-write). Thay đổi cần lan sang kho khác → dòng `outbox` trong cùng giao dịch.
-  - **Server — SQLite (`auth`, `sync`):** mỗi DB một kết nối ghi duy nhất (Mutex) + tối đa 4 kết nối đọc, tất cả chạy trong `tokio::task::spawn_blocking`; PRAGMA mỗi kết nối: `journal_mode = WAL`, `synchronous = NORMAL`, `foreign_keys = ON`, `busy_timeout = 5000`. Hết `busy_timeout` → `UNAVAILABLE` (API_CONTRACT §Quy ước lỗi).
+  - **Server — SQLite (`auth`, `sync`):** mỗi DB một kết nối ghi duy nhất (HikariCP `maximumPoolSize = 1`, giao dịch `BEGIN IMMEDIATE` qua `TxRunner`) + tối đa 4 kết nối đọc (Hikari `readOnly`), truy cập qua `sqlite-jdbc` + `JdbcClient`; PRAGMA mỗi kết nối: `journal_mode = WAL`, `synchronous = NORMAL`, `foreign_keys = ON`, `busy_timeout = 5000`. Hết `busy_timeout` → `UNAVAILABLE` (API_CONTRACT §Quy ước lỗi).
   - **`auth` — Register:** một giao dịch: `users` + `security_answers` + `auth_tokens` + `outbox` (`user.registered` × 3 bên nhận: sync, gamification, insight). Trùng email/nickname → `ALREADY_EXISTS`, rollback cả giao dịch (không có sự kiện). **Khóa tăng dần:** đọc–ghi bộ đếm trong một giao dịch `BEGIN IMMEDIATE` ngắn (§Quy tắc khóa tăng dần).
   - **`auth` — ChangePassword, ResetPassword, DeleteAccount:** một giao dịch: sửa/xóa `users` + `UPDATE auth_tokens SET revoked_at = now WHERE user_id = ? AND revoked_at IS NULL` (hoặc CASCADE khi xóa) + `outbox`. `edge` xóa mọi mục cache token của user ngay khi nhận kết quả OK.
   - **`sync` — Push:** **một giao dịch `BEGIN IMMEDIATE`** cho cả lô ≤ 500: kiểm `purged_users` (có → `PERMISSION_DENIED` `ACCOUNT_DELETED`, không ghi gì) → với từng bản ghi cấp `server_seq` bằng `UPDATE sync_seq SET value = value + 1 WHERE id = 1 RETURNING value`, ghi bản ghi (UPSERT LWW / `INSERT … ON CONFLICT DO NOTHING` cho bảng chỉ-thêm) → cập nhật `user_stats` → chèn `outbox` (`xp.recorded` cho từng XP APPLIED, một `progress.changed` cho cả lô) → `COMMIT`. Lỗi một bản ghi → `REJECTED` nhưng không rollback cả lô; lỗi hệ thống → rollback cả lô, trả `INTERNAL`/`UNAVAILABLE` (app đẩy lại, idempotent).
@@ -1160,7 +1162,7 @@ Tìm theo cách đọc/nghĩa (`LIKE '%' || ? || '%'`) không dùng được ind
 ## Migration
 - Công cụ, quy ước đặt tên, thay đổi tương thích ngược (expand/contract), kế hoạch hoàn tác:
   - **App:** chưa có CSDL thật → viết lại `DatabaseHelper.onCreate` theo lược đồ trên, giữ `DATABASE_VERSION = 1` (T-003 làm lại ). Từ bản phát hành đầu: tăng `DATABASE_VERSION`, mỗi phiên bản một bước trong `onUpgrade` (`ALTER TABLE … ADD COLUMN`, tạo bảng mới), không xóa bảng dữ liệu người dùng (NFR-E3).
-  - **SQLite server (`auth.db`, `sync.db`):** bộ chạy migration tự viết trong `common::migrate` (không thêm `refinery`/`sqlx`): tệp `migrations/<auth|sync>/V###__<mô_tả>.sql` nhúng vào binary bằng `include_str!`, chạy các tệp có số > `MAX(schema_version.version)` theo thứ tự, mỗi tệp một giao dịch, ghi `schema_version`. Chỉ-tiến (forward-only). Trước khi chạy tệp mới, dịch vụ tạo bản sao `VACUUM INTO '<db>.bak-<version>'` (hoàn tác = dừng dịch vụ, chép lại file .bak). Hai DB đánh số **độc lập** (`auth` V001.., `sync` V001..).
+  - **SQLite server (`auth.db`, `sync.db`):** **Flyway** chạy lúc khởi động trên DataSource ghi: tệp `src/main/resources/db/migration/<auth|sync>/V###__<mô_tả>.sql` đóng trong jar, chạy các tệp chưa có trong `flyway_schema_history` theo thứ tự, mỗi tệp một giao dịch (tệp cần đổi PRAGMA `foreign_keys` đặt `executeInTransaction=false`), kiểm checksum (`validate-on-migrate`), `clean` bị tắt. Dự phòng nếu S-01' thấy Flyway không nhận SQLite: migrator ≈ 60 dòng ở `common.sqlite` đọc cùng tệp, ghi `schema_version`. Chỉ-tiến (forward-only). Trước khi chạy tệp mới, dịch vụ tạo bản sao `VACUUM INTO '<db>.bak-<version>'` (hoàn tác = dừng dịch vụ, chép lại file .bak). Hai DB đánh số **độc lập** (`auth` V001.., `sync` V001..).
   - **MongoDB:** không có migration dạng tệp; `ensure_schema` (§B4) là khai báo — mỗi lần đổi validator/index thì tăng `meta._schema.version` và viết bước chuyển đổi idempotent trong code (vd `updateMany` thêm trường mặc định) chạy **trước** `collMod`. Đổi lược đồ kiểu expand/contract: (1) nới validator (`validationLevel: "moderate"` hoặc thêm trường tùy chọn), (2) triển khai code ghi trường mới, (3) chuyển đổi dữ liệu cũ, (4) siết validator. Dữ liệu `learninge_game` và `learninge_content` dựng lại được nên có thể chọn "xóa + rebuild/import" thay cho chuyển đổi.
   - **Outbox/proto:** payload là protobuf nên thêm trường trong `Event` là tương thích hai chiều (API_CONTRACT §Versioning); bên nhận phải chịu được trường thiếu.
   - Khởi tạo: `auth` V001, `sync` V001 (DDL §B1, §B2); Mongo bootstrap v1 (§B4); nội dung nạp bằng `content-import` (§Seed).
@@ -1170,20 +1172,20 @@ Tìm theo cách đọc/nghĩa (`LIKE '%' || ? || '%'`) không dùng được ind
   - **App:** dữ liệu trong bộ nhớ riêng của app; `android:allowBackup="false"` + `dataExtractionRules` loại trừ `sharedpref`/`database` khỏi sao lưu và chuyển máy (NFR-S4); token trong SharedPreferences riêng tư (Should: mã hóa Android Keystore AES-GCM), xóa khi đăng xuất/`UNAUTHENTICATED`/xóa tài khoản. `quiz_answers`, `exam_answers` chỉ ở máy (< 3 MB/năm). `leaderboard_cache` giữ 2 tuần.
   - **Server — thời hạn:** dữ liệu tài khoản và tiến độ giữ tới khi người dùng xóa tài khoản (EP-10) hoặc hết đợt đồ án. EP-10: `auth` xóa ngay trong giao dịch (CASCADE) và thu hồi token → các dịch vụ khác xóa khi nhận `user.deleted` (bình thường < 2 s, tối đa theo NFR-N6 ≤ 60 s sau khi bên nhận sẵn sàng). `auth_tokens` hết hạn/thu hồi xóa sau 7 ngày; `auth_attempts` sau 24 giờ không hoạt động; outbox đã phát sau 7 ngày. Tombstone trong `sync.db` giữ suốt đợt đồ án. `audit_events` 90 ngày, `request_logs` 7 ngày, `analytics_daily_users` 35 ngày (TTL); `analytics_daily` giữ tới hết đồ án (không định danh).
   - **Không PII sang MongoDB:** email, `display_name`, hash mật khẩu/câu trả lời, token **không bao giờ** rời `auth.db`; `learninge_game` chỉ có `user_id` (UUID ngẫu nhiên) + nickname công khai; `learninge_insight` chỉ có `user_hmac`. Validator `additionalProperties: false` chặn trường lạ lọt vào.
-  - **Sao lưu SQLite (nguồn sự thật, ưu tiên 1):** trước mỗi buổi demo, trước mỗi migration và hằng ngày khi có dữ liệu thật: `sqlite3 auth.db ".backup 'backup/auth-<ngày>.db'"` và tương tự `sync.db` (an toàn khi WAL đang mở; hoặc lệnh `learninge-server backup --out <thư mục>` dùng `VACUUM INTO`). Sao `auth.db` trước `sync.db` không bắt buộc vì không có ràng buộc chéo; sau khôi phục, sự kiện còn trong outbox sẽ được phát lại (idempotent).
+  - **Sao lưu SQLite (nguồn sự thật, ưu tiên 1):** trước mỗi buổi demo, trước mỗi migration và hằng ngày khi có dữ liệu thật: `sqlite3 auth.db ".backup 'backup/auth-<ngày>.db'"` và tương tự `sync.db` (an toàn khi WAL đang mở; hoặc lệnh `java -jar auth.jar --ops=backup --out=<thư mục>` (tương tự `sync.jar`) dùng `VACUUM INTO`). Sao `auth.db` trước `sync.db` không bắt buộc vì không có ràng buộc chéo; sau khôi phục, sự kiện còn trong outbox sẽ được phát lại (idempotent).
   - **Sao lưu MongoDB (ưu tiên 2, dựng lại được):** `mongodump --uri "$LEARNINGE_MONGO_URI" --db learninge_content --gzip --archive=backup/content-<ngày>.gz` (lặp cho `learninge_game`, `learninge_insight` với URI của dịch vụ tương ứng, chạy trong mạng riêng như công cụ vận hành); khôi phục `mongorestore --gzip --archive=… --drop`. Nếu chọn MongoDB Atlas (Q3) thì dùng thêm bản chụp của Atlas; nếu chọn nền tảng PaaS (vd Railway) thì file SQLite **phải nằm trên volume bền vững**, không trên đĩa tạm của container (mục mở cho SYSTEM-BLUEPRINT/lập trình viên khi chốt Q3).
   - Bản sao lưu chứa PII (email, hash) → lưu ngoài repo, không commit; `*.db`, `*.db-wal`, `*.db-shm`, `*.bak*`, `backup/` có trong `.gitignore` của repo server. Khóa `LEARNINGE_SERVER_KEY`/`LEARNINGE_PSEUDONYM_KEY` **không** nằm trong bản sao lưu (biến môi trường); mất khóa → id câu hỏi giả đổi và `user_hmac` mới không khớp bản cũ (chấp nhận).
   - Dữ liệu demo không chứa PII thật (email `demo1@learninge.test`).
 
 ## Dữ liệu mẫu (seed) và dữ liệu test
 - **Nội dung có sẵn (một nguồn cho cả app và server):** file JSON theo DEC-002 trong `app/src/main/assets/seed/` (bản nền trong APK để dùng ngoại tuyến). Định dạng bổ sung : mỗi từ có trường **`uid`** ổn định dạng `<mã bộ>-<4 chữ số>` (vd `T01-0007`), không đổi khi sửa nội dung; mỗi bộ/đề có `version` (số nguyên, tăng khi sửa). Phạm vi theo cắt C4/C5: 15 chủ đề × 20 từ, X01 40 từ, X02/X03 30 từ, J01, đề E01 20 câu. CODING-STANDARDS cập nhật định dạng ở phase 4.
-- **Server — nội dung:** công cụ `tools/content-import` (repo `LearningE_Server`) đọc thư mục `content/` (JSON cùng định dạng seed của app, chép từ repo app hoặc tham chiếu theo đường dẫn `LEARNINGE_CONTENT_DIR`), kiểm bằng cùng luật như validator, ghi vào `learninge_content` (thứ tự §Toàn vẹn). Bộ/đề có `version` lớn hơn bản trong Mongo thì thay; từ bị bỏ khỏi file → `deleted: true`. Chạy lại không đổi gì nếu nội dung không đổi (idempotent).
+- **Server — nội dung:** lệnh `content --ops=import` (module `content`, repo `LearningE_Server`) đọc thư mục `content-data/` (JSON cùng định dạng seed của app, chép từ repo app hoặc tham chiếu theo đường dẫn `LEARNINGE_CONTENT_DIR`), kiểm bằng cùng luật như validator, ghi vào `learninge_content` (thứ tự §Toàn vẹn). Bộ/đề có `version` lớn hơn bản trong Mongo thì thay; từ bị bỏ khỏi file → `deleted: true`. Chạy lại không đổi gì nếu nội dung không đổi (idempotent).
 - **Dữ liệu demo server** (`LEARNINGE_DEMO_SEED=true`, chỉ máy demo): 2 tài khoản `demo1@learninge.test`, `demo2@learninge.test` (mật khẩu ghi trong README nội bộ của nhóm, không phải mật khẩu thật) + 8 người dùng giả; tạo qua chính RPC `Register` và `Push` (để dữ liệu đi đúng đường outbox → Mongo), không chèn thẳng vào Mongo.
-- **Dữ liệu test:** test `auth`/`sync` dùng file SQLite tạm (`tempfile`) chạy migration thật, mỗi test một DB; test `content`/`gamification`/`insight` dùng MongoDB container dùng một lần (database tên ngẫu nhiên, xóa sau test); test app dùng CSDL trong bộ nhớ (`SQLiteOpenHelper` tên `null`). Bộ dữ liệu biên giữ như thay đổi phạm vi: 500 bản ghi một lô (NFR-N3), 501 bản ghi (`INVALID_ARGUMENT` `BATCH_TOO_LARGE`), hai máy sửa cùng `card_progress` (BR-062), XP chạm trần 500/ngày (BR-068), tuần ISO đổi lúc 00:00 thứ Hai giờ Việt Nam. Thêm : cùng sự kiện `xp.recorded` gửi 2 lần → 1 tài liệu, `weekly_xp` không đổi; tắt Mongo giữa phiên → Push OK, outbox tăng, bật lại → xả ≤ 60 s; `user.deleted` → 3 dịch vụ sạch dữ liệu của user; Push sau khi xóa → `PERMISSION_DENIED`; `gamification rebuild` cho cùng kết quả bảng xếp hạng với dữ liệu trước khi xóa Mongo.
+- **Dữ liệu test:** test `auth`/`sync` (JUnit, thay đổi phạm vi) dùng file SQLite tạm (`@TempDir`) chạy migration Flyway thật, mỗi test một DB; test `content`/`gamification`/`insight` dùng MongoDB container dùng một lần (Testcontainers `MongoDBContainer`) (database tên ngẫu nhiên, xóa sau test); test app dùng CSDL trong bộ nhớ (`SQLiteOpenHelper` tên `null`). Bộ dữ liệu biên giữ như thay đổi phạm vi: 500 bản ghi một lô (NFR-N3), 501 bản ghi (`INVALID_ARGUMENT` `BATCH_TOO_LARGE`), hai máy sửa cùng `card_progress` (BR-062), XP chạm trần 500/ngày (BR-068), tuần ISO đổi lúc 00:00 thứ Hai giờ Việt Nam. Thêm : cùng sự kiện `xp.recorded` gửi 2 lần → 1 tài liệu, `weekly_xp` không đổi; tắt Mongo giữa phiên → Push OK, outbox tăng, bật lại → xả ≤ 60 s; `user.deleted` → 3 dịch vụ sạch dữ liệu của user; Push sau khi xóa → `PERMISSION_DENIED`; `gamification rebuild` cho cùng kết quả bảng xếp hạng với dữ liệu trước khi xóa Mongo.
 
 ## Định dạng dữ liệu nạp sẵn và import/export
 Định dạng file seed và nội dung (DEC-002) — dùng chung cho app và server
-Mỗi bộ một file `{deck, source, words}` (`T01.json` … `T15.json`, `X01.json` … `X03.json`, `J01.json` trong `decks/`), cộng `languages.json`, `grammar.json`, `exams.json`. **Vị trí:** app `app/src/main/assets/seed/` (bản dùng ngoại tuyến, trong APK); server `content/` cùng cấu trúc thư mục (`content/decks/…`, `content/languages.json`, `content/grammar.json`, `content/exams.json`) — nguồn cho EP-14..EP-16 qua `content-import`. **Một định dạng, hai bản:** mọi thay đổi định dạng (thêm trường) làm ở cả hai repo trong cùng đợt, kèm test kiểm schema (app: unit test seed / TC-SEED; server: `cargo test` nạp toàn bộ `content/**/*.json` bằng cùng bộ phân tích của `content-import`). Trường `deck.icon` là tên icon chủ đề (`t01-family` … `t15-health`) hoặc `null`; không dùng emoji:
+Mỗi bộ một file `{deck, source, words}` (`T01.json` … `T15.json`, `X01.json` … `X03.json`, `J01.json` trong `decks/`), cộng `languages.json`, `grammar.json`, `exams.json`. **Vị trí:** app `app/src/main/assets/seed/` (bản dùng ngoại tuyến, trong APK); server `content-data/` cùng cấu trúc thư mục (`content-data/decks/…`, `content-data/languages.json`, `content-data/grammar.json`, `content-data/exams.json`) — nguồn cho EP-14..EP-16 qua `content --ops=import`. **Một định dạng, hai bản:** mọi thay đổi định dạng (thêm trường) làm ở cả hai repo trong cùng đợt, kèm test kiểm schema (app: unit test seed / TC-SEED; server: `./gradlew :content:test` nạp toàn bộ `content-data/**/*.json` bằng cùng bộ phân tích của `--ops=import`). Trường `deck.icon` là tên icon chủ đề (`t01-family` … `t15-health`) hoặc `null`; không dùng emoji:
 ```json
 {
   "deck": { "code": "T01", "name": "Gia đình", "name_en": "Family", "language": "en", "icon": "t01-family", "level": "A1", "exam_tag": null, "sort_order": 1 },

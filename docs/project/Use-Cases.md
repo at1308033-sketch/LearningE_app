@@ -37,7 +37,7 @@
 <!-- diagram:usecase/uc-07-online-dong-bo-xep-hang.puml -->
 ![Sơ đồ use case nhóm Đồng bộ, bảng xếp hạng và nội dung từ máy chủ](../diagrams/usecase/uc-07-online-dong-bo-xep-hang.png)
 <!-- /diagram -->
-Tác nhân: **Khách**, **Người học**, **Bộ hẹn giờ hệ thống (AlarmManager)**, **Hệ thống** (khởi tạo seed) và **Hệ thống máy chủ LearningE** (thay đổi phạm vi: 6 microservice Rust — edge, auth, sync, content, gamification, insight — giao tiếp gRPC; SQLite chính + MongoDB phụ; thay "server Java (Javalin) + SQLite" của thay đổi phạm vi), tác nhân phụ (secondary actor) tham gia mọi use case cần mạng. Lưu ý: "Hệ thống máy chủ" khác tác nhân "Hệ thống" (khởi tạo seed ở máy). Với app, hệ thống máy chủ là **một** tác nhân: chỉ cổng `edge` nhận lời gọi gRPC.
+Tác nhân: **Khách**, **Người học**, **Bộ hẹn giờ hệ thống (AlarmManager)**, **Hệ thống** (khởi tạo seed) và **Hệ thống máy chủ LearningE** (thay đổi phạm vi/thay đổi phạm vi: 6 microservice Java 21 + Spring Boot — edge, auth, sync, content, gamification, insight — giao tiếp gRPC; SQLite chính + MongoDB phụ; thay "server Java (Javalin) + SQLite" của thay đổi phạm vi), tác nhân phụ (secondary actor) tham gia mọi use case cần mạng. Lưu ý: "Hệ thống máy chủ" khác tác nhân "Hệ thống" (khởi tạo seed ở máy). Với app, hệ thống máy chủ là **một** tác nhân: chỉ cổng `edge` nhận lời gọi gRPC.
 | UC | Tên | Tác nhân | US | FN |
 |---|---|---|---|---|
 | UC-001 | Đăng ký (thay đổi phạm vi: trên server) | Khách, Hệ thống máy chủ LearningE | US-001 | FN-001 |
@@ -391,7 +391,7 @@ Mỗi chức năng: mục đích, điều kiện tiên quyết, các bước, d�
 <!-- diagram:activity/act-03-dang-nhap-dang-xuat.puml -->
 ![Sơ đồ hoạt động mở ứng dụng, đăng nhập online (khóa tăng dần), phiên hết hạn (UNAUTHENTICATED) và đăng xuất](../diagrams/activity/act-03-dang-nhap-dang-xuat.png)
 <!-- /diagram -->
-- Vai trò: Khách · Điểm vào: chạm icon app · Thành công: vào Trang chủ hoặc Thiết lập lần đầu · Tiền đề: không có. (thay đổi phạm vi; thay đổi phạm vi) Tài khoản nằm trên Hệ thống máy chủ LearningE (6 microservice Rust, app chỉ gọi gRPC tới cổng `edge`); đăng ký/đăng nhập cần mạng, mở app khi đã có token thì không cần mạng (BR-004, BR-078).
+- Vai trò: Khách · Điểm vào: chạm icon app · Thành công: vào Trang chủ hoặc Thiết lập lần đầu · Tiền đề: không có. (thay đổi phạm vi; thay đổi phạm vi) Tài khoản nằm trên Hệ thống máy chủ LearningE (6 microservice Java 21 + Spring Boot, app chỉ gọi gRPC tới cổng `edge`); đăng ký/đăng nhập cần mạng, mở app khi đã có token thì không cần mạng (BR-004, BR-078).
 
 Phần A — mở app và đăng ký:
 ```mermaid

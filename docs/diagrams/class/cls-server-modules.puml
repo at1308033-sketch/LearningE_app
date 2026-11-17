@@ -3,72 +3,96 @@
 skinparam dpi 105
 left to right direction
 set separator none
-title Cargo workspace LearningE_Server — crates proto · common · edge · auth · sync · content · gamification · insight (CR-007, DEC-018..DEC-022)
+title Gradle multi-module LearningE_Server (Java 21 + Spring Boot) — proto · common · edge · auth · sync · content · gamification · insight (CR-007, CR-008, DEC-018..DEC-024)
 skinparam classAttributeIconSize 0
 hide empty members
 
-package "crates/proto (learninge-proto)" as proto {
-  interface "learninge.app.v1\nAuthService · SyncService ·\nLeaderboardService · ContentService" as AppV1 <<tonic trait>>
-  interface "learninge.internal.v1\nAuthBackend · TokenValidator · SyncBackend ·\nContentBackend · GamificationBackend ·\nInsightBackend · EventSink" as IntV1 <<tonic trait>>
+package "module proto — com.learninge.server.proto" as proto {
+  interface "learninge.app.v1\nAuthServiceGrpc · SyncServiceGrpc ·\nLeaderboardServiceGrpc · ContentServiceGrpc" as AppV1 <<ImplBase / BlockingStub>>
+  interface "learninge.internal.v1\nAuthBackend · TokenValidator · SyncBackend ·\nContentBackend · GamificationBackend ·\nInsightBackend · EventSink" as IntV1 <<ImplBase / BlockingStub>>
 }
 
-package "crates/common" as common {
-  enum AppError <<thiserror>> {
-    mã nghiệp vụ CR-006
-    (EMAIL_TAKEN, ACCOUNT_LOCKED…)
-    From<AppError> for tonic::Status
-    → mã gRPC + trailer error-code
+package "module common — com.learninge.server.common" as common {
+  class AppException <<RuntimeException>> {
+    ErrorCode (mã nghiệp vụ CR-006:
+    EMAIL_TAKEN, ACCOUNT_LOCKED…)
   }
-  class InternalAuthInterceptor {
+  class AppExceptionHandler <<GrpcExceptionHandler>> {
+    AppException → Status + trailer error-code
+  }
+  class RequestIdServerInterceptor <<@GlobalServerInterceptor>> {
+    x-request-id → MDC
+  }
+  class InternalAuthServerInterceptor <<@GlobalServerInterceptor>> {
     x-internal-auth = LEARNINGE_INTERNAL_TOKEN
-    so sánh hằng thời gian (subtle)
+    MessageDigest.isEqual trên SHA-256
   }
-  class SqliteDb {
-    1 kết nối ghi (Mutex) + spawn_blocking
-    BEGIN IMMEDIATE, WAL, quick_check
+  class InternalAuthClientInterceptor
+  class ConcurrencyLimitInterceptor
+  class DeadlineCapInterceptor
+  class CallerContext {
+    +userId() từ x-user-id
   }
-  class Migrator
+  class SqliteDataSources {
+    ghi: Hikari 1 kết nối · đọc: Hikari 4
+    WAL, quick_check
+  }
+  class TxRunner {
+    BEGIN IMMEDIATE
+  }
+  class "Flyway\n(db/migration/<svc>)" as Flyway <<spring-boot-starter-flyway>>
   class OutboxWriter {
     +enqueue(tx, Event, destinations)
   }
-  class Relay {
-    mỗi destination một vòng lặp
-    lùi 1 s → 15 s, hỏi Health đích
+  class OutboxRelay <<@Scheduled(fixedDelay = 1 s)>> {
+    mỗi đích một tiến độ
+    lùi 1 s → 15 s, hỏi grpc.health.v1 của đích
   }
-  class EventRoutes {
+  class EventRouting {
     loại sự kiện → danh sách đích
   }
-  interface Clock <<trait>>
-  class MongoDb {
-    ensure_schema (validator, index, TTL)
+  class LearningeProperties <<@ConfigurationProperties>>
+  class OpsCommandRunner {
+    ops=import hoặc ops=rebuild rồi thoát
   }
+  class "java.time.Clock" as Clock <<bean>>
 }
 
-package "services/edge  :50051" as edge {
-  class EdgeServer {
-    hiện thực learninge.app.v1,
+package "module edge  :50051  (+ Actuator 127.0.0.1:8081)" as edge {
+  class EdgeApplication <<@SpringBootApplication>>
+  class AuthForwarder <<@GrpcService>> {
+    extends AuthServiceGrpc.AuthServiceImplBase
     mỗi RPC một hàm chuyển tiếp
   }
-  class TokenCache {
-    token_sha256 → user_id, user_hmac
-    TTL ≤ 60 s, xóa theo user
+  class SyncForwarder <<@GrpcService>>
+  class LeaderboardForwarder <<@GrpcService>>
+  class ContentForwarder <<@GrpcService>>
+  class TokenAuthenticator <<ServerInterceptor>> {
+    xóa x-user-id / x-internal-* từ client
+    ValidateToken → gắn x-user-id
   }
-  class RateLimiter
-  class MeComposer {
+  class TokenCache <<Caffeine>> {
+    token_sha256 → user_id, user_hmac
+    expireAfterWrite 60 s, xóa theo user
+  }
+  class IpRateLimiter <<Caffeine>>
+  class GetMeComposer {
     GetMe = auth.GetProfile +
     sync.GetStreak và gamification.GetStats
   }
-  class RequestLogQueue {
-    ≤ 1000 mục, best-effort
+  class RequestLogShipper {
+    hàng đợi ≤ 1000 mục, best-effort
   }
 }
 
-package "services/auth  :50052" as auth {
-  class AuthBackendImpl
-  class TokenValidatorImpl
+package "module auth  :50052" as auth {
+  class AuthBackendGrpcService <<@GrpcService>> {
+    extends AuthBackendGrpc.AuthBackendImplBase
+  }
+  class TokenValidatorGrpcService <<@GrpcService>>
   class PasswordHasher {
-    PBKDF2 120.000 vòng,
-    ≤ 4 phép đồng thời
+    PBKDF2 120.000 vòng (javax.crypto),
+    Semaphore ≤ 4 phép đồng thời
   }
   class TokenService {
     256 bit, lưu SHA-256, 30 ngày
@@ -76,12 +100,12 @@ package "services/auth  :50052" as auth {
   class LockPolicy {
     5 lần sai → 60 s, ×2, ≤ 1 giờ
   }
-  class AuthStore <<auth.db>>
+  class AuthRepository <<JdbcClient · auth.db>>
 }
 
-package "services/sync  :50053" as sync {
-  class SyncBackendImpl
-  class SyncEventSink <<EventSink>> {
+package "module sync  :50053" as sync {
+  class SyncBackendGrpcService <<@GrpcService>>
+  class SyncEventSinkGrpcService <<@GrpcService · EventSink>> {
     user.registered → bộ "Sổ tay" UUIDv5
     user.deleted → purge + purged_users
   }
@@ -90,18 +114,20 @@ package "services/sync  :50053" as sync {
     BR-065..BR-068, trần 500 XP/ngày
   }
   class StreakCalculator
-  class SyncStore <<sync.db>>
+  class SyncRepository <<JdbcClient · sync.db>>
 }
 
-package "services/content  :50054" as content {
-  class ContentBackendImpl
-  class ContentStore <<learninge_content>>
-  class "tools/content-import" as CImp
+package "module content  :50054" as content {
+  class ContentBackendGrpcService <<@GrpcService>>
+  class ContentRepository <<Spring Data MongoDB · learninge_content>>
+  class ContentImporter {
+    --ops=import: content-data/*.json
+  }
 }
 
-package "services/gamification  :50055" as game {
-  class GamificationBackendImpl
-  class GameEventSink <<EventSink>>
+package "module gamification  :50055" as game {
+  class GamificationBackendGrpcService <<@GrpcService>>
+  class GameEventSinkGrpcService <<@GrpcService · EventSink>>
   class IsoWeek {
     Asia/Ho_Chi_Minh
   }
@@ -109,61 +135,69 @@ package "services/gamification  :50055" as game {
   class Ranking {
     hòa → đạt sớm hơn
   }
-  class GameStore <<learninge_game>>
+  class GameRepository <<Spring Data MongoDB · learninge_game>>
 }
 
-package "services/insight  :50056" as insight {
-  class InsightBackendImpl
-  class InsightEventSink <<EventSink>>
+package "module insight  :50056" as insight {
+  class InsightBackendGrpcService <<@GrpcService>>
+  class InsightEventSinkGrpcService <<@GrpcService · EventSink>>
   class AnalyticsAggregator
-  class InsightStore <<learninge_insight>>
+  class InsightRepository <<Spring Data MongoDB · learninge_insight, TTL index>>
 }
 
-class "bin/learninge-server (chế độ gộp: all hoặc only edge,auth)" as Bin
+class "module all-in-one — AllInOneApplication\n(6 context Spring con trong 1 JVM: cờ <U+002D><U+002D>all hoặc <U+002D><U+002D>only=edge,auth)" as AllInOne
 
+AuthForwarder --> TokenAuthenticator
+AuthForwarder --> GetMeComposer
+TokenAuthenticator --> TokenCache
+AuthForwarder --> IpRateLimiter
+SyncForwarder ..> RequestLogShipper : request_logs
+LeaderboardForwarder ..> GamificationBackendGrpcService : gRPC h2c
+ContentForwarder ..> ContentBackendGrpcService : gRPC h2c
+RequestLogShipper ..> InsightBackendGrpcService : LogRequests
+AuthForwarder ..> AuthBackendGrpcService : gRPC h2c (BlockingStub)
+SyncForwarder ..> SyncBackendGrpcService : gRPC h2c
 
-EdgeServer --> TokenCache
-EdgeServer --> RateLimiter
-EdgeServer --> MeComposer
-EdgeServer --> RequestLogQueue
-EdgeServer ..> AuthBackendImpl : gRPC h2c
-EdgeServer ..> SyncBackendImpl : gRPC h2c
+AuthBackendGrpcService --> PasswordHasher
+AuthBackendGrpcService --> LockPolicy
+AuthBackendGrpcService --> TokenService
+AuthBackendGrpcService --> AuthRepository
+SyncBackendGrpcService --> LwwPolicy
+SyncBackendGrpcService --> XpValidator
+SyncBackendGrpcService --> StreakCalculator
+SyncBackendGrpcService --> SyncRepository
+SyncEventSinkGrpcService --> SyncRepository
+ContentBackendGrpcService --> ContentRepository
+ContentImporter --> ContentRepository
+GamificationBackendGrpcService --> Ranking
+GamificationBackendGrpcService --> IsoWeek
+GameEventSinkGrpcService --> DailyCap
+GameEventSinkGrpcService --> GameRepository
+GamificationBackendGrpcService --> GameRepository
+InsightEventSinkGrpcService --> AnalyticsAggregator
+InsightEventSinkGrpcService --> InsightRepository
 
-AuthBackendImpl --> PasswordHasher
-AuthBackendImpl --> LockPolicy
-AuthBackendImpl --> TokenService
-AuthBackendImpl --> AuthStore
-SyncBackendImpl --> LwwPolicy
-SyncBackendImpl --> XpValidator
-SyncBackendImpl --> StreakCalculator
-SyncBackendImpl --> SyncStore
-ContentBackendImpl --> ContentStore
-CImp --> ContentStore
-GamificationBackendImpl --> Ranking
-GamificationBackendImpl --> IsoWeek
-GameEventSink --> DailyCap
-GameEventSink --> GameStore
-InsightEventSink --> AnalyticsAggregator
-InsightEventSink --> InsightStore
-
-AuthStore --> SqliteDb
-SyncStore --> SqliteDb
-AuthStore ..> OutboxWriter : cùng giao dịch
-SyncStore ..> OutboxWriter : cùng giao dịch
-OutboxWriter --> EventRoutes
-Relay ..> IntV1 : EventSink.Publish
-AuthBackendImpl ..> IntV1 : implements
-EdgeServer ..> AppV1 : implements
-ContentStore --> MongoDb
-GameStore --> MongoDb
-InsightStore --> MongoDb
-SqliteDb --> Migrator
-EdgeServer ..> InternalAuthInterceptor
-AuthBackendImpl ..> AppError
-Bin ..> EdgeServer : serve()
+AuthRepository --> SqliteDataSources
+SyncRepository --> SqliteDataSources
+SqliteDataSources --> Flyway
+AuthRepository ..> TxRunner
+SyncRepository ..> TxRunner
+AuthRepository ..> OutboxWriter : cùng giao dịch
+SyncRepository ..> OutboxWriter : cùng giao dịch
+OutboxWriter --> EventRouting
+OutboxRelay ..> IntV1 : EventSink.Publish
+OutboxRelay ..> InternalAuthClientInterceptor
+OutboxRelay ..> OutboxWriter : đọc bảng outbox
+AuthBackendGrpcService ..> IntV1 : implements
+AuthForwarder ..> AppV1 : implements
+AuthBackendGrpcService ..> AppException
+AppExceptionHandler ..> AppException
+InternalAuthServerInterceptor ..> CallerContext : trước khi đọc x-user-id
+AllInOne ..> EdgeApplication : khởi context con
 
 legend bottom
-  Mỗi dịch vụ: grpc (hiện thực trait sinh từ proto, đổi message ↔ kiểu miền, lỗi ↔ Status) → domain (Rust thuần, không I/O, nhận Clock) → store (rusqlite có ?, hoặc truy vấn Mongo có kiểu).
-  user_id chỉ lấy từ metadata x-user-id do edge gắn, sau interceptor x-internal-auth; dịch vụ không import crate của dịch vụ khác, chỉ qua proto. Relay chạy trong tiến trình của auth và sync.
+  Mỗi dịch vụ: grpc (@GrpcService kế thừa ImplBase sinh từ proto, đổi message ↔ kiểu miền, ném AppException → Status) → domain (Java thuần, không I/O, không annotation Spring, nhận Clock) → store (JdbcClient SQL tham số, hoặc Spring Data MongoDB / MongoTemplate có kiểu).
+  Interceptor toàn cục (common): RequestId → InternalAuth → ConcurrencyLimit → DeadlineCap. user_id chỉ lấy từ metadata x-user-id do edge gắn (CallerContext.userId()) sau InternalAuthServerInterceptor; module dịch vụ không phụ thuộc module dịch vụ khác, chỉ qua stub của module proto.
+  OutboxRelay (@Scheduled) chạy trong JVM của auth và sync. Mỗi module dịch vụ là một ứng dụng Spring Boot; Actuator chỉ ở 127.0.0.1:8081 nội bộ.
 endlegend
 @enduml

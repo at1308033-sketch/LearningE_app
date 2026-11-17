@@ -36,7 +36,7 @@ else Có mạng
     alt Đang khóa tăng dần (locked_until > now)
       A --> E : RESOURCE_EXHAUSTED · ACCOUNT_LOCKED · retry-after-seconds (không chạy PBKDF2)
     else Không khóa
-      A -> PH : verify(password, salt, hash) — spawn_blocking, tối đa 4 phép đồng thời
+      A -> PH : verify(password, salt, hash) — javax.crypto, Semaphore tối đa 4 phép đồng thời
       note right of PH
         PBKDF2-HMAC-SHA256 120.000 vòng; email không
         tồn tại vẫn băm với salt giả (thời gian tương đương);

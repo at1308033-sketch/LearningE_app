@@ -9,12 +9,12 @@
 - Điểm vào duy nhất cho app: dịch vụ `edge`, cổng **50051**. Các dịch vụ `auth` 50052, `sync` 50053, `content` 50054, `gamification` 50055, `insight` 50056 chỉ nghe trên mạng nội bộ, **không bao giờ** được app gọi trực tiếp.
 - Vận chuyển: bản release chỉ dùng **TLS** (`useTransportSecurity()`; TLS kết thúc ở tunnel/nền tảng chứa hoặc ở `edge` tùy phương án Q3 — SYSTEM-BLUEPRINT). Plaintext h2c chỉ ở bản debug và chỉ tới host trong danh sách trắng (`10.0.2.2`, IP LAN khai báo trong `BuildConfig`) — `grpc-okhttp` **không** tuân `network_security_config`, nên chặn bằng mã (`GrpcChannelFactory` từ chối `usePlaintext()` khi `!BuildConfig.DEBUG`).
 - Client app: `grpc-okhttp` + `grpc-protobuf-lite` + `grpc-stub`, stub **blocking** chạy trên luồng `io` (DEC-011, DEC-021); một `ManagedChannel` dùng chung cho cả app.
-- **Không dùng streaming** (cả server-stream, client-stream, bidi): dữ liệu lớn nhất (Pull) đã phân trang bằng cursor ≤ 500 bản ghi; app offline-first chủ động kéo theo mốc (DEC-014), không cần đẩy thời gian thực (Non-goal thay đổi phạm vi); stream dài bị tunnel/proxy cắt khi rảnh và khó thử lại an toàn. Ngoại lệ duy nhất: `grpc.health.v1.Health/Watch` có sẵn trong `tonic-health` nhưng app không dùng.
+- **Không dùng streaming** (cả server-stream, client-stream, bidi): dữ liệu lớn nhất (Pull) đã phân trang bằng cursor ≤ 500 bản ghi; app offline-first chủ động kéo theo mốc (DEC-014), không cần đẩy thời gian thực (Non-goal thay đổi phạm vi); stream dài bị tunnel/proxy cắt khi rảnh và khó thử lại an toàn. Ngoại lệ duy nhất: `grpc.health.v1.Health/Watch` có sẵn trong dịch vụ health của `grpc-services` nhưng app không dùng.
 
 ## Link spec (OpenAPI/GraphQL schema/...)
 - **Nguồn sự thật**: các tệp `.proto` trong repo server `https://github.com/at1308033-sketch/LearningE_Server` (DEC-022, thay đổi phạm vi Q4):
 ```text
-LearningE_Server/proto/
+LearningE_Server/proto/src/main/proto/      # module Gradle `proto`
   learninge/app/v1/common.proto            # User, Stats, AuthSession
   learninge/app/v1/auth.proto              # AuthService      (EP-02..EP-10)
   learninge/app/v1/sync.proto              # SyncService      (EP-11, EP-12)
@@ -24,7 +24,7 @@ LearningE_Server/proto/
   learninge/internal/v1/events.proto   # Event + EventSink (outbox relay)
   grpc/health/v1/health.proto          # bản chuẩn của gRPC (EP-01)
 ```
-- Rust: crate `crates/proto` sinh mã bằng `tonic-build` + `prost` (`protoc` từ `protoc-bin-vendored`, không cài tay). App: plugin Gradle `com.google.protobuf`, `option lite` cho `java` và `grpc`; app **chỉ** nhận gói công khai + `grpc/health` (không nhận `learninge/internal`).
+- Server: module Gradle `proto` sinh message `protobuf-java` + stub grpc-java (`XxxGrpc.XxxImplBase`, blocking/future stub) bằng plugin `com.google.protobuf` 0.10.0 + `protoc` 4.36.2 + `protoc-gen-grpc-java` 1.84.1 (tải từ Maven, không cài tay); 6 module dịch vụ phụ thuộc `project(":proto")`; `grpc/health/v1` lấy từ `grpc-services`. App: plugin Gradle `com.google.protobuf`, `option lite` cho `java` và `grpc`; app **chỉ** nhận gói công khai + `grpc/health` (không nhận `learninge/internal`).
 - Bản sao trong repo app: `app/src/main/proto/` + tệp `app/src/main/proto/proto.lock`, do `tools/sync-proto.ps1` tạo (chép tệp, ghi SHA commit server và SHA-256 từng tệp); chế độ `-Check` chạy trong task Gradle `verifyProtoLock` trước `generateProto` và **làm hỏng build** nếu tệp bị sửa tay:
 ```text
 # proto.lock — sinh bởi tools/sync-proto.ps1, KHÔNG sửa tay
@@ -35,11 +35,11 @@ sha256 learninge/app/v1/common.proto <64 hex>
 sha256 learninge/app/v1/auth.proto <64 hex>
 ... (mỗi tệp một dòng)
 ```
-- Tài liệu này mô tả proto v1 **để duyệt** (M0b, 16/11). Sau khi đóng băng, tệp `.proto` là chuẩn; mọi khác biệt giữa code, `.proto` và tài liệu là lỗi, hoặc phải có CR. Test hợp đồng (T-153): client Rust sinh từ proto + kịch bản `grpcurl` cho EP-01..EP-16 kiểm mã trạng thái, trailer `error-code`, trường trả về. Server reflection chỉ bật ở `edge` khi `LEARNINGE_GRPC_REFLECTION=true` **và** `APP_ENV=dev`; `APP_ENV=prod` mà cờ bật → từ chối khởi động; dịch vụ nội bộ không bao giờ bật (THREAT_MODEL D-15); bản demo tắt, `grpcurl` dùng `-import-path proto -proto …`.
+- Tài liệu này mô tả proto v1 **để duyệt** (M0b, 16/11). Sau khi đóng băng, tệp `.proto` là chuẩn; mọi khác biệt giữa code, `.proto` và tài liệu là lỗi, hoặc phải có CR. Test hợp đồng (T-153): JUnit 5 + client grpc-java sinh từ cùng proto (server in-process `grpc-inprocess` và compose thật) + kịch bản `grpcurl` cho EP-01..EP-16 kiểm mã trạng thái, trailer `error-code`, trường trả về. Server reflection chỉ bật ở `edge` khi `LEARNINGE_GRPC_REFLECTION=true` **và** `APP_ENV=dev`; `APP_ENV=prod` mà cờ bật → từ chối khởi động; dịch vụ nội bộ không bao giờ bật (THREAT_MODEL D-15); bản demo tắt, `grpcurl` dùng `-import-path proto/src/main/proto -proto …`. Reflection bật bằng property reflection của Spring gRPC, điều kiện kiểm ở `common` lúc khởi động.
 
 ## Xác thực và phân quyền
 - Cơ chế (Bearer/OAuth/API key), phạm vi quyền, hết hạn, giới hạn tốc độ:
-  - **Bearer token opaque** (DEC-013, BR-057), gửi trong metadata `authorization: Bearer <token>`; token = 32 byte ngẫu nhiên an toàn (`rand::rngs::OsRng`) mã hóa base64url không đệm (43 ký tự `[A-Za-z0-9_-]`). `auth` lưu `SHA-256(token)` hex; hạn **30 ngày** kể từ khi cấp, không gia hạn trượt.
+  - **Bearer token opaque** (DEC-013, BR-057), gửi trong metadata `authorization: Bearer <token>`; token = 32 byte ngẫu nhiên an toàn (`java.security.SecureRandom`) mã hóa base64url không đệm (43 ký tự `[A-Za-z0-9_-]`). `auth` lưu `SHA-256(token)` hex; hạn **30 ngày** kể từ khi cấp, không gia hạn trượt.
   - Luồng xác thực ở `edge`: đọc `authorization` → tính `SHA-256` → tra cache (≤ 60 s, không quá `expires_at`) → nếu trượt gọi `TokenValidator.ValidateToken(token_sha256)` → gắn metadata nội bộ `x-user-id` (UUID) rồi chuyển tiếp. **Token thô không đi vào mạng nội bộ.** `edge` **xóa** mọi metadata `x-user-id`, `x-internal-*` do client gửi trước khi xử lý (chống giả danh nội bộ).
   - Thu hồi: EP-04 thu hồi token hiện tại; EP-07, EP-09, EP-10 thu hồi **mọi** token của người dùng (BR-058); `edge` xóa ngay các mục cache của người dùng đó khi RPC trả OK — user lấy từ `x-user-id` (EP-04, EP-07, EP-10) hoặc `AuthSession.user.id` trả về (EP-09); cache theo `token_sha256`, TTL = min(60 s, `expires_at`) (chỉ có một `edge` nên cache không lệch; THREAT_MODEL D-12).
   - Một vai trò ("người học"); **phân quyền theo chủ sở hữu**: `user_id` chỉ lấy từ `x-user-id` do `edge` gắn, **không bao giờ** từ message. Bản ghi của người khác coi như không tồn tại (`NOT_FOUND` hoặc `REJECTED` trong sync) — chống IDOR/BOLA (OWASP API1).
@@ -54,10 +54,10 @@ sha256 learninge/app/v1/auth.proto <64 hex>
 | `Register` | 10 yêu cầu/giờ/IP | `RESOURCE_EXHAUSTED` `RATE_LIMITED` |
 | `GetResetQuestion`, `ResetPassword` | 5 yêu cầu/phút/IP; sai câu trả lời 5 lần liên tiếp → khóa đặt lại 60 s, gấp đôi, tối đa 1 giờ, 24 giờ về 0 (BR-008, bộ đếm riêng) | `RESOURCE_EXHAUSTED` `RATE_LIMITED` / `RESET_LOCKED` + `retry-after-seconds` |
 | `ChangePassword`, `DeleteAccount` | Sai mật khẩu hiện tại 5 lần/15 phút/tài khoản | `RESOURCE_EXHAUSTED` `RATE_LIMITED` |
-| PBKDF2 toàn `auth` (EP-02, 03, 07, 09, 10) | Tối đa 4 phép băm đồng thời (`tokio::sync::Semaphore`); chờ quá 2 s → từ chối (TM-05) | `UNAVAILABLE` `SERVICE_UNAVAILABLE` + `retry-after-seconds: 5` |
+| PBKDF2 toàn `auth` (EP-02, 03, 07, 09, 10) | Tối đa 4 phép băm đồng thời (`java.util.concurrent.Semaphore`, `tryAcquire(2, SECONDS)`); chờ quá 2 s → từ chối (TM-05) | `UNAVAILABLE` `SERVICE_UNAVAILABLE` + `retry-after-seconds: 5` |
 | `Push` | 30 yêu cầu/phút/token | `RESOURCE_EXHAUSTED` `RATE_LIMITED` |
 | Còn lại (đã đăng nhập) | 120 yêu cầu/phút/token | `RESOURCE_EXHAUSTED` `RATE_LIMITED` |
-| Đồng thời toàn `edge` | ≤ 64 RPC đang xử lý (`tower::limit::ConcurrencyLimit`), hàng đợi ≤ 2 s | `UNAVAILABLE` `SERVICE_UNAVAILABLE` |
+| Đồng thời toàn `edge` | ≤ 64 RPC đang xử lý (`ConcurrencyLimitInterceptor` của `common`, `Semaphore`), hàng đợi ≤ 2 s | `UNAVAILABLE` `SERVICE_UNAVAILABLE` |
 
 ## Endpoint / lệnh / hàm công khai
 Bảng ánh xạ EP cũ → RPC (ID EP giữ nguyên để SRS, TESTING-STRATEGY không đánh số lại). "Hiện thực" = dịch vụ thật sự xử lý sau `edge`. Deadline = giá trị app đặt (`withDeadlineAfter`); `edge` chuyển cho dịch vụ đích phần còn lại trừ 100 ms. "Thử lại" = app tự thử lại theo BR-077 (§Quy ước chung).
@@ -350,9 +350,9 @@ message XpEventData {
 }
 ```
 Quy tắc Push (giữ nguyên thay đổi phạm vi, DEC-014; chỉ đổi cách diễn đạt):
-- **≤ 500 phần tử** `changes` và message ≤ 1 MiB; vượt số lượng → `INVALID_ARGUMENT` `BATCH_TOO_LARGE` (`grpc-message` nêu giới hạn 500); vượt kích thước → `RESOURCE_EXHAUSTED` `PAYLOAD_TOO_LARGE` (tonic từ chối khi giải mã; mã thực tế xác minh ở S-01, app coi `RESOURCE_EXHAUSTED`/`OUT_OF_RANGE` có reason này hoặc không có chi tiết là "lô quá lớn" và chia đôi lô). App chia lô theo thứ tự cha → con: `settings`, `deck`, `word`, `favorite`, `card_progress`, `study_log`, `quiz_attempt`, `exam_attempt`, `xp_event`.
+- **≤ 500 phần tử** `changes` và message ≤ 1 MiB; vượt số lượng → `INVALID_ARGUMENT` `BATCH_TOO_LARGE` (`grpc-message` nêu giới hạn 500); vượt kích thước → `RESOURCE_EXHAUSTED` `PAYLOAD_TOO_LARGE` (grpc-java/Netty từ chối khi vượt `maxInboundMessageSize` 1 MiB của edge — thường `RESOURCE_EXHAUSTED` không có `error-code`; mã thực tế xác minh ở S-01', app coi `RESOURCE_EXHAUSTED`/`OUT_OF_RANGE` có reason này hoặc không có chi tiết là "lô quá lớn" và chia đôi lô). App chia lô theo thứ tự cha → con: `settings`, `deck`, `word`, `favorite`, `card_progress`, `study_log`, `quiz_attempt`, `exam_attempt`, `xp_event`.
 - Khóa bản ghi: `record_id` = uuid (v4 do app sinh) hoặc `word_uid` (`T01-0007` / uuid từ của người dùng) cho `card_progress`, `favorite`; `settings` không có khóa (1 bản/người dùng). `data` chưa đặt (oneof rỗng, vd app mới gửi loại server cũ chưa biết) → `REJECTED` `UNKNOWN_ENTITY`.
-- **Danh sách trắng trường** (TM-15) nay là chính lược đồ proto: message không có `user_id`, `server_seq` (bị bỏ qua khi Push), `received_at`, `local_date`, `week_start`; `xp_awarded` gửi lên bị bỏ qua. Trường lạ từ client mới hơn bị `prost` bỏ qua.
+- **Danh sách trắng trường** (TM-15) nay là chính lược đồ proto: message không có `user_id`, `server_seq` (bị bỏ qua khi Push), `received_at`, `local_date`, `week_start`; `xp_awarded` gửi lên bị bỏ qua. Trường lạ từ client mới hơn được `protobuf-java` giữ ở unknown fields và không bao giờ đọc/lưu.
 - proto3 không phân biệt "thiếu" với giá trị mặc định cho trường không `optional`: trường bắt buộc kiểu chuỗi rỗng `""`, enum `*_UNSPECIFIED`, số ngoài miền → `REJECTED` `INVALID_RECORD`. Trường `optional` không đặt = `NULL`.
 - `updated_at_ms` > `server_time + 5 phút` → kẹp về `server_time`. Bảng thường (`settings`, `deck`, `word`, `favorite`): LWW theo thứ tự `sync` nhận → `APPLIED`. `card_progress`: chỉ ghi khi `updated_at_ms` **lớn hơn** bản đang có, ngược lại `STALE` + `current`. Chỉ-thêm (`study_log`, `quiz_attempt`, `exam_attempt`, `xp_event`): chưa có → `APPLIED`, đã có (cùng user) → `DUPLICATE`. `xp_event`: `sync` tự tính `xp_awarded` (BR-065..BR-068, DATABASE-DESIGN §Quy tắc XP), trả trong `current.xp_event.xp_awarded` cho cả `APPLIED` và `DUPLICATE`.
 - Sở hữu (TM-14): `record_id` đã tồn tại nhưng của người khác → `REJECTED` `INVALID_RECORD`, không ghi, không trả `current`. `word.deck_uuid` không thuộc user → `REJECTED` `DECK_NOT_OWNED`. Chuỗi vượt giới hạn SRS §Validation (trần chung 1 000 ký tự) → `INVALID_RECORD` (TM-18). XP: số đếm ngoài 0..200 → `REJECTED`; vô lý hoặc `occurred_at_ms` ngoài `[received_at − 7 ngày, received_at + 5 phút]` → `APPLIED` với `xp_awarded = 0` (BR-068, TM-16). Một bản ghi lỗi **không** hủy cả lô.
@@ -468,7 +468,7 @@ message ExamQuestion {
 `code` sai mẫu → `INVALID_ARGUMENT`; không có → `NOT_FOUND`. App so `version` với bảng `content_version` cục bộ, chỉ tải mục có `version` lớn hơn. MongoDB ngừng → `UNAVAILABLE` → app dùng seed trong APK + bản đã tải.
 
 ### EP-01 Health
-Dùng proto chuẩn `grpc/health/v1/health.proto` (`grpc.health.v1.Health/Check`, `tonic-health`). `service = ""` → `SERVING` khi `edge` chạy và `auth` + `sync` trả `SERVING` (lõi); `service = "learninge.app.v1.LeaderboardService"` / `"learninge.app.v1.ContentService"` phản ánh `gamification`/`content` + MongoDB. Phiên bản và giờ server (EP-01 cũ) nằm ở metadata phản hồi `x-server-version`, `x-server-time-ms` (có trên **mọi** phản hồi của `edge`).
+Dùng proto chuẩn `grpc/health/v1/health.proto` (`grpc.health.v1.Health/Check`, dịch vụ health của `grpc-services` qua Spring gRPC, trạng thái lấy từ health Actuator). `service = ""` → `SERVING` khi `edge` chạy và `auth` + `sync` trả `SERVING` (lõi); `service = "learninge.app.v1.LeaderboardService"` / `"learninge.app.v1.ContentService"` phản ánh `gamification`/`content` + MongoDB. Phiên bản và giờ server (EP-01 cũ) nằm ở metadata phản hồi `x-server-version`, `x-server-time-ms` (có trên **mọi** phản hồi của `edge`).
 
 ### Ràng buộc trường (kiểm ở cả app và `auth`, BR-001..BR-009, BR-060, BR-061; giữ thay đổi phạm vi)
 | Trường | Ràng buộc |
@@ -505,7 +505,7 @@ Bảng ánh xạ từ mã HTTP thay đổi phạm vi:
 | Mã gRPC · `error-code` | HTTP cũ | Ý nghĩa | Khi nào | `grpc-message` mẫu · trailer phụ |
 |---|---|---|---|---|
 | `INVALID_ARGUMENT` · `VALIDATION_ERROR` | 400 | Trường sai ràng buộc | Chuỗi rỗng, sai độ dài, sai miền, enum UNSPECIFIED | "Dữ liệu chưa hợp lệ" · `error-fields: password=TOO_SHORT` |
-| (bỏ) `BAD_JSON` | 400 | — | Không còn JSON; message protobuf hỏng do tonic từ chối (`INTERNAL`/`INVALID_ARGUMENT` không có `error-code`) → app coi là lỗi lập trình | — |
+| (bỏ) `BAD_JSON` | 400 | — | Không còn JSON; message protobuf hỏng do grpc-java từ chối (`INTERNAL`/`INVALID_ARGUMENT` không có `error-code`) → app coi là lỗi lập trình | — |
 | `UNAUTHENTICATED` · `UNAUTHENTICATED` | 401 | Token thiếu/sai/hết hạn/bị thu hồi | RPC cần token | "Phiên đăng nhập đã hết hạn" → BR-059 |
 | `UNAUTHENTICATED` · `INVALID_CREDENTIALS` | 401 | Sai email hoặc mật khẩu | EP-03 (không có token → không kích hoạt BR-059) | "Email hoặc mật khẩu không đúng" |
 | `PERMISSION_DENIED` · `INVALID_CREDENTIALS` | 401 | Sai mật khẩu hiện tại khi đã đăng nhập | EP-07, EP-10 | "Mật khẩu hiện tại không đúng" |
@@ -538,7 +538,7 @@ Dịch vụ nội bộ trả lỗi cho `edge` theo cùng quy ước; `edge` **ch
   - Phân trang: chỉ EP-12 (cursor `since`/`next_cursor`, `limit` ≤ 500) và RPC nội bộ `Export*`. Danh sách khác có giới hạn cố định (bảng xếp hạng 50).
   - **Metadata phản hồi (edge → app)**: header `x-request-id`, `x-server-version`, `x-server-time-ms`; khi lỗi thêm trailer `error-code`, và nếu áp dụng `retry-after-seconds`, `error-fields` (§Quy ước lỗi).
   - **Metadata nội bộ (edge → dịch vụ)**: `x-user-id` (UUID), `x-request-id`, `x-client-version`, `grpc-timeout` (phần còn lại − 100 ms). Chỉ `edge` được đặt `x-user-id`. **Mọi** lời gọi nội bộ (edge, relay, công cụ vận hành → dịch vụ, kể cả `EventSink`, `Export*`, `InsightBackend`) mang thêm `x-internal-auth: <LEARNINGE_INTERNAL_TOKEN>`; interceptor của `common` so sánh hằng thời gian, thiếu/sai → `UNAUTHENTICATED` (chỉ `grpc.health.v1.Health/Check` được miễn); dịch vụ chỉ đọc `x-user-id` sau khi qua kiểm này. `edge` xóa `x-user-id`, `x-user-id-bin` và mọi `x-internal-*` từ client (THREAT_MODEL D-09, TM-33).
-  - **Log**: không ghi metadata `authorization`, message của `AuthService` (mật khẩu, câu trả lời, token), email; span `tracing` gắn `request_id`, `rpc`, `user_hmac` (HMAC-SHA256 với `LEARNINGE_PSEUDONYM_KEY`, do `auth`/`sync` tính; `edge` nhận qua `ValidateTokenResponse.user_hmac`, không giữ khóa — THREAT_MODEL D-10), `code`, `duration_ms` (NFR-S7, DEC-025).
+  - **Log**: không ghi metadata `authorization`, message của `AuthService` (mật khẩu, câu trả lời, token), email; log JSON (structured logging Spring Boot) có MDC `request_id`, `rpc`, `user_hmac` (HMAC-SHA256 với `LEARNINGE_PSEUDONYM_KEY`, do `auth`/`sync` tính; `edge` nhận qua `ValidateTokenResponse.user_hmac`, không giữ khóa — THREAT_MODEL D-10), `code`, `duration_ms` (NFR-S7, DEC-025).
   - **Giới hạn kích thước message**: `edge` nhận ≤ **1 MiB** (`max_decoding_message_size`), gửi ≤ 4 MiB; dịch vụ nội bộ nhận/gửi ≤ 4 MiB; app `maxInboundMessageSize(4 MiB)`. Một trang Pull 500 bản ghi ≈ 150–300 KB, một bộ 1 000 từ ≈ 200 KB.
   - **Deadline phía app** (đặt trên mọi lời gọi bằng `withDeadlineAfter`; không có deadline = lỗi review; theo SYSTEM-BLUEPRINT §Deadline và thử lại): Health 3 s; mọi RPC `AuthService` (EP-02..EP-10) 10 s; Push 20 s; Pull 15 s; GetWeekly 5 s; `ContentService` 15 s. `edge` → dịch vụ: phần còn lại − 100 ms, chặn trên auth 8 s, Push 18 s, Pull 13 s, còn lại 3 s. Nội bộ khác: `ValidateToken` 500 ms; phần không bắt buộc của `GetMe` (`SyncBackend.GetStreak`, `GamificationBackend.GetStats`) 300 ms; `Export*` 10 s; `EventSink.Publish` 3 s/lô. `edge` không bao giờ kéo dài deadline của app.
   - **Giới hạn phần tử và giao thức** (THREAT_MODEL TM-44): kiểm số phần tử `repeated` ở đầu handler, trước mọi xử lý — `changes` ≤ 500, `PublishRequest.events` ≤ 200, `LogRequests.logs` ≤ 100 (vượt → `INVALID_ARGUMENT`); `limit` của `Export*` kẹp ≤ 1 000, `GetDailyStats` ≤ 92 ngày; metadata mỗi yêu cầu ≤ 16 KiB (`http2_max_header_list_size`); `max_concurrent_streams` ≤ 100/kết nối; server đặt `timeout` (trần deadline nhóm + 2 s) để lời gọi không có deadline vẫn bị cắt.
@@ -576,10 +576,10 @@ message LeaderboardEntry {
 }
 ```
   - Số trường 1–15 (1 byte) dành cho trường dùng thường xuyên; 19000–19999 cấm (dành cho protobuf). Trong `Change`, số 5–9 để trống cho trường chung sau này, `oneof data` bắt đầu từ 10.
-  - Client và server phải **chịu được trường/enum lạ**: Java lite giữ giá trị enum lạ là `UNRECOGNIZED` (app xử lý như "không biết", vd bỏ qua bản ghi Pull loại lạ và ghi log); `prost` bỏ trường lạ. App phải bỏ qua `Change` có `oneof data` rỗng khi kéo về.
+  - Client và server phải **chịu được trường/enum lạ**: Java lite giữ giá trị enum lạ là `UNRECOGNIZED` (app xử lý như "không biết", vd bỏ qua bản ghi Pull loại lạ và ghi log); `protobuf-java` ở server giữ trường lạ dạng unknown fields và bỏ qua. App phải bỏ qua `Change` có `oneof data` rỗng khi kéo về.
   - Thay đổi phá vỡ → CR mới + gói `learninge.v2` chạy **song song** v1 trên cùng `edge` tới hết đợt demo; bản app cũ bị chặn bằng `x-client-version` < `EDGE_MIN_CLIENT` (mặc định 1) → `FAILED_PRECONDITION` `UPGRADE_REQUIRED`.
   - Gói nội bộ có thể đổi nhanh hơn nhưng vẫn theo các luật trên vì các dịch vụ có thể chạy lệch phiên bản trong lúc khởi động lại; payload `Event` trong outbox cũ phải giải mã được bằng code mới (DATABASE-DESIGN §Migration).
-  - **Quy trình đồng bộ proto giữa 2 repo**: (1) sửa `.proto` ở `LearningE_Server` qua PR có người review hợp đồng (lập trình viên) — PR phải nêu "cộng thêm" hay "phá vỡ"; (2) merge → chạy `tools/sync-proto.ps1 -ServerRepo <đường dẫn> ` trong repo app → chép gói công khai + cập nhật `proto.lock` (SHA commit + SHA-256 từng tệp) → commit trong repo app; (3) CI/`verifyProtoLock` của app hỏng nếu tệp lệch lock; (4) test hợp đồng Rust chạy trên chính tệp đã chép. Lược đồ server (SQLite/Mongo) đổi bằng migration, không làm đổi hợp đồng v1.
+  - **Quy trình đồng bộ proto giữa 2 repo**: (1) sửa `.proto` ở `LearningE_Server` qua PR có người review hợp đồng (lập trình viên) — PR phải nêu "cộng thêm" hay "phá vỡ"; (2) merge → chạy `tools/sync-proto.ps1 -ServerRepo <đường dẫn> ` trong repo app → chép gói công khai + cập nhật `proto.lock` (SHA commit + SHA-256 từng tệp) → commit trong repo app; (3) CI/`verifyProtoLock` của app hỏng nếu tệp lệch lock; (4) test hợp đồng server (JUnit + grpc-java) chạy trên chính tệp nguồn đó; nguồn trong repo server nằm ở `proto/src/main/proto/learninge/app/v1/` và `sync-proto.ps1` chép từ đường dẫn này (cập nhật script ). Lược đồ server (SQLite/Mongo) đổi bằng migration, không làm đổi hợp đồng v1.
 
 ## Webhook / sự kiện (nếu có)
 - **Không có webhook hay đẩy sự kiện tới app** (realtime là Non-goal); app chủ động gọi EP-11/EP-12 theo mốc của DEC-014 (đăng nhập, mở app, sau phiên học, "Đồng bộ ngay").
@@ -718,5 +718,5 @@ message DailyStats {
 
 ### Bộ mặc định "Sổ tay của tôi" — `uuid` tất định (SYSTEM-BLUEPRINT §Bộ mặc định)
 - Hằng namespace UUIDv5 (cố định vĩnh viễn, có trong `common::ids` của server và `SyncIds` của app): **`NS_LEARNINGE = a7039332-6c5e-4d97-8f86-2dc4e4e084cd`**.
-- `uuid` của bộ = `UUIDv5(NS_LEARNINGE, "notebook:" + user_id)` với `user_id` là `User.id` dạng chữ thường có gạch nối; kết quả viết chữ thường. Rust: `Uuid::new_v5(&NS_LEARNINGE, format!("notebook:{user_id}").as_bytes())`; Java: tự hiện thực SHA-1 theo RFC 9562 §5.5 (JDK chỉ có `nameUUIDFromBytes` = v3/MD5, **không dùng được**) — test chéo bằng một cặp (user_id, uuid) cố định trong cả hai bộ test.
+- `uuid` của bộ = `UUIDv5(NS_LEARNINGE, "notebook:" + user_id)` với `user_id` là `User.id` dạng chữ thường có gạch nối; kết quả viết chữ thường. Server (`common.id.UuidV5`) và app đều Java: tự hiện thực SHA-1 theo RFC 9562 §5.5 (JDK chỉ có `nameUUIDFromBytes` = v3/MD5, **không dùng được**) — test chéo bằng một cặp (user_id, uuid) cố định trong cả hai bộ test.
 - `sync` tạo bộ khi nhận `user.registered` (`INSERT OR IGNORE`, `name = "Sổ tay của tôi"`, `is_default = 1`, cấp `server_seq`); app tạo cục bộ trước (nếu cần) với cùng `uuid` → Push về thành `APPLIED`/LWW trên cùng khóa, không sinh bản trùng.

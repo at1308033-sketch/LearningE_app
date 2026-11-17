@@ -130,7 +130,7 @@
 | TC-043.2 | AC-043.2 (US-043) | U+SV | Quiz 10/10 → +15; 7/10 → +7; thi thử E01 đúng 16/20 → +16 (không thưởng 100%) (BR-066, BR-067). | Cao |
 | TC-043.3 | AC-043.3 (US-043) | U+SV | Đã có 490 XP trong ngày, quiz 10/10 (+15) → chỉ +10, tổng 500, app hiện "Bạn đã đạt tối đa 500 XP hôm nay"; hoạt động tiếp theo +0; sang ngày mới (00:00 giờ VN) cộng lại bình thường. | Cao |
 | TC-043.4 | AC-043.4 (US-043) | SV | Client gửi `xp: 999` / tổng XP sai cho phiên 10 thẻ 7/3 → server bỏ qua, ghi 17; XP kiếm khi ngoại tuyến hiện tạm tính rồi được thay bằng số của server sau đồng bộ. | Cao |
-| TC-044.1 | AC-044.1 (US-044) | SV+SY | [Should — thay đổi phạm vi] Tăng `content_version` bằng `content-import` + thêm 1 bộ trên server → mở app lần kế tiếp (có mạng, có token) bộ mới hiện ở SCR-06; tiến độ học hiện có không đổi; không token → `UNAUTHENTICATED`; Mongo/`content` tắt → `UNAVAILABLE`, app dùng seed + bản đã tải. | Trung bình |
+| TC-044.1 | AC-044.1 (US-044) | SV+SY | [Should — thay đổi phạm vi] Tăng `content_version` bằng `content --ops=import` + thêm 1 bộ trên server → mở app lần kế tiếp (có mạng, có token) bộ mới hiện ở SCR-06; tiến độ học hiện có không đổi; không token → `UNAUTHENTICATED`; Mongo/`content` tắt → `UNAVAILABLE`, app dùng seed + bản đã tải. | Trung bình |
 | TC-044.2 | AC-044.2 (US-044) | SY | [Should — thay đổi phạm vi] Ngắt mạng ở từ thứ 25/40 khi tải bộ → giữ nguyên nội dung và version cũ (không có bộ dở dang); thử lại ở lần mở sau. | Trung bình |
 | TC-045.1 | AC-045.1 (US-045) | U | `FlameStage.of(s)`: 0 → tắt; 1, 2 → giai đoạn 1; 3, 6 → 2; 7, 29 → 3; 30 → 4 (unit test 8 biên); SCR-21 hiện đúng hình theo chuỗi thật. | Cao |
 | TC-045.2 | AC-045.2 (US-045) | M | Trang Chủ (SCR-05): huy hiệu chuỗi ngày pixel cùng giai đoạn với SCR-21 và hiện số ngày s. | Cao |
@@ -147,25 +147,27 @@
 - **KG-3 (ĐÃ ĐÓNG 11/11 — BR-076 và D-03):** HMAC-SHA256 với khóa `LEARNINGE_SERVER_KEY` (`APP_ENV=prod` thiếu khóa → từ chối khởi động; dev → khóa tạm + WARN). TC-UNI-25, TC-SRV-11, TC-SEC-04 kiểm.
 - **KG-4 (ĐÃ ĐÓNG 11/11 — tên bộ "(2)" vượt 50 ký tự):** BR-044 cắt phần tên gốc để tổng ≤ 50 ký tự; TC-UNI-14 kiểm.
 - **KG-5 (`REJECTED`/`DUPLICATE` và AC):** AC-040.1/BR-062 mô tả `STALE`; `DUPLICATE` cho bảng chỉ-thêm không có AC riêng — kiểm ở TC-SRV-17, TC-SYN-15, TC-SYN-26 (truy vết về BR-064).
-- **KG-6 (ngưỡng độ phủ server):** NFR-M2 chỉ yêu cầu ≥ 80% nhánh cho `domain.rules` ở app; ngưỡng ≥ 80% dòng cho `auth`, `sync`, `gamification` của server (đo bằng `cargo llvm-cov`) là đề xuất của người kiểm thử, cần nhóm trưởng/nhóm trưởng xác nhận.
-- **KG-7 (Q3/DEC-023 chưa chốt — nơi triển khai P1..P4):** TC-SEC-38, TC-SEC-27, TC-DEMO-02, TC-PERF-19, TC-AND-17 chỉ chạy được khi đã chọn phương án; các ca này ghi theo "lớp lộ ra" chung. Nếu chọn P3 (Railway) mà proxy công khai chỉ có TCP thì TLS phải kết thúc ở `edge` (tonic TLS — crate/feature mới cần duyệt) và sẽ cần thêm TC kiểm cấu hình TLS của `edge` (người kiểm thử bổ sung khi DEC-023 chốt). Phương án P2 (Atlas) thêm TC-SEC-28 phần IP allowlist.
-- **KG-8 (công cụ/dependency chỉ dùng cho test — cần duyệt):** Q1 của thay đổi phạm vi chỉ duyệt thư viện runtime. người kiểm thử đề xuất duyệt thêm **công cụ dev/test**, không vào image/APK: Rust `tempfile`, `testcontainers` (hoặc dịch vụ Mongo của CI), `cargo-llvm-cov`, `cargo deny`; app `testImplementation` `grpc-inprocess`/`grpc-testing`; tải `ghz` (Go, binary dev) hoặc `tools/loadtest` tự viết; `buf` (chỉ nếu không dùng test descriptor ở TC-PROTO-01). Chưa duyệt → không thêm; ngoài danh sách này không thêm gì mới.
-- **KG-9 (NFR-S11..S15 chưa có trong SRS (phi chức năng).md):** THREAT_MODEL đề xuất (11 khóa nội bộ, 12 chặn plaintext, 13 Mongo không PII, 14 container không root, 15 xóa tài khoản ≤ 60 s). TC-SEC-24, 26, 33, 36, 32 và ma trận SRS (phi chức năng) → TC giữ theo đề xuất; lập trình viên/nhóm trưởng cần thêm vào SRS (phi chức năng) để truy vết chính thức.
+- **KG-6 (ngưỡng độ phủ server — ĐÃ ĐÓNG 17/11, theo chỉ đạo thay đổi phạm vi):** NFR-M2 chỉ nêu ≥ 80% nhánh cho `domain.rules` ở app; server áp dụng ≥ 80% **dòng** cho gói `domain`/`service` của các module (JaCoCo 0.8.16, `jacocoTestCoverageVerification`). nhóm trưởng cần đồng bộ NFR-M2/CODING-STANDARDS (định nghĩa hoàn thành) (ngoài phạm vi người kiểm thử).
+- **KG-7 (Q3/DEC-023 chưa chốt — nơi triển khai P1..P4):** TC-SEC-38, TC-SEC-27, TC-DEMO-02, TC-PERF-19, TC-AND-17 chỉ chạy được khi đã chọn phương án; các ca này ghi theo "lớp lộ ra" chung. Nếu chọn P3 (Railway) mà proxy công khai chỉ có TCP thì TLS phải kết thúc ở `edge` (grpc-java Netty TLS — cấu hình/thư viện mới cần duyệt) và sẽ cần thêm TC kiểm cấu hình TLS của `edge` (người kiểm thử bổ sung khi DEC-023 chốt). Phương án P2 (Atlas) thêm TC-SEC-28 phần IP allowlist.
+- **KG-8 (công cụ/dependency chỉ dùng cho test — viết lại 17/11 ; phần công cụ Rust ĐÃ ĐÓNG, không còn áp dụng):** Q1 của thay đổi phạm vi chỉ duyệt thư viện runtime. Danh sách công cụ dev/test của server Java **chờ người dùng duyệt** (không vào image/APK): (1) `io.grpc:grpc-inprocess` + `io.grpc:grpc-testing` (`testImplementation`, theo BOM grpc-java 1.84.1); (2) Testcontainers 2.0.5 (`testcontainers-mongodb`, `testcontainers-junit-jupiter`; cần Docker ở máy dev/CI); (3) plugin Gradle `jacoco` 0.8.16; (4) plugin `org.owasp.dependencycheck` 13.0.0 (cần NVD API key do người chạy cấp qua biến môi trường/GitHub Secret, không vào repo); (5) `ghz` (binary Go, chỉ dev; thay thế: script tải tự viết bằng stub grpc-java); (6) plugin Gradle `com.diffplug.spotless` 8.11.0 + `googleJavaFormat("1.37.0")` — **đề xuất** ép Google Java Style (`spotlessCheck` trong `./gradlew build`; không duyệt thì bỏ `spotlessCheck` khỏi NFR-Q1/DoD, dùng định dạng IDE + review). App: `testImplementation` `grpc-inprocess`/`grpc-testing`; `buf` chỉ nếu không dùng test descriptor ở TC-PROTO-01. JUnit 6.0.3 và các thư viện đi kèm `spring-boot-starter-test` theo BOM (đã nằm trong catalog SYSTEM-BLUEPRINT (công nghệ)); `grpcurl`, `nmap`, `docker stats` là công cụ có sẵn. Chưa duyệt → không thêm; ngoài danh sách này không thêm gì mới.
+- **KG-9 (ĐÃ ĐÓNG 17/11 — NFR-S11..S16 đã có trong SRS (phi chức năng).md):** 11 khóa nội bộ, 12 chặn plaintext, 13 Mongo không PII, 14 container không root, 15 xóa tài khoản ≤ 60 s, 16 nền tảng Java/Spring. Ma trận SRS (phi chức năng) → TC khớp SRS (phi chức năng).md; TC-SEC-41..50 gắn NFR-S16 (S10/S11/S14 bổ sung).
 - **KG-10 (ưu tiên REQ-022):** thay đổi phạm vi §3 nâng REQ-022 (US-044) Could → Should; PRD hiện còn ghi Could. TC-044.1/044.2 tạm tính **Trung bình**; nhóm trưởng đồng bộ PRD/PROJECT-PLAN (công việc). Nếu PRD giữ Could thì hai TC này chuyển lại Could (không ảnh hưởng điều kiện ra).
 - **KG-11 (ngưỡng SRS (phi chức năng) là mục tiêu chưa đo):** NFR-N4, N6, E4, E5, P7 chưa đo; có thể cần sửa qua CR sau S-01/M1/M2. TC-PERF ghi số thật, không chỉnh ngưỡng để khớp. Đặc biệt TC-OUT-06 phụ thuộc `OUTBOX_MAX_BACKOFF_SECS` ≤ 15 hoặc relay thử ngay khi đích `SERVING` (NFR-N6).
 - **KG-12 (ResetPassword và cache token 60 s):** NFR-S7 viết "ResetPassword… chậm nhất khi cache hết hạn (≤ 60 s)", còn API_CONTRACT §Xác thực và THREAT_MODEL TC-SEC-29 yêu cầu `edge` xóa cache **ngay** (lấy user từ `AuthSession.user.id`). Test đặt kỳ vọng chặt hơn (ngay lập tức — TC-RPC-10, TC-SVC-07, TC-SEC-29); lập trình viên thống nhất lại NFR-S7.
 - **KG-13 (thay đổi hợp đồng so với thay đổi phạm vi):** `x-client-version` thiếu → `UPGRADE_REQUIRED` (API_CONTRACT) khác ca "thiếu header" của thay đổi phạm vi (TC-SRV-47 cũ) — đã đổi ở TC-RPC-30, TC-SRV-51.
+- **KG-14 (NFR-E4/E5 lệch  — nhóm trưởng đồng bộ SRS (phi chức năng).md):** người dùng chốt 17/11: `compose up` ≤ 90 s (SRS (phi chức năng).md còn ≤ 60 s) và RAM chế độ tách ≤ 2 GB / gộp ≤ 1 GB (SRS (phi chức năng).md còn tổng ≤ 1 GB và trần từng container 64/96/128 MB — không khả thi với JVM, SYSTEM-BLUEPRINT ước 288 MiB/dịch vụ). TC-PERF-12/13 dùng ngưỡng mới; trần từng dịch vụ chỉ ghi nhận số thật. Ngưỡng ≤ 30 s cho `all-in-one` và image ≤ 300 MB là đề xuất của người kiểm thử, ghi số thật ở S-01' (KG-11).
 - **Thay đổi so với bản thay đổi phạm vi:** TC-SRV (51 ca REST/Javalin) viết lại thành 56 ca Rust theo dịch vụ + 34 ca TC-RPC; thêm TC-SVC, TC-OUT, TC-DEG, TC-PROTO, TC-AND, TC-PERF; TC-SEC 23 → 40; TC-UNI-16 và TC-UNI-19..26 viết lại cho Rust/gRPC, thêm TC-UNI-27..29; TC-SYN thêm 26..28; TC-MAN-09 đổi, thêm TC-MAN-11; TC-SRS (phi chức năng): bỏ N3/N4/E1/E4 (sang TC-PERF), thêm O1; TC-DEMO 8 → 10; KG-7 (Jackson) bỏ vì Javalin/Jackson bị hủy (thay đổi phạm vi §3). Giữ: mức E (Espresso) đã bỏ từ thay đổi phạm vi; `TC-NFR-X1-DARK`, `TC-SEED` cũ bỏ/thay; `TC-020.1`, `TC-020.2`, `TC-021.1` Won't; AC-032.1/033.1 chỉ CSV; seed 20 từ/chủ đề và 1 đề E01.
+- **Thay đổi thay đổi phạm vi (17/11):** đổi công cụ/cách chạy/ngưỡng; **các ID TC cũ giữ nguyên**, chỉ **thêm TC-SEC-41..50** (nền tảng Java/Spring, THREAT_MODEL TM-51..TM-58; TC-SEC 40 → 50, tổng chạy 472 → 482). Rust/cargo/tonic/tokio → Java 21 + Gradle + JUnit + `grpc-inprocess` + Testcontainers (`mongo:8.0.34`); `cargo llvm-cov` → JaCoCo; `cargo audit`/`deny` → OWASP Dependency-Check; `tools/loadtest` (tonic) → `ghz`; `tests/contract/errors.toml` → `all-in-one/src/test/resources/contract/errors.yaml`; `content-import`/`rebuild` → `--ops=import|rebuild`. TC-PERF-12 (RAM) và TC-PERF-13 (`compose up`) đổi ngưỡng; thêm rủi ro JVM (RA-1b), ma trận CI repo server, KG-14.
 
 ## Ma trận truy vết
 > Truy vết từ yêu cầu đến user story, acceptance criteria, business rule, flow, RPC, test case và task: không yêu cầu nào không có test, không test nào không có yêu cầu.
-> Bảng sinh bằng script từ PRD (REQ/US/AC), SRS (BR/FN/UC), Use-Cases (luồng) (FLOW), API_CONTRACT (EP-01..EP-16), SRS (phi chức năng), THREAT_MODEL và cột "Truy vết" của từng TC trong TESTING-STRATEGY, nên số liệu ở §7 là số đếm thật, không nhập tay. Mỗi AC có đúng một test case cùng số (`AC-009.3` → `TC-009.3`); cột TC liệt kê thêm các test bổ sung trỏ tới AC đó: `TC-UNI` unit, `TC-INS` instrumented DAO, `TC-SRV` integration theo dịch vụ Rust, `TC-RPC` hợp đồng RPC công khai qua `edge`, `TC-SVC` liên dịch vụ, `TC-OUT` outbox/relay, `TC-DEG` suy giảm có kiểm soát, `TC-PROTO` hợp đồng proto, `TC-AND` app gọi gRPC, `TC-SYN` đồng bộ, `TC-MAN` thủ công, `TC-SEC` bảo mật, `TC-SRS (phi chức năng)`/`TC-PERF` phi chức năng, `TC-DEMO` diễn tập. Nội dung từng TC: TESTING-STRATEGY §Truy vết AC → test case. người kiểm thử cập nhật cột Trạng thái khi chạy (Chưa chạy / Đạt / Lỗi #id).
+> Bảng sinh bằng script từ PRD (REQ/US/AC), SRS (BR/FN/UC), Use-Cases (luồng) (FLOW), API_CONTRACT (EP-01..EP-16), SRS (phi chức năng), THREAT_MODEL và cột "Truy vết" của từng TC trong TESTING-STRATEGY, nên số liệu ở §7 là số đếm thật, không nhập tay. Mỗi AC có đúng một test case cùng số (`AC-009.3` → `TC-009.3`); cột TC liệt kê thêm các test bổ sung trỏ tới AC đó: `TC-UNI` unit, `TC-INS` instrumented DAO, `TC-SRV` integration theo dịch vụ (Java/JUnit), `TC-RPC` hợp đồng RPC công khai qua `edge`, `TC-SVC` liên dịch vụ, `TC-OUT` outbox/relay, `TC-DEG` suy giảm có kiểm soát, `TC-PROTO` hợp đồng proto, `TC-AND` app gọi gRPC, `TC-SYN` đồng bộ, `TC-MAN` thủ công, `TC-SEC` bảo mật, `TC-SRS (phi chức năng)`/`TC-PERF` phi chức năng, `TC-DEMO` diễn tập. Nội dung từng TC: TESTING-STRATEGY §Truy vết AC → test case. người kiểm thử cập nhật cột Trạng thái khi chạy (Chưa chạy / Đạt / Lỗi #id).
 > Giữ nguyên ID cũ, không đánh số lại: REQ/US/AC/BR của phần Won't (ngữ pháp REQ-008, dark mode REQ-013, widget REQ-015, import JSON BR-049, bài tập ngữ pháp BR-056) vẫn nằm trong bảng để truy vết, đánh dấu "Won't". REQ-009, REQ-022, REQ-024 là Could (theo PRD).
 
 ## 1. Ma trận
 Quy ước ID: `REQ-xxx` (yêu cầu) → `US-xxx` (user story, trong PRD) → `AC-xxx.n` (tiêu chí chấp nhận) → `BR-xxx` (SRS) → `FLOW-xxx` (Use-Cases (luồng)) → `EP-xx` + RPC (API_CONTRACT, gói công khai `learninge.app.v1`, ghi `Dịch vụ.Phương thức`) → `TC-xxx` (test case, TESTING-STRATEGY) → `T-xxx` (task trong PROJECT-PLAN (công việc)).
 Mỗi `US-xxx` trong PRD phải xuất hiện ít nhất một lần trong bảng (lint kiểm tra). Cột BR ở mức AC = BR viện dẫn trong chính AC (PRD) cộng BR trong các TC trỏ tới AC đó; nếu AC không viện dẫn BR nào thì lấy BR của US nguồn (SRS §Business rules, cột "Nguồn (US)"); BR chưa được AC/TC nào viện dẫn được gắn vào mọi AC của US nguồn để không BR nào rơi khỏi ma trận (như bản trước). Cột RPC = EP mà AC hoặc TC-RPC/TC-SRV/TC-AND… viện dẫn; AC thuần cục bộ (không gọi máy chủ) ghi `—`; với AC có từ khóa mạng/máy chủ nhưng không TC nào nêu EP thì lấy EP của FN tương ứng (13 AC, người kiểm thử đối chiếu khi rà TESTING-STRATEGY).
-**Cột Task:** đã khớp PROJECT-PLAN (công việc) thay đổi phạm vi (Rust gRPC, T-140..T-155, cập nhật 12/11). Ma trận dùng ID task của **app** (T-001..T-107, T-120..T-133) và của **server** (T-146..T-150, T-153, chọn theo cột US/RPC/TC của từng dòng). Task server cũ theo Javalin/REST được thay bằng T-141, T-145, T-147, T-148, T-149, T-150, T-152, T-153, T-154. Không còn nhãn chờ; ma trận không tự đánh số task.
+**Cột Task:** đã khớp PROJECT-PLAN (công việc) thay đổi phạm vi (server Java 21 + Spring Boot, T-142..T-157; **T-140 học Rust và T-141 SPIKE S-01 Rust đã hủy**, thay bằng **T-156** ôn Spring Boot 4 + gRPC Java và **T-157** SPIKE S-01'; cập nhật 17/11). Ma trận dùng ID task của **app** (T-001..T-107, T-120..T-133) và của **server** (T-146..T-150, T-153, chọn theo cột US/RPC/TC của từng dòng). Task server cũ theo Javalin/REST được thay bằng T-145, T-147, T-148, T-149, T-150, T-152, T-153, T-154 (T-141 đã hủy ở thay đổi phạm vi, không còn dùng; T-156, T-157 là task nền tảng, không gắn AC). Không còn nhãn chờ; ma trận không tự đánh số task.
 
 | REQ | US | AC | BR (SRS) | FLOW | RPC (API_CONTRACT) | TC | Task | Trạng thái |
 |---|---|---|---|---|---|---|---|---|
@@ -456,7 +458,7 @@ Nguồn: SRS (phi chức năng).md (các `NFR-xxx`), chỉ mục "Ma trận SRS 
 | NFR-N5 | Khi MongoDB hoặc một dịch vụ phụ ngừng, lõi vẫn chạy và app thấy đúng hành vi suy giảm: (a)… | TC-042.4, TC-AND-16, TC-DEG-01..13, TC-DEMO-09, TC-OUT-05, TC-RPC-20, TC-SRV-40, TC-SRV-47, TC-SVC-14, TC-SYN-27 |
 | NFR-N6 | Sự kiện outbox (XP, hồ sơ, xóa tài khoản, tiến độ…) tới đích p95 ≤ 5 s kể từ commit khi… | TC-OUT-01, TC-OUT-02, TC-OUT-03, TC-OUT-05, TC-OUT-06, TC-OUT-08, TC-OUT-12, TC-PERF-18, TC-SYN-27, TC-UNI-28 |
 | NFR-N7 | Message vào edge ≤ 1 MiB… | TC-AND-13, TC-AND-20, TC-RPC-14, TC-RPC-26, TC-SEC-16 |
-| NFR-O1 | x-request-id đầu–cuối: app sinh UUID mỗi lời gọi → edge nhận lại nếu hợp lệ… | TC-AND-05, TC-NFR-O1, TC-RPC-29, TC-SEC-20, TC-SEC-39, TC-SRV-41, TC-SVC-09 |
+| NFR-O1 | x-request-id đầu–cuối: app sinh UUID mỗi lời gọi → edge nhận lại nếu hợp lệ… | TC-AND-05, TC-NFR-O1, TC-RPC-29, TC-SEC-20, TC-SEC-39, TC-SEC-44, TC-SRV-41, TC-SVC-09 |
 | NFR-P1 | Khởi động lạnh đến khi hiện Trang chủ ≤ 2 giây (lần mở thứ 2 trở đi) | TC-AND-01, TC-NFR-P1, TC-PERF-14, TC-PERF-15 |
 | NFR-P2 | Mọi truy vấn CSDL trên luồng giao diện bị cấm | TC-AND-11, TC-NFR-P2, TC-PERF-17 |
 | NFR-P3 | Kết quả tra hiện ≤ 300 ms sau khi ngừng gõ (debounce 250 ms) | TC-NFR-P3 |
@@ -478,17 +480,18 @@ Nguồn: SRS (phi chức năng).md (các `NFR-xxx`), chỉ mục "Ma trận SRS 
 | NFR-S7 | Token = 32 byte từ nguồn ngẫu nhiên của hệ điều hành (OsRng), mã hóa base64url không đệm 43… | TC-AND-04, TC-NFR-S7, TC-RPC-23, TC-SEC-01..07, TC-SEC-09, TC-SEC-19, TC-SRV-08, TC-SRV-46, TC-SVC-05, TC-SVC-06, TC-UNI-16, TC-UNI-19..22 |
 | NFR-S8 | Login tối đa 5 yêu cầu/phút/IP tại edge… | TC-002.3, TC-NFR-S8, TC-RPC-02, TC-RPC-27, TC-SEC-01..07, TC-SEC-09, TC-SEC-19, TC-SRV-49, TC-UNI-19..22 |
 | NFR-S9 | Chỉ edge lộ cổng — compose chỉ publish 127.0.0.1:50051… | TC-SEC-25, TC-SEC-27, TC-SEC-28, TC-SRV-14, TC-SRV-36, TC-SVC-15 |
-| NFR-S10 | cargo audit (RustSec) 0 lỗ hổng mức cao/nghiêm trọng chưa xử lý trên Cargo.lock tại mỗi PR… | TC-SEC-35, TC-SEC-37 |
-| NFR-S11 | Mọi RPC nội bộ (5 dịch vụ sau edge, kể cả EventSink, Export*, GetDailyStats) yêu cầu… | TC-SEC-24, TC-SEC-30, TC-SEC-40, TC-SVC-01..04, TC-UNI-27 |
+| NFR-S10 | OWASP Dependency-Check failBuildOnCVSS = 7 + Gradle dependency verification + image ghim digest… | TC-SEC-35, TC-SEC-37, TC-SEC-49 |
+| NFR-S11 | Mọi RPC nội bộ (5 dịch vụ sau edge, kể cả EventSink, Export*, GetDailyStats) yêu cầu… | TC-SEC-24, TC-SEC-30, TC-SEC-40, TC-SEC-47, TC-SEC-50, TC-SVC-01..04, TC-UNI-27 |
 | NFR-S12 | Bản release không thể gọi gRPC plaintext: GrpcChannelFactory mặc định TLS, usePlaintext()… | TC-AND-02, TC-AND-03, TC-AND-17, TC-MAN-09, TC-SEC-10, TC-SEC-26, TC-SEC-38 |
 | NFR-S13 | Dữ liệu MongoDB không chứa email, hash mật khẩu, token, câu trả lời bảo mật, tên hiển thị | TC-OUT-14, TC-SEC-33, TC-SRV-42 |
-| NFR-S14 | Mọi container dịch vụ chạy không root (USER 10001:10001), read_only: true (+ tmpfs: /tmp),… | TC-SEC-36 |
+| NFR-S14 | Mọi container dịch vụ chạy không root (USER 10001:10001), read_only: true (+ tmpfs: /tmp, /app/native),… | TC-SEC-36, TC-SEC-48 |
 | NFR-S15 | Sau DeleteAccount, dữ liệu của user ở sync.db (9 bảng), learninge_game… | TC-OUT-13, TC-SEC-18, TC-SEC-32, TC-SRV-43 |
+| NFR-S16 | Nền tảng Java/Spring Boot: không bề mặt HTTP ngoài Actuator 127.0.0.1:8081, không chẩn đoán JVM từ xa (JMX/JDWP/heap dump), không Java serialization/_class, bí mật chỉ qua env… | TC-SEC-41, TC-SEC-42, TC-SEC-43, TC-SEC-45, TC-SEC-46, TC-SEC-48, TC-SEC-50 |
 | NFR-V1 | Tương thích ngược proto v1: chỉ cộng thêm… | TC-PROTO-01..09, TC-RPC-31, TC-RPC-32 |
 | NFR-X1 | Vùng chạm ≥ 48 × 48 dp | TC-MAN-08, TC-NFR-X1 |
 
 ## 5. Bảo mật (TM → TC-SEC)
-Nguồn: THREAT_MODEL (TM-01..TM-50; ca TC-SEC-01..TC-SEC-40) đối chiếu cột "Mối đe dọa" của TESTING-STRATEGY §TC-SEC, thêm các TC khác (TC-RPC/SRV/SVC/OUT/AND…) viện dẫn mã TM. Dấu † = liên kết gián tiếp theo nội dung TC (TESTING-STRATEGY không ghi mã TM), người kiểm thử xác nhận ở §8.
+Nguồn: THREAT_MODEL (TM-01..TM-58; ca TC-SEC-01..TC-SEC-50; TM-51..TM-58 và TC-SEC-41..50 thuộc thay đổi phạm vi) đối chiếu cột "Mối đe dọa" của TESTING-STRATEGY §TC-SEC, thêm các TC khác (TC-RPC/SRV/SVC/OUT/AND…) viện dẫn mã TM. Dấu † = liên kết gián tiếp theo nội dung TC (TESTING-STRATEGY không ghi mã TM), người kiểm thử xác nhận ở §8.
 
 | TM | Mối đe dọa (rút gọn) | Mức | TC-SEC | TC khác |
 |---|---|---|---|---|
@@ -512,20 +515,20 @@ Nguồn: THREAT_MODEL (TM-01..TM-50; ca TC-SEC-01..TC-SEC-40) đối chiếu c�
 | TM-18 | D: Message lớn, chuỗi dài, quá nhiều bản ghi | TB | TC-SEC-16 | TC-RPC-26, TC-SRV-19 |
 | TM-19 | D: Nghẽn khóa ghi SQLite | TB | TC-SEC-17 | TC-RPC-17, TC-SRV-25 |
 | TM-20 | T/E: SQL injection / NoSQL injection | Cao | TC-SEC-19 | TC-RPC-22, TC-SRV-39 |
-| TM-21 | T/R: Chèn dòng log giả | Thấp | TC-SEC-20 | TC-SRV-51, TC-SVC-09, TC-UNI-26 |
-| TM-22 | I: Lỗi lộ chi tiết nội bộ | TB | TC-SEC-21 | TC-SRV-53, TC-UNI-26 |
+| TM-21 | T/R: Chèn dòng log giả | Thấp | TC-SEC-20, TC-SEC-44 | TC-SRV-51, TC-SVC-09, TC-UNI-26 |
+| TM-22 | I: Lỗi lộ chi tiết nội bộ | TB | TC-SEC-21, TC-SEC-42 | TC-SRV-53, TC-UNI-26 |
 | TM-23 | I: Bí mật/CSDL bị commit lên repo | Cao | TC-SEC-37 | — |
 | TM-24 | I: Log chứa PII/token/mật khẩu | TB | TC-SEC-22 | — |
 | TM-25 | T/D: Hỏng/mất file SQLite | TB | TC-SEC-23 | TC-DEG-12, TC-SRV-14, TC-SRV-24, TC-SRV-56 |
-| TM-26 | R: Chối bỏ thao tác tài khoản | Thấp | — | TC-OUT-03, TC-SRV-41, TC-SRV-43, TC-SRV-45 † |
+| TM-26 | R: Chối bỏ thao tác tài khoản | Thấp | TC-SEC-44 | TC-OUT-03, TC-SRV-41, TC-SRV-43, TC-SRV-45 |
 | TM-27 | I: Xóa tài khoản không đầy đủ trong `auth.db`/`sync.db` | TB | TC-SEC-18, TC-SEC-32 | — |
 | TM-28 | I: Quyền riêng tư (PDPL) | TB | TC-SEC-18, TC-SEC-32 | — |
 | TM-29 | T: Chuỗi cung ứng dependency **app** (Gradle) | TB | TC-SEC-35 | TC-PROTO-04 |
 | TM-30 | T: Nội dung server bị sửa/độc hại | Thấp | — | — (chưa có TC, xem §8) |
 | TM-31 | S: Tài khoản demo mật khẩu biết trước trên URL công khai | Thấp | — | TC-DEMO-01 † |
 | TM-32 | S: Token còn hiệu lực sau đăng xuất ngoại tuyến | Thấp | TC-SEC-09 | — |
-| TM-33 | S/E: Giả mạo giữa dịch vụ — gọi thẳng dịch vụ nội bộ với `x-user-id` tùy ý | Cao | TC-SEC-24 | TC-RPC-25, TC-SVC-02, TC-SVC-03, TC-SVC-04, TC-UNI-27 |
-| TM-34 | I: gRPC reflection / health liệt kê dịch vụ, RPC nội bộ | Thấp | TC-SEC-25 | TC-RPC-01, TC-RPC-25 |
+| TM-33 | S/E: Giả mạo giữa dịch vụ — gọi thẳng dịch vụ nội bộ với `x-user-id` tùy ý | Cao | TC-SEC-24, TC-SEC-47, TC-SEC-50 | TC-RPC-25, TC-SVC-02, TC-SVC-03, TC-SVC-04, TC-UNI-27 |
+| TM-34 | I: gRPC reflection / health liệt kê dịch vụ, RPC nội bộ | Thấp | TC-SEC-25, TC-SEC-50 | TC-RPC-01, TC-RPC-25 |
 | TM-35 | I/T: App release gọi gRPC plaintext (`grpc-okhttp` bỏ qua… | Cao | TC-SEC-26 | TC-AND-02, TC-AND-03 |
 | TM-36 | I/T: Kết thúc TLS và h2c ở lớp lộ ra theo từng phương án | TB | TC-SEC-38 | — |
 | TM-37 | E: Token đã thu hồi vẫn dùng được nhờ cache 60 s ở edge | TB | TC-SEC-29 | TC-SVC-07 |
@@ -536,12 +539,20 @@ Nguồn: THREAT_MODEL (TM-01..TM-50; ca TC-SEC-01..TC-SEC-40) đối chiếu c�
 | TM-42 | I: Gỡ bút danh dữ liệu insight | Thấp | TC-SEC-33 | TC-OUT-14, TC-SRV-42, TC-UNI-29 |
 | TM-43 | I/E: MongoDB lộ cổng/không xác thực/quyền rộng | Cao | TC-SEC-27, TC-SEC-28 | TC-SRV-36, TC-SVC-15 |
 | TM-44 | D: DoS bằng protobuf/HTTP/2 (message lớn, nhiều phần tử, header lớn, nhiều… | Cao | TC-SEC-34 | TC-DEG-13, TC-RPC-26, TC-RPC-28, TC-SRV-44, TC-SRV-50 |
-| TM-45 | T: Chuỗi cung ứng **server** (crate, `protoc` vendored, image Docker) | TB | TC-SEC-35 | — |
+| TM-45 | T: Chuỗi cung ứng **server** (thư viện Maven/Gradle, `protoc` tải từ Maven, image Docker) | TB | TC-SEC-35, TC-SEC-49 | — |
 | TM-46 | E: Container chạy root, FS ghi được, quyền thừa | TB | TC-SEC-36 | — |
-| TM-47 | I: Bí mật lộ qua repo, image, log, `docker inspect`, nền tảng | Cao | TC-SEC-33, TC-SEC-37 | — |
+| TM-47 | I: Bí mật lộ qua repo, image, log, `docker inspect`, nền tảng | Cao | TC-SEC-33, TC-SEC-37, TC-SEC-46 | — |
 | TM-48 | I: PII/token lọt log do in nguyên message proto (`Debug`) | TB | TC-SEC-39 | — |
 | TM-49 | I: Lạm dụng RPC vận hành/xuất hàng loạt (`Export*`, `GetDailyStats`, `requeue`) | TB | TC-SEC-40 | TC-SRV-30, TC-SRV-44 |
 | TM-50 | E: Chiếm bề mặt quản trị hạ tầng (SSH VPS, tài khoản Railway/Atlas/tunnel,… | TB | TC-SEC-27, TC-SEC-38 | — |
+| TM-51 | I/E: Actuator lộ ra ngoài hoặc mở endpoint nguy hiểm (env, heapdump, threaddump, loggers, shutdown) | TB | TC-SEC-41 | — |
+| TM-52 | I: Trang lỗi/stack trace mặc định của Spring Boot, bề mặt HTTP ngoài ý muốn, reflection/health tự đăng ký | TB | TC-SEC-42, TC-SEC-50 | — |
+| TM-53 | T/E: Deserialization không tin cậy (Java serialization, Jackson default typing, `_class` của Spring Data MongoDB) | TB | TC-SEC-43 | — |
+| TM-54 | T/R/I: Chèn dòng log (CRLF/ANSI), MDC rò giữa các lời gọi, log DEBUG của thư viện | TB | TC-SEC-44 | — |
+| TM-55 | I: Heap dump/core dump/JMX/JDWP/attach lộ bí mật trong bộ nhớ | TB | TC-SEC-45 | — |
+| TM-56 | I: Bí mật trong `application.yml`/jar/image/`JAVA_TOOL_OPTIONS`/`toString()` của cấu hình | Cao | TC-SEC-46 | — |
+| TM-57 | I: Side-channel thời gian khi so sánh khóa nội bộ, hash PBKDF2, HMAC | Thấp | TC-SEC-47 | — |
+| TM-58 | E/T: Thư viện native của `sqlite-jdbc`/Netty giải nén vào thư mục tạm dùng chung; URL JDBC/extension SQLite từ đầu vào | TB | TC-SEC-48 | — |
 
 ## 6. RPC → TC-RPC / TC-SRV
 **RPC công khai** (`learninge.app.v1`, do `edge` phục vụ): mọi EP có ≥ 1 `TC-RPC` (qua `edge`) và ≥ 1 `TC-SRV` (dịch vụ đích). Cột "TC khác" gồm TC-AND (app), TC-SYN, TC-SVC, TC-DEG, TC-PERF, TC-SEC… viện dẫn EP đó.
@@ -604,11 +615,11 @@ Số liệu đếm từ chính các tài liệu nguồn ở ngày cập nhật.
 | FN và UC có US | FN 27 / 27; UC 27 / 27 |
 | RPC công khai có TC-RPC và TC-SRV | 16 / 16 (EP-01..EP-16) |
 | RPC nội bộ có TC-SVC | 15 / 15 dòng RPC nội bộ (TC-SVC-01 sinh ca từ descriptor `learninge.internal.v1`) |
-| SRS (phi chức năng) có TC | 48 / 54 trực tiếp; +2 gián tiếp † (NFR-D1, NFR-D2); 4 chưa có (NFR-L1, NFR-M1, NFR-M3, NFR-R2) |
-| TM có TC | 44 / 50 trực tiếp; +5 gián tiếp † (TM-08, TM-12, TM-26, TM-31, TM-40); 1 chưa có (TM-30) |
-| TC bổ sung | 345 (UNI 29, INS 12, SRV 56, RPC 34, SVC 16, OUT 16, DEG 13, PROTO 9, AND 22, SYN 28, MAN 11, SRS (phi chức năng) 30, PERF 19, SEC 40, DEMO 10) |
-| Tổng TC | 475 = 130 `TC-xxx.n` + 345 bổ sung; **chạy 472** (không chạy 3 TC Won't của ngữ pháp: TC-020.1, TC-020.2, TC-021.1) — khớp TESTING-STRATEGY §Số lượng test case (472) |
-| TC bổ sung trỏ tới ≥ 1 AC | 80 / 345; phần còn lại trỏ tới BR, SRS (phi chức năng), TM, EP, FLOW hoặc tài liệu thiết kế (DATABASE-DESIGN, SYSTEM-BLUEPRINT, DEC, rủi ro) |
+| SRS (phi chức năng) có TC | 49 / 55 trực tiếp (thêm NFR-S16); +2 gián tiếp † (NFR-D1, NFR-D2); 4 chưa có (NFR-L1, NFR-M1, NFR-M3, NFR-R2) |
+| TM có TC | 53 / 58 trực tiếp (44 cũ + TM-26 nay có TC-SEC-44 + TM-51..TM-58); +4 gián tiếp † (TM-08, TM-12, TM-31, TM-40); 1 chưa có (TM-30) |
+| TC bổ sung | 355 (UNI 29, INS 12, SRV 56, RPC 34, SVC 16, OUT 16, DEG 13, PROTO 9, AND 22, SYN 28, MAN 11, SRS (phi chức năng) 30, PERF 19, SEC 50, DEMO 10) |
+| Tổng TC | 485 = 130 `TC-xxx.n` + 355 bổ sung; **chạy 482** (không chạy 3 TC Won't của ngữ pháp: TC-020.1, TC-020.2, TC-021.1) — khớp TESTING-STRATEGY §Số lượng test case (482) |
+| TC bổ sung trỏ tới ≥ 1 AC | 80 / 355; phần còn lại trỏ tới BR, SRS (phi chức năng), TM, EP, FLOW hoặc tài liệu thiết kế (DATABASE-DESIGN, SYSTEM-BLUEPRINT, DEC, rủi ro) |
 | TC không truy vết tới AC/BR/SRS (phi chức năng)/TM/EP/FLOW/US | 20 (chỉ trỏ tới tài liệu thiết kế, DEC, rủi ro hoặc mốc: TC-AND-12, TC-DEMO-07, TC-DEMO-08, TC-DEMO-10, TC-INS-01, TC-MAN-03, TC-MAN-11, TC-OUT-04, TC-OUT-09, TC-OUT-10, TC-OUT-11, TC-OUT-15, TC-OUT-16, TC-PERF-19, TC-RPC-30, TC-SRV-35, TC-SRV-45, TC-SRV-52, TC-SRV-54, TC-SVC-12) |
 | Task trong ma trận | 53 ID task app + 6 ID task server (T-146, T-147, T-148, T-149, T-150, T-153) |
 
@@ -658,8 +669,8 @@ Số liệu đếm từ chính các tài liệu nguồn ở ngày cập nhật.
 | TM liên kết gián tiếp (†) | TM-08, TM-12, TM-26, TM-31, TM-40 | Liên kết theo nội dung TC (TC-SEC-08/33, TC-SEC-26, TC-SRV-41/43/45 + TC-OUT-03, TC-DEMO-01, TC-OUT-09/11 + TC-UNI-28) vì TESTING-STRATEGY không ghi mã TM ở các ca này; người kiểm thử bổ sung mã TM vào cột "Truy vết" |
 | TC chỉ trỏ tới thiết kế | 20 TC bổ sung (xem §7) trỏ tới DATABASE-DESIGN/SYSTEM-BLUEPRINT/API_CONTRACT/DEC/rủi ro/mốc, chưa nêu AC/BR/SRS (phi chức năng)/TM | Không phải TC mồ côi; người kiểm thử có thể thêm mã BR/SRS (phi chức năng)/TM khi rà |
 | TC-NFR-IMP | Hiệu năng import CSV 2.000 dòng (xem trước ≤ 2 s, nhập ≤ 3 s) không có SRS (phi chức năng) tương ứng trong SRS (phi chức năng).md | Gắn tạm với US-032/US-033 (BR-048, BR-050); nhóm trưởng/lập trình viên thêm SRS (phi chức năng) import vào SRS (phi chức năng).md hoặc người kiểm thử đổi tên TC |
-| TESTING-STRATEGY KG-9 và KG-12 đã cũ | KG-9 ("NFR-S11..S15 chưa có trong SRS (phi chức năng).md") và KG-12 (cache token sau ResetPassword): SRS (phi chức năng).md hiện đã có NFR-S11..S15 và NFR-S7 đã chốt "edge xóa cache ngay" | người kiểm thử đóng KG-9, KG-12 ở TESTING-STRATEGY; ma trận này dùng SRS (phi chức năng).md hiện hành |
-| Phụ thuộc quyết định chưa chốt | KG-7 (DEC-023, nơi triển khai P1..P4): TC-SEC-38, TC-SEC-27, TC-DEMO-02, TC-PERF-19, TC-AND-17; KG-8: công cụ dev/test (`testcontainers`, `cargo-llvm-cov`, `cargo deny`, `grpc-testing`…) chưa duyệt | Không chặn truy vết; các TC giữ ở "Chưa chạy" tới khi quyết định chốt |
-| Task (đã giải quyết) | PROJECT-PLAN (công việc) thay đổi phạm vi đã chốt (T-140..T-155). Nhãn chờ đã thay bằng ID thật; task server Javalin/REST cũ (đã hủy) thay bằng T-141, T-145, T-147, T-148, T-149, T-150, T-152, T-153, T-154 | **Đã giải quyết** (12/11): 37 dòng AC có task server, tra theo US/RPC/TC (T-146, T-147, T-148, T-149, T-150, T-153); không đánh lại số ID |
-| Task chưa gắn US/AC | T-001, T-002, T-005, T-082, T-083, T-085, T-101, T-102, T-104, T-105 và các task hạ tầng server thay đổi phạm vi | Task nền tảng/hạ tầng, không sinh AC riêng; được kiểm bằng TC-DEMO/TC-SRS (phi chức năng)/TC-PERF |
+| TESTING-STRATEGY KG-9 và KG-12 đã cũ | KG-9 ("NFR-S11..S15 chưa có trong SRS (phi chức năng).md") đã đóng 17/11 ở TESTING-STRATEGY (SRS (phi chức năng).md có NFR-S11..S16) và KG-12 (cache token sau ResetPassword): NFR-S7 đã chốt "edge xóa cache ngay" | người kiểm thử đóng KG-12 ở TESTING-STRATEGY; ma trận này dùng SRS (phi chức năng).md hiện hành |
+| Phụ thuộc quyết định chưa chốt | KG-7 (DEC-023, nơi triển khai P1..P4): TC-SEC-38, TC-SEC-27, TC-DEMO-02, TC-PERF-19, TC-AND-17; KG-8: công cụ dev/test/build (Testcontainers, JaCoCo, OWASP Dependency-Check, `grpc-testing`, Spotless đề xuất…) chưa duyệt | Không chặn truy vết; các TC giữ ở "Chưa chạy" tới khi quyết định chốt |
+| Task (đã giải quyết) | PROJECT-PLAN (công việc) thay đổi phạm vi đã chốt (T-142..T-157; T-140/T-141 hủy → T-156, T-157). Nhãn chờ đã thay bằng ID thật; task server Javalin/REST cũ (đã hủy) thay bằng T-145, T-147, T-148, T-149, T-150, T-152, T-153, T-154 | **Đã giải quyết** (12/11): 37 dòng AC có task server, tra theo US/RPC/TC (T-146, T-147, T-148, T-149, T-150, T-153); không đánh lại số ID |
+| Task chưa gắn US/AC | T-001, T-002, T-005, T-082, T-083, T-085, T-101, T-102, T-104, T-105 và các task hạ tầng server thay đổi phạm vi/thay đổi phạm vi (T-142..T-145, T-151, T-152, T-154, T-156, T-157) | Task nền tảng/hạ tầng, không sinh AC riêng; được kiểm bằng TC-DEMO/TC-SRS (phi chức năng)/TC-PERF |
 | Mục rubric | 10 mục chức năng của "File báo cáo kết quả dự án" | Cơ bản → US-028..US-031, US-009, US-012; nâng cao → US-001..US-005, US-032/US-033, US-012 (Leitner), US-016..US-018, US-019, US-034, US-035..US-037, US-038..US-043 (đồng bộ, XP) |

@@ -229,13 +229,13 @@
  },
  {
   "file": "architecture/arc-components.puml",
-  "caption": "Sơ đồ thành phần client–server (C4 mức container): app Android (gRPC client) → edge → 5 dịch vụ Rust, SQLite theo dịch vụ, MongoDB, outbox relay; chỉ edge lộ ra ngoài",
+  "caption": "Sơ đồ thành phần client–server (C4 mức container): app Android (gRPC client) → edge → 5 dịch vụ Java 21 + Spring Boot, SQLite theo dịch vụ, MongoDB, outbox relay; chỉ edge lộ ra ngoài",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Sơ đồ tổng quan"
  },
  {
   "file": "architecture/arc-packages.puml",
-  "caption": "Sơ đồ gói com.learninge.app (data.remote gRPC, stub proto) và cargo workspace LearningE_Server (crates proto/common, services edge/auth/sync/content/gamification/insight)",
+  "caption": "Sơ đồ gói com.learninge.app (data.remote gRPC, stub proto) và Gradle multi-module LearningE_Server (module proto/common, dịch vụ edge/auth/sync/content/gamification/insight, all-in-one)",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Bản đồ gói mã nguồn"
  },
@@ -289,7 +289,7 @@
  },
  {
   "file": "class/cls-server-modules.puml",
-  "caption": "Sơ đồ lớp cargo workspace server: crates proto, common và 6 dịch vụ edge, auth, sync, content, gamification, insight (struct/trait chính)",
+  "caption": "Sơ đồ lớp Gradle multi-module server (Java 21 + Spring Boot): module proto, common và 6 dịch vụ edge, auth, sync, content, gamification, insight (@GrpcService, interceptor, repository JdbcClient/Mongo, OutboxRelay, TokenCache)",
   "doc": "engineering/SYSTEM-BLUEPRINT.md",
   "heading": "Lược đồ lớp"
  },

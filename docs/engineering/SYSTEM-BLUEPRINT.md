@@ -2,7 +2,7 @@
 
 > **TỰ SINH** từ bộ phân tích thiết kế đã duyệt của nhóm — không sửa trực tiếp tệp này; đề xuất thay đổi qua Issue/PR để nhóm trưởng cập nhật nguồn và sinh lại. Danh mục tài liệu: [docs/README.md](../README.md).
 
-**Mục đích:** bức tranh toàn hệ thống: tính năng, kiến trúc client–server (ứng dụng Android 3 tầng offline-first + 6 microservice Rust gRPC), gói mã nguồn, luồng dữ liệu, lược đồ lớp, công nghệ và lý do chọn.
+**Mục đích:** bức tranh toàn hệ thống: tính năng, kiến trúc client–server (ứng dụng Android 3 tầng offline-first + 6 microservice Java Spring Boot gRPC), gói mã nguồn, luồng dữ liệu, lược đồ lớp, công nghệ và lý do chọn.
 
 ## Đọc trước khi nhận task
 Trang này là **điểm bắt đầu** cho mọi thành viên. Danh mục đầy đủ: [docs/README.md](../README.md) · Figma: [Learning-English-Mobile-App](https://www.figma.com/design/wOdb07dQkcBh18PKijh8Jx/Learning-English-Mobile-App) · Quy chuẩn code: [CODING-STANDARDS](CODING-STANDARDS.md).
@@ -27,7 +27,7 @@ Ngoài phạm vi: máy chủ/API, đồng bộ đám mây, đăng nhập mạng 
 ## Bản đồ gói mã nguồn
 
 <!-- diagram:architecture/arc-packages.puml -->
-![Sơ đồ gói com.learninge.app (data.remote gRPC, stub proto) và cargo workspace LearningE_Server (crates proto/common, services edge/auth/sync/content/gamification/insight)](../diagrams/architecture/arc-packages.png)
+![Sơ đồ gói com.learninge.app (data.remote gRPC, stub proto) và Gradle multi-module LearningE_Server (module proto/common, dịch vụ edge/auth/sync/content/gamification/insight, all-in-one)](../diagrams/architecture/arc-packages.png)
 <!-- /diagram -->
 ```mermaid
 flowchart LR
@@ -67,13 +67,13 @@ flowchart LR
 
 ## Kiến trúc
 > Thành phần, luồng dữ liệu, triển khai, tích hợp.
-> **thay đổi phạm vi:** LearningE gồm **app Android** (Java 17, MVVM 3 tầng — DEC-001, offline-first — DEC-014, gọi **gRPC** qua `grpc-okhttp` + protobuf-lite — DEC-020) và **backend 6 dịch vụ Rust** (`edge`, `auth`, `sync`, `content`, `gamification`, `insight` — DEC-018, DEC-019) ở repo riêng `LearningE_Server` (DEC-022). Mỗi dịch vụ sở hữu kho dữ liệu riêng: **SQLite là nguồn sự thật** (`auth.db`, `sync.db`), **MongoDB là kho phụ** (`learninge_content`, `learninge_game`, `learninge_insight`) chỉ được nạp qua **outbox** (DEC-021). Nghiệp vụ (BR-001..BR-077, US-001..US-047), pixel layer, cắt C1–C8 **không đổi** so với thay đổi phạm vi. Nơi triển khai **chưa chốt** (Q3, DEC-023): tài liệu này trung lập — mọi dịch vụ đóng gói thành image Docker, phát triển bằng `docker compose`. Công nghệ/phiên bản: SYSTEM-BLUEPRINT (công nghệ). Lược đồ: DATABASE-DESIGN. Hợp đồng proto: API_CONTRACT.
+> **thay đổi phạm vi + thay đổi phạm vi:** LearningE gồm **app Android** (Java 17, MVVM 3 tầng — DEC-001, offline-first — DEC-014, gọi **gRPC** qua `grpc-okhttp` + protobuf-lite — DEC-020) và **backend 6 dịch vụ Java 21 + Spring Boot** (`edge`, `auth`, `sync`, `content`, `gamification`, `insight` — DEC-024, DEC-019; thay đổi phạm vi thay nền tảng của thay đổi phạm vi, mọi thứ khác giữ) ở repo riêng `LearningE_Server` (DEC-022). Mỗi dịch vụ sở hữu kho dữ liệu riêng: **SQLite là nguồn sự thật** (`auth.db`, `sync.db`), **MongoDB là kho phụ** (`learninge_content`, `learninge_game`, `learninge_insight`) chỉ được nạp qua **outbox** (DEC-021). Nghiệp vụ (BR-001..BR-077, US-001..US-047), pixel layer, cắt C1–C8 **không đổi** so với thay đổi phạm vi. Nơi triển khai **chưa chốt** (Q3, DEC-023): tài liệu này trung lập — mọi dịch vụ đóng gói thành image Docker, phát triển bằng `docker compose`. Công nghệ/phiên bản: SYSTEM-BLUEPRINT (công nghệ). Lược đồ: DATABASE-DESIGN. Hợp đồng proto: API_CONTRACT.
 
 ## Bối cảnh và phạm vi
 - Phạm vi: app Android (minSdk 29) + backend gRPC 6 dịch vụ; không trang quản trị web, không realtime/streaming, không đăng nhập mạng xã hội (Non-goal thay đổi phạm vi giữ). Nhắc học vẫn cục bộ bằng `AlarmManager` (DEC-004) → không có dịch vụ notification.
 - Người dùng: người học (một vai trò). Người vận hành: thành viên nhóm (chạy compose, `content-import`, `gamification rebuild`, `grpcurl` lấy số liệu insight).
 - Hệ thống ngoài: lớp lộ ra Internet (đường hầm HTTP/2, nền tảng PaaS hoặc reverse proxy trên VPS — tùy DEC-023), MongoDB (container trong compose hoặc dịch vụ managed — tùy DEC-023), dịch vụ Android (TTS, AlarmManager, SAF, trình duyệt).
-- SRS (phi chức năng) chi phối kiến trúc: offline-first NFR-N1, timeout/thử lại NFR-N2, 500 bản ghi ≤ 5 s NFR-N3, p95 ≤ 300 ms đo tại edge NFR-N4, **Mongo/dịch vụ phụ ngừng thì đăng nhập + đồng bộ vẫn chạy NFR-N5**, outbox đuổi kịp ≤ 60 s NFR-N6, chỉ edge lộ cổng NFR-S9, `cargo audit` 0 lỗi mức cao NFR-S10, bảo mật NFR-S1..S8, khởi chạy 1 lệnh NFR-E4 (`docker compose up`), không mạng/CSDL trên luồng UI NFR-P2.
+- SRS (phi chức năng) chi phối kiến trúc: offline-first NFR-N1, timeout/thử lại NFR-N2, 500 bản ghi ≤ 5 s NFR-N3, p95 ≤ 300 ms đo tại edge NFR-N4, **Mongo/dịch vụ phụ ngừng thì đăng nhập + đồng bộ vẫn chạy NFR-N5**, outbox đuổi kịp ≤ 60 s NFR-N6, chỉ edge lộ cổng NFR-S9, OWASP Dependency-Check 0 lỗi mức cao NFR-S10, bảo mật NFR-S1..S8, khởi chạy 1 lệnh NFR-E4 (`docker compose up`), không mạng/CSDL trên luồng UI NFR-P2.
 
 **C4 mức 1 — Ngữ cảnh hệ thống**
 ```mermaid
@@ -82,7 +82,7 @@ flowchart LR
   OP([Người vận hành - nhóm])
   subgraph LE["Hệ thống LearningE"]
     APP["App Android LearningE - Java, SQLite trên máy"]
-    BE["Backend LearningE - 6 dịch vụ Rust gRPC"]
+    BE["Backend LearningE - 6 dịch vụ Java Spring Boot gRPC"]
   end
   EXP["Lớp lộ ra Internet - tunnel HTTP/2 hoặc PaaS hoặc reverse proxy - DEC-023"]
   MDB[("MongoDB 8.0 - compose hoặc managed - DEC-023")]
@@ -146,7 +146,7 @@ Nét liền = gọi đồng bộ trong yêu cầu của người dùng; nét đ�
 ## Sơ đồ tổng quan
 
 <!-- diagram:architecture/arc-components.puml -->
-![Sơ đồ thành phần client–server (C4 mức container): app Android (gRPC client) → edge → 5 dịch vụ Rust, SQLite theo dịch vụ, MongoDB, outbox relay; chỉ edge lộ ra ngoài](../diagrams/architecture/arc-components.png)
+![Sơ đồ thành phần client–server (C4 mức container): app Android (gRPC client) → edge → 5 dịch vụ Java 21 + Spring Boot, SQLite theo dịch vụ, MongoDB, outbox relay; chỉ edge lộ ra ngoài](../diagrams/architecture/arc-components.png)
 <!-- /diagram -->
 Sơ đồ thành phần app (C4 mức 3 rút gọn); backend xem §Backend.
 ```mermaid
@@ -233,15 +233,15 @@ Mã gói proto: công khai `learninge.app.v1` (app gọi, edge hiện thực), n
 | Dịch vụ | Trách nhiệm | gRPC service / RPC sở hữu | Kho dữ liệu | Gọi tới | Cổng |
 |---|---|---|---|---|---|
 | `edge` | Điểm vào duy nhất của app. Hiện thực toàn bộ `learninge.app.v1` bằng **chuyển tiếp tường minh** (mỗi RPC một hàm, không proxy chung); xác thực token qua `auth.ValidateToken` (cache 60 s, xóa theo user khi thu hồi — D-12; nhận `user_hmac` từ `ValidateTokenResponse` — D-10); xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` do client gửi rồi gắn `x-user-id` + `x-internal-auth` (D-09); giới hạn tần suất theo IP; kiểm `x-client-version`; deadline; `x-request-id`; giới hạn message 1 MiB; ghép `GetMe`; gửi `request_logs` sang insight (best-effort) | `grpc.health.v1.Health` (EP-01); `AuthService` EP-02..EP-10; `SyncService` EP-11, EP-12; `LeaderboardService` EP-13; `ContentService` EP-14..EP-16 | Không (chỉ bộ nhớ: cache token, bộ đếm tần suất, hàng đợi log có giới hạn) | auth, sync, content, gamification, insight | 50051 — **cổng duy nhất được publish** |
-| `auth` | EP-02..EP-10: đăng ký, đăng nhập, đăng xuất, hồ sơ, đổi/đặt lại mật khẩu, câu hỏi bảo mật (HMAC khóa server), xóa tài khoản; khóa tăng dần (BR-003, BR-008); PBKDF2 trong `spawn_blocking` với trần 4 phép đồng thời; phát sự kiện `user.registered`, `user.profile_changed`, `user.deleted`, `auth.login_failed`, `auth.locked` | `learninge.internal.v1.AuthBackend` (các RPC tương ứng EP-02..EP-10, nhận `x-user-id` từ edge) + `TokenValidator.ValidateToken` | SQLite `auth.db` + bảng `outbox` | — (sự kiện đi qua relay) | 50052 |
+| `auth` | EP-02..EP-10: đăng ký, đăng nhập, đăng xuất, hồ sơ, đổi/đặt lại mật khẩu, câu hỏi bảo mật (HMAC khóa server), xóa tài khoản; khóa tăng dần (BR-003, BR-008); PBKDF2 (`javax.crypto`) với trần 4 phép đồng thời (`java.util.concurrent.Semaphore`); phát sự kiện `user.registered`, `user.profile_changed`, `user.deleted`, `auth.login_failed`, `auth.locked` | `learninge.internal.v1.AuthBackend` (các RPC tương ứng EP-02..EP-10, nhận `x-user-id` từ edge) + `TokenValidator.ValidateToken` | SQLite `auth.db` + bảng `outbox` | — (sự kiện đi qua relay) | 50052 |
 | `sync` | EP-11 Push, EP-12 Pull: LWW, tombstone, `server_seq`, danh sách trắng cột, kẹp `updated_at` ≤ giờ server + 5 phút; kiểm `xp_events` (loại hợp lệ, cửa sổ −7 ngày/+5 phút, mức XP theo BR-065..BR-068) và lưu làm **nguồn sự thật XP**; tính chuỗi ngày cho `GetMe`; phát `xp.recorded`, `progress.changed` (tới gamification + insight); nhận `user.registered` → tạo bộ mặc định "Sổ tay của tôi" (§Bộ mặc định); tạo `user_settings` **lười** khi app đẩy `settings` lần đầu (không tạo lúc đăng ký); nhận `user.deleted` → purge + ghi `purged_users`, lô Push đến muộn của tài khoản đã xóa → `PERMISSION_DENIED` `ACCOUNT_DELETED` | `SyncBackend.Push`, `SyncBackend.Pull`, `SyncBackend.GetStreak`, `SyncBackend.ExportXpEvents` (phân trang, cho rebuild), `EventSink.Publish` | SQLite `sync.db` + `outbox` | — | 50053 |
-| `content` | EP-14..EP-16: manifest (`content_version`, `if_version` thay ETag), bộ từ, đề thi; công cụ `content-import` nạp JSON từ `content/` (cùng định dạng seed CODING-STANDARDS), idempotent theo `code` | `ContentBackend.GetManifest`, `GetDeck`, `GetExam` | MongoDB `learninge_content` | — | 50054 |
+| `content` | EP-14..EP-16: manifest (`content_version`, `if_version` thay ETag), bộ từ, đề thi; lệnh vận hành `content --ops=import` nạp JSON từ `content-data/` (cùng định dạng seed CODING-STANDARDS), idempotent theo `code` | `ContentBackend.GetManifest`, `GetDeck`, `GetExam` | MongoDB `learninge_content` | — | 50054 |
 | `gamification` | EP-13 bảng xếp hạng tuần ISO Asia/Ho_Chi_Minh (top 50 + "Bạn", hòa → đạt sớm hơn), trần 500 XP/ngày khi tổng hợp; `GetStats` (total_xp, week_xp) cho `GetMe`; nhận `xp.recorded`, `progress.changed` (chuỗi ngày hiển thị ở bảng xếp hạng, cập nhật theo phiên bản `updated_at`), `user.registered`, `user.profile_changed`, `user.deleted`; lệnh `gamification rebuild` dựng lại từ `sync.ExportXpEvents` | `GamificationBackend.GetWeekly`, `GetStats`, `EventSink.Publish` | MongoDB `learninge_game` | sync (chỉ khi rebuild) | 50055 |
 | `insight` | Nhận mọi sự kiện + `request_logs`; audit có TTL; bản sao phân tích đã khử định danh (`analytics_daily`: DAU, số thẻ ôn, quiz, lượng sync); purge theo `user_hmac` khi `user.deleted`. App không gọi | `EventSink.Publish`, `InsightBackend.LogRequests`, `InsightBackend.GetDailyStats` (vận hành, dùng `grpcurl`) | MongoDB `learninge_insight` | — | 50056 |
 
-Mọi dịch vụ còn hiện thực `grpc.health.v1.Health` (qua `tonic-health`) để compose `healthcheck` và edge/relay kiểm tra phụ thuộc (Health là RPC **duy nhất** miễn khóa nội bộ). **Khóa nội bộ (D-09):** mọi server nội bộ (cả 5 dịch vụ sau edge, kể cả `EventSink`, `Export*`, `GetDailyStats`) gắn interceptor `common::internal_auth` kiểm metadata `x-internal-auth` = `LEARNINGE_INTERNAL_TOKEN` bằng so sánh hằng thời gian (`subtle`); thiếu/sai → `UNAUTHENTICATED` không chi tiết + log WARN; mọi client nội bộ (edge, relay, `gamification rebuild`, công cụ vận hành) gắn khóa qua interceptor. Dịch vụ nội bộ **chỉ bind loopback/mạng riêng**, không bao giờ công khai. Mỗi dịch vụ là **một crate thư viện có hàm `serve(config, shutdown)`** + `main` mỏng; binary `learninge-server --all` gọi cả 6 `serve()` trong một tiến trình (chế độ gộp, dự phòng demo RB-3) — cùng mã, cùng bộ test hợp đồng; ở chế độ này 5 dịch vụ nội bộ **chỉ nghe `127.0.0.1`** (không `0.0.0.0`, tránh lộ trên LAN — TM-13) và vẫn kiểm khóa nội bộ.
+Mọi dịch vụ còn hiện thực `grpc.health.v1.Health` (dịch vụ health của `grpc-services`, bật qua starter Spring gRPC, trạng thái lấy từ health Actuator của dịch vụ) để compose `healthcheck` và edge/relay kiểm tra phụ thuộc (Health là RPC **duy nhất** miễn khóa nội bộ). **Khóa nội bộ (D-09):** mọi server nội bộ (cả 5 dịch vụ sau edge, kể cả `EventSink`, `Export*`, `GetDailyStats`) gắn interceptor `InternalAuthServerInterceptor` (module `common`) kiểm metadata `x-internal-auth` = `LEARNINGE_INTERNAL_TOKEN` bằng so sánh hằng thời gian (`MessageDigest.isEqual` trên SHA-256 của hai giá trị — không lộ độ dài); thiếu/sai → `UNAUTHENTICATED` không chi tiết + log WARN; mọi client nội bộ (edge, relay, `gamification rebuild`, công cụ vận hành) gắn khóa qua interceptor. Dịch vụ nội bộ **chỉ bind loopback/mạng riêng**, không bao giờ công khai. Mỗi dịch vụ là **một module Gradle = một ứng dụng Spring Boot** (lớp cấu hình gốc `<Svc>ServiceConfig` + `<Svc>Application` mỏng); module `all-in-one` khởi 6 context Spring con trong **một JVM** (`java -jar all-in-one.jar --all` hoặc `--only=edge,auth`; chế độ gộp, dự phòng demo RB-3 và phương án tiết kiệm RAM) — cùng mã, cùng bộ test hợp đồng; ở chế độ này 5 dịch vụ nội bộ **chỉ nghe `127.0.0.1`** (không `0.0.0.0`, tránh lộ trên LAN — TM-13) và vẫn kiểm khóa nội bộ.
 
-**Quy tắc phụ thuộc trong mỗi dịch vụ:** `grpc` (hiện thực trait sinh từ proto, chỉ chuyển đổi message ↔ kiểu miền và lỗi ↔ `Status`) → `domain` (quy tắc thuần Rust, không I/O, nhận `Clock` để test) → `store` (SQL `rusqlite` có tham số `?` hoặc truy vấn Mongo có kiểu). `user_id` **chỉ** lấy từ metadata `x-user-id` do edge gắn **và chỉ sau khi lời gọi qua interceptor khóa nội bộ** (phải là UUID hợp lệ), không từ message. Crate `common` dùng được ở mọi tầng; dịch vụ không import crate của dịch vụ khác (chỉ qua proto).
+**Quy tắc phụ thuộc trong mỗi dịch vụ (gói Java):** `grpc` (lớp `@Service` kế thừa `XxxGrpc.XxxImplBase` sinh từ proto, chỉ chuyển đổi message ↔ kiểu miền và ném `AppException`) → `domain` (quy tắc Java thuần, không I/O, không annotation Spring, nhận `java.time.Clock` để test) → `store` (SQL viết tay qua `JdbcClient` có tham số, hoặc `MongoTemplate` có kiểu). `user_id` **chỉ** lấy từ metadata `x-user-id` do edge gắn **và chỉ sau khi lời gọi qua interceptor khóa nội bộ** (phải là UUID hợp lệ; đọc qua `CallerContext.userId()` của `common`), không từ message. Module `common` dùng được ở mọi tầng; module dịch vụ không phụ thuộc module dịch vụ khác (chỉ qua stub của module `proto`) — kiểm bằng khai báo dependency Gradle.
 
 **Ghép `GetMe` (EP-05) ở edge:** gọi song song `auth.GetProfile` (bắt buộc), `sync.GetStreak` và `gamification.GetStats` (không bắt buộc, deadline 300 ms). Phần không bắt buộc lỗi/quá hạn → trả hồ sơ với `stats_partial = true` (không fail cả RPC).
 
@@ -249,7 +249,7 @@ Mọi dịch vụ còn hiện thực `grpc.health.v1.Health` (qua `tonic-health`
 - Trong `auth` và `sync`, mọi thay đổi nghiệp vụ cần phát sự kiện ghi **bản ghi `outbox` trong cùng giao dịch SQLite** với thay đổi đó. Không dịch vụ nào ghi đồng thời SQLite và Mongo trong một yêu cầu.
 - Định tuyến cố định trong `common::events` (loại sự kiện → danh sách đích): `user.registered` → **sync**, gamification, insight; `user.profile_changed` → gamification, insight; `user.deleted` → sync, gamification, insight; `auth.login_failed`, `auth.locked` → insight; `xp.recorded` → gamification, insight; `progress.changed` → **gamification** (chuỗi ngày cho `LeaderboardEntry.streak`), insight. Đích nhận qua RPC `EventSink.Publish(batch)`.
 - **Mỗi đích có tiến độ phát riêng** để một đích ngừng (vd insight) không chặn đích khác (vd gamification). Đề xuất lược đồ: một dòng outbox cho mỗi cặp (sự kiện, đích) ghi ngay trong giao dịch — DATABASE-DESIGN chốt (mục mở cho D2).
-- Tác vụ nền relay (tokio task trong chính dịch vụ phát, crate `common::outbox`): mỗi 1 s hoặc khi được đánh thức sau commit, đọc ≤ 200 dòng chưa phát theo `id` cho từng đích → `Publish` (deadline 3 s) → nhận ack thì đặt `published_at`; lỗi thì tăng `attempts`, chờ lùi dần theo cấp số nhân 1 s → 2 s → 4 s → 8 s → **trần 15 s** (± 20% nhiễu), và **thử lại ngay khi đích trở lại `SERVING`** (trong lúc lùi, relay hỏi `grpc.health.v1.Health/Check` của đích mỗi 1 s; `SERVING` → đặt lại bộ đếm lùi của đích đó và xả ngay) — để NFR-N6 (≤ 60 s sau khi đích sống lại) luôn đạt. Thứ tự giữ theo `id` trong từng đích. Dòng đã phát xóa sau 7 ngày; > 10 000 dòng chưa phát → log WARN.
+- Tác vụ nền relay (`OutboxRelay` của gói `common.outbox`, chạy bằng `@Scheduled(fixedDelay = 1 s)` + một luồng đánh thức sau commit, trong chính dịch vụ phát): mỗi 1 s hoặc khi được đánh thức sau commit, đọc ≤ 200 dòng chưa phát theo `id` cho từng đích → `Publish` (deadline 3 s) → nhận ack thì đặt `published_at`; lỗi thì tăng `attempts`, chờ lùi dần theo cấp số nhân 1 s → 2 s → 4 s → 8 s → **trần 15 s** (± 20% nhiễu), và **thử lại ngay khi đích trở lại `SERVING`** (trong lúc lùi, relay hỏi `grpc.health.v1.Health/Check` của đích mỗi 1 s; `SERVING` → đặt lại bộ đếm lùi của đích đó và xả ngay) — để NFR-N6 (≤ 60 s sau khi đích sống lại) luôn đạt. Thứ tự giữ theo `id` trong từng đích. Dòng đã phát xóa sau 7 ngày; > 10 000 dòng chưa phát → log WARN.
 - Bên nhận **upsert theo `event_id`** (UUIDv7) → giao ít nhất một lần + idempotent = hiệu quả đúng một lần. `weekly_xp` được **tính lại** từ `xp_events` của user trong tuần (không `$inc`) nên nhận trùng không sai.
 - Payload sự kiện là message protobuf (`learninge.internal.v1.Event`), **không chứa email, hash, token, câu trả lời bảo mật**; insight chỉ nhận `user_hmac`. Gamification nhận `user_id` nội bộ + nickname công khai (cần cho dòng "Bạn").
 
@@ -264,8 +264,8 @@ Mọi dịch vụ còn hiện thực `grpc.health.v1.Health` (qua `tonic-health`
 | Sự cố | Hành vi hệ thống | App thấy |
 |---|---|---|
 | MongoDB ngừng | auth, sync chạy bình thường (chỉ SQLite); relay tích lũy outbox; content/gamification/insight trả `UNAVAILABLE` cho RPC cần Mongo; health của 3 dịch vụ này báo `NOT_SERVING` | Đăng nhập, đồng bộ OK; EP-13 → `leaderboard_cache`; EP-14..16 → seed/bản đã tải; `GetMe` có `stats_partial = true` |
-| Dịch vụ đích ngừng (auth, sync, content, gamification, insight) | Edge nhận lỗi kết nối/`UNAVAILABLE` từ client tonic → trả **`UNAVAILABLE`** + trailer `error-code = SERVICE_UNAVAILABLE`; không thử lại phía edge (tránh khuếch đại, app tự thử lại RPC idempotent) | `SERVER_UNAVAILABLE`; nếu là auth: các RPC cần token cũng `UNAVAILABLE` (trừ token còn trong cache 60 s) |
-| Đích quá hạn | Edge truyền deadline còn lại; client tonic hết hạn → `DEADLINE_EXCEEDED` | `NETWORK_TIMEOUT` |
+| Dịch vụ đích ngừng (auth, sync, content, gamification, insight) | Edge nhận lỗi kết nối/`UNAVAILABLE` từ stub grpc-java → trả **`UNAVAILABLE`** + trailer `error-code = SERVICE_UNAVAILABLE`; không thử lại phía edge (tránh khuếch đại, app tự thử lại RPC idempotent) | `SERVER_UNAVAILABLE`; nếu là auth: các RPC cần token cũng `UNAVAILABLE` (trừ token còn trong cache 60 s) |
+| Đích quá hạn | Edge truyền deadline còn lại; stub grpc-java hết hạn → `DEADLINE_EXCEEDED` | `NETWORK_TIMEOUT` |
 | insight ngừng | Hàng đợi `request_logs` ở edge (≤ 1000 mục) đầy thì bỏ và đếm `dropped`; outbox insight tích lũy | Không ảnh hưởng |
 | Mongo sống lại | Relay thấy đích `SERVING` (hoặc hết nhịp lùi ≤ 15 s) rồi xả outbox, tổng ≤ 60 s (NFR-N6); không cần thao tác tay | — |
 | Xóa tài khoản khi `sync` đang ngừng, hoặc lô Push đến muộn | `auth` xóa ngay; `user.deleted` nằm trong outbox tới khi `sync` nhận. Khi `sync` xử lý: một giao dịch xóa mọi dòng của user + ghi `purged_users`; từ đó mọi `Push` của user đó bị từ chối `ACCOUNT_DELETED` và không ghi gì (chặn việc dữ liệu "sống lại") | `PERMISSION_DENIED` `ACCOUNT_DELETED` → app xóa token + dữ liệu cục bộ của user, báo "Tài khoản đã bị xóa", về SCR-02 (như dòng `ACCOUNT_DELETED` ở §Mô hình lỗi) |
@@ -295,31 +295,40 @@ Mọi dịch vụ còn hiện thực `grpc.health.v1.Health` (qua `tonic-health`
 
 ### Repo `LearningE_Server` (DEC-022)
 ```text
-LearningE_Server/
-├── Cargo.toml                 # [workspace] members = crates/*, services/*, tools/*, bin/*; [workspace.dependencies] ghim phiên bản (SYSTEM-BLUEPRINT (công nghệ))
-├── Cargo.lock                 # commit (workspace có binary)
-├── rust-toolchain.toml        # channel = "1.99.1", components = ["rustfmt", "clippy"]
-├── proto/learninge/app/v1/*.proto        # gói công khai — nguồn sự thật, app chép bản sao
-├── proto/learninge/internal/v1/*.proto   # gói nội bộ — không chép sang app
-├── crates/
-│   ├── proto/        # learninge-proto: build.rs (tonic-prost-build + protoc-bin-vendored) sinh mã client + server cho cả 2 gói
-│   └── common/       # config từ env, tracing JSON, AppError → tonic::Status (+ trailer error-code), interceptor request-id/user-id,
-│                     # mở SQLite (PRAGMA) + migrator, outbox + relay, EventSink client, health, shutdown tín hiệu
-├── services/
-│   ├── edge/         # lib (serve) + main; forwarders, auth cache, rate limit, GetMe composer
-│   ├── auth/         # lib + main; domain (PasswordHasher, LockPolicy, TokenService), store (auth.db)
-│   ├── sync/         # lib + main; domain (LwwPolicy, XpValidator, StreakCalculator), store (sync.db)
-│   ├── content/      # lib + main; store Mongo
-│   ├── gamification/ # lib + main (+ lệnh rebuild); domain (IsoWeek, DailyCap, Ranking), store Mongo
-│   └── insight/      # lib + main; store Mongo (TTL index)
-├── bin/learninge-server/   # chế độ gộp: --all hoặc --only edge,auth
-├── tools/content-import/   # nạp content/*.json → learninge_content
-├── content/                # JSON nguồn (cùng định dạng seed của app)
-├── migrations/auth/V001__init.sql, migrations/sync/V001__init.sql
+LearningE_Server/                      # Gradle multi-module, Kotlin DSL (DEC-024)
+├── settings.gradle.kts                # include("proto", "common", "edge", "auth", "sync", "content", "gamification", "insight", "all-in-one")
+├── build.gradle.kts                   # cấu hình chung: Java toolchain 21, BOM Spring Boot (platform), JaCoCo, OWASP Dependency-Check
+├── gradle/libs.versions.toml          # catalog phiên bản — nguồn duy nhất (SYSTEM-BLUEPRINT (công nghệ) §Server)
+├── gradle/verification-metadata.xml   # Gradle dependency verification (SHA-256 mọi artifact) — NFR-S10
+├── gradle/wrapper/ + gradlew, gradlew.bat   # Gradle 9.6.0 (giống app)
+├── proto/                             # module `proto` (java-library): plugin com.google.protobuf sinh message + stub grpc-java
+│   └── src/main/proto/
+│       ├── learninge/app/v1/*.proto       # gói công khai — NGUỒN SỰ THẬT, app chép bản sao
+│       └── learninge/internal/v1/*.proto  # gói nội bộ — không chép sang app
+│                                          # (grpc/health/v1 có sẵn trong grpc-services, không chép)
+├── common/                            # module `common` (java-library, không phải app Boot)
+│   └── src/main/java/.../server/common/
+│       ├── grpc/      # RequestIdServerInterceptor (MDC), InternalAuthServer/ClientInterceptor, ConcurrencyLimitInterceptor,
+│       │              # DeadlineCapInterceptor, AppExceptionHandler (AppException → Status + trailer error-code), NettyLimitsCustomizer
+│       ├── error/     # AppException, ErrorCode (tên mã nghiệp vụ = API_CONTRACT)
+│       ├── config/    # LearningeProperties (@ConfigurationProperties), SecretKeys (đọc + kiểm khóa ≥ 32 byte khi APP_ENV=prod)
+│       ├── sqlite/    # SqliteDataSources (ghi: Hikari 1 kết nối, đọc: Hikari 4), PRAGMA, quick_check, TxRunner (BEGIN IMMEDIATE)
+│       ├── outbox/    # OutboxWriter, OutboxRelay (@Scheduled + đánh thức), Backoff, EventRouting
+│       ├── ops/       # OpsCommandRunner: chạy lệnh vận hành `--ops=…` rồi thoát (không mở cổng gRPC)
+│       └── id/        # UuidV7, UuidV5 (JDK không có sẵn)
+├── edge/          # app Boot: forwarders (1 lớp/service app.v1), TokenAuthenticator + cache Caffeine, IpRateLimiter, GetMeComposer, RequestLogShipper
+├── auth/          # app Boot: domain (PasswordHasher, LockPolicy, TokenService), store (auth.db); src/main/resources/db/migration/auth/V001__init.sql
+├── sync/          # app Boot: domain (LwwPolicy, XpValidator, StreakCalculator), store (sync.db); db/migration/sync/V001__init.sql
+├── content/       # app Boot: store Mongo; lệnh `--ops=import` nạp content-data/*.json → learninge_content
+├── gamification/  # app Boot: domain (IsoWeek, DailyCap, Ranking), store Mongo; lệnh `--ops=rebuild`
+├── insight/       # app Boot: store Mongo (TTL index)
+│                  # mỗi module dịch vụ: src/main/java/.../server/<svc>/{grpc,domain,store}, src/main/resources/application.yml, src/test/java
+├── all-in-one/    # chế độ gộp: AllInOneApplication khởi 6 context con (`--all` | `--only=edge,auth`), nội bộ nghe 127.0.0.1
+├── content-data/  # JSON nguồn (cùng định dạng seed của app) — đổi tên từ `content/` để không trùng module `content`
 ├── deploy/
 │   ├── docker-compose.yml          # dev: mongo:8.0 + 6 dịch vụ, mạng nội bộ, chỉ edge publish 127.0.0.1:50051
 │   ├── docker-compose.override.example.yml   # khung cho môi trường đích (DEC-023)
-│   ├── Dockerfile                  # một Dockerfile nhiều stage, ARG SERVICE chọn binary
+│   ├── Dockerfile                  # một Dockerfile nhiều stage, ARG SERVICE chọn module (SYSTEM-BLUEPRINT (công nghệ) §Đóng gói)
 │   ├── mongo-init/                 # tạo user Mongo quyền tối thiểu cho từng dịch vụ
 │   └── .env.example                # tên biến, không giá trị bí mật
 └── README.md                       # chạy dev, test, compose, runbook demo
@@ -384,7 +393,7 @@ sequenceDiagram
   E->>E: xóa x-user-id từ client; rate limit IP 5/phút; kiểm phiên bản
   E->>AU: AuthBackend.Login, deadline còn lại − 100 ms
   AU->>ADB: đọc users / auth_attempts, kiểm khóa tăng dần
-  AU->>AU: PBKDF2 120k trong spawn_blocking (trần 4 đồng thời)
+  AU->>AU: PBKDF2 120k (javax.crypto, Semaphore trần 4 đồng thời)
   AU->>ADB: BEGIN; INSERT auth_tokens (SHA-256 token); reset bộ đếm; INSERT outbox; COMMIT
   AU-->>E: {token, user}
   E-->>A: {token, user}
@@ -434,7 +443,7 @@ Nhắc học hằng ngày (FLOW-007) — không đổi so với thay đổi ph�
 <!-- /diagram -->
 
 <!-- diagram:class/cls-server-modules.puml -->
-![Sơ đồ lớp cargo workspace server: crates proto, common và 6 dịch vụ edge, auth, sync, content, gamification, insight (struct/trait chính)](../diagrams/class/cls-server-modules.png)
+![Sơ đồ lớp Gradle multi-module server (Java 21 + Spring Boot): module proto, common và 6 dịch vụ edge, auth, sync, content, gamification, insight (@GrpcService, interceptor, repository JdbcClient/Mongo, OutboxRelay, TokenCache)](../diagrams/class/cls-server-modules.png)
 <!-- /diagram -->
 
 <!-- diagram:class/cls-domain-game.puml -->
@@ -526,20 +535,54 @@ Mã lỗi CSDL cũ (`DB_ERROR`, …) giữ nguyên.
 **Cấu hình app (không bí mật trong repo):** `app/build.gradle.kts` sinh `BuildConfig.GRPC_HOST`, `GRPC_PORT`, `GRPC_TLS` cho từng build type từ thuộc tính Gradle `learninge.grpcHost`, `learninge.grpcPort` (đặt trong `local.properties` hoặc `~/.gradle/gradle.properties`, không commit); mặc định debug `10.0.2.2:50051`, TLS tắt; **release bắt buộc `GRPC_TLS = true`** (build release dừng nếu thiếu host hoặc TLS tắt). `BuildConfig.ONLINE` (mặc định `true`) giữ làm cờ rollback. `network_security_config` vẫn giữ (`cleartextTrafficPermitted="false"` ở `main`) cho mọi kết nối không phải gRPC, nhưng **không** được coi là lớp bảo vệ cho kênh gRPC. App không chứa khóa API hay bí mật nào.
 
 ## Backend
-**Mô hình chạy mỗi dịch vụ:** một tiến trình tokio đa luồng (`#[tokio::main]`, số worker = số lõi). Server `tonic` với `Server::builder().timeout(...)`, `concurrency_limit_per_connection(64)`, `max_decoding_message_size(1 MiB)` (edge) / 4 MiB (nội bộ); tắt dần khi nhận SIGTERM/Ctrl+C (`serve_with_shutdown`, relay xả lô đang chạy rồi dừng). Client tới dịch vụ khác: `tonic::transport::Channel` tạo một lần lúc khởi động (`connect_lazy`, để dịch vụ lên được dù đích chưa sẵn sàng), dùng chung, `connect_timeout` 1 s.
+**Gói Java gốc (lập trình viên xác nhận 17/11, khớp CODING-STANDARDS):** `com.learninge.server.<module>` với `<module>` ∈ `common`, `edge`, `auth`, `sync`, `content`, `gamification`, `insight`, `allinone`; tầng con `.grpc`, `.domain`, `.store` (riêng `common`: `.grpc`, `.error`, `.config`, `.sqlite`, `.outbox`, `.ops`, `.id`); lớp Boot `com.learninge.server.<module>.<Module>Application`; mã sinh từ proto ở gói `com.learninge.proto.app.v1` (khớp `option java_package` của API_CONTRACT) và `com.learninge.proto.internal.v1` (module `proto`), tách khỏi gói app `com.learninge.app`.
 
-**SQLite (auth, sync):** `rusqlite` (bundled SQLite). Một **kết nối ghi** duy nhất bọc trong `std::sync::Mutex`, mọi giao dịch ghi chạy trong `tokio::task::spawn_blocking` với `BEGIN IMMEDIATE` (tuần tự hóa ghi, tránh `SQLITE_BUSY`); đọc mở kết nối riêng trong `spawn_blocking` (WAL cho đọc song song). PRAGMA mỗi kết nối: `journal_mode = WAL`, `foreign_keys = ON`, `busy_timeout = 5000`, `synchronous = NORMAL`. Migration tự viết trong `common` (bảng `schema_version`, chạy `migrations/<svc>/V###__*.sql` theo thứ tự lúc khởi động). `PRAGMA quick_check` khi khởi động.
+**Mô hình chạy mỗi dịch vụ:** một JVM (Java 21, Temurin) chạy một ứng dụng Spring Boot **không có endpoint nghiệp vụ HTTP/REST** — cổng nghiệp vụ duy nhất là server gRPC (grpc-java trên Netty, `grpc-netty`) do starter `spring-boot-starter-grpc-server` (Spring gRPC) dựng; lớp hiện thực `XxxGrpc.XxxImplBase` là bean `@Service` và được tự đăng ký. Giới hạn đặt bằng `spring.grpc.server.*` trong `application.yml` và một bean `NettyLimitsCustomizer` (`ServerBuilderCustomizer<NettyServerBuilder>`) ở `common` cho phần property không phủ: `maxInboundMessageSize` **1 MiB ở edge** / 4 MiB nội bộ, `maxInboundMetadataSize` 16 KiB, `maxConcurrentCallsPerConnection` 100, `keepAliveTime` 60 s + `keepAliveTimeout` 20 s, `permitKeepAliveTime` 30 s (chặn ping dồn dập), `maxConnectionIdle` 5 phút; **executor = thread pool cố định** (edge 64 luồng, nội bộ 32) thay executor mặc định không giới hạn của grpc-java. Tắt dần: `spring.lifecycle.timeout-per-shutdown-phase = 20s`, server gRPC ngừng nhận rồi chờ lời gọi đang chạy; relay là `SmartLifecycle` xả lô đang gửi rồi dừng. Client tới dịch vụ khác: kênh tạo bằng `GrpcChannelFactory` của Spring gRPC từ `spring.grpc.client.channels.<tên>.address` (DNS của compose/nền tảng), tạo một lần lúc khởi động, dùng chung, h2c trong mạng riêng; grpc-java kết nối lười nên dịch vụ lên được dù đích chưa sẵn sàng; mỗi lời gọi stub kèm `withDeadline(...)`. **Luồng ảo (virtual threads): tắt mặc định** — trên Java 21, `sqlite-jdbc` gọi JNI trong khối `synchronized` nên luồng ảo bị ghim (pinning; chỉ hết từ JDK 24); chỉ cân nhắc bật cho edge/content/gamification/insight nếu SPIKE S-01' đo thấy lợi.
 
-**MongoDB (content, gamification, insight):** driver `mongodb` chính thức (async, tokio). Mỗi dịch vụ một `Client` dùng chung, URI và user riêng (quyền `readWrite` chỉ trên database của mình); `serverSelectionTimeout` 2 s để thất bại nhanh khi Mongo ngừng → `UNAVAILABLE`. Index (kể cả TTL) được tạo idempotent lúc khởi động. Không dùng transaction/change stream → chạy được trên Mongo đơn lẻ (không cần replica set) và cả trên dịch vụ managed.
+**Starter gRPC — chọn Spring gRPC (dự án chính thức của Spring), không dùng `net.devh:grpc-spring-boot-starter`:** kiểm Maven Central 16/11/2026 — `net.devh` phát hành bản cuối 3.1.0.RELEASE tháng 04/2024 (nhắm Spring Boot 3.2, grpc-java 1.63), 2,5 năm không có bản mới, không hỗ trợ chính thức Spring Boot 3.4+/4.x → rủi ro không vá lỗ hổng (NFR-S10). Spring gRPC đạt 1.0 GA (12/2025) và từ Spring Boot 4.1 được **đưa vào chính Spring Boot** (`org.springframework.boot:spring-boot-starter-grpc-server` / `-grpc-client`; BOM của Boot quản spring-grpc 1.1.2 + grpc-java 1.84.1 + protobuf-java 4.36.2 + Netty) → phiên bản grpc/protobuf/Netty tự khớp, có `@GlobalServerInterceptor`, `GrpcExceptionHandler`, health + reflection, test in-process. Đánh đổi: ví dụ trên mạng ít hơn `net.devh`, một số tên property còn mới → SPIKE S-01' xác nhận.
 
-**Mô hình lỗi server:** mỗi dịch vụ có `AppError` (`thiserror`) gồm mã nghiệp vụ; `impl From<AppError> for tonic::Status` ở `common` đặt mã gRPC + trailer `error-code`; lỗi không lường trước → `INTERNAL` với thông điệp chung + log kèm `request_id` (không đưa chi tiết nội bộ, câu SQL, stack ra ngoài). Edge chuyển nguyên mã + trailer từ dịch vụ đích về app; lỗi transport → `UNAVAILABLE`/`SERVICE_UNAVAILABLE`.
+**Dòng Spring Boot — 4.1 thay 3.x (Q-J1 ĐÓNG: người dùng chốt Spring Boot 4.1.2 ngày 17/11/2026):** thay đổi phạm vi ghi "Spring Boot 3". Kiểm Maven Central 16/11/2026: bản 3.x cuối cùng là **3.5.16 (25/06/2026)**, dòng 3.x hết hỗ trợ mã nguồn mở từ 30/06/2026 (không còn bản vá bảo mật miễn phí — trái NFR-S10), và Spring gRPC cho Boot 3.5 chỉ có 0.12.0 (tiền 1.0, grpc-java 1.76). Chốt **Spring Boot 4.1.2** (22/10/2026): cùng mô hình lập trình (Spring Framework thế hệ kế tiếp, Jakarta EE), khác 3.x chủ yếu ở tên module/property; Java 21 được hỗ trợ đầy đủ. Dự phòng (không dùng, chỉ để truy vết nếu 4.1 bất khả thi ở S-01'): Boot 3.5.16 + `org.springframework.grpc:spring-grpc-spring-boot-starter` 0.12.0 — mọi thiết kế trong tài liệu này không đổi, chỉ đổi tọa độ thư viện và tên property.
+
+**Interceptor chung (`common.grpc`, bean `@GlobalServerInterceptor`, thứ tự bằng `@Order`) — thứ tự THỰC THI từ ngoài vào trong (TM-33 (6), D-09):**
+1. `InternalAuthServerInterceptor` (5 dịch vụ nội bộ) — **chạy đầu tiên**, trước mọi interceptor đọc `x-user-id`, ghi log hay đặt MDC: `MessageDigest.isEqual(sha256(nhận), sha256(LEARNINGE_INTERNAL_TOKEN))`; miễn duy nhất `grpc.health.v1.Health/Check`; sai/thiếu → `UNAUTHENTICATED` không chi tiết + WARN (chỉ `rpc` và địa chỉ peer, chưa có `request_id`) và **handler không được gọi**; chỉ sau khi khóa đúng mới đọc `x-user-id` (UUID hợp lệ) vào `Context` (`CallerContext`). Ở **edge** vị trí này là `ClientMetadataScrubInterceptor`: xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` từ client.
+2. `RequestIdServerInterceptor` — nhận `x-request-id` hợp lệ (UUID) hoặc sinh mới; đặt vào `io.grpc.Context` và **MDC** `request_id`/`rpc` ở **mọi** callback của listener (grpc-java có thể đổi luồng giữa các callback nên MDC đặt/xóa trong `ForwardingServerCallListener` với `finally`, không đặt một lần); trả lại trong header phản hồi.
+3. `ConcurrencyLimitInterceptor` (edge: 64 RPC đồng thời toàn cục, `Semaphore.tryAcquire(2 s)` → `UNAVAILABLE` `SERVICE_UNAVAILABLE`) và `DeadlineCapInterceptor` (lời gọi không có deadline hoặc deadline dài hơn trần nhóm + 2 s → `Context.withDeadlineAfter(trần)`; lời gọi xuống dưới bị hủy theo).
+4. `AppExceptionHandler` (`GrpcExceptionHandler`) bắt mọi `Throwable` ở trong cùng → `INTERNAL` chung (TM-52).
+
+grpc-java chạy interceptor đăng ký **sau** trước còn Spring gRPC sắp theo `@Order` — **không suy luận**: giá trị `@Order` ghi ở một hằng `InterceptorOrder` trong `common.grpc`, và test TC-SEC-50 (+ RC-33) chứng minh khi sai khóa thì handler/interceptor đọc `x-user-id`/MDC không chạy; cơ chế sắp thứ tự xác nhận ở S-01'.
+
+Phía client: `InternalAuthClientInterceptor` + `RequestIdClientInterceptor` gắn vào mọi kênh nội bộ (edge, relay, `--ops=rebuild`). Edge **không** gắn `InternalAuthServerInterceptor` (cổng công khai) mà xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` từ client ở interceptor đầu tiên.
+
+**Edge = proxy gRPC tường minh:** mỗi service `learninge.app.v1` một lớp `@Service extends XxxGrpc.XxxImplBase`, mỗi RPC một phương thức: kiểm đầu vào nhẹ → (RPC cần token) `TokenAuthenticator` → gọi blocking stub nội bộ với `withDeadline(min(còn lại − 100 ms, trần nhóm))` + metadata `x-user-id` → trả phản hồi; lỗi `StatusRuntimeException` của đích chuyển nguyên mã + trailer. **Cache token (D-12): Caffeine** `maximumSize(10_000)`, hết hạn theo từng mục = min(60 s, `expires_at`) (`Expiry`), khóa = `token_sha256` (không bao giờ giữ token thô), kèm chỉ mục `ConcurrentHashMap<userId, Set<tokenSha256>>` để `invalidateUser(userId)` khi chuyển tiếp OK `Logout`/`ChangePassword`/`ResetPassword`/`DeleteAccount`. Rate limit theo IP: bộ đếm cửa sổ 1 phút trong một cache Caffeine (không thêm thư viện). `GetMe`: 3 lời gọi song song bằng `XxxFutureStub` + `Futures.successfulAsList` (Guava, đi kèm grpc-java), phần không bắt buộc deadline 300 ms. Hàng đợi `request_logs` = `ArrayBlockingQueue(1000)` + luồng gửi lô (đầy → bỏ, đếm `dropped`).
+
+**SQLite (auth, sync):** `org.xerial:sqlite-jdbc` (đóng gói thư viện native SQLite cho Windows/Linux/macOS — không cài SQLite hệ thống) + Spring `JdbcClient` (SQL viết tay có tham số, không ORM, không repository Spring Data JDBC). Hai `DataSource` HikariCP trỏ cùng file: **ghi** `maximumPoolSize = 1` (người ghi duy nhất; mọi giao dịch ghi qua `TxRunner` của `common` mở bằng `BEGIN IMMEDIATE` — tuần tự hóa ghi, tránh `SQLITE_BUSY`) và **đọc** `maximumPoolSize = 4`, `readOnly = true` (WAL cho đọc song song). PRAGMA mỗi kết nối (qua `SQLiteConfig`/thuộc tính URL): `journal_mode = WAL`, `foreign_keys = ON`, `busy_timeout = 5000`, `synchronous = NORMAL`. Chờ kết nối ghi quá `connectionTimeout` 5 s hoặc hết `busy_timeout` → `UNAVAILABLE`. **Migration: Flyway** (quản bởi BOM Boot, `spring-boot-starter-flyway`) chạy `classpath:db/migration/<svc>/V###__*.sql` trên DataSource ghi lúc khởi động (bảng `flyway_schema_history`, kiểm checksum: `validate-on-migrate = true`, `clean-disabled = true`); script cần tắt `foreign_keys` để dựng lại bảng đặt `executeInTransaction=false` (PRAGMA này không đổi được trong giao dịch). Lý do chọn Flyway thay migrator tự viết: không phải viết/test mã migrator, có checksum chống sửa script đã chạy, nhóm dễ giải thích; dự phòng nếu S-01' thấy Flyway không nhận SQLite: migrator ≈ 60 dòng trong `common.sqlite` đọc **cùng** tên tệp `V###__*.sql` (không phải đổi tệp). `PRAGMA quick_check` khi khởi động (lỗi → health `NOT_SERVING`, không nhận RPC).
+
+**MongoDB (content, gamification, insight):** Spring Data MongoDB (driver Java đồng bộ chính thức `mongodb-driver-sync`, quản bởi BOM) qua `MongoTemplate` (truy vấn/upsert/aggregation có kiểu; không dùng repository phái sinh cho truy vấn phức tạp). Mỗi dịch vụ một `MongoClient` từ `LEARNINGE_MONGO_URI` + `LEARNINGE_MONGO_DB` (ánh xạ sang property Mongo của Boot trong `application.yml`), user riêng (role tùy biến `readWrite` + `collMod` chỉ trên database của mình); `MongoClientSettingsBuilderCustomizer` đặt `serverSelectionTimeout` 2 s, `connectTimeout` 2 s để thất bại nhanh khi Mongo ngừng → `UNAVAILABLE`. Collection + validator `$jsonSchema` + index (kể cả **TTL**) do `MongoSchemaInitializer` (`ApplicationRunner`) tạo **tường minh, idempotent** bằng `createCollection`/`collMod` + `IndexOperations.createIndex(... .expire(...))` — **không** bật `auto-index-creation` và không dùng `@Indexed(expireAfter)`, để mọi định nghĩa index nằm một chỗ, khớp DATABASE-DESIGN §B. Mongo ngừng lúc khởi động: dịch vụ vẫn lên, health `NOT_SERVING`, initializer thử lại nền mỗi 5 s. Không dùng transaction/change stream → chạy được trên Mongo đơn lẻ (không cần replica set) và cả trên dịch vụ managed.
+
+**Mô hình lỗi server:** `common.error.AppException(ErrorCode, Status.Code, message)`; bean `AppExceptionHandler` (`GrpcExceptionHandler` của Spring gRPC) ánh xạ `AppException` → `Status` + trailer `error-code` (+ `retry-after-seconds`); ngoại lệ khác → `INTERNAL` với thông điệp chung + log ERROR kèm `request_id` (không đưa chi tiết nội bộ, câu SQL, stack ra ngoài). Edge chuyển nguyên mã + trailer từ dịch vụ đích về app; lỗi transport → `UNAVAILABLE`/`SERVICE_UNAVAILABLE`.
+
+**Lệnh vận hành (thay binary/công cụ riêng):** chạy chính jar/image của dịch vụ với `--ops=<lệnh>`; `OpsCommandRunner` (`common.ops`) tắt server gRPC (`spring.grpc.server.enabled=false`), chạy lệnh rồi thoát với mã 0/1: `content --ops=import --dir=/content-data`, `gamification --ops=rebuild` (gọi `sync.ExportXpEvents` kèm khóa nội bộ), `auth|sync --ops=backup --out=<thư mục>` (`VACUUM INTO`), `auth|sync --ops=outbox-requeue --event-id=<id>`. Trong compose: `docker compose run --rm content --ops=import …`.
+
+**Quan sát:** log JSON bằng **structured logging có sẵn của Spring Boot** (`logging.structured.format.console = logstash`, không thêm thư viện encoder) ra stdout, MDC `request_id`, `rpc`, `user_hmac`, `grpc_code`, `duration_ms`; `LOG_FORMAT=pretty` dùng định dạng thường khi dev. **Actuator chỉ ở cổng quản trị nội bộ** (`management.server.port = 8081`, `management.server.address = 127.0.0.1`, máy chủ web nhúng Reactor Netty chỉ phục vụ Actuator), chỉ lộ `health` (nhóm `liveness`/`readiness`) và `metrics`; **không bao giờ** publish cổng này, không lộ `env`, `beans`, `heapdump`, `threaddump`, `loggers`. Healthcheck compose gọi `http://127.0.0.1:8081/actuator/health/readiness` **từ bên trong** container; health gRPC (`grpc.health.v1`) phản ánh cùng trạng thái cho edge/relay.
+
+**Ngân sách bộ nhớ và khởi động JVM (đầu vào NFR-E4/E5, đo ở SPIKE S-01'):** mỗi dịch vụ `JAVA_TOOL_OPTIONS = -Xmx160m -Xss512k -XX:MaxMetaspaceSize=96m -XX:ReservedCodeCacheSize=48m -XX:MaxDirectMemorySize=48m -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:+ExitOnOutOfMemoryError`; compose `mem_limit` 288 MiB/dịch vụ (ước RSS khi chạy 180–240 MB). Tổng chế độ tách ≈ 6 × 0,23 GB + Mongo (`--wiredTigerCacheSizeGB 0.25`, ≈ 0,3 GB) ≈ **1,7 GB** (trần compose ≈ 2,2 GB) — **vượt mục tiêu 1,5 GB của thay đổi phạm vi**; chế độ gộp `all-in-one` (một JVM `-Xmx384m`) + Mongo ≈ **0,9 GB**. Khởi động: mỗi dịch vụ ước 4–8 s (Boot + gRPC + Flyway/Mongo), compose khởi động lại từ image có sẵn ≈ 45–60 s gồm Mongo healthy (NFR-E4 ≤ 90 s); lần `--build` đầu (tải Gradle + dependency) không tính. Tăng tốc tùy chọn (Could): CDS của JVM theo hướng dẫn Spring Boot.
+
+**Hardening JVM và Spring (D-16, D-18, D-19; TM-51..TM-58) — bắt buộc ở mọi dịch vụ, `all-in-one` và image:**
+- **`JAVA_TOOL_OPTIONS` thêm** (sau các cờ bộ nhớ ở trên): `-XX:+DisableAttachMechanism -XX:-CreateCoredumpOnCrash -XX:-HeapDumpOnOutOfMemoryError -Djdk.serialFilter=!* -Dorg.sqlite.tmpdir=/app/native -Dio.netty.native.workdir=/app/native`. `-Djdk.serialFilter=!*` (từ chối mọi deserialization Java) là **đề xuất, xác nhận ở S-01'** bằng chạy đủ bộ test. **Cấm** trong `JAVA_TOOL_OPTIONS`/`ENTRYPOINT`/`CMD`: `-Dcom.sun.management.jmxremote*`, `-agentlib:jdwp=…`, `-XX:+HeapDumpOnOutOfMemoryError`/`-XX:HeapDumpPath`, JFR; không bí mật nào trong biến này (JVM in `Picked up JAVA_TOOL_OPTIONS` ra stderr). Không ghi heap dump/core/`hs_err_pid*` lên volume hay thư mục dùng chung; `ExitOnOutOfMemoryError` giữ nguyên (thoát, compose khởi động lại).
+- **Compose (bổ sung hardening §Triển khai):** `tmpfs: /tmp` với `noexec,nosuid`; `tmpfs: /app/native` chế độ `0700`, `uid=10001,gid=10001`, **cho phép exec** (nơi `sqlite-jdbc` và Netty giải nén thư viện native; tách khỏi `/tmp`, vẫn giữ `read_only: true`); `ulimits: core: 0`; **không `ports:` cho 8081**; không `privileged`. Không tải được thư viện native → dịch vụ thất bại khởi động rõ ràng (không bỏ `read_only` để chạy). Tùy chọn mạnh hơn (đề xuất): giải nén sẵn native vào `/opt/native/` lúc build image.
+- **`application.yml` (chỉ tham chiếu, không bí mật):** `management.server.port=8081`, `management.server.address=127.0.0.1`, `management.endpoints.web.exposure.include=health,metrics`, `management.endpoint.health.show-details=never`; `server.address=127.0.0.1` để cổng HTTP **chính** của webflux không lộ ra ngoài (hoặc tắt nếu Boot 4.1 hỗ trợ — xác nhận bằng `ss -ltn` ở S-01': chỉ cổng gRPC và `127.0.0.1:8081`); `server.error.include-stacktrace=never`, `include-message=never`, `include-exception=false`, `include-binding-errors=never`, `server.error.whitelabel.enabled=false`; `spring.grpc.server.reflection.enabled=false` (chỉ edge + `APP_ENV=dev` + `LEARNINGE_GRPC_REFLECTION=true` mới bật); `spring.jmx.enabled=false`; `spring.main.banner-mode=off`, `spring.main.log-startup-info=false` ở prod; mức log thư viện (Netty/gRPC/Mongo/JDBC) ≥ `INFO`. Không Spring Web/MVC/devtools; webflux **chỉ** để phục vụ Actuator, không controller nghiệp vụ. Tên property của Boot 4.1/Spring gRPC 1.1.2 xác nhận ở S-01' (TC-SEC-41, 42, 50; chạy lại sau mỗi lần nâng Boot).
+- **Bí mật trong cấu hình (TM-56):** `application*.yml` chỉ chứa `${LEARNINGE_…}` **không có giá trị mặc định** (thiếu → khởi động thất bại); nạp từ biến môi trường hoặc `spring.config.import=optional:configtree:/run/secrets/`; `@ConfigurationProperties` chứa bí mật dùng kiểu `Secret` (`toString()` → `***`, ở `common.config`); so sánh mọi bí mật/token/hash/HMAC bằng `MessageDigest.isEqual` (TM-57).
+- **Deserialization (D-18, TM-53):** không `ObjectInputStream`/`Serializable` cho dữ liệu lưu hay truyền; Jackson (chỉ `--ops=import`) không default typing; `MappingMongoConverter` đặt `DefaultMongoTypeMapper(null)` để **không ghi `_class`** (hoặc ánh xạ `Document` ↔ record bằng tay).
+- **SQLite (TM-58):** URL JDBC chỉ dựng từ cấu hình (đường dẫn cố định), không `ATTACH DATABASE` từ đầu vào, không `enableLoadExtension`.
 
 **Cấu hình (biến môi trường, có mặc định; bí mật chỉ qua env/secret của nền tảng, không commit):**
 | Biến | Dịch vụ | Mặc định | Ý nghĩa |
 |---|---|---|---|
-| `LISTEN_ADDR` | mọi dịch vụ | edge `127.0.0.1:50051`; trong compose `0.0.0.0:<cổng>` | Địa chỉ nghe; compose chỉ publish cổng của edge ra `127.0.0.1` của máy chủ. Dịch vụ nội bộ chỉ nghe loopback/mạng riêng (`0.0.0.0` chỉ **bên trong** container của mạng bridge nội bộ; chế độ `--all`: `127.0.0.1`) |
-| `RUST_LOG`, `LOG_FORMAT` | mọi dịch vụ | `info`, `json` | Mức log (`tracing-subscriber` EnvFilter), định dạng `json` hoặc `pretty` (dev) |
-| `AUTH_ADDR`, `SYNC_ADDR`, `CONTENT_ADDR`, `GAMIFICATION_ADDR`, `INSIGHT_ADDR` | edge, relay, gamification | `http://localhost:5005x`; compose `http://auth:50052`… | Địa chỉ dịch vụ (DNS của compose/nền tảng làm service discovery) |
+| `LISTEN_ADDR` | mọi dịch vụ | edge `127.0.0.1:50051`; trong compose `0.0.0.0:<cổng>` | Địa chỉ nghe (ánh xạ sang `spring.grpc.server.address`/`port`); compose chỉ publish cổng của edge ra `127.0.0.1` của máy chủ. Dịch vụ nội bộ chỉ nghe loopback/mạng riêng (`0.0.0.0` chỉ **bên trong** container của mạng bridge nội bộ; chế độ `--all`: `127.0.0.1`) |
+| `LOG_LEVEL`, `LOG_FORMAT` | mọi dịch vụ | `INFO`, `json` | Mức log (`logging.level.root`), định dạng `json` (structured logging của Boot, `logstash`) hoặc `pretty` (dev) |
+| `JAVA_TOOL_OPTIONS` | mọi dịch vụ | xem §Backend (ngân sách bộ nhớ + hardening JVM) | Cờ JVM: heap, metaspace, GC; đặt trong compose theo từng dịch vụ |
+| `MANAGEMENT_PORT` | mọi dịch vụ | `8081` (chỉ `127.0.0.1` trong container) | Cổng Actuator nội bộ cho healthcheck; **không bao giờ publish** |
+| `AUTH_ADDR`, `SYNC_ADDR`, `CONTENT_ADDR`, `GAMIFICATION_ADDR`, `INSIGHT_ADDR` | edge, relay, gamification | `localhost:5005x`; compose `auth:50052`… | Địa chỉ dịch vụ (DNS của compose/nền tảng làm service discovery), ánh xạ sang `spring.grpc.client.channels.<tên>.address` (cú pháp chính xác xác nhận ở S-01') |
 | `EDGE_TRUST_PROXY` | edge | `false` | `true` khi đứng sau tunnel/PaaS/reverse proxy: chỉ khi kết nối đến từ địa chỉ proxy tin cậy (`EDGE_TRUSTED_PROXIES`, mặc định loopback) mới đọc IP thật từ metadata `x-forwarded-for` (phần tử cuối) — áp cho rate limit |
 | `EDGE_MIN_CLIENT` | edge | `1` | `versionCode` tối thiểu |
 | `EDGE_TOKEN_CACHE_SECS` | edge | `60` | Thời gian cache kết quả `ValidateToken` |
@@ -594,8 +637,8 @@ sequenceDiagram
 <!-- diagram:class/cls-rules-security-io.puml -->
 ![Lớp quy tắc thuần Java: chuẩn hóa, mã hóa CSV/JSON (băm mật khẩu đã chuyển lên máy chủ)](../diagrams/class/cls-rules-security-io.png)
 <!-- /diagram -->
-- **Tài khoản (DEC-013, hiện thực ở `auth`):** PBKDF2-HMAC-SHA256 120.000 vòng, salt 16 byte, khóa 32 byte (crate `pbkdf2` + `hmac` + `sha2`, unit test vector RFC 7914 §11); so sánh hằng thời gian (`subtle`). App không băm, không lưu mật khẩu.
-- **Khóa tăng dần (BR-003, BR-008):** `auth::domain::LockPolicy` dùng chung cho đăng nhập và đặt lại mật khẩu: sai 5 lần → khóa 60 s, nhân đôi, tối đa 1 giờ; tính cả email không tồn tại (`auth_attempts`, khóa theo HMAC email). Giới hạn 5 lần đăng nhập/phút/IP ở edge (NFR-S8) kiểm **trước** khi gọi auth; trần 4 phép PBKDF2 đồng thời (`tokio::sync::Semaphore`, chờ > 2 s → `UNAVAILABLE`).
+- **Tài khoản (DEC-013, hiện thực ở `auth`):** PBKDF2-HMAC-SHA256 120.000 vòng, salt 16 byte, khóa 32 byte (`SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")` của JDK, unit test vector RFC 7914 §11); so sánh hằng thời gian (`MessageDigest.isEqual`); token/salt từ `SecureRandom`, mã hóa `Base64.getUrlEncoder().withoutPadding()`. App không băm, không lưu mật khẩu.
+- **Khóa tăng dần (BR-003, BR-008):** `auth::domain::LockPolicy` dùng chung cho đăng nhập và đặt lại mật khẩu: sai 5 lần → khóa 60 s, nhân đôi, tối đa 1 giờ; tính cả email không tồn tại (`auth_attempts`, khóa theo HMAC email). Giới hạn 5 lần đăng nhập/phút/IP ở edge (NFR-S8) kiểm **trước** khi gọi auth; trần 4 phép PBKDF2 đồng thời (`java.util.concurrent.Semaphore.tryAcquire(2, SECONDS)`, quá → `UNAVAILABLE`).
 - **Phiên:** token opaque 256 bit (nguồn ngẫu nhiên hệ điều hành), base64url; `auth.db` chỉ lưu SHA-256; hạn 30 ngày; thu hồi khi đăng xuất/đổi/đặt lại mật khẩu/xóa tài khoản.
 - **Xác thực qua metadata:** app gửi `authorization: Bearer <token>`. Edge: (1) xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` từ client (cả RPC công khai); (2) RPC công khai đi thẳng; (3) RPC còn lại gọi `TokenValidator.ValidateToken(sha256(token))` — cache theo băm token 60 s; thiếu/sai/hết hạn → `UNAUTHENTICATED`; (4) gắn `x-user-id` + `x-internal-auth` rồi chuyển tiếp. **Cache token (D-12):** khóa = `token_sha256`, giá trị = `user_id`, `user_hmac` (do `auth` tính, trả trong `ValidateTokenResponse`), `expires_at_ms`; TTL = min(`EDGE_TOKEN_CACHE_SECS` = 60 s, `expires_at`); chỉ mục `user_id → {token_sha256}`; trong bộ nhớ, ≤ 10 000 mục, một bản edge (nhiều bản ⇒ xem lại D-12). **Edge xóa mọi mục cache của user** ngay khi chuyển tiếp OK `Logout`, `ChangePassword`, `DeleteAccount` (user từ `x-user-id`) và `ResetPassword` (user từ `AuthSession.user.id` trả về) — mọi đường thu hồi của người dùng đều qua edge nên không còn cửa sổ 60 s trong luồng bình thường (đóng RA-10).
 - **Phân quyền dữ liệu:** dịch vụ lọc mọi truy vấn theo `x-user-id` (chống IDOR); không đọc `user_id` từ message. Dịch vụ nội bộ chỉ đọc `x-user-id` **sau khi** lời gọi qua interceptor khóa nội bộ `x-internal-auth` (D-09; **không** mTLS) và chỉ nhận UUID hợp lệ. Cách ly mạng (cổng 50052–50056 và 27017 không publish — NFR-S9; bind loopback/mạng riêng) là lớp thứ hai, không phải lớp duy nhất (P3: mọi service của project chung mạng riêng; chế độ gộp; compose lỡ publish). Nâng cấp sau (Could): khóa riêng từng bên gọi.
@@ -609,7 +652,7 @@ sequenceDiagram
 |---|---|---|
 | Backend LearningE (edge) | gRPC `learninge.app.v1` qua `GrpcClient` (API_CONTRACT) | Bảng `ErrorCode` ở §Tầng mạng; app vẫn chạy ngoại tuyến |
 | Lớp lộ ra Internet (DEC-023, chưa chốt) | Tunnel HTTP/2 tới origin, nền tảng PaaS hoặc reverse proxy (TLS kết thúc ở đây, chuyển h2c tới edge). **Bắt buộc hỗ trợ HTTP/2 end-to-end tới edge** (gRPC không chạy trên HTTP/1.1) — xác minh ở SPIKE S-02 | Dự phòng LAN h2c (debug) → emulator → video |
-| MongoDB 8.0 (container hoặc managed — DEC-023) | Driver `mongodb` từ content, gamification, insight | §Chế độ lỗi: lõi vẫn chạy |
+| MongoDB 8.0 (container hoặc managed — DEC-023) | Spring Data MongoDB (driver Java chính thức) từ content, gamification, insight | §Chế độ lỗi: lõi vẫn chạy |
 | TextToSpeech, Storage Access Framework, trình duyệt, AlarmManager + NotificationManager | Như thay đổi phạm vi | AC-010.2, AC-013.3, AC-032.3, AC-033.2, AC-037.2, AC-019.4 |
 
 ## Triển khai (môi trường, hạ tầng)
@@ -617,9 +660,9 @@ sequenceDiagram
 <!-- diagram:architecture/arc-deployment.puml -->
 ![Sơ đồ triển khai docker compose: chỉ edge publish, TLS kết thúc ở lớp lộ ra, nơi chạy chưa chốt (P1 laptop + tunnel, P2 Atlas, P3 Railway, P4 VPS)](../diagrams/architecture/arc-deployment.png)
 <!-- /diagram -->
-**Đơn vị triển khai (trung lập với nơi chạy):** mỗi dịch vụ là một image Docker xây từ `deploy/Dockerfile` (stage build `rust:1.99.1-slim-bookworm`, `cargo build --release -p <service>`; stage chạy `debian:bookworm-slim` + `ca-certificates`, `USER 10001:10001`, chỉ chứa binary; mọi image nền ghim theo digest `@sha256:…`). `auth`, `sync` cần **volume bền vững** cho file SQLite. Image `learninge-server` (chế độ gộp) dùng cùng Dockerfile.
+**Đơn vị triển khai (trung lập với nơi chạy):** mỗi dịch vụ là một image Docker xây từ `deploy/Dockerfile` (stage build `eclipse-temurin:21-jdk-noble` chạy `./gradlew --no-daemon :<service>:bootJar` rồi tách lớp jar bằng `java -Djarmode=tools … extract --layers`; stage chạy `eclipse-temurin:21-jre-noble`, `USER 10001:10001`, chỉ chứa các lớp jar; mọi image nền ghim theo digest `@sha256:…`). `auth`, `sync` cần **volume bền vững** cho file SQLite. Image `all-in-one` (chế độ gộp) dùng cùng Dockerfile (`SERVICE=all-in-one`). Chọn Dockerfile thay Jib: `docker compose up --build` dùng trực tiếp, healthcheck cần shell + `curl` trong image (ảnh distroless mặc định của Jib không có), các bước build nhìn thấy được khi vấn đáp, không thêm plugin.
 
-**Môi trường phát triển (đã chốt):** `docker compose -f deploy/docker-compose.yml up` chạy `mongo:8.0` (bật xác thực, script `mongo-init` tạo 3 user) + 6 dịch vụ trên một mạng bridge nội bộ; **chỉ edge publish `127.0.0.1:50051`**; volume `auth-data`, `sync-data`, `mongo-data`; `healthcheck` qua `grpc.health.v1`, `depends_on: condition: service_healthy` cho edge. Phát triển hằng ngày có thể `cargo run -p <svc>` + chỉ Mongo trong compose, hoặc `learninge-server --all`. Emulator gọi `10.0.2.2:50051`; máy thật cùng Wi-Fi gọi IP LAN (chỉ debug, khi đó edge nghe `0.0.0.0` và `EDGE_TRUST_PROXY=false`).
+**Môi trường phát triển (đã chốt):** `docker compose -f deploy/docker-compose.yml up` chạy `mongo:8.0` (bật xác thực, script `mongo-init` tạo 3 user) + 6 dịch vụ trên một mạng bridge nội bộ; **chỉ edge publish `127.0.0.1:50051`**; volume `auth-data`, `sync-data`, `mongo-data`; `healthcheck` qua Actuator nội bộ (`curl -fs http://127.0.0.1:8081/actuator/health/readiness`, cùng trạng thái với `grpc.health.v1`), `depends_on: condition: service_healthy` cho edge. Phát triển hằng ngày có thể `./gradlew :<svc>:bootRun` + chỉ Mongo trong compose, hoặc `./gradlew :all-in-one:bootRun --args=--all`. Emulator gọi `10.0.2.2:50051`; máy thật cùng Wi-Fi gọi IP LAN (chỉ debug, khi đó edge nghe `0.0.0.0` và `EDGE_TRUST_PROXY=false`).
 ```mermaid
 flowchart LR
   subgraph PH["Điện thoại thật / emulator"]
@@ -650,13 +693,13 @@ flowchart LR
 ```
 
 **Hardening triển khai (mọi phương án — THREAT_MODEL TM-44..TM-47; NFR-S14):**
-- **Compose, mọi dịch vụ:** `user: "10001:10001"`, `read_only: true` + `tmpfs: /tmp`, `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]`, `mem_limit`/`cpus`/`pids_limit`, `restart: unless-stopped`; chỉ mount volume dữ liệu của chính dịch vụ (`auth-data` → `auth`, `sync-data` → `sync`); không `privileged`, không mount `docker.sock`.
-- **Image ghim digest:** mọi `image:`/`FROM` (`rust`, `debian`, `mongo:8.0.34`) kèm `@sha256:…`; build dùng `--locked`; CI chạy `cargo audit` + `cargo deny check` (NFR-S10).
+- **Compose, mọi dịch vụ:** `user: "10001:10001"`, `read_only: true` + `tmpfs: /tmp` (`noexec,nosuid`) + `tmpfs: /app/native` (`0700`, uid 10001, exec — thư viện native của `sqlite-jdbc`/Netty), `ulimits: core: 0`, `cap_drop: [ALL]`, `security_opt: [no-new-privileges:true]`, `mem_limit`/`cpus`/`pids_limit`, `restart: unless-stopped`; chỉ mount volume dữ liệu của chính dịch vụ (`auth-data` → `auth`, `sync-data` → `sync`); không `privileged`, không mount `docker.sock`.
+- **Image ghim digest:** mọi `image:`/`FROM` (`eclipse-temurin` jdk/jre, `mongo:8.0.34`) kèm `@sha256:…`; Gradle dùng catalog ghim phiên bản + `gradle/verification-metadata.xml` (dependency verification); CI/trước demo chạy `./gradlew dependencyCheckAnalyze` (OWASP Dependency-Check, `failBuildOnCVSS = 7`) (NFR-S10).
 - **Mongo không publish:** không có `ports:` cho Mongo và cho 50052–50056 ở mọi compose (kể cả override); `--auth`, `mongo-init` tạo 3 user với role tùy biến `readWrite` + `collMod` trên đúng database của mình; user root chỉ dùng trong `mongo-init`.
 - **Bí mật:** chỉ qua `env_file: deploy/.env` (không commit), compose `secrets:` (`/run/secrets/*`, ưu tiên ở P4) hoặc Variables của nền tảng (P3); không `ENV`/`ARG` bí mật trong Dockerfile; mỗi dịch vụ chỉ nhận bí mật mình cần (bảng người giữ khóa ở §Xác thực, D-10); `APP_ENV=prod` từ chối khởi động nếu thiếu/ngắn khóa mà dịch vụ cần.
-- **Giới hạn HTTP/2 và tài nguyên (edge + `common`, TM-44):** `http2_max_header_list_size` 16 KiB, `max_concurrent_streams` ≤ 100/kết nối, `concurrency_limit_per_connection(64)` và `ConcurrencyLimit` 64 toàn edge, `Server::timeout` = trần deadline nhóm + 2 s (lời gọi không deadline vẫn bị cắt), `tcp_keepalive` + `http2_keepalive_interval` cho kết nối từ ngoài; message tối đa 1 MiB ở edge / 4 MiB nội bộ; `h2`/`hyper` ở bản đã vá Rapid Reset/CONTINUATION (`cargo audit` chặn).
+- **Giới hạn HTTP/2 và tài nguyên (edge + `common`, TM-44):** `NettyServerBuilder.maxInboundMetadataSize` 16 KiB, `maxConcurrentCallsPerConnection` ≤ 100, `ConcurrencyLimitInterceptor` 64 toàn edge (chờ ≤ 2 s), `DeadlineCapInterceptor` = trần deadline nhóm + 2 s (lời gọi không deadline vẫn bị cắt), `keepAliveTime`/`keepAliveTimeout` + `permitKeepAliveTime` 30 s + `maxConnectionIdle` cho kết nối từ ngoài; executor cố định 64 luồng; message tối đa 1 MiB ở edge / 4 MiB nội bộ; grpc-java/Netty ở bản đã vá Rapid Reset (CVE-2023-44487) và CONTINUATION flood — dùng đúng phiên bản BOM Spring Boot, OWASP Dependency-Check chặn bản có CVE mức cao.
 - **Reflection:** chỉ ở edge và chỉ khi `APP_ENV=dev` **và** `LEARNINGE_GRPC_REFLECTION=true`; `prod` + cờ bật → từ chối khởi động; dịch vụ nội bộ không bao giờ bật reflection.
-- **Mạng:** dịch vụ nội bộ chỉ nghe loopback hoặc mạng bridge/riêng của nền tảng (chế độ `--all`: `127.0.0.1`); edge publish `127.0.0.1:50051` (nghe LAN chỉ ở debug, ghi rõ, `EDGE_TRUST_PROXY=false`).
+- **Mạng:** dịch vụ nội bộ chỉ nghe loopback hoặc mạng bridge/riêng của nền tảng (chế độ gộp `all-in-one --all`: `127.0.0.1`); cổng Actuator 8081 chỉ `127.0.0.1` trong container, không publish; edge publish `127.0.0.1:50051` (nghe LAN chỉ ở debug, ghi rõ, `EDGE_TRUST_PROXY=false`).
 
 **Môi trường demo/chấm — CHƯA CHỐT (Q3 của thay đổi phạm vi, DEC-023).** Các phương án, cùng image và cùng compose, chỉ khác lớp lộ ra và nơi chạy Mongo:
 | Phương án | Mô tả | Ưu | Nhược / cần xác minh |
@@ -680,22 +723,23 @@ flowchart LR
 | NFR-N1 offline-first | SQLite máy là nguồn hiển thị (DEC-014); `leaderboard_cache`; seed nội dung trong APK |
 | NFR-N2 timeout/thử lại | Deadline từng RPC; `RetryPolicy` BR-077 chỉ RPC idempotent; edge truyền deadline còn lại |
 | NFR-N3 500 bản ghi ≤ 5 s | 1 lô = 1 RPC Push + 1 giao dịch `sync.db` + 1 giao dịch app; protobuf nhỏ hơn JSON; index `(user_id, server_seq)` |
-| NFR-N4 p95 ≤ 300 ms tại edge | Đo bằng span `tracing` ở edge; ngân sách mỗi bước nội bộ ≤ 50 ms (h2c trong mạng nội bộ, kênh dùng lại); PBKDF2 loại khỏi chỉ tiêu chung |
+| NFR-N4 p95 ≤ 300 ms tại edge | Đo bằng `duration_ms` trong log JSON của edge (và timer Micrometer qua Actuator `metrics`); ngân sách mỗi bước nội bộ ≤ 50 ms (h2c trong mạng nội bộ, kênh dùng lại); PBKDF2 loại khỏi chỉ tiêu chung |
 | NFR-N5 Mongo/dịch vụ phụ ngừng | Lõi auth/sync chỉ dùng SQLite; edge trả `UNAVAILABLE` cục bộ cho RPC phụ; `GetMe` `stats_partial` |
 | NFR-N6 outbox ≤ 60 s | Relay mỗi 1 s, lô 200, lùi dần theo cấp số nhân **trần 15 s** + thử ngay khi đích `SERVING` (hỏi `Health`); tiến độ riêng từng đích |
 | NFR-A1, A3 toàn vẹn | Giao dịch cả hai phía; outbox cùng giao dịch; idempotent theo `event_id`/`uuid` |
 | NFR-S1..S8 | PBKDF2 ở auth; SQL tham số; token băm; `user_id` từ edge; rate limit; TLS bắt buộc ở release |
 | NFR-S9 chỉ edge lộ cổng | Compose chỉ publish edge (`127.0.0.1`); Mongo và cổng 50052–50056 không publish; dịch vụ nội bộ bind loopback/mạng riêng (`--all`: `127.0.0.1`) |
-| NFR-S10 chuỗi cung ứng | `Cargo.lock` commit, phiên bản ghim, `--locked`, `cargo audit` + `cargo deny check` trong CI/trước demo, image ghim digest |
-| NFR-S11 khóa nội bộ | Interceptor `common::internal_auth` ở mọi server nội bộ kiểm `x-internal-auth` (so sánh hằng thời gian); edge xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` từ client; dịch vụ nội bộ bind loopback/mạng riêng (D-09) |
+| NFR-S10 chuỗi cung ứng | Catalog `libs.versions.toml` ghim phiên bản + BOM Spring Boot, Gradle dependency verification (SHA-256), OWASP Dependency-Check 0 lỗi CVSS ≥ 7 trong CI/trước demo, image ghim digest |
+| NFR-S11 khóa nội bộ | `InternalAuthServerInterceptor` (`common`) ở mọi server nội bộ kiểm `x-internal-auth` (so sánh hằng thời gian); edge xóa `x-user-id`, `x-user-id-bin`, `x-internal-*` từ client; dịch vụ nội bộ bind loopback/mạng riêng (D-09) |
 | NFR-S12 không plaintext ở release | `GrpcChannelFactory` mặc định TLS, `usePlaintext()` chỉ `BuildConfig.DEBUG` + host danh sách trắng (fail closed); build `release` hỏng nếu `GRPC_TLS != true`/thiếu `GRPC_HOST` (D-11) |
 | NFR-S13 không PII trong Mongo, khóa giới hạn | Validator `additionalProperties: false`; payload sự kiện không email/hash/token/câu trả lời; insight chỉ `user_hmac`; `LEARNINGE_PSEUDONYM_KEY` chỉ `auth`+`sync`, `LEARNINGE_SERVER_KEY` chỉ `auth` (D-10) |
 | NFR-S14 gia cố container | Không root (UID 10001), `read_only`, `cap_drop: [ALL]`, `no-new-privileges`, giới hạn tài nguyên, giới hạn HTTP/2 ở edge — xem §Triển khai (Hardening) |
 | NFR-S15 xóa tài khoản ≤ 60 s | `user.deleted` ghi cùng giao dịch xóa ở `auth`; relay thử ngay khi đích `SERVING` (trần lùi 15 s); tombstone `purged_users`/`deleted_users` chặn sự kiện đến muộn; insight purge theo `user_hmac` (D-14) |
 | NFR-D1 API 29+ | `grpc-okhttp` + TLS nền tảng (không Conscrypt); `java.time`; không UPSERT ở app |
 | NFR-E1..E3 | Nội dung JSON + `content-import`; ngôn ngữ mới = dữ liệu (DEC-009) |
-| NFR-E4 chạy 1 lệnh | `docker compose up` (hoặc `learninge-server --all`); migration + index tự chạy lúc khởi động |
-| NFR-M1, M2 bảo trì | App 3 tầng + `data.remote`; mỗi dịch vụ 3 tầng `grpc → domain → store`; quy tắc thuần có unit test (`cargo test`, JUnit) |
+| NFR-E4 chạy 1 lệnh | `docker compose up` (hoặc `java -jar all-in-one.jar --all`); Flyway + index Mongo tự chạy lúc khởi động; khởi động ước 45–60 s, đo ở S-01' |
+| NFR-E5 tài nguyên | Heap mỗi JVM ≤ 160 MiB, `mem_limit` 288 MiB/dịch vụ; tách ≈ 1,7 GB gồm Mongo, gộp ≈ 0,9 GB (§Backend — ngân sách bộ nhớ; số chính thức do nhóm trưởng/người kiểm thử chốt ở SRS (phi chức năng) sau S-01') |
+| NFR-M1, M2 bảo trì | App 3 tầng + `data.remote`; mỗi dịch vụ 3 tầng `grpc → domain → store`; quy tắc thuần có unit test (JUnit 5 ở server, JUnit 4 ở app) |
 
 ## Dữ liệu và lưu trữ
 Chi tiết lược đồ: DATABASE-DESIGN (A) app — không đổi; (B) server — tách theo dịch vụ.
@@ -705,7 +749,7 @@ Chi tiết lược đồ: DATABASE-DESIGN (A) app — không đổi; (B) server 
 | SharedPreferences | App | Token, `user_id`, địa chỉ server (debug), cài đặt giao diện | — |
 | SQLite `auth.db` | auth | `users`, `auth_tokens`, `security_answers`, `auth_attempts`, `server_meta`, `outbox` | **Nguồn sự thật** tài khoản/phiên |
 | SQLite `sync.db` | sync | `decks`, `words`, `card_progress`, `favorites`, `study_log`, `quiz_attempts`, `exam_attempts`, `user_settings` (tạo lười), `user_stats`, `xp_events`, `sync_seq`, `purged_users`, `outbox` | **Nguồn sự thật** tiến độ và XP |
-| Mongo `learninge_content` | content | `content_decks`, `content_exams`, `content_meta` | Nguồn = JSON trong git `content/`, nạp bằng `content-import` |
+| Mongo `learninge_content` | content | `content_decks`, `content_exams`, `content_meta` | Nguồn = JSON trong git `content-data/`, nạp bằng `content --ops=import` |
 | Mongo `learninge_game` | gamification | `xp_events` (bản sao), `weekly_xp`, `players` | Kho phụ dựng từ outbox; rebuild được từ `sync.db` |
 | Mongo `learninge_insight` | insight | `audit_events` (TTL 90 ngày), `request_logs` (TTL 7 ngày), `analytics_daily` | Kho phụ, khử định danh; mất được |
 
@@ -714,28 +758,29 @@ Nhất quán: LWW (DEC-014, BR-062); XP do sync kiểm và lưu, gamification t�
 ## Khả năng mở rộng, chịu lỗi, quan sát
 - **Quy mô mục tiêu:** ≤ 50 người dùng, ≤ 10 yêu cầu/giây lúc demo. Điểm nghẽn đầu tiên: một luồng ghi `sync.db` (Push đồng thời) → giao dịch ngắn, lô ≤ 500, `busy_timeout`; tiếp theo là CPU cho PBKDF2 → rate limit + semaphore. Hướng mở rộng ngoài đồ án: tách `sync.db` sang PostgreSQL, nhiều bản edge sau load balancer (cache token khi đó cần chung).
 - **Chịu lỗi:** offline-first; Push idempotent; cursor chỉ tăng sau khi ghi xong trang; outbox + relay chịu đích ngừng; health check + `restart: unless-stopped` trong compose; tắt dần có kiểm soát.
-- **Quan sát (thay DEC-025 của thay đổi phạm vi):** edge sinh/nhận `x-request-id`, truyền qua mọi lời gọi nội bộ và payload sự kiện; mỗi dịch vụ dùng `tracing` với span gắn `request_id`, `rpc`, `user_hmac` (không `user_id` thô ở insight), thời gian xử lý, mã gRPC; log JSON ra stdout (`docker compose logs -f`). **Không bao giờ** log token, mật khẩu, câu trả lời bảo mật, email đầy đủ (chỉ dạng che `m***@gmail.com` cho sự kiện auth thất bại chưa có user). Edge gửi `request_logs` sang insight (best-effort, hàng đợi ≤ 1000, đếm `dropped`). Đo NFR-N4: script tính p95 từ log edge hoặc `InsightBackend.GetDailyStats`. OpenTelemetry/Jaeger: Could. App: lỗi đồng bộ gần nhất ở `sync_state` (SCR-35), Logcat chỉ ở debug (R8 bỏ `Log.d/v`).
+- **Quan sát (thay DEC-025 của thay đổi phạm vi):** edge sinh/nhận `x-request-id`, truyền qua mọi lời gọi nội bộ và payload sự kiện; mỗi dịch vụ ghi log JSON (structured logging của Spring Boot) với MDC `request_id`, `rpc`, `user_hmac` (không `user_id` thô ở insight), thời gian xử lý, mã gRPC; log JSON ra stdout (`docker compose logs -f`). **Không bao giờ** log token, mật khẩu, câu trả lời bảo mật, email đầy đủ (chỉ dạng che `m***@gmail.com` cho sự kiện auth thất bại chưa có user). Edge gửi `request_logs` sang insight (best-effort, hàng đợi ≤ 1000, đếm `dropped`). Đo NFR-N4: script tính p95 từ log edge hoặc `InsightBackend.GetDailyStats`. OpenTelemetry/Jaeger: Could. App: lỗi đồng bộ gần nhất ở `sync_state` (SCR-35), Logcat chỉ ở debug (R8 bỏ `Log.d/v`).
 
 ## Rủi ro kiến trúc và quyết định liên quan
 | Rủi ro | Giảm thiểu | DEC |
 |---|---|---|
-| RA-1 Đường cong học Rust/async làm trễ server (R-41) | T-140 + SPIKE S-01; mẫu dịch vụ chuẩn trong `common`; go/no-go 29/11; rollback RB-1 về thay đổi phạm vi (snapshot) | DEC-018 |
+| RA-1 Cấu hình Spring gRPC/grpc-java sai (interceptor, deadline, giới hạn message) hoặc nhóm chưa quen Spring Boot 4 (R-41, thay đổi phạm vi) | Ôn Spring Boot + gRPC Java ≈ 2 ngày công; SPIKE S-01' dựng `common` + 1 dịch vụ mẫu + compose; test hợp đồng kiểm mã lỗi/trailer/giới hạn; dự phòng dòng Boot 3.5 (Q-J1) | DEC-024 |
+| RA-1b JVM tốn RAM, khởi động chậm hơn bản native | Cờ JVM + `mem_limit` (§Backend), Serial GC, chế độ gộp `all-in-one`; đo ở S-01' trước khi chốt NFR-E5 và phương án P4 (VPS 2 GB chỉ đủ khi gộp, hoặc VPS 4 GB) | DEC-024, DEC-023 |
 | RA-2 Đồng bộ mất/ghi đè tiến độ (R-36) | LWW, tombstone, xóa `dirty` có điều kiện `updated_at`, trang + cursor cùng giao dịch, test 2 máy | DEC-014 |
 | RA-3 Đồng hồ máy lệch | sync kẹp `updated_at` ≤ giờ server + 5 phút; kéo theo `server_seq` | DEC-014 |
 | RA-4 Lộ token, brute-force, IDOR, gian lận XP, giả mạo `x-user-id` (R-37) | Token băm + thu hồi; rate limit ở edge; edge xóa metadata nội bộ; chỉ edge lộ cổng; sync kiểm XP + trần ngày; THREAT_MODEL TM-19..TM-24 | DEC-013, DEC-019 |
 | RA-5 gRPC không qua được tunnel/proxy miễn phí (R-42) | SPIKE S-02 trước 20/11; phương án P1–P4 (DEC-023); dự phòng LAN + emulator + video | DEC-020, DEC-023 |
 | RA-6 Plugin protobuf + AGP 9.5.1 xung đột (R-43) | SPIKE S-03; dự phòng sinh mã Java lite bằng `protoc` ngoài Gradle rồi commit vào app | DEC-020 |
 | RA-7 Lệch dữ liệu SQLite ↔ Mongo (R-44) | Outbox cùng giao dịch, idempotent, tiến độ riêng từng đích, `gamification rebuild`, `content-import` | DEC-021 |
-| RA-8 Vận hành 6 dịch vụ + Docker trên Windows (R-45) | Chế độ gộp `--all`; compose có healthcheck; runbook | DEC-019 |
+| RA-8 Vận hành 6 dịch vụ + Docker trên Windows (R-45) | Chế độ gộp `all-in-one --all` (một JVM); compose có healthcheck; runbook | DEC-019 |
 | RA-9 Lệch proto giữa 2 repo (R-50) | `proto.lock` + `sync-proto.ps1`; chỉ thêm trường/RPC trong v1, xóa thì `reserved` | DEC-022 |
 | RA-10 Cache token ở edge làm token đã thu hồi còn dùng được ≤ 60 s | **Đóng (D-12):** giữ cache ≤ 60 s; edge xóa mọi mục cache của user khi chuyển tiếp OK Logout/ChangePassword/ResetPassword (user từ `AuthSession.user.id`)/DeleteAccount | DEC-013, DEC-020 |
 | RA-11 `INSERT OR REPLACE` vô tình xóa dữ liệu con qua CASCADE (app) | Quy ước DATABASE-DESIGN §Toàn vẹn; code review | DEC-011, DEC-014 |
-| RA-12 Thành viên không giải thích được code Rust của mình (R-47) | Mỗi dịch vụ một người phụ trách (Q6 **chưa phân công**); không để AI viết phần không ai hiểu; `common` giữ nhỏ, không macro tự viết | DEC-018, DEC-019 |
+| RA-12 Thành viên không giải thích được code server của mình (R-47) | Mỗi dịch vụ một người phụ trách (Q6 **chưa phân công**); không để AI viết phần không ai hiểu; `common` giữ nhỏ, hạn chế "phép thuật" Spring (không AOP tự viết, cấu hình tường minh bằng `@Bean`) | DEC-024, DEC-019 |
 
 ## Công nghệ sử dụng
 > Công nghệ, phiên bản, lý do chọn.
-> **Quy tắc chọn phiên bản:** bản ổn định mới nhất **phát hành ≥ 2 tuần** trước ngày chọn (2026-11-12 → phát hành trước hoặc đúng 2026-10-29), kiểm tra ngày 2026-11-12 trên `crates.io/api/v1/crates/<tên>/versions` (crate) và `repo1.maven.org/maven2/<group>/<artifact>/maven-metadata.xml` + `Last-Modified` của `.pom` (Maven). Bản bị loại vì quá mới được ghi bên cạnh.
-> **thay đổi phạm vi (Q1 đã duyệt 2026-11-11):** đảo ngược "app không thêm thư viện" của thay đổi phạm vi — app thêm gRPC Java (okhttp, protobuf-lite, stub), `protobuf-javalite`, plugin Gradle protobuf, `annotations-api` (compileOnly). Server: các crate ở §Server + image `mongo:8.0`. Hủy dependency Java server đã duyệt ở thay đổi phạm vi (Javalin, Jackson, sqlite-jdbc, slf4j, JUnit 5).
+> **Quy tắc chọn phiên bản:** bản ổn định mới nhất **phát hành ≥ 2 tuần** trước ngày chọn (2026-11-12 → phát hành trước hoặc đúng 2026-10-29), kiểm tra ngày 2026-11-12 (app) / 2026-11-16 (server, thay đổi phạm vi) trên `repo1.maven.org/maven2/<group>/<artifact>/maven-metadata.xml` + `Last-Modified` của `.pom` (Maven). Bản bị loại vì quá mới được ghi bên cạnh.
+> **thay đổi phạm vi (Q1 đã duyệt 2026-11-11):** đảo ngược "app không thêm thư viện" của thay đổi phạm vi — app thêm gRPC Java (okhttp, protobuf-lite, stub), `protobuf-javalite`, plugin Gradle protobuf, `annotations-api` (compileOnly). **thay đổi phạm vi (duyệt 2026-11-16):** server quay về Java — thư viện ở §Server (dòng Boot 4.1.2 đã chốt 17/11, Q-J1 đóng; danh sách công cụ build/test — gồm Spotless — vẫn chờ người dùng duyệt, TESTING-STRATEGY KG-8) + image `mongo:8.0`; Javalin của thay đổi phạm vi vẫn không dùng.
 
 ## App Android
 | Lớp | Công nghệ | Phiên bản | Lý do | STACKS guide |
@@ -791,78 +836,94 @@ protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 R8: thêm quy tắc giữ cho lớp sinh protobuf-lite (`-keep class * extends com.google.protobuf.GeneratedMessageLite { <fields>; }`) — xác minh ở S-03 bằng bản release gọi `Health.Check`.
 
 ## Server
-Repo riêng `LearningE_Server` (DEC-022), Cargo workspace, Rust **edition 2021**. Crate chọn: phổ biến, có bảo trì, không macro "phép thuật" khó vấn đáp.
+> Bảng crate Rust của thay đổi phạm vi **đã thay bằng thay đổi phạm vi** (lịch sử: DEC-018, bản git trước 2026-11-16).
+
+Repo riêng `LearningE_Server` (DEC-022), **Gradle multi-module, Kotlin DSL**, catalog `gradle/libs.versions.toml` + BOM Spring Boot. Kiểm Maven Central / Gradle Plugin Portal ngày 2026-11-16 (`maven-metadata.xml` + `Last-Modified` của `.pom`), mốc ≥ 2 tuần = phát hành trước hoặc đúng 2026-11-02.
+**Quy tắc phiên bản riêng của server:** thư viện **có trong BOM Spring Boot** dùng **đúng phiên bản BOM** (đã được Spring kiểm tương thích chéo — grpc-java ↔ protobuf ↔ Netty ↔ Spring gRPC), kể cả khi có bản mới hơn; chỉ ghi đè BOM khi có CVE mức cao, qua PR riêng. Thư viện ngoài BOM: bản ổn định mới nhất phát hành ≥ 2 tuần.
+
 | Lớp | Công nghệ | Phiên bản | Lý do | STACKS guide |
 |---|---|---|---|---|
-| Toolchain | Rust stable ghim trong `rust-toolchain.toml` (+ `rustfmt`, `clippy`) | **1.99.1** (2026-10-13). MSRV cần: `rusqlite` 0.41 → 1.89, `tonic`/`mongodb` → 1.88 | Cả nhóm và Docker build cùng một bản | rust-lang.github.io/rustup/overrides.html |
-| Async runtime | `tokio` (features `rt-multi-thread`, `macros`, `signal`, `sync`, `time`) | **1.54.1** (2026-10-21) | Runtime chuẩn mà tonic và driver mongodb dựa vào | tokio.rs/tokio/tutorial |
-| gRPC | `tonic` (server + client, transport HTTP/2), `tonic-prost` (codec prost) | **0.14.9** (2026-10-29) | gRPC thuần Rust phổ biến nhất; từ 0.14 phần prost tách sang `tonic-prost`/`tonic-prost-build` | docs.rs/tonic |
-| Protobuf | `prost`, `prost-types` | **0.14.4** (2026-06-07; 0.14.5 phát hành 2026-11-10 chưa đủ 2 tuần) | Message Rust thuần, dùng chung với tonic 0.14 (`^0.14`) | docs.rs/prost |
-| Sinh mã | `tonic-prost-build` (build-dependency của crate `proto`; tương đương `tonic-build` + prost trước 0.14) + `protoc-bin-vendored` | **0.14.9** · **3.3.0** (2026-10-05) | Sinh client/server cho `learninge.app.v1` + `internal.v1`; `protoc` đi kèm crate → không cài tay trên Windows | docs.rs/tonic-prost-build |
-| Health | `tonic-health` (`grpc.health.v1`) | **0.14.9** | EP-01 + healthcheck compose | docs.rs/tonic-health |
-| Middleware | `tower` (timeout, concurrency limit layer) | **0.5.3** (2026-01-12) | Lớp chung cho server/client tonic | docs.rs/tower |
-| SQLite | **`rusqlite`** (feature `bundled`) | **0.41.1** (2026-10-28; 0.42.0 phát hành 2026-11-11 chưa đủ 2 tuần) | Xem "Chọn rusqlite thay sqlx" dưới bảng | docs.rs/rusqlite |
-| MongoDB | `mongodb` — driver chính thức (async tokio, rustls, SRV DNS cho Atlas) | **3.9.1** (2026-09-10; 3.10.0 phát hành 2026-11-03 chưa đủ 2 tuần) | DEC-021; chạy được với `mongo:8.0` đơn lẻ và Atlas | mongodb.com/docs/drivers/rust/current |
-| Băm mật khẩu | `pbkdf2` + `hmac` + `sha2` | **0.13.0** (2026-04-21) · **0.13.0** (2026-03-29) · **0.11.1** (2026-10-12) — cùng `digest` 0.11 | Giữ đúng PBKDF2-HMAC-SHA256 120.000 vòng (DEC-003/DEC-013, BR-002, BR-007); test vector RFC 7914 §11. **Không dùng Argon2/bcrypt** (giữ quy tắc bảo mật đã duyệt) | docs.rs/pbkdf2 |
-| HMAC/so sánh | `hmac` (HMAC khóa server, `user_hmac`), `subtle` (so sánh hằng thời gian) | `subtle` **2.6.1** | BR-076; chống đo thời gian | docs.rs/subtle |
-| Ngẫu nhiên, mã hóa | `rand` (nguồn hệ điều hành cho token 256 bit, salt), `base64` (base64url token) | **0.10.3** (2026-09-20) · **0.23.1** (2026-08-04) | DEC-013 | docs.rs/rand |
-| Định danh | `uuid` (features `v4`, `v7`) | **1.29.0** (2026-10-23; 1.29.1/1.29.2 chưa đủ 2 tuần) | `uuid` bản ghi đồng bộ, `event_id` UUIDv7 (sắp theo thời gian) | docs.rs/uuid |
-| Thời gian | `chrono` + `chrono-tz` | **0.4.45** (2026-06-04) · **0.10.4** (2025-07-11) | Tuần ISO Asia/Ho_Chi_Minh (BR-069), cửa sổ XP | docs.rs/chrono |
-| Log | `tracing` + `tracing-subscriber` (features `json`, `env-filter`) | **0.1.44** (2025-12-18) · **0.3.23** (2026-03-13) | Log JSON có span `request_id` (DEC-020 §quan sát) | docs.rs/tracing |
-| Lỗi | `thiserror` (lỗi có kiểu trong thư viện); `anyhow` chỉ ở `main`/tools | **2.0.21** (2026-09-23) · **1.0.104** (2026-07-18) | `AppError` → `tonic::Status` | docs.rs/thiserror |
-| JSON | `serde` + `serde_json` | **1.0.229** (2026-07-18) · **1.0.154** (2026-10-11) | Chỉ cho `content-import`, cấu hình, log; giao thức là protobuf | serde.rs |
-| Test | `cargo test` (unit + tích hợp: SQLite file tạm, Mongo container), client sinh từ proto cho test hợp đồng; `grpcurl` thủ công | Đi kèm toolchain | TESTING-STRATEGY | doc.rust-lang.org/book/ch11-00-testing.html |
-| Chất lượng | `rustfmt`, `clippy -D warnings`, `cargo audit` (NFR-S10) | Đi kèm toolchain; `cargo-audit` cài bằng `cargo install --locked` | CODING-STANDARDS mục server | rustsec.org |
-| MongoDB server | Image `mongo:8.0` (tag `8.0.34` cập nhật 2026-10-27) — ghim `mongo:8.0.34` trong compose | 8.0.34 | Dòng 8.0 đã duyệt (Q1); bật xác thực | hub.docker.com/_/mongo |
-| Đóng gói | Docker (Dockerfile nhiều stage: `rust:1.99.1-slim-bookworm` → `debian:bookworm-slim`), Docker Compose v2 (`docker compose`) | Docker Desktop / Engine bản ổn định hiện hành trên máy dev | NFR-E4; trung lập với nơi triển khai (DEC-023) | docs.docker.com/compose |
-| Công cụ vận hành | `grpcurl` (gọi thử RPC, `GetDailyStats`), tunnel/reverse proxy theo DEC-023 | Bản ổn định hiện hành | Không phải dependency của mã | github.com/fullstorydev/grpcurl |
+| Ngôn ngữ / JDK | Java 21 LTS, Eclipse Temurin (Gradle toolchain `languageVersion = 21`) | **21.0.13+9** (2026-10-22) | Yêu cầu môn "Java + SQLite"; cùng ngôn ngữ với app; LTS được Spring Boot 4.x hỗ trợ | adoptium.net |
+| Build | Gradle wrapper (Kotlin DSL), plugin `org.springframework.boot` + `io.spring.dependency-management` | Gradle **9.6.0** (giống app) · Boot plugin **4.1.2** · dependency-management **1.1.7** (2024-12-17) | Một công cụ build cho cả nhóm; multi-module `proto`, `common`, 6 dịch vụ, `all-in-one` | docs.gradle.org/current/userguide/multi_project_builds.html |
+| Framework | **Spring Boot** (BOM `spring-boot-dependencies`) | **4.1.2** (2026-10-22) — **đã chốt 17/11/2026 (Q-J1 đóng)**; dòng 3.x: bản cuối 3.5.16 (2026-06-25), hết hỗ trợ OSS 30/06/2026; 4.2.0 mới ở RC | Cấu hình, DI, lifecycle, Actuator, structured logging; xem SYSTEM-BLUEPRINT §Backend | docs.spring.io/spring-boot |
+| gRPC (Spring) | **Spring gRPC** qua starter của Boot: `spring-boot-starter-grpc-server`, `spring-boot-starter-grpc-client` (kéo `grpc-netty`, `grpc-services`, `grpc-stub`) | Theo BOM 4.1.2: spring-grpc **1.1.2** (2026-10-22) | Dự án chính thức của Spring, nay nằm trong Boot; `net.devh grpc-spring-boot-starter` loại (bản cuối 3.1.0.RELEASE 04/2024, không theo Boot 3.4+/4.x) | docs.spring.io/spring-grpc/reference |
+| gRPC runtime | `io.grpc:grpc-netty`, `grpc-protobuf`, `grpc-stub`, `grpc-services` (health, reflection) | **1.84.1** (2026-10-07, theo BOM; 1.85.1 có nhưng không ghi đè) | Transport HTTP/2 Netty; wire tương thích app dùng 1.85.1 (cùng giao thức gRPC) | grpc.io/docs/languages/java/ |
+| Protobuf | `com.google.protobuf:protobuf-java` (đầy đủ, không lite) | **4.36.2** (2026-09-17, theo BOM) — trùng `protobuf-javalite` của app | Message Java ở server | protobuf.dev/reference/java/ |
+| Sinh mã | Plugin Gradle `com.google.protobuf` + `com.google.protobuf:protoc` + `io.grpc:protoc-gen-grpc-java` (module `proto`) | Plugin **0.10.0** (0.10.1 ngày 2026-11-04 chưa đủ 2 tuần) · `protoc` **4.36.2** · `protoc-gen-grpc-java` **1.84.1** (phải trùng runtime) | Sinh message + stub cho `learninge.app.v1` và `learninge.internal.v1`; `protoc` tải từ Maven, không cài tay trên Windows | github.com/google/protobuf-gradle-plugin |
+| SQLite | `org.xerial:sqlite-jdbc` + Spring `JdbcClient` (`spring-boot-starter-jdbc`, HikariCP 7.0.2 theo BOM) | **3.53.4.0** (2026-08-26, theo BOM; 3.54.1.0 ngày 2026-10-29 có nhưng không ghi đè) | JDBC thuần, SQL tham số nhìn thấy được; native SQLite đóng gói sẵn | github.com/xerial/sqlite-jdbc |
+| Migration | **Flyway** (`spring-boot-starter-flyway`, `flyway-core`) | **12.4.0** (2026-04-14, theo BOM) | Checksum + lịch sử, không phải tự viết migrator; **xác nhận SQLite ở S-01'** (dự phòng migrator ≈ 60 dòng, cùng tên tệp `V###__*.sql`) | documentation.red-gate.com/flyway |
+| MongoDB | Spring Data MongoDB (`spring-boot-starter-data-mongodb`) → `mongodb-driver-sync` | spring-data-mongodb **5.1.2** (2026-10-22) · driver **5.8.1** (theo BOM) | DEC-021; `MongoTemplate`, index/TTL tạo tường minh; chạy với `mongo:8.0` đơn lẻ và Atlas | docs.spring.io/spring-data/mongodb |
+| Cache | Caffeine | **3.2.4** (theo BOM; 3.3.1 có nhưng không ghi đè) | Cache token edge 60 s + xóa theo user (D-12), bộ đếm rate limit | github.com/ben-manes/caffeine |
+| Băm, ngẫu nhiên, HMAC | JDK: `SecretKeyFactory` `PBKDF2WithHmacSHA256`, `Mac` `HmacSHA256`, `MessageDigest` SHA-256 + `isEqual`, `SecureRandom`, `Base64` | JDK 21 | Giữ đúng PBKDF2-HMAC-SHA256 120.000 vòng, salt 16 byte, khóa 32 byte (DEC-003/DEC-013, BR-002, BR-007); test vector RFC 7914 §11; **không** Argon2/bcrypt, không thư viện crypto ngoài | docs.oracle.com/en/java/javase/21/security |
+| Định danh, thời gian | JDK `UUID` (v4), UUIDv7 + UUIDv5 tự hiện thực ở `common.id` (≈ 40 dòng, test vector RFC 9562); `java.time` + `ZoneId.of("Asia/Ho_Chi_Minh")`, `IsoFields` | JDK 21 | Không thêm thư viện UUID; tuần ISO (BR-069) | datatracker.ietf.org/doc/html/rfc9562 |
+| JSON | Jackson (theo BOM Boot) | Theo BOM | Chỉ cho `--ops=import` (đọc `content-data/*.json`) và cấu hình; giao thức là protobuf | — |
+| Log, quan sát | SLF4J + Logback + **structured logging của Spring Boot** (`logstash` JSON); Actuator + Micrometer (`spring-boot-starter-actuator`) trên Reactor Netty (`spring-boot-starter-webflux`) **chỉ ở cổng 8081 loopback** | Theo BOM (logback 1.5.38, micrometer 1.17.2) | Log JSON có MDC `request_id`; health/metrics nội bộ; không thêm `logstash-logback-encoder` | docs.spring.io/spring-boot/reference/features/logging.html |
+| Test | JUnit **Jupiter** (`spring-boot-starter-test`), `io.grpc:grpc-inprocess` + `grpc-testing` (server in-process cho test hợp đồng/interceptor), Testcontainers `org.testcontainers:testcontainers-mongodb` + `testcontainers-junit-jupiter`, SQLite file tạm (`@TempDir`) | JUnit **6.0.3** · grpc **1.84.1** · Testcontainers **2.0.5** (2026-04-20) — đều theo BOM | TESTING-STRATEGY TC-SRV/RPC/SVC/OUT; Testcontainers cần Docker trên máy chạy test | junit.org/junit5 · testcontainers.com |
+| Độ phủ | Plugin `jacoco` của Gradle (`toolVersion`) | **0.8.16** (2026-10-26) | Báo cáo độ phủ từng module + gộp | jacoco.org |
+| Định dạng mã (**ĐỀ XUẤT — chờ người dùng duyệt**, TESTING-STRATEGY KG-8) | Plugin Gradle `com.diffplug.spotless` với `googleJavaFormat("1.37.0")` (`./gradlew spotlessApply` / `spotlessCheck`, chỉ `src/**/*.java` của server; không áp cho `proto`/mã sinh) | Plugin **8.11.0** (2026-11-02 — đúng mốc ≥ 2 tuần so với 2026-11-16; kiểm `maven-metadata.xml` + `Last-Modified` của `.pom` 17/11; 8.10.4 ngày 2026-10-08 là dự phòng) · google-java-format **1.37.0** (2026-10-01; 2.0.0 ngày 2026-10-30 chưa đủ 2 tuần) | Ép Google Java Style (CODING-STANDARDS §Định dạng) bằng máy thay vì chỉ review; plugin build dev, không vào image/jar; **nếu không duyệt**: bỏ `spotlessCheck` khỏi NFR-Q1/DoD và dùng định dạng IDE + review | github.com/diffplug/spotless |
+| Quét dependency | Plugin Gradle `org.owasp.dependencycheck` (OWASP Dependency-Check) + Gradle dependency verification | **13.0.0** (2026-08-03) | NFR-S10: `failBuildOnCVSS = 7` và `failOnError = true` (không tải được CSDL NVD thì **build thất bại**, không bỏ qua im lặng); cần **NVD API key** (`NVD_API_KEY`: biến môi trường của người chạy/**secret CI**, không commit, không vào image — chạy ngoài bước build image) để tải CSDL nhanh; ngoại lệ chỉ qua `suppression.xml` **có `until=` (hạn) + lý do + người duyệt**, quá hạn thì build lại thất bại (TM-45); lần đầu tải lâu (vài phút) | owasp.org/www-project-dependency-check |
+| MongoDB server | Image `mongo:8.0` — ghim `mongo:8.0.34` trong compose (giữ thay đổi phạm vi) | 8.0.34 | Dòng 8.0 đã duyệt; bật xác thực | hub.docker.com/_/mongo |
+| Đóng gói | **Dockerfile nhiều stage** (`ARG SERVICE`): build `eclipse-temurin:21.0.13_9-jdk-noble` → chạy `eclipse-temurin:21.0.13_9-jre-noble`, jar tách lớp (`-Djarmode=tools extract --layers`), `USER 10001`; Docker Compose v2 | Image ghim `@sha256:…` khi tạo compose | Chọn Dockerfile thay **Jib** (3.5.4, 2026-07-14): compose `up --build` dùng trực tiếp, cần shell + `curl` cho healthcheck (distroless của Jib không có), không thêm plugin, dễ giải thích | docs.docker.com/compose · docs.spring.io/spring-boot/reference/packaging/container-images |
+| Công cụ vận hành | `grpcurl` (gọi thử RPC), tunnel/reverse proxy theo DEC-023 | Bản ổn định hiện hành | Không phải dependency của mã | github.com/fullstorydev/grpcurl |
 
-**Chọn `rusqlite` thay `sqlx`:** (1) API đồng bộ, SQL viết tay nhìn thấy được — dễ giải thích khi vấn đáp, giống JDBC thuần của kế hoạch thay đổi phạm vi; (2) feature `bundled` đóng gói SQLite, build giống nhau trên Windows và Docker, không cần cài thư viện hệ thống; (3) `sqlx` cần macro kiểm truy vấn lúc biên dịch (phải có CSDL hoặc chế độ offline + `.sqlx/`), thêm độ phức tạp cho nhóm mới học Rust, và driver SQLite của `sqlx` thực chất cũng chạy trên luồng riêng nên không lợi về hiệu năng; (4) quy mô ≤ 10 yêu cầu/giây nên một kết nối ghi + `spawn_blocking` là đủ (SYSTEM-BLUEPRINT §Backend). Đánh đổi: phải tự bọc `spawn_blocking` và tự viết migrator nhỏ (≈ 50 dòng trong `common`).
+**Tương thích đã kiểm (BOM `spring-boot-dependencies` 4.1.2, đọc trực tiếp `.pom` trên Maven Central):** `spring-grpc.version` 1.1.2 · `grpc-java.version` 1.84.1 · `protobuf-java.version` 4.36.2 · `netty.version` 4.2.19.Final · `sqlite-jdbc.version` 3.53.4.0 · `flyway.version` 12.4.0 · `mongodb.version` 5.8.1 · `spring-data-bom` 2026.0.2 · `caffeine` 3.2.4 · `junit-jupiter` 6.0.3 · `testcontainers` 2.0.5 · `hikaricp` 7.0.2 · `logback` 1.5.38. App giữ grpc 1.85.1 / protobuf-javalite 4.36.2 — khác bản vá phụ của grpc-java giữa app và server không ảnh hưởng giao thức.
 
-**Không dùng (có chủ ý):** `axum`/`actix-web` (chỉ gRPC, không cần HTTP framework), `sqlx`/`diesel`/`sea-orm` (xem trên), Argon2/bcrypt (giữ PBKDF2 đã duyệt), `jsonwebtoken` (token opaque — DEC-013), Envoy (edge tự viết — Q2), OpenTelemetry (Could), `tonic` feature TLS (TLS kết thúc ở lớp lộ ra Internet — DEC-023; nếu phương án cuối cần TLS tại edge thì bật `tls-ring` và ghi lại ở DEC-023).
+**Dự phòng (đã loại sau Q-J1; chỉ để truy vết nếu S-01' chứng minh Boot 4.1 bất khả thi):** Boot **3.5.16** + `org.springframework.grpc:spring-grpc-spring-boot-starter` **0.12.0** (2025-10-24, BOM 0.12.0: grpc 1.76.0, protobuf-java 4.32.1 → `protoc`/`protoc-gen-grpc-java` phải hạ theo) + Flyway 11.7.2, sqlite-jdbc 3.49.1.0, Mongo driver 5.5.2, JUnit 5.12.2, Testcontainers 1.21.4 (`org.testcontainers:mongodb`) theo BOM 3.5.16. Nhược: không còn bản vá OSS sau 06/2026, Spring gRPC tiền 1.0.
 
-Mục `[workspace.dependencies]` dự kiến (chưa tạo — chỉ tài liệu; SPIKE S-01 xác nhận build):
+**Cần xác nhận ở SPIKE S-01' (0,5 ngày, trước khi code dịch vụ):** (1) `./gradlew build` trên Windows + trong Docker với Gradle 9.6.0 + Boot plugin 4.1.2 + protobuf plugin 0.10.0; (2) tên property Spring gRPC/Mongo của Boot 4.1 (`spring.grpc.server.*`, `spring.grpc.client.channels.*.address`, property URI Mongo) và `@GlobalServerInterceptor`/`GrpcExceptionHandler` chạy đúng thứ tự; (3) giới hạn Netty (1 MiB, metadata 16 KiB) trả mã lỗi gì khi vượt (API_CONTRACT EP-11); (4) Flyway 12.4.0 nhận SQLite qua `sqlite-jdbc` (`STRICT`, `RETURNING`), DataSource ghi 1 kết nối + đọc 4; (5) Actuator trên webflux cổng 8081 không làm Spring gRPC chuyển sang chế độ servlet/không đổi transport; `curl` có trong image `eclipse-temurin` jre-noble; (6) đo RSS từng JVM với cờ ở SYSTEM-BLUEPRINT §Backend, tổng compose và chế độ gộp → chốt NFR-E5; thời gian `docker compose up` → NFR-E4; (7) `all-in-one` chạy 6 context con trong một JVM, mỗi context cổng riêng; (8) OWASP Dependency-Check chạy được với NVD API key.
+
+**Không dùng (có chủ ý):** Spring MVC/REST cho nghiệp vụ (chỉ gRPC; webflux chỉ để phục vụ Actuator nội bộ), Spring Data JDBC/JPA/Hibernate (SQL viết tay qua `JdbcClient`), `net.devh` grpc starter, Jib, Lombok (giảm "phép thuật", dễ vấn đáp), Argon2/bcrypt (giữ PBKDF2 đã duyệt), JWT (token opaque — DEC-013), Envoy (edge tự viết — Q2), OpenTelemetry (Could), TLS tại edge (TLS kết thúc ở lớp lộ ra Internet — DEC-023; nếu cần, cấu hình TLS của Spring gRPC và ghi lại ở DEC-023), virtual threads (mặc định tắt — pinning với `sqlite-jdbc` trên Java 21).
+
+**Ràng buộc hardening liên quan stack (THREAT_MODEL D-16..D-19, chi tiết ở SYSTEM-BLUEPRINT §Backend "Hardening JVM và Spring"):** `spring-boot-starter-webflux` **chỉ** để phục vụ Actuator trên `127.0.0.1:8081` (chỉ `health` + `metrics`; cổng HTTP chính không nghe; không controller nghiệp vụ — TM-51, TM-52); cấm `spring-boot-starter-web`/webmvc/Tomcat/Undertow/Jetty/`spring-boot-devtools` và thư viện trong danh sách cấm của CODING-STANDARDS (TM-45); `JAVA_TOOL_OPTIONS` có `-Djdk.serialFilter=!*` (đề xuất, xác nhận S-01'), `-XX:+DisableAttachMechanism`, `-XX:-CreateCoredumpOnCrash`, `-XX:-HeapDumpOnOutOfMemoryError`, `-Dorg.sqlite.tmpdir=/app/native`, `-Dio.netty.native.workdir=/app/native`; không JMX/JDWP/JFR/heap dump ở prod (TM-55, TM-58); `MappingMongoConverter` không ghi `_class` (TM-53); bí mật kiểu `Secret`, nạp từ env/`configtree` (TM-56). Gói Java gốc `com.learninge.server.<module>` (đã xác nhận).
+
+Mục catalog dự kiến (chưa tạo — chỉ tài liệu; S-01' xác nhận build):
 ```toml
-[workspace.package]
-edition = "2021"
-rust-version = "1.89"
+[versions]
+springBoot = "4.1.2"
+springDependencyManagement = "1.1.7"
+protobufPlugin = "0.10.0"
+protoc = "4.36.2"              # = protobuf-java của BOM
+grpcJava = "1.84.1"            # = grpc-java của BOM, dùng cho protoc-gen-grpc-java
+jacoco = "0.8.16"
+owaspDependencyCheck = "13.0.0"
+spotless = "8.11.0"            # ĐỀ XUẤT — chỉ thêm khi được duyệt (KG-8)
+googleJavaFormat = "1.37.0"    # ĐỀ XUẤT — truyền vào googleJavaFormat(...) trong cấu hình spotless
 
-[workspace.dependencies]
-tokio = { version = "1.54.1", features = ["rt-multi-thread", "macros", "signal", "sync", "time"] }
-tonic = "0.14.9"
-tonic-prost = "0.14.9"
-tonic-health = "0.14.9"
-tonic-prost-build = "0.14.9"        # build-dependency của crates/proto
-protoc-bin-vendored = "3.3.0"       # build-dependency của crates/proto
-prost = "0.14.4"
-prost-types = "0.14.4"
-tower = { version = "0.5.3", features = ["timeout", "limit"] }
-rusqlite = { version = "0.41.1", features = ["bundled"] }
-mongodb = "3.9.1"
-pbkdf2 = "0.13.0"
-hmac = "0.13.0"
-sha2 = "0.11.1"
-subtle = "2.6.1"
-rand = "0.10.3"
-base64 = "0.23.1"
-uuid = { version = "1.29.0", features = ["v4", "v7"] }
-chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
-chrono-tz = "0.10.4"
-tracing = "0.1.44"
-tracing-subscriber = { version = "0.3.23", features = ["json", "env-filter"] }
-thiserror = "2.0.21"
-anyhow = "1.0.104"
-serde = { version = "1.0.229", features = ["derive"] }
-serde_json = "1.0.154"
+[libraries]
+spring-boot-starter-grpc-server = { module = "org.springframework.boot:spring-boot-starter-grpc-server" }
+spring-boot-starter-grpc-client = { module = "org.springframework.boot:spring-boot-starter-grpc-client" }
+spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
+spring-boot-starter-flyway = { module = "org.springframework.boot:spring-boot-starter-flyway" }
+spring-boot-starter-data-mongodb = { module = "org.springframework.boot:spring-boot-starter-data-mongodb" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc" }
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf" }
+grpc-stub = { module = "io.grpc:grpc-stub" }
+protobuf-java = { module = "com.google.protobuf:protobuf-java" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+grpc-inprocess = { module = "io.grpc:grpc-inprocess" }
+grpc-testing = { module = "io.grpc:grpc-testing" }
+testcontainers-mongodb = { module = "org.testcontainers:testcontainers-mongodb" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter" }
+# không ghi version: lấy từ BOM spring-boot-dependencies:4.1.2
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+owasp-dependencycheck = { id = "org.owasp.dependencycheck", version.ref = "owaspDependencyCheck" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }   # ĐỀ XUẤT, chờ duyệt
 ```
-`Cargo.lock` được commit; nâng phiên bản bằng PR riêng, kèm `cargo audit` và theo quy tắc ≥ 2 tuần.
+Nâng phiên bản bằng PR riêng, cập nhật `gradle/verification-metadata.xml` (`./gradlew --write-verification-metadata sha256 help`) và chạy `dependencyCheckAnalyze`, theo quy tắc ≥ 2 tuần.
 
 ### Cách chạy (dự kiến, NFR-E4)
-1. Cài Rust bằng rustup (bản ghim tự tải nhờ `rust-toolchain.toml`) và Docker Desktop (Windows bật WSL 2).
+1. Cài JDK 21 (Temurin) — hoặc để Gradle toolchain tự tải — và Docker Desktop (Windows bật WSL 2).
 2. `cp deploy/.env.example deploy/.env` rồi điền `LEARNINGE_SERVER_KEY`, `LEARNINGE_PSEUDONYM_KEY`, `LEARNINGE_INTERNAL_TOKEN` (base64 ≥ 32 byte), mật khẩu Mongo cho root và 3 user dịch vụ — `deploy/.env` không commit.
-3. `docker compose -f deploy/docker-compose.yml up --build` → Mongo + 6 dịch vụ; edge nghe `127.0.0.1:50051`. Lần đầu tự chạy migration SQLite, tạo index Mongo.
-4. Nạp nội dung: `docker compose run --rm content-import` (hoặc `cargo run -p content-import`).
+3. `docker compose -f deploy/docker-compose.yml up --build` → Mongo + 6 dịch vụ; edge nghe `127.0.0.1:50051`. Lần đầu Flyway tự chạy migration SQLite, dịch vụ Mongo tự tạo collection/index.
+4. Nạp nội dung: `docker compose -f deploy/docker-compose.yml run --rm content --ops=import --dir=/content-data`.
 5. Kiểm tra: `grpcurl -plaintext 127.0.0.1:50051 grpc.health.v1.Health/Check` → `SERVING`.
-6. Không Docker: `cargo run -p learninge-server -- --all` + Mongo cài thường hoặc container riêng.
-7. Test: `cargo test --workspace`; `cargo clippy --workspace -- -D warnings`; `cargo audit`.
+6. Không Docker: `./gradlew :all-in-one:bootRun --args=--all` (hoặc `./gradlew :<svc>:bootRun`) + Mongo cài thường hoặc container riêng.
+7. Test: `./gradlew test jacocoTestReport`; quét: `./gradlew dependencyCheckAnalyze`.
 8. App: emulator dùng `10.0.2.2:50051` (debug, h2c); máy thật theo phương án triển khai đã chốt ở DEC-023 (đặt `learninge.grpcHost`/`learninge.grpcPort` trong `local.properties`).

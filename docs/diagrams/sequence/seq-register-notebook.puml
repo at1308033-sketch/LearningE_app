@@ -20,7 +20,7 @@ U -> APP : Điền form, bấm Đăng ký (đã kiểm định dạng ở app)
 APP -> E : AuthService/Register {email, nickname, display_name, password,\nsecurity_question_id, security_answer}; deadline 10 s (không thử lại)
 E -> E : giới hạn 10 yêu cầu/giờ/IP; kiểm x-client-version
 E -> A : AuthBackend/Register + x-internal-auth
-A -> A : kiểm tra lại; PBKDF2 (mật khẩu, câu trả lời) trong spawn_blocking
+A -> A : kiểm tra lại; PBKDF2 (mật khẩu, câu trả lời) (javax.crypto, Semaphore ≤ 4 phép đồng thời)
 A -> ADB : BEGIN IMMEDIATE; kiểm email/nickname (trùng → ALREADY_EXISTS · EMAIL_TAKEN / NICKNAME_TAKEN)
 A -> ADB : INSERT users, security_answers, auth_tokens (SHA-256);\nINSERT outbox user.registered — 3 dòng: sync, gamification, insight; COMMIT
 A --> E : AuthSession {token, user{id = users.uuid}}

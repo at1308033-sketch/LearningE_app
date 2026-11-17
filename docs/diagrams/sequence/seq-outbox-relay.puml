@@ -7,14 +7,14 @@ skinparam maxMessageSize 200
 
 participant "Dịch vụ phát\n(auth hoặc sync)\nxử lý RPC" as P
 database "SQLite (auth.db / sync.db)\nbảng nghiệp vụ + outbox" as DB
-participant "Relay\n(tokio task, common::outbox)" as RL
+participant "OutboxRelay\n(@Scheduled, common.outbox)" as RL
 participant "Đích: EventSink\n(sync · gamification · insight)" as D
 database "Kho của đích\nSQLite sync.db / MongoDB" as DDB
 
 == 1. Ghi: một giao dịch, không ghi đồng thời SQLite và Mongo ==
 P -> DB : BEGIN IMMEDIATE
 P -> DB : thay đổi nghiệp vụ (vd INSERT xp_events, UPDATE users)
-P -> DB : INSERT outbox — mỗi (sự kiện, đích) một dòng:\nevent_id UUIDv7, destination, type, payload (Event protobuf, cắt theo đích)\nđịnh tuyến cố định common::events (vd xp.recorded → gamification, insight)
+P -> DB : INSERT outbox — mỗi (sự kiện, đích) một dòng:\nevent_id UUIDv7, destination, type, payload (Event protobuf, cắt theo đích)\nđịnh tuyến cố định EventRouting (common.outbox) (vd xp.recorded → gamification, insight)
 P -> DB : COMMIT
 P -> RL : Notify (đánh thức ngay, không chờ chu kỳ 1 s)
 

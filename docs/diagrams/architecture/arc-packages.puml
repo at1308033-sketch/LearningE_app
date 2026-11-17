@@ -1,7 +1,7 @@
 @startuml
 !include ../_style.puml
 set separator none
-title Sơ đồ gói com.learninge.app (app) và cargo workspace LearningE_Server (crates + services) và hướng phụ thuộc (CR-007)
+title Sơ đồ gói com.learninge.app (app) và Gradle multi-module LearningE_Server (proto, common, 6 dịch vụ, all-in-one; com.learninge.server.<module>) và hướng phụ thuộc (CR-007, CR-008)
 skinparam dpi 100
 hide empty members
 hide circle
@@ -48,28 +48,30 @@ package "Repo app — module :app — com.learninge.app" as APP {
   }
 }
 
-package "Repo LearningE_Server — cargo workspace (Rust 1.99.1)" as SRV {
-  package "proto/learninge/app/v1 + internal/v1\n(.proto — nguồn sự thật;\napp chép bản sao + proto.lock)" as protofiles {
+package "Repo LearningE_Server — Gradle multi-module, Kotlin DSL (Java 21, Spring Boot 4.1.2) — gói com.learninge.server.<module>" as SRV {
+  package "proto\n(src/main/proto: learninge/app/v1 + internal/v1 —\nnguồn sự thật; app chép bản sao + proto.lock)" as protofiles {
   }
-  package "crates/proto (learninge-proto)\nbuild.rs → tonic-prost-build" as cproto {
+  package "module proto (java-library)\nplugin com.google.protobuf → message + stub grpc-java\ncom.learninge.server.proto" as cproto {
   }
-  package "crates/common\n(config, tracing, AppError → Status + error-code,\ninternal_auth, SQLite + migrator,\noutbox + relay, events, health, shutdown)" as ccommon {
+  package "module common (java-library) — com.learninge.server.common\ngrpc (interceptor, AppExceptionHandler) · error (AppException, ErrorCode)\nconfig · sqlite (DataSource, TxRunner) · outbox (OutboxWriter, OutboxRelay)\nops · id (UuidV7, UuidV5)" as ccommon {
   }
-  package "services/* — mỗi dịch vụ một crate thư viện serve() + main" as SVCS {
-  package "services/edge\n(forwarders, token cache,\nrate limit, GetMe composer)" as sedge {
+  package "Module dịch vụ — mỗi module = một ứng dụng Spring Boot (<Svc>Application + <Svc>ServiceConfig)\nmỗi module chia gói grpc → domain → store" as SVCS {
+  package "module edge — com.learninge.server.edge\n(forwarders, TokenAuthenticator + Caffeine,\nIpRateLimiter, GetMeComposer)" as sedge {
   }
-  package "services/auth\n(domain: PasswordHasher, LockPolicy,\nTokenService · store: auth.db)" as sauth {
+  package "module auth — com.learninge.server.auth\n(domain: PasswordHasher, LockPolicy, TokenService\nstore: JdbcClient auth.db · db/migration/auth)" as sauth {
   }
-  package "services/sync\n(domain: LwwPolicy, XpValidator,\nStreakCalculator · store: sync.db)" as ssync {
+  package "module sync — com.learninge.server.sync\n(domain: LwwPolicy, XpValidator, StreakCalculator\nstore: JdbcClient sync.db · db/migration/sync)" as ssync {
   }
-  package "services/content\n(store: Mongo)" as scontent {
+  package "module content — com.learninge.server.content\n(store: Spring Data MongoDB; --ops=import)" as scontent {
   }
-  package "services/gamification\n(IsoWeek, DailyCap, Ranking · Mongo)" as sgame {
+  package "module gamification — com.learninge.server.gamification\n(IsoWeek, DailyCap, Ranking · MongoDB; --ops=rebuild)" as sgame {
   }
-  package "services/insight\n(store: Mongo, TTL index)" as sinsight {
+  package "module insight — com.learninge.server.insight\n(store: MongoDB, TTL index)" as sinsight {
   }
   }
-  package "bin/learninge-server (--all)\ntools/content-import" as sbin {
+  package "module all-in-one\n(AllInOneApplication: 6 context Spring con trong 1 JVM,\ncờ <U+002D><U+002D>all hoặc <U+002D><U+002D>only=edge,auth; nội bộ nghe 127.0.0.1)" as sbin {
+  }
+  package "content-data/ (JSON nguồn)\ndeploy/ (compose, Dockerfile nhiều stage)" as sdeploy {
   }
 }
 
@@ -99,15 +101,16 @@ core ..> db
 stub ..> protofiles : bản sao learninge.app.v1\n(tools/sync-proto.ps1)
 remote ..> sedge : gRPC (h2/TLS) learninge.app.v1\n(hợp đồng API_CONTRACT, không phụ thuộc mã)
 
-protofiles ..> cproto : build.rs
+protofiles ..> cproto : plugin protobuf (Gradle)
 SVCS ..> cproto
 SVCS ..> ccommon
 sbin ..> SVCS
+sdeploy ..> sbin : đóng gói image
 
 legend bottom
   Quy tắc app: ui → domain → data (gồm data.remote); chỉ data.remote import mã sinh từ proto và io.grpc.*; sync được domain gọi, không phụ thuộc ui;
   domain.rules không import android.*; DAO không chứa quy tắc nghiệp vụ; ViewModel không giữ Context của Activity.
-  Quy tắc server: mỗi dịch vụ là crate thư viện có serve(config, shutdown) + main mỏng; grpc → domain → store; dịch vụ không import crate dịch vụ khác (chỉ qua proto);
-  user_id chỉ lấy từ metadata x-user-id do edge gắn sau khi qua interceptor x-internal-auth. common dùng được ở mọi tầng.
+  Quy tắc server: mỗi dịch vụ là một module Gradle = ứng dụng Spring Boot; gói grpc → domain (Java thuần, không Spring) → store (JdbcClient / MongoTemplate); module dịch vụ không phụ thuộc module dịch vụ khác (chỉ qua stub của module proto, kiểm bằng dependency Gradle);
+  user_id chỉ lấy từ metadata x-user-id do edge gắn sau khi qua InternalAuthServerInterceptor (x-internal-auth). common dùng được ở mọi tầng.
 endlegend
 @enduml
