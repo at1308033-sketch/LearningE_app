@@ -126,6 +126,30 @@
         <item quantity="other">%d ngày</item>
     </plurals>
 
+    <!-- SCR-22 Tôi -->
+    <string name="me_progress">Tiến độ học tập</string>
+
+    <!-- SCR-21 Tiến độ -->
+    <string name="progress_title">Tiến độ</string>
+    <string name="progress_current_streak">Chuỗi hiện tại</string>
+    <string name="progress_days_in_row">ngày liên tiếp</string>
+    <string name="progress_record">Kỷ lục: %1$d ngày</string>
+    <string name="progress_no_streak">Chưa có chuỗi — học hôm nay để thắp lửa</string>
+    <string name="progress_week">Hoạt động 7 ngày</string>
+    <string name="progress_mastered_of">Đã thuộc %1$d/%2$d từ</string>
+    <string name="progress_quiz_average">Điểm quiz trung bình 7 ngày: %1$d</string>
+    <string name="progress_no_quiz">Chưa làm bài quiz nào trong 7 ngày qua</string>
+    <string name="progress_by_topic">Theo chủ đề</string>
+    <string-array name="weekdays_short">
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+        <item>T7</item>
+        <item>CN</item>
+    </string-array>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

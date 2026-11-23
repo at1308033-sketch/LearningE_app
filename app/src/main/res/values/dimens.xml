@@ -32,4 +32,6 @@
     <dimen name="topic_blob">72dp</dimen>
     <dimen name="topic_blob_offset">-16dp</dimen>
     <dimen name="badge_padding">3dp</dimen>
+    <dimen name="chart_height">160dp</dimen>
+    <dimen name="chart_text">12sp</dimen>
 </resources>

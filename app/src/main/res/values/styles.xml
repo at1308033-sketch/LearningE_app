@@ -72,6 +72,37 @@
         <item name="navigationIconTint">@color/on_hero</item>
     </style>
 
+    <style name="Widget.LearningE.SettingRow" parent="">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:drawablePadding">@dimen/space_4</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/button_height_l</item>
+        <item name="android:paddingStart">@dimen/space_4</item>
+        <item name="android:paddingEnd">@dimen/space_4</item>
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.TitleS</item>
+        <item name="drawableEndCompat">@drawable/ic_chevron_right</item>
+    </style>
+
+    <style name="Widget.LearningE.StatColumn" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="Widget.LearningE.StatNumber" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.TitleL</item>
+    </style>
+
+    <style name="Widget.LearningE.StatLabel" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
+    </style>
+
     <style name="Widget.LearningE.Badge" parent="">
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
         <item name="android:background">@drawable/bg_pill</item>

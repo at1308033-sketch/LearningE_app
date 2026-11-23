@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-051: SCR-21 Tiến độ với biểu đồ cột 7 ngày tự vẽ (`BarChartView`), `StatisticsService`.
 - T-050: `StudyLogDao`, `ProgressService` (hoạt động học, chuỗi ngày), SCR-05 Trang chủ.
 - T-030: `DeckDao`, `WordDao`, `DeckService`; SCR-06 lưới chủ đề + lọc cấp độ, SCR-07 danh sách từ + trạng thái; 15 icon chủ đề.
 - T-121: trạng thái online của đăng nhập/đăng ký (mất mạng, máy chủ bận, phiên hết hạn, tài khoản đã xóa, đổi tài khoản khi còn thay đổi chưa đồng bộ).

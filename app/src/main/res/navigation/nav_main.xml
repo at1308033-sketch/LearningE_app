@@ -20,6 +20,15 @@
             app:argType="long" />
     </fragment>
 
+    <action
+        android:id="@+id/action_global_progress"
+        app:destination="@id/progress_fragment" />
+
+    <fragment
+        android:id="@+id/progress_fragment"
+        android:name="com.learninge.app.ui.me.ProgressFragment"
+        tools:layout="@layout/fragment_progress" />
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">
@@ -67,6 +76,6 @@
         <fragment
             android:id="@+id/me_fragment"
             android:name="com.learninge.app.ui.me.MeFragment"
-            tools:layout="@layout/fragment_placeholder" />
+            tools:layout="@layout/fragment_me" />
     </navigation>
 </navigation>
