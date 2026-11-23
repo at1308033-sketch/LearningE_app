@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_graph"
+        android:icon="@drawable/ic_home"
+        android:title="@string/tab_home" />
+
+    <item
+        android:id="@+id/learn_graph"
+        android:icon="@drawable/ic_book_open"
+        android:title="@string/tab_learn" />
+
+    <item
+        android:id="@+id/practice_graph"
+        android:icon="@drawable/ic_clipboard_check"
+        android:title="@string/tab_practice" />
+
+    <item
+        android:id="@+id/search_graph"
+        android:icon="@drawable/ic_search"
+        android:title="@string/tab_search" />
+
+    <item
+        android:id="@+id/me_graph"
+        android:icon="@drawable/ic_user"
+        android:title="@string/tab_me" />
+</menu>

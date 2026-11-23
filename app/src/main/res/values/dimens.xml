@@ -21,4 +21,5 @@
     <dimen name="progress_thickness">8dp</dimen>
     <dimen name="badge_m">48dp</dimen>
     <dimen name="badge_s">40dp</dimen>
+    <dimen name="empty_art_size">200dp</dimen>
 </resources>

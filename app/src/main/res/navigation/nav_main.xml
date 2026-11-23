@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mỗi tab là một đồ thị con để giữ ngăn xếp riêng. Màn hình con dùng chung cho nhiều tab đặt ở cấp này, kèm action_global_*. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/home_graph">
+
+    <navigation
+        android:id="@+id/home_graph"
+        app:startDestination="@id/home_fragment">
+
+        <fragment
+            android:id="@+id/home_fragment"
+            android:name="com.learninge.app.ui.home.HomeFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/learn_graph"
+        app:startDestination="@id/learn_fragment">
+
+        <fragment
+            android:id="@+id/learn_fragment"
+            android:name="com.learninge.app.ui.learn.LearnFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/practice_graph"
+        app:startDestination="@id/practice_fragment">
+
+        <fragment
+            android:id="@+id/practice_fragment"
+            android:name="com.learninge.app.ui.practice.PracticeFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/search_graph"
+        app:startDestination="@id/search_fragment">
+
+        <fragment
+            android:id="@+id/search_fragment"
+            android:name="com.learninge.app.ui.search.SearchFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/me_graph"
+        app:startDestination="@id/me_fragment">
+
+        <fragment
+            android:id="@+id/me_fragment"
+            android:name="com.learninge.app.ui.me.MeFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+</navigation>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hero_brand_start"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/space_6">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.LearningE.Display"
+        android:textColor="@color/on_hero" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_2"
+        android:gravity="center"
+        android:text="@string/splash_slogan"
+        android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+        android:textColor="@color/on_hero_variant" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:contentDescription="@string/splash_loading"
+        android:indeterminate="true" />
+</LinearLayout>

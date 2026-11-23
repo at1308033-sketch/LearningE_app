@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:gravity="center"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/iv_empty_art"
+        android:layout_width="@dimen/empty_art_size"
+        android:layout_height="@dimen/empty_art_size"
+        android:layout_gravity="center_horizontal"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/tv_empty_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_6"
+        android:layout_marginTop="@dimen/space_4"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.LearningE.TitleL" />
+
+    <TextView
+        android:id="@+id/tv_empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_6"
+        android:layout_marginTop="@dimen/space_2"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.LearningE.BodyM" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_empty_action"
+        style="@style/Widget.LearningE.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_4"
+        android:visibility="gone" />
+</merge>

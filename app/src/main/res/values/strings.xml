@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LearningE</string>
+
+    <!-- Thanh tab -->
+    <string name="tab_home">Trang chủ</string>
+    <string name="tab_learn">Học</string>
+    <string name="tab_practice">Luyện tập</string>
+    <string name="tab_search">Tra từ</string>
+    <string name="tab_me">Tôi</string>
+
+    <!-- SCR-01 Màn hình chờ -->
+    <string name="splash_slogan">Học tiếng Anh mỗi ngày —\nhọc được cả khi mất mạng</string>
+    <string name="splash_loading">Đang chuẩn bị dữ liệu học…</string>
+
+    <!-- Màn hình chưa làm -->
+    <string name="placeholder_title">Sắp có</string>
+    <string name="placeholder_message">Màn hình này đang được xây dựng.</string>
 </resources>
