@@ -69,14 +69,16 @@ public class ExamHubFragment extends BaseFragment {
     }
 
     private void addGroup(ViewGroup parent, NavController nav, ExamHubViewModel.Group group) {
-        ItemExamGroupBinding item = ItemExamGroupBinding.inflate(LayoutInflater.from(parent.getContext()), parent, true);
+        ItemExamGroupBinding item = ItemExamGroupBinding.inflate(LayoutInflater.from(parent.getContext()),
+                        parent, true);
         item.tvExamBadge.setText(label(group.tag()));
         item.tvExamBadge.setBackgroundTintList(ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), color(group.tag()))));
         item.tvExamName.setText(label(group.tag()));
         item.tvExamNote.setText(note(group.tag()));
         for (DeckSummary deck : group.decks()) {
-            ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(item.llRows.getContext()), item.llRows, true);
+            ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(item.llRows.getContext()),
+                            item.llRows, true);
             row.ivRow.setImageResource(R.drawable.ic_book_open);
             row.tvRowTitle.setText(getString(R.string.exam_deck, deck.deck().name(), deck.total()));
             row.tvRowNote.setText(R.string.deck_read_only);
@@ -85,7 +87,8 @@ public class ExamHubFragment extends BaseFragment {
                     nav.navigate(NavMainDirections.actionGlobalDeckDetail(deck.deck().id())));
         }
         for (ExamTest test : group.tests()) {
-            ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(item.llRows.getContext()), item.llRows, true);
+            ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(item.llRows.getContext()),
+                            item.llRows, true);
             row.ivRow.setImageResource(R.drawable.ic_clipboard_check);
             row.tvRowTitle.setText(test.title());
             row.tvRowNote.setText(test.bestScore() == null

@@ -50,7 +50,8 @@ final class DbSchema {
                     + "deck_id INTEGER NOT NULL REFERENCES decks(id) ON DELETE CASCADE, term TEXT NOT NULL, "
                     + "reading TEXT, part_of_speech TEXT, meaning_vi TEXT NOT NULL, example TEXT, "
                     + "example_translation TEXT, search_term TEXT NOT NULL, search_reading TEXT, search_meaning TEXT, "
-                    + "sort_order INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, " + DELETED + ", " + SYNC + ")",
+                    + "sort_order INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, " + DELETED
+                    + ", " + SYNC + ")",
             "CREATE INDEX idx_words_deck ON words(deck_id, sort_order)",
             "CREATE UNIQUE INDEX ux_words_deck_term ON words(deck_id, search_term) WHERE deleted = 0",
             "CREATE INDEX idx_words_search ON words(search_term)",
@@ -103,7 +104,8 @@ final class DbSchema {
             "CREATE TABLE exam_attempts (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid TEXT NOT NULL UNIQUE, "
                     + "user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, "
                     + "test_id INTEGER NOT NULL REFERENCES exam_tests(id) ON DELETE CASCADE, "
-                    + "status TEXT NOT NULL CHECK (status IN ('IN_PROGRESS','SUBMITTED')), started_at INTEGER NOT NULL, "
+                    + "status TEXT NOT NULL CHECK (status IN ('IN_PROGRESS','SUBMITTED')), "
+                    + "started_at INTEGER NOT NULL, "
                     + "submitted_at INTEGER, score INTEGER CHECK (score BETWEEN 0 AND 100), correct_count INTEGER, "
                     + "total_count INTEGER NOT NULL, duration_sec INTEGER, updated_at INTEGER NOT NULL, "
                     // Chỉ lượt đã nộp mới được đẩy lên server.

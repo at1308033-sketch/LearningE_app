@@ -60,7 +60,7 @@ public class ContentRemote {
         }
         GetManifestResponse value = response.value;
         List<SeedLanguage> languages = value.getLanguagesList().stream().map(item -> new SeedLanguage(item.getCode(),
-                item.getNameVi(), item.getTtsLocale(), item.getReadingLabel(), item.getSortOrder()))
+                        item.getNameVi(), item.getTtsLocale(), item.getReadingLabel(), item.getSortOrder()))
                 .collect(Collectors.toList());
         return Result.ok(new Manifest(value.getContentVersion(), value.getNotModified(), languages,
                 items(value.getDecksList()), items(value.getExamsList())));

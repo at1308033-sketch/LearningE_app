@@ -72,8 +72,8 @@ public final class WordDao {
      */
     public WordItem findById(long userId, long wordId) {
         List<WordItem> found = list("w.id = CAST(?2 AS INTEGER) AND EXISTS (SELECT 1 FROM decks d "
-                + "WHERE d.id = w.deck_id AND d.deleted = 0 "
-                + "AND (d.owner_user_id IS NULL OR d.owner_user_id = CAST(?1 AS INTEGER)))",
+                        + "WHERE d.id = w.deck_id AND d.deleted = 0 "
+                        + "AND (d.owner_user_id IS NULL OR d.owner_user_id = CAST(?1 AS INTEGER)))",
                 String.valueOf(userId), String.valueOf(wordId));
         return found.isEmpty() ? null : found.get(0);
     }

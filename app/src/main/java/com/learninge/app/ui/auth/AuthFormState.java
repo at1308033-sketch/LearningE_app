@@ -10,9 +10,9 @@ import java.util.Set;
 /**
  * Trạng thái form đăng nhập/đăng ký.
  *
- * @param error         lỗi chung của form, null nếu không có
- * @param fieldErrors   các trường sai
- * @param lockedUntil   mốc {@code SystemClock.elapsedRealtime()} hết khóa tạm, 0 nếu không bị khóa
+ * @param error       lỗi chung của form, null nếu không có
+ * @param fieldErrors các trường sai
+ * @param lockedUntil mốc {@code SystemClock.elapsedRealtime()} hết khóa tạm, 0 nếu không bị khóa
  */
 record AuthFormState(boolean isLoading, boolean isDone, ErrorCode error, Set<Field> fieldErrors, long lockedUntil) {
     static final AuthFormState IDLE = new AuthFormState(false, false, null, Set.of(), 0);

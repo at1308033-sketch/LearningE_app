@@ -55,7 +55,8 @@ public final class CardProgressDao {
     public void save(long userId, long wordId, int box, LocalDate nextReview, LocalDate today, long now) {
         SQLiteDatabase db = database.getWritableDatabase();
         db.execSQL("UPDATE card_progress SET box = ?, next_review_date = ?, last_reviewed_at = ?, "
-                        + "review_count = review_count + 1, updated_at = ?, dirty = 1 WHERE user_id = ? AND word_id = ?",
+                        + "review_count = review_count + 1, updated_at = ?, dirty = 1 "
+                        + "WHERE user_id = ? AND word_id = ?",
                 new Object[]{box, nextReview.toString(), now, now, userId, wordId});
         if (findBox(userId, wordId) != null) {
             return;

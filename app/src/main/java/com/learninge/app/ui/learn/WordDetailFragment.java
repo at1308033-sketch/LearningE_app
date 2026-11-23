@@ -50,8 +50,8 @@ public class WordDetailFragment extends BaseFragment {
         binding.btnSaveToDeck.setOnClickListener(v -> viewModel.loadTargets());
         viewModel.targets().observe(getViewLifecycleOwner(), decks -> chooseTarget(viewModel, wordId, decks));
         viewModel.copied().observe(getViewLifecycleOwner(), result -> Snackbar.make(view, result.isOk()
-                ? getString(R.string.word_saved) : result.error == ErrorCode.DUPLICATE
-                ? getString(R.string.word_error_duplicate) : ErrorMessages.of(requireContext(), result.error),
+                        ? getString(R.string.word_saved) : result.error == ErrorCode.DUPLICATE
+                        ? getString(R.string.word_error_duplicate) : ErrorMessages.of(requireContext(), result.error),
                 Snackbar.LENGTH_LONG).show());
         viewModel.deleted().observe(getViewLifecycleOwner(), result -> {
             if (result.isOk()) {

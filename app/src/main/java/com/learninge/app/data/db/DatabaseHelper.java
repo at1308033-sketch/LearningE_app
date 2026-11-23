@@ -38,6 +38,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Chưa có phiên bản 2. Mỗi phiên bản mới thêm một bước ALTER/CREATE, không xóa bảng dữ liệu người dùng (NFR-E3).
+        // Chưa có phiên bản 2. Mỗi phiên bản mới thêm một bước ALTER/CREATE, không xóa dữ liệu người dùng (NFR-E3).
     }
 }

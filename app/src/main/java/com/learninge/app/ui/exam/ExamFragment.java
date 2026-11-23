@@ -113,7 +113,8 @@ public class ExamFragment extends BaseFragment {
     private void renderOptions(FragmentExamBinding binding, ExamViewModel viewModel, ExamQuestion question) {
         binding.llOptions.removeAllViews();
         for (int i = 0; i < question.options().size(); i++) {
-            ItemOptionBinding item = ItemOptionBinding.inflate(LayoutInflater.from(binding.llOptions.getContext()), binding.llOptions, true);
+            ItemOptionBinding item = ItemOptionBinding.inflate(LayoutInflater.from(binding.llOptions.getContext()),
+                            binding.llOptions, true);
             int option = i;
             boolean isSelected = question.selectedIndex() != null && question.selectedIndex() == i;
             item.tvLetter.setText(LETTERS[i]);

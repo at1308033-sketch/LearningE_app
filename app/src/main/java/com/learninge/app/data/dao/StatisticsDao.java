@@ -26,7 +26,8 @@ public final class StatisticsDao {
      */
     public int countWords(long userId) {
         try (Cursor cursor = query("SELECT COUNT(*) FROM words w JOIN decks d ON d.id = w.deck_id "
-                + "WHERE w.deleted = 0 AND d.deleted = 0 AND (d.owner_user_id IS NULL OR d.owner_user_id = ?)", userId)) {
+                + "WHERE w.deleted = 0 AND d.deleted = 0 "
+                + "AND (d.owner_user_id IS NULL OR d.owner_user_id = ?)", userId)) {
             return cursor.moveToFirst() ? cursor.getInt(0) : 0;
         }
     }

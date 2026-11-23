@@ -14,8 +14,8 @@ import com.learninge.app.domain.rules.StreakCalculator;
  * Bảng {@code user_settings}.
  */
 public final class SettingsDao {
-    private static final String[] COLUMNS = {DbContract.Settings.LEVEL, DbContract.Settings.DAILY_GOAL, DbContract.Settings.REMINDER_ENABLED,
-            DbContract.Settings.REMINDER_MINUTE};
+    private static final String[] COLUMNS = {DbContract.Settings.LEVEL, DbContract.Settings.DAILY_GOAL,
+            DbContract.Settings.REMINDER_ENABLED, DbContract.Settings.REMINDER_MINUTE};
 
     private final DatabaseHelper database;
 

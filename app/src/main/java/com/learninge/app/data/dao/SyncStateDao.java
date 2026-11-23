@@ -47,10 +47,11 @@ public final class SyncStateDao {
     }
 
     public SyncState find(long userId) {
-        String[] columns = {DbContract.SyncState.DEVICE_ID, DbContract.SyncState.PULL_CURSOR, DbContract.SyncState.LAST_SYNC_AT, DbContract.SyncState.LAST_ERROR_CODE,
+        String[] columns = {DbContract.SyncState.DEVICE_ID, DbContract.SyncState.PULL_CURSOR,
+                DbContract.SyncState.LAST_SYNC_AT, DbContract.SyncState.LAST_ERROR_CODE,
                 DbContract.SyncState.LAST_ERROR_AT};
-        try (Cursor cursor = database.getReadableDatabase().query(DbContract.SyncState.TABLE, columns, BY_USER, args(userId), null,
-                null, null)) {
+        try (Cursor cursor = database.getReadableDatabase().query(DbContract.SyncState.TABLE, columns, BY_USER,
+                args(userId), null, null, null)) {
             return cursor.moveToFirst() ? new SyncState(cursor.getString(0), cursor.getLong(1),
                     cursor.isNull(2) ? null : cursor.getLong(2), cursor.getString(3),
                     cursor.isNull(4) ? null : cursor.getLong(4)) : null;

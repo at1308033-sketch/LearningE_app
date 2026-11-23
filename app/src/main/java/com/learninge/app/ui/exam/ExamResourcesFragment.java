@@ -32,7 +32,8 @@ public class ExamResourcesFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FragmentExamResourcesBinding binding = FragmentExamResourcesBinding.bind(view);
         padStatusBar(binding.headerResources);
-        binding.toolbarResources.setNavigationOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
+        binding.toolbarResources.setNavigationOnClickListener(v ->
+                NavHostFragment.findNavController(this).navigateUp());
         binding.bannerResources.show(FeedbackBannerView.Kind.INFO, getString(R.string.resources_note));
         add(binding, R.string.resource_toeic, R.string.url_toeic);
         add(binding, R.string.resource_ielts, R.string.url_ielts);
@@ -40,7 +41,8 @@ public class ExamResourcesFragment extends BaseFragment {
     }
 
     private void add(FragmentExamResourcesBinding binding, @StringRes int title, @StringRes int url) {
-        ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(binding.llResources.getContext()), binding.llResources, true);
+        ItemExamRowBinding row = ItemExamRowBinding.inflate(LayoutInflater.from(binding.llResources.getContext()),
+                        binding.llResources, true);
         row.ivRow.setImageResource(R.drawable.ic_info);
         row.tvRowTitle.setText(title);
         row.tvRowNote.setText(R.string.resource_open);

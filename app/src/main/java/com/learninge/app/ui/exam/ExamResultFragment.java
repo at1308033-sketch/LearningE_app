@@ -73,7 +73,8 @@ public class ExamResultFragment extends BaseFragment {
     }
 
     private void addAnswer(FragmentExamResultBinding binding, ExamQuestion question) {
-        ItemExamAnswerBinding item = ItemExamAnswerBinding.inflate(LayoutInflater.from(binding.llAnswers.getContext()), binding.llAnswers, true);
+        ItemExamAnswerBinding item = ItemExamAnswerBinding.inflate(LayoutInflater.from(binding.llAnswers.getContext()),
+                        binding.llAnswers, true);
         boolean isCorrect = question.isCorrect();
         item.ivAnswer.setImageResource(isCorrect ? R.drawable.ic_check : R.drawable.ic_x);
         item.ivAnswer.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(),

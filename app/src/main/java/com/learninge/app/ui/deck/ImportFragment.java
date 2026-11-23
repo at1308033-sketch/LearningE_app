@@ -132,7 +132,7 @@ public class ImportFragment extends BaseFragment {
         }
         // Neo vào cửa sổ để thông báo còn hiện sau khi quay lại danh sách bộ.
         Snackbar.make(requireActivity().findViewById(R.id.nav_host_main), getString(R.string.import_done,
-                result.value.imported(), result.value.skipped()), Snackbar.LENGTH_LONG)
+                        result.value.imported(), result.value.skipped()), Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.bottom_nav).show();
         close();
     }
