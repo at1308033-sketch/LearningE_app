@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t13-work-jobs.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M0 5h1v9h-1zM1 4h14v1h-14zM1 14h14v1h-14zM4 2h1v2h-1zM5 1h6v1h-6zM6 3h4v1h-4zM7 9h2v1h-2zM11 2h1v2h-1zM15 5h1v9h-1z" />
+    <path
+        android:fillColor="#2A2180"
+        android:pathData="M1 8h5v1h-5zM1 13h14v1h-14zM10 8h5v1h-5zM14 12h1v1h-1z" />
+    <path
+        android:fillColor="#5146E0"
+        android:pathData="M1 6h1v2h-1zM1 9h5v2h-5zM1 12h13v1h-13zM1 5h14v1h-14zM1 11h14v1h-14zM3 7h12v1h-12zM4 6h11v1h-11zM10 9h5v2h-5z" />
+    <path
+        android:fillColor="#8B5E3C"
+        android:pathData="M5 3h1v1h-1zM5 2h6v1h-6zM10 3h1v1h-1z" />
+    <path
+        android:fillColor="#A5A0FF"
+        android:pathData="M2 7h1v1h-1zM2 6h2v1h-2z" />
+    <path
+        android:fillColor="#FFC93C"
+        android:pathData="M6 9h1v1h-1zM6 8h4v1h-4zM6 10h4v1h-4zM9 9h1v1h-1z" />
+</vector>

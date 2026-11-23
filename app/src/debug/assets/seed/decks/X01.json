@@ -1,0 +1,25 @@
+{
+  "deck": {
+    "code": "X01",
+    "version": 1,
+    "name": "TOEIC — Văn phòng",
+    "name_en": "TOEIC Office",
+    "description": "Từ vựng TOEIC chủ đề công việc văn phòng",
+    "language": "en",
+    "icon": null,
+    "level": "B1",
+    "exam_tag": "TOEIC",
+    "sort_order": 101
+  },
+  "source": "Dữ liệu mẫu; thay bằng bộ chính thức của nhóm",
+  "words": [
+    {"uid": "X01-0001", "term": "deadline", "reading": "/ˈdedlaɪn/", "pos": "danh từ", "meaning": "hạn chót", "example": "The deadline for the report is Friday.", "example_translation": "Hạn chót nộp báo cáo là thứ Sáu."},
+    {"uid": "X01-0002", "term": "schedule", "reading": "/ˈskedʒuːl/", "pos": "danh từ", "meaning": "lịch trình", "example": "Please check the meeting schedule.", "example_translation": "Vui lòng xem lịch họp."},
+    {"uid": "X01-0003", "term": "invoice", "reading": "/ˈɪnvɔɪs/", "pos": "danh từ", "meaning": "hóa đơn", "example": "We sent the invoice to the client yesterday.", "example_translation": "Chúng tôi đã gửi hóa đơn cho khách hôm qua."},
+    {"uid": "X01-0004", "term": "colleague", "reading": "/ˈkɑːliːɡ/", "pos": "danh từ", "meaning": "đồng nghiệp", "example": "My colleague helped me with the slides.", "example_translation": "Đồng nghiệp đã giúp tôi làm slide."},
+    {"uid": "X01-0005", "term": "postpone", "reading": "/poʊstˈpoʊn/", "pos": "động từ", "meaning": "hoãn lại", "example": "They decided to postpone the launch.", "example_translation": "Họ quyết định hoãn buổi ra mắt."},
+    {"uid": "X01-0006", "term": "budget", "reading": "/ˈbʌdʒɪt/", "pos": "danh từ", "meaning": "ngân sách", "example": "The project is under budget.", "example_translation": "Dự án chi tiêu dưới ngân sách."},
+    {"uid": "X01-0007", "term": "applicant", "reading": "/ˈæplɪkənt/", "pos": "danh từ", "meaning": "người nộp đơn", "example": "Each applicant must send a resume.", "example_translation": "Mỗi người nộp đơn phải gửi sơ yếu lý lịch."},
+    {"uid": "X01-0008", "term": "reimburse", "reading": "/ˌriːɪmˈbɜːrs/", "pos": "động từ", "meaning": "hoàn tiền", "example": "The company will reimburse your travel costs.", "example_translation": "Công ty sẽ hoàn tiền chi phí đi lại cho bạn."}
+  ]
+}

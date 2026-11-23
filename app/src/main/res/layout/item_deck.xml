@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.LearningE.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/space_4"
+    android:layout_marginVertical="@dimen/space_1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_3">
+
+        <ImageView
+            android:id="@+id/iv_deck_badge"
+            android:layout_width="@dimen/badge_m"
+            android:layout_height="@dimen/badge_m"
+            android:background="@drawable/bg_tile"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/space_3"
+            app:tint="@color/on_primary"
+            tools:src="@drawable/ic_notebook" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_3"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_deck_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+                    tools:text="Sổ tay của tôi" />
+
+                <ImageView
+                    android:id="@+id/iv_deck_lock"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="@dimen/space_2"
+                    android:contentDescription="@string/deck_read_only"
+                    app:srcCompat="@drawable/ic_lock"
+                    app:tint="@color/on_surface_variant" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_deck_language"
+                    style="@style/Widget.LearningE.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2"
+                    android:background="@drawable/bg_pill_outlined"
+                    tools:text="EN" />
+
+                <TextView
+                    android:id="@+id/tv_deck_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                    tools:text="14 từ" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_deck_due"
+            style="@style/Widget.LearningE.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/feat_streak_container"
+            android:textColor="@color/feat_streak"
+            tools:text="5 cần ôn" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

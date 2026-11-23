@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Exam">
+
+    <LinearLayout
+        android:id="@+id/header_exam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/space_4">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_exam_close"
+                style="@style/Widget.LearningE.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/common_close"
+                app:icon="@drawable/ic_x"
+                app:iconTint="@color/on_surface" />
+
+            <TextView
+                android:id="@+id/tv_exam_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+                tools:text="TOEIC Part 5 — Đề 1" />
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill"
+                android:backgroundTint="@color/feat_exam_container"
+                android:fontFeatureSettings="tnum"
+                android:paddingHorizontal="@dimen/space_3"
+                android:paddingVertical="@dimen/space_2"
+                android:textAppearance="@style/TextAppearance.LearningE.Label"
+                android:textColor="@color/feat_exam"
+                tools:text="14:32" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_timer_announce"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            android:accessibilityLiveRegion="polite" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/space_4">
+
+            <TextView
+                android:id="@+id/tv_exam_position"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                tools:text="Câu 7/20" />
+
+            <TextView
+                android:id="@+id/tv_exam_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                tools:text="Đã làm 6 · Đánh dấu 1" />
+        </LinearLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/pi_exam"
+            style="@style/Widget.LearningE.Progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_1"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_4">
+
+                    <TextView
+                        android:id="@+id/tv_question_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.Overline"
+                        android:textColor="@color/feat_exam"
+                        tools:text="Câu 7" />
+
+                    <TextView
+                        android:id="@+id/tv_passage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_2"
+                        android:textAppearance="@style/TextAppearance.LearningE.BodyM" />
+
+                    <TextView
+                        android:id="@+id/tv_question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_2"
+                        android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+                        tools:text="The report must be ___ by Friday." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/ll_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:clipChildren="false"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingBottom="@dimen/space_3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_previous"
+                style="@style/Widget.LearningE.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
+                android:text="@string/exam_previous"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_flag"
+                style="@style/Widget.LearningE.Button.Outlined"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_2"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
+                android:text="@string/exam_flag"
+                android:textColor="@color/feat_streak"
+                app:strokeColor="@color/feat_streak"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_next"
+                style="@style/Widget.LearningE.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
+                android:text="@string/exam_next"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_grid"
+            style="@style/Widget.LearningE.Button.Tonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:text="@string/exam_grid" />
+    </LinearLayout>
+</LinearLayout>

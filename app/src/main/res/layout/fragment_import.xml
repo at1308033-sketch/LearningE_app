@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Deck">
+
+    <FrameLayout
+        android:id="@+id/header_import"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/feat_deck_container">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_import"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:title="@string/import_title"
+            tools:subtitle="tu_vung_cong_viec · 102 dòng" />
+    </FrameLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pi_import"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/common_loading"
+        android:indeterminate="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_import"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            app:emptyArt="@drawable/ill_import_file" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_import"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="@dimen/space_4">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:clipChildren="false"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                        <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                            <TextView
+                                android:id="@+id/tv_valid"
+                                style="@style/Widget.LearningE.StatNumber"
+                                android:textColor="@color/success"
+                                tools:text="90" />
+
+                            <TextView
+                                style="@style/Widget.LearningE.StatLabel"
+                                android:text="@string/import_valid" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/Widget.LearningE.StatCard"
+                        android:layout_marginHorizontal="@dimen/space_2">
+
+                        <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                            <TextView
+                                android:id="@+id/tv_duplicate"
+                                style="@style/Widget.LearningE.StatNumber"
+                                tools:text="6" />
+
+                            <TextView
+                                style="@style/Widget.LearningE.StatLabel"
+                                android:text="@string/import_duplicate" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                        <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                            <TextView
+                                android:id="@+id/tv_errors"
+                                style="@style/Widget.LearningE.StatNumber"
+                                android:textColor="@color/error"
+                                tools:text="4" />
+
+                            <TextView
+                                style="@style/Widget.LearningE.StatLabel"
+                                android:text="@string/import_errors" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_errors"
+                    style="@style/Widget.LearningE.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_4">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/import_error_title"
+                            android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                        <TextView
+                            android:id="@+id/tv_error_lines"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                            tools:text="Dòng 15: thiếu nghĩa" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_sample"
+                    style="@style/Widget.LearningE.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_4">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/import_sample"
+                            android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                        <TextView
+                            android:id="@+id/tv_sample"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                            tools:text="apple — quả táo" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.LearningE.Dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3"
+                    android:hint="@string/import_target">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/act_target"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_import"
+                    style="@style/Widget.LearningE.Button.Large"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    tools:text="Nhập 90 từ" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_import_cancel"
+                    style="@style/Widget.LearningE.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:text="@string/common_cancel" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</LinearLayout>

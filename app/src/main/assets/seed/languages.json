@@ -1,0 +1,6 @@
+[
+  { "code": "en", "name_vi": "Tiếng Anh", "tts_locale": "en-US", "reading_label": "Phiên âm (IPA)", "sort_order": 1 },
+  { "code": "ja", "name_vi": "Tiếng Nhật", "tts_locale": "ja-JP", "reading_label": "Cách đọc (kana/romaji)", "sort_order": 2 },
+  { "code": "zh", "name_vi": "Tiếng Trung", "tts_locale": "zh-CN", "reading_label": "Pinyin", "sort_order": 3 },
+  { "code": "ko", "name_vi": "Tiếng Hàn", "tts_locale": "ko-KR", "reading_label": "Romaja", "sort_order": 4 }
+]

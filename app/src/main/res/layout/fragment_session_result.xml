@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.LearningE.Learn">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_4">
+
+        <LinearLayout
+            android:id="@+id/header_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_header_streak_tint"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/space_5">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/view_celebration" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_result_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                tools:text="Tuyệt vời, Minh!" />
+
+            <TextView
+                android:id="@+id/tv_result_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+                tools:text="Bạn đã ôn xong 16 thẻ đến hạn." />
+
+            <LinearLayout
+                android:id="@+id/ll_result_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_result_stage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_2"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+                    android:textColor="@color/feat_streak"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_result_xp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="@color/feat_streak_decor"
+                    android:paddingHorizontal="@dimen/space_3"
+                    android:paddingVertical="@dimen/space_1"
+                    android:textAppearance="@style/TextAppearance.LearningE.Label"
+                    android:textColor="@color/on_sun"
+                    tools:text="+29 XP" />
+
+                <TextView
+                    android:id="@+id/tv_result_cap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:text="@string/result_xp_capped"
+                    android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:clipToPadding="false"
+            android:padding="@dimen/space_4"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_cards"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/feat_learn"
+                        tools:text="16" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_cards" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.StatCard"
+                android:layout_marginHorizontal="@dimen/space_2">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_percent"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/success"
+                        tools:text="81%" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_correct" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_streak"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/feat_streak"
+                        tools:text="6" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_streak" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginBottom="@dimen/space_3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/result_boxes"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                <TextView
+                    android:id="@+id/tv_result_moves"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                    tools:text="13 lên hộp · 3 về hộp 1" />
+
+                <com.learninge.app.ui.common.ChestRowView
+                    android:id="@+id/chests_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_done"
+            style="@style/Widget.LearningE.Button.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_2"
+            android:text="@string/result_done" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue"
+            style="@style/Widget.LearningE.Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:text="@string/result_continue" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

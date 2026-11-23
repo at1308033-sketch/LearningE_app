@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/header_me"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero_brand"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_5"
+        android:paddingBottom="@dimen/space_6">
+
+        <TextView
+            android:id="@+id/tv_me_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_me"
+            android:textAppearance="@style/TextAppearance.LearningE.Headline"
+            android:textColor="@color/on_hero" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.LearningE.Card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_4">
+
+        <LinearLayout
+            android:id="@+id/ll_me_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
+
+            <TextView
+                android:id="@+id/row_progress"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/me_progress"
+                app:drawableStartCompat="@drawable/ic_bar_chart" />
+
+            <TextView
+                android:id="@+id/row_leaderboard"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/leaderboard_title"
+                app:drawableStartCompat="@drawable/ic_target" />
+
+            <TextView
+                android:id="@+id/row_sync"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sync_title"
+                app:drawableStartCompat="@drawable/ic_refresh" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

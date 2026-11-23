@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Chỉ bản debug: gọi máy chủ trong mạng nội bộ (emulator 10.0.2.2, IP LAN). Android 17 chặn nếu không có quyền này. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+</manifest>

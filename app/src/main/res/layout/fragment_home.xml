@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_4"
+        android:paddingBottom="@dimen/space_4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_greeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+                    android:textColor="@color/on_surface_variant"
+                    tools:text="Chào buổi tối," />
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                    tools:text="Minh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_streak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill"
+                android:backgroundTint="@color/feat_streak_decor"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/space_3"
+                android:paddingVertical="@dimen/space_2">
+
+                <ImageView
+                    android:id="@+id/iv_streak"
+                    android:layout_width="20dp"
+                    android:layout_height="26dp"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/px_flame_badge" />
+
+                <TextView
+                    android:id="@+id/tv_streak"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_1"
+                    android:textAppearance="@style/TextAppearance.LearningE.Label"
+                    android:textColor="@color/on_sun"
+                    tools:text="5 ngày" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_4"
+            android:background="@drawable/bg_card_brand"
+            android:padding="@dimen/space_5">
+
+            <TextView
+                android:id="@+id/tv_session_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/hero_art_width"
+                android:text="@string/home_session_label"
+                android:textAppearance="@style/TextAppearance.LearningE.Overline"
+                android:textColor="@color/on_hero_variant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:layout_width="@dimen/hero_art_width"
+                android:layout_height="@dimen/hero_art_height"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ill_streak_mascot" />
+
+            <TextView
+                android:id="@+id/tv_cards"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.LearningE.DisplayNum"
+                android:textColor="@color/on_hero"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_session_label"
+                tools:text="16" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2"
+                android:text="@string/home_cards"
+                android:textAppearance="@style/TextAppearance.LearningE.TitleM"
+                android:textColor="@color/on_hero"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_cards"
+                app:layout_constraintStart_toEndOf="@id/tv_cards" />
+
+            <TextView
+                android:id="@+id/tv_minutes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/hero_art_width"
+                android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                android:textColor="@color/on_hero_variant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_cards"
+                tools:text="Khoảng 8 phút" />
+
+            <LinearLayout
+                android:id="@+id/ll_session_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_minutes">
+
+                <TextView
+                    android:id="@+id/tv_due"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_hero_chip"
+                    android:paddingHorizontal="@dimen/space_3"
+                    android:paddingVertical="@dimen/space_2"
+                    android:textAppearance="@style/TextAppearance.LearningE.Label"
+                    android:textColor="@color/on_hero"
+                    tools:text="12 thẻ cần ôn" />
+
+                <TextView
+                    android:id="@+id/tv_new_words"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_2"
+                    android:background="@drawable/bg_hero_chip"
+                    android:paddingHorizontal="@dimen/space_3"
+                    android:paddingVertical="@dimen/space_2"
+                    android:textAppearance="@style/TextAppearance.LearningE.Label"
+                    android:textColor="@color/on_hero"
+                    tools:text="4 từ mới" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_goal_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginEnd="@dimen/space_2"
+                android:text="@string/home_goal_label"
+                android:textAppearance="@style/TextAppearance.LearningE.Label"
+                android:textColor="@color/on_hero"
+                app:layout_constraintEnd_toStartOf="@id/tv_goal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_session_chips" />
+
+            <TextView
+                android:id="@+id/tv_goal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.LearningE.Label"
+                android:textColor="@color/on_hero"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_goal_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="6/10 từ" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/pi_goal"
+                style="@style/Widget.LearningE.Progress.Hero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:importantForAccessibility="no"
+                app:layout_constraintTop_toBottomOf="@id/tv_goal_label" />
+
+            <TextView
+                android:id="@+id/tv_goal_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                android:textColor="@color/on_hero"
+                app:layout_constraintTop_toBottomOf="@id/pi_goal"
+                tools:text="@string/home_goal_not_met" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_start"
+                style="@style/Widget.LearningE.Button.White"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:minHeight="@dimen/button_height_l"
+                android:text="@string/home_start"
+                app:icon="@drawable/ic_chevron_right"
+                app:iconGravity="textEnd"
+                app:layout_constraintTop_toBottomOf="@id/tv_goal_note" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_continue_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_5"
+            android:text="@string/home_continue_label"
+            android:textAppearance="@style/TextAppearance.LearningE.Label"
+            android:textColor="@color/on_surface_variant" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_last_deck"
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/space_3">
+
+                <ImageView
+                    android:id="@+id/iv_last_deck"
+                    android:layout_width="@dimen/topic_tile"
+                    android:layout_height="@dimen/topic_tile"
+                    android:background="@drawable/bg_tile"
+                    android:importantForAccessibility="no"
+                    android:padding="@dimen/space_1" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_3"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_last_deck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.TitleM"
+                        tools:text="Gia đình" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/pi_last_deck"
+                            style="@style/Widget.LearningE.Progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:importantForAccessibility="no"
+                            app:indicatorColor="@color/feat_learn" />
+
+                        <TextView
+                            android:id="@+id/tv_last_deck_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_2"
+                            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                            tools:text="16/20 từ" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_m"
+                    android:layout_height="@dimen/icon_m"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_chevron_right"
+                    app:tint="@color/on_surface_variant" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_first_topic"
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2">
+
+            <include
+                android:id="@+id/row_first_topic"
+                layout="@layout/view_first_topic" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_home_exam"
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/space_3">
+
+                <ImageView
+                    android:layout_width="@dimen/badge_s"
+                    android:layout_height="@dimen/badge_s"
+                    android:background="@drawable/bg_tile"
+                    android:backgroundTint="@color/feat_exam_container"
+                    android:importantForAccessibility="no"
+                    android:padding="@dimen/space_2"
+                    app:srcCompat="@drawable/ic_clipboard_check"
+                    app:tint="@color/feat_exam" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_3"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_exam"
+                        android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_exam_note"
+                        android:textAppearance="@style/TextAppearance.LearningE.Caption" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_m"
+                    android:layout_height="@dimen/icon_m"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_chevron_right"
+                    app:tint="@color/on_surface_variant" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_leaderboard"
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/space_3">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/px_trophy" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_3"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_leaderboard"
+                        android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                    <TextView
+                        android:id="@+id/tv_home_rank"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                        tools:text="Hạng 7 · 340 XP" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="@dimen/icon_m"
+                    android:layout_height="@dimen/icon_m"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_chevron_right"
+                    app:tint="@color/on_surface_variant" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

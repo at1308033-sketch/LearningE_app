@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Learn">
+
+    <LinearLayout
+        android:id="@+id/header_learn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero_learn"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_3"
+        android:paddingBottom="@dimen/space_4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tab_learn"
+                android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                android:textColor="@color/on_hero" />
+
+            <ImageView
+                android:layout_width="@dimen/hero_art_width"
+                android:layout_height="@dimen/hero_art_height"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ill_onboarding_level" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/tg_learn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tab_topics"
+                style="@style/Widget.LearningE.Segment"
+                android:text="@string/learn_topics" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tab_decks"
+                style="@style/Widget.LearningE.Segment"
+                android:text="@string/learn_my_decks" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/hs_levels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_2"
+        android:scrollbars="none">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cg_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_all"
+                style="@style/Widget.LearningE.FilterChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/learn_level_all" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_a1"
+                style="@style/Widget.LearningE.FilterChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_a1" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_a2"
+                style="@style/Widget.LearningE.FilterChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_a2" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_b1"
+                style="@style/Widget.LearningE.FilterChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_b1" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_decks"
+        android:name="com.learninge.app.ui.deck.MyDecksFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/fl_topics"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_topics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/space_3"
+            android:paddingBottom="@dimen/space_4"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2" />
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_learn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            app:emptyArt="@drawable/ill_onboarding_level" />
+    </FrameLayout>
+</LinearLayout>

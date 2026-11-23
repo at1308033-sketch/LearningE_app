@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Learn">
+
+    <LinearLayout
+        android:id="@+id/header_word_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero_learn"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_4">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_word_list"
+            style="@style/Widget.LearningE.Toolbar.Hero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            tools:title="Gia đình" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_4">
+
+            <ImageView
+                android:id="@+id/iv_deck_icon"
+                android:layout_width="@dimen/topic_tile"
+                android:layout_height="@dimen/topic_tile"
+                android:background="@drawable/bg_tile"
+                android:importantForAccessibility="no"
+                android:padding="@dimen/space_1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_deck_level"
+                style="@style/Widget.LearningE.Badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_3"
+                app:layout_constraintStart_toEndOf="@id/iv_deck_icon"
+                app:layout_constraintTop_toTopOf="@id/iv_deck_icon"
+                tools:text="A1" />
+
+            <TextView
+                android:id="@+id/tv_deck_counts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                android:textColor="@color/on_hero_variant"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_deck_level"
+                app:layout_constraintTop_toTopOf="@id/tv_deck_level"
+                tools:text="20 từ · 6 đang học" />
+
+            <TextView
+                android:id="@+id/tv_deck_mastered"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_3"
+                android:textAppearance="@style/TextAppearance.LearningE.TitleM"
+                android:textColor="@color/on_hero"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_deck_icon"
+                app:layout_constraintTop_toBottomOf="@id/b_deck_counts"
+                tools:text="Đã thuộc 16/20 từ" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/b_deck_counts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_deck_level,tv_deck_counts" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/b_deck_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="iv_deck_icon,tv_deck_mastered" />
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/pi_deck"
+                style="@style/Widget.LearningE.Progress.Hero"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3"
+                android:importantForAccessibility="no"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/b_deck_header" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_learn_new"
+            style="@style/Widget.LearningE.Button.White"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_3"
+            android:text="@string/word_list_learn"
+            app:icon="@drawable/ic_book_open"
+            app:iconGravity="textStart" />
+
+        <TextView
+            android:id="@+id/tv_all_learned"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_3"
+            android:text="@string/study_no_new"
+            android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+            android:textColor="@color/on_hero"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_words"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/space_2"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_words"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            app:emptyTitle="@string/word_list_empty" />
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.LearningE.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/space_1">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/v_topic_blob"
+            android:layout_width="@dimen/topic_blob"
+            android:layout_height="@dimen/topic_blob"
+            android:layout_marginTop="@dimen/topic_blob_offset"
+            android:layout_marginEnd="@dimen/topic_blob_offset"
+            android:background="@drawable/bg_blob"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_topic_icon"
+            android:layout_width="@dimen/topic_tile"
+            android:layout_height="@dimen/topic_tile"
+            android:layout_marginStart="@dimen/space_3"
+            android:layout_marginTop="@dimen/space_3"
+            android:background="@drawable/bg_tile"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/space_1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_topic_t01_family" />
+
+        <TextView
+            android:id="@+id/tv_topic_level"
+            style="@style/Widget.LearningE.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_3"
+            app:layout_constraintBottom_toBottomOf="@id/iv_topic_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_topic_icon"
+            tools:text="A1" />
+
+        <TextView
+            android:id="@+id/tv_topic_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_3"
+            android:layout_marginTop="@dimen/space_2"
+            android:minLines="2"
+            android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_topic_icon"
+            tools:text="Gia đình" />
+
+        <TextView
+            android:id="@+id/tv_topic_progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_3"
+            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_topic_name"
+            tools:text="Đã thuộc 16/20" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/pi_topic"
+            style="@style/Widget.LearningE.Progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_3"
+            android:importantForAccessibility="no"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_topic_progress" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

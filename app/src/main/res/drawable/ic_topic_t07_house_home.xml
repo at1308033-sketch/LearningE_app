@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t07-house-home.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M0 9h1v1h-1zM1 8h1v1h-1zM1 10h2v1h-2zM2 7h1v1h-1zM2 11h1v4h-1zM3 6h1v1h-1zM3 15h10v1h-10zM4 5h1v1h-1zM5 4h1v1h-1zM6 3h1v1h-1zM7 2h2v1h-2zM9 3h2v1h-2zM10 1h1v2h-1zM10 4h1v1h-1zM11 0h2v1h-2zM11 5h2v1h-2zM12 6h1v1h-1zM13 1h1v4h-1zM13 7h1v1h-1zM13 11h1v4h-1zM13 10h2v1h-2zM14 8h1v1h-1zM15 9h1v1h-1z" />
+    <path
+        android:fillColor="#553DB9"
+        android:pathData="M1 9h14v1h-14zM8 3h1v1h-1zM9 4h1v1h-1zM10 5h1v1h-1zM11 6h1v1h-1zM12 7h1v1h-1zM13 8h1v1h-1z" />
+    <path
+        android:fillColor="#6345DA"
+        android:pathData="M5 7h1v1h-1zM7 5h1v1h-1zM7 7h1v1h-1zM9 5h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1z" />
+    <path
+        android:fillColor="#6C4BF0"
+        android:pathData="M3 8h10v1h-10zM4 7h1v1h-1zM5 6h6v1h-6zM6 5h1v1h-1zM6 7h1v1h-1zM7 4h2v1h-2zM8 5h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1z" />
+    <path
+        android:fillColor="#7DD3FC"
+        android:pathData="M4 12h2v1h-2zM5 11h1v1h-1zM10 12h2v1h-2zM11 11h1v1h-1z" />
+    <path
+        android:fillColor="#8B5E3C"
+        android:pathData="M7 13h1v1h-1zM7 12h2v1h-2zM7 14h2v1h-2z" />
+    <path
+        android:fillColor="#9881F4"
+        android:pathData="M2 8h1v1h-1zM3 7h1v1h-1zM4 6h1v1h-1zM5 5h1v1h-1zM6 4h1v1h-1zM7 3h1v1h-1z" />
+    <path
+        android:fillColor="#A0643C"
+        android:pathData="M12 1h1v4h-1z" />
+    <path
+        android:fillColor="#C98B62"
+        android:pathData="M11 1h1v4h-1z" />
+    <path
+        android:fillColor="#EAD3A8"
+        android:pathData="M12 10h1v5h-1z" />
+    <path
+        android:fillColor="#FFC93C"
+        android:pathData="M8 13h1v1h-1z" />
+    <path
+        android:fillColor="#FFF1D6"
+        android:pathData="M3 11h1v2h-1zM3 13h4v2h-4zM3 10h9v1h-9zM6 12h1v1h-1zM6 11h4v1h-4zM9 12h1v1h-1zM9 13h3v2h-3z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M4 11h1v1h-1zM10 11h1v1h-1z" />
+</vector>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.LearningE.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_3">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_4">
+
+            <TextView
+                android:id="@+id/tv_exam_badge"
+                android:layout_width="@dimen/badge_m"
+                android:layout_height="@dimen/badge_m"
+                android:background="@drawable/bg_tile"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:maxLines="1"
+                android:paddingHorizontal="2dp"
+                app:autoSizeMaxTextSize="12sp"
+                app:autoSizeMinTextSize="4sp"
+                app:autoSizeTextType="uniform"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                android:textColor="@color/on_primary"
+                tools:text="TOEIC" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_3"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_exam_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleM"
+                    tools:text="TOEIC" />
+
+                <TextView
+                    android:id="@+id/tv_exam_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                    tools:text="Tiếng Anh giao tiếp công việc" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_rows"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="beginning|middle" />
+
+        <TextView
+            android:id="@+id/tv_no_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/space_4"
+            android:paddingBottom="@dimen/space_4"
+            android:text="@string/exam_no_content"
+            android:textAppearance="@style/TextAppearance.LearningE.BodyM" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

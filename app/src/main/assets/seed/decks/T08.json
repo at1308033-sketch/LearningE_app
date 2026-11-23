@@ -1,0 +1,197 @@
+{
+  "deck": {
+    "code": "T08",
+    "version": 1,
+    "name": "Trường học",
+    "name_en": "School",
+    "description": "Từ vựng về lớp học, môn học và việc học",
+    "language": "en",
+    "icon": "t08-school",
+    "level": "A2",
+    "exam_tag": null,
+    "sort_order": 8
+  },
+  "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
+  "words": [
+    {
+      "uid": "T08-0001",
+      "term": "classroom",
+      "reading": "/ˈklæsruːm/",
+      "pos": "danh từ",
+      "meaning": "phòng học",
+      "example": "Our classroom is on the third floor.",
+      "example_translation": "Phòng học của chúng tôi ở tầng ba."
+    },
+    {
+      "uid": "T08-0002",
+      "term": "teacher",
+      "reading": "/ˈtiːtʃər/",
+      "pos": "danh từ",
+      "meaning": "giáo viên",
+      "example": "The teacher explained the lesson again.",
+      "example_translation": "Giáo viên giảng lại bài."
+    },
+    {
+      "uid": "T08-0003",
+      "term": "student",
+      "reading": "/ˈstuːdnt/",
+      "pos": "danh từ",
+      "meaning": "học sinh, sinh viên",
+      "example": "Every student needs a library card.",
+      "example_translation": "Mỗi sinh viên cần một thẻ thư viện."
+    },
+    {
+      "uid": "T08-0004",
+      "term": "classmate",
+      "reading": "/ˈklæsmeɪt/",
+      "pos": "danh từ",
+      "meaning": "bạn cùng lớp",
+      "example": "My classmates helped me with the project.",
+      "example_translation": "Các bạn cùng lớp giúp tôi làm dự án."
+    },
+    {
+      "uid": "T08-0005",
+      "term": "lesson",
+      "reading": "/ˈlesn/",
+      "pos": "danh từ",
+      "meaning": "bài học",
+      "example": "Today's lesson is about the weather.",
+      "example_translation": "Bài học hôm nay nói về thời tiết."
+    },
+    {
+      "uid": "T08-0006",
+      "term": "subject",
+      "reading": "/ˈsʌbdʒɪkt/",
+      "pos": "danh từ",
+      "meaning": "môn học",
+      "example": "History is my favorite subject.",
+      "example_translation": "Lịch sử là môn tôi thích nhất."
+    },
+    {
+      "uid": "T08-0007",
+      "term": "homework",
+      "reading": "/ˈhoʊmwɜːrk/",
+      "pos": "danh từ",
+      "meaning": "bài tập về nhà",
+      "example": "I finished my homework before dinner.",
+      "example_translation": "Tôi làm xong bài tập trước bữa tối."
+    },
+    {
+      "uid": "T08-0008",
+      "term": "exam",
+      "reading": "/ɪɡˈzæm/",
+      "pos": "danh từ",
+      "meaning": "kỳ thi",
+      "example": "She passed the exam last week.",
+      "example_translation": "Cô ấy đã đỗ kỳ thi tuần trước."
+    },
+    {
+      "uid": "T08-0009",
+      "term": "grade",
+      "reading": "/ɡreɪd/",
+      "pos": "danh từ",
+      "meaning": "điểm số",
+      "example": "He got a good grade in math.",
+      "example_translation": "Cậu ấy được điểm tốt môn toán."
+    },
+    {
+      "uid": "T08-0010",
+      "term": "library",
+      "reading": "/ˈlaɪbreri/",
+      "pos": "danh từ",
+      "meaning": "thư viện",
+      "example": "You can borrow five books from the library.",
+      "example_translation": "Bạn có thể mượn năm cuốn sách ở thư viện."
+    },
+    {
+      "uid": "T08-0011",
+      "term": "notebook",
+      "reading": "/ˈnoʊtbʊk/",
+      "pos": "danh từ",
+      "meaning": "quyển vở",
+      "example": "Write the new words in your notebook.",
+      "example_translation": "Hãy viết từ mới vào vở."
+    },
+    {
+      "uid": "T08-0012",
+      "term": "textbook",
+      "reading": "/ˈtekstbʊk/",
+      "pos": "danh từ",
+      "meaning": "sách giáo khoa",
+      "example": "Open your textbook to page ten.",
+      "example_translation": "Mở sách giáo khoa trang mười."
+    },
+    {
+      "uid": "T08-0013",
+      "term": "dictionary",
+      "reading": "/ˈdɪkʃəneri/",
+      "pos": "danh từ",
+      "meaning": "từ điển",
+      "example": "Look up the word in a dictionary.",
+      "example_translation": "Hãy tra từ đó trong từ điển."
+    },
+    {
+      "uid": "T08-0014",
+      "term": "pencil",
+      "reading": "/ˈpensl/",
+      "pos": "danh từ",
+      "meaning": "bút chì",
+      "example": "Can I borrow your pencil?",
+      "example_translation": "Cho tôi mượn bút chì được không?"
+    },
+    {
+      "uid": "T08-0015",
+      "term": "ruler",
+      "reading": "/ˈruːlər/",
+      "pos": "danh từ",
+      "meaning": "thước kẻ",
+      "example": "Use a ruler to draw a straight line.",
+      "example_translation": "Dùng thước kẻ để vẽ đường thẳng."
+    },
+    {
+      "uid": "T08-0016",
+      "term": "board",
+      "reading": "/bɔːrd/",
+      "pos": "danh từ",
+      "meaning": "cái bảng",
+      "example": "The answer is on the board.",
+      "example_translation": "Đáp án ở trên bảng."
+    },
+    {
+      "uid": "T08-0017",
+      "term": "learn",
+      "reading": "/lɜːrn/",
+      "pos": "động từ",
+      "meaning": "học, học được",
+      "example": "We learn English three times a week.",
+      "example_translation": "Chúng tôi học tiếng Anh ba buổi một tuần."
+    },
+    {
+      "uid": "T08-0018",
+      "term": "study",
+      "reading": "/ˈstʌdi/",
+      "pos": "động từ",
+      "meaning": "học bài, nghiên cứu",
+      "example": "I usually study in the evening.",
+      "example_translation": "Tôi thường học bài vào buổi tối."
+    },
+    {
+      "uid": "T08-0019",
+      "term": "explain",
+      "reading": "/ɪkˈspleɪn/",
+      "pos": "động từ",
+      "meaning": "giải thích",
+      "example": "Could you explain this rule?",
+      "example_translation": "Bạn có thể giải thích quy tắc này không?"
+    },
+    {
+      "uid": "T08-0020",
+      "term": "practice",
+      "reading": "/ˈpræktɪs/",
+      "pos": "động từ",
+      "meaning": "luyện tập",
+      "example": "Practice speaking every day.",
+      "example_translation": "Hãy luyện nói mỗi ngày."
+    }
+  ]
+}

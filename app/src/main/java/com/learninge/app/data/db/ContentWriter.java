@@ -1,0 +1,185 @@
+package com.learninge.app.data.db;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.learninge.app.data.db.DbContract.ContentVersion;
+import com.learninge.app.data.db.DbContract.Decks;
+import com.learninge.app.data.db.DbContract.ExamQuestions;
+import com.learninge.app.data.db.DbContract.ExamTests;
+import com.learninge.app.data.db.DbContract.Languages;
+import com.learninge.app.data.db.DbContract.Sync;
+import com.learninge.app.data.db.DbContract.Words;
+import com.learninge.app.data.io.SeedContent.SeedDeck;
+import com.learninge.app.data.io.SeedContent.SeedExam;
+import com.learninge.app.data.io.SeedContent.SeedLanguage;
+import com.learninge.app.data.io.SeedContent.SeedQuestion;
+import com.learninge.app.data.io.SeedContent.SeedWord;
+import com.learninge.app.domain.rules.TextNormalizer;
+
+import java.time.Clock;
+
+/**
+ * Ghi nội dung có sẵn (seed hoặc tải từ server) vào CSDL; sửa tại chỗ theo mã nên tiến độ học không mất. Nơi gọi mở
+ * giao dịch.
+ */
+public final class ContentWriter {
+    private final SQLiteDatabase db;
+    private final Clock clock;
+
+    public ContentWriter(SQLiteDatabase db, Clock clock) {
+        this.db = db;
+        this.clock = clock;
+    }
+
+    public void putLanguage(SeedLanguage language) {
+        ContentValues values = new ContentValues();
+        values.put(Languages.CODE, language.code());
+        values.put(Languages.NAME_VI, language.nameVi());
+        values.put(Languages.TTS_LOCALE, language.ttsLocale());
+        values.put(Languages.READING_LABEL, language.readingLabel());
+        values.put(Languages.SORT_ORDER, language.sortOrder());
+        updateOrInsert(Languages.TABLE, values, Languages.CODE, language.code());
+    }
+
+    public void putDeck(SeedDeck deck) {
+        long now = clock.millis();
+        ContentValues values = new ContentValues();
+        values.put(Sync.UUID, deck.code());
+        values.put(Decks.CODE, deck.code());
+        values.put(Decks.NAME, deck.name());
+        values.put(Decks.NAME_NORM, TextNormalizer.normalize(deck.name()));
+        values.put(Decks.DESCRIPTION, deck.description());
+        values.put(Decks.LANGUAGE_CODE, deck.language());
+        values.put(Decks.LEVEL, deck.level());
+        values.put(Decks.ICON, deck.icon());
+        values.put(Decks.EXAM_TAG, deck.examTag());
+        values.put(Decks.SORT_ORDER, deck.sortOrder());
+        values.put(Decks.CREATED_AT, now);
+        values.put(Sync.UPDATED_AT, now);
+        values.put(Sync.DELETED, 0);
+        values.put(Sync.DIRTY, 0);
+        long deckId = updateOrInsert(Decks.TABLE, values, Sync.UUID, deck.code());
+
+        // Từ bị bỏ khỏi file thì chỉ đánh dấu xóa vì tiến độ học còn trỏ tới.
+        ContentValues hidden = new ContentValues();
+        hidden.put(Sync.DELETED, 1);
+        db.update(Words.TABLE, hidden, Words.DECK_ID + " = ?", new String[]{String.valueOf(deckId)});
+        int order = 0;
+        for (SeedWord word : deck.words()) {
+            putWord(deckId, deck.language(), ++order, word, now);
+        }
+        installed("deck:" + deck.code(), deck.version());
+    }
+
+    private void putWord(long deckId, String language, int order, SeedWord word, long now) {
+        ContentValues values = new ContentValues();
+        values.put(Sync.UUID, word.uid());
+        values.put(Words.DECK_ID, deckId);
+        values.put(Words.TERM, word.term());
+        values.put(Words.READING, word.reading());
+        values.put(Words.PART_OF_SPEECH, word.partOfSpeech());
+        values.put(Words.MEANING_VI, word.meaning());
+        values.put(Words.EXAMPLE, word.example());
+        values.put(Words.EXAMPLE_TRANSLATION, word.exampleTranslation());
+        values.put(Words.SEARCH_TERM, TextNormalizer.searchKey(word.term(), language));
+        values.put(Words.SEARCH_READING, word.reading() == null ? null : TextNormalizer.stripMarks(word.reading()));
+        values.put(Words.SEARCH_MEANING, TextNormalizer.stripMarks(word.meaning()));
+        values.put(Words.SORT_ORDER, order);
+        values.put(Words.CREATED_AT, now);
+        values.put(Sync.UPDATED_AT, now);
+        values.put(Sync.DELETED, 0);
+        values.put(Sync.DIRTY, 0);
+        updateOrInsert(Words.TABLE, values, Sync.UUID, word.uid());
+    }
+
+    public void putExam(SeedExam exam) {
+        ContentValues values = new ContentValues();
+        values.put(ExamTests.CODE, exam.code());
+        values.put(ExamTests.EXAM_TAG, exam.examTag());
+        values.put(ExamTests.TITLE, exam.title());
+        values.put(ExamTests.PART_LABEL, exam.partLabel());
+        values.put(ExamTests.QUESTION_COUNT, exam.questions().size());
+        values.put(ExamTests.DURATION_SEC, exam.durationSec());
+        values.put(ExamTests.DESCRIPTION, exam.description());
+        values.put(ExamTests.SORT_ORDER, exam.sortOrder());
+        long testId = updateOrInsert(ExamTests.TABLE, values, ExamTests.CODE, exam.code());
+        for (SeedQuestion question : exam.questions()) {
+            putQuestion(testId, question);
+        }
+        db.delete(ExamQuestions.TABLE, ExamQuestions.TEST_ID + " = ? AND " + ExamQuestions.NUMBER + " > ?",
+                new String[]{String.valueOf(testId), String.valueOf(exam.questions().size())});
+        installed("exam:" + exam.code(), exam.version());
+    }
+
+    private void putQuestion(long testId, SeedQuestion question) {
+        ContentValues values = new ContentValues();
+        values.put(ExamQuestions.TEST_ID, testId);
+        values.put(ExamQuestions.NUMBER, question.number());
+        values.put(ExamQuestions.PASSAGE, question.passage());
+        values.put(ExamQuestions.QUESTION, question.question());
+        values.put(ExamQuestions.OPTIONS_JSON, question.optionsJson());
+        values.put(ExamQuestions.CORRECT_INDEX, question.correctIndex());
+        values.put(ExamQuestions.EXPLANATION, question.explanation());
+        values.put(ExamQuestions.WORD_ID, question.wordUid() != null ? wordIdByUid(question.wordUid())
+                : wordId(question.deckCode(), question.term()));
+        String[] key = {String.valueOf(testId), String.valueOf(question.number())};
+        int updated = db.update(ExamQuestions.TABLE, values,
+                ExamQuestions.TEST_ID + " = ? AND " + ExamQuestions.NUMBER + " = ?", key);
+        if (updated == 0) {
+            db.insertOrThrow(ExamQuestions.TABLE, null, values);
+        }
+    }
+
+    private Long wordIdByUid(String uid) {
+        try (Cursor cursor = db.query(Words.TABLE, new String[]{Words.ID}, Sync.UUID + " = ?", new String[]{uid}, null,
+                null, null)) {
+            return cursor.moveToFirst() ? Long.valueOf(cursor.getLong(0)) : null;
+        }
+    }
+
+    private Long wordId(String deckCode, String term) {
+        if (deckCode == null || term == null) {
+            return null;
+        }
+        try (Cursor cursor = db.rawQuery("SELECT w.id FROM words w JOIN decks d ON d.id = w.deck_id "
+                        + "WHERE d.code = ? AND w.search_term = ? AND w.deleted = 0",
+                new String[]{deckCode, TextNormalizer.stripMarks(term)})) {
+            return cursor.moveToFirst() ? Long.valueOf(cursor.getLong(0)) : null;
+        }
+    }
+
+    /**
+     * true nếu mục chưa cài hoặc bản đã cài cũ hơn.
+     */
+    public boolean isNewer(String key, long version) {
+        try (Cursor cursor = db.query(ContentVersion.TABLE, new String[]{ContentVersion.VERSION},
+                ContentVersion.ITEM_KEY + " = ?", new String[]{key}, null, null, null)) {
+            return !cursor.moveToFirst() || cursor.getLong(0) < version;
+        }
+    }
+
+    /**
+     * Ghi lại phiên bản đã cài.
+     */
+    public void installed(String key, long version) {
+        ContentValues values = new ContentValues();
+        values.put(ContentVersion.ITEM_KEY, key);
+        values.put(ContentVersion.VERSION, version);
+        values.put(ContentVersion.INSTALLED_AT, clock.millis());
+        db.replaceOrThrow(ContentVersion.TABLE, null, values);
+    }
+
+    // Không UPSERT (SQLite của Android 10): UPDATE, 0 dòng thì INSERT; giữ nguyên id để khóa ngoại không đứt.
+    private long updateOrInsert(String table, ContentValues values, String keyColumn, String key) {
+        String[] args = {key};
+        if (db.update(table, values, keyColumn + " = ?", args) == 0) {
+            return db.insertOrThrow(table, null, values);
+        }
+        try (Cursor cursor = db.query(table, new String[]{"rowid"}, keyColumn + " = ?", args, null, null, null)) {
+            cursor.moveToFirst();
+            return cursor.getLong(0);
+        }
+    }
+}

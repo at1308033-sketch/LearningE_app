@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mỗi tab là một đồ thị con để giữ ngăn xếp riêng. Màn hình con dùng chung cho nhiều tab đặt ở cấp này, kèm action_global_*. -->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/home_graph">
+
+    <action
+        android:id="@+id/action_global_word_list"
+        app:destination="@id/word_list_fragment" />
+
+    <fragment
+        android:id="@+id/word_list_fragment"
+        android:name="com.learninge.app.ui.learn.WordListFragment"
+        tools:layout="@layout/fragment_word_list">
+
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_progress"
+        app:destination="@id/progress_fragment" />
+
+    <fragment
+        android:id="@+id/progress_fragment"
+        android:name="com.learninge.app.ui.me.ProgressFragment"
+        tools:layout="@layout/fragment_progress" />
+
+    <action
+        android:id="@+id/action_global_word_detail"
+        app:destination="@id/word_detail_fragment" />
+
+    <fragment
+        android:id="@+id/word_detail_fragment"
+        android:name="com.learninge.app.ui.learn.WordDetailFragment"
+        tools:layout="@layout/fragment_word_detail">
+
+        <argument
+            android:name="wordId"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_flashcard"
+        app:destination="@id/flashcard_fragment" />
+
+    <fragment
+        android:id="@+id/flashcard_fragment"
+        android:name="com.learninge.app.ui.study.FlashcardFragment"
+        tools:layout="@layout/fragment_flashcard">
+
+        <argument
+            android:name="source"
+            app:argType="com.learninge.app.ui.study.StudySource" />
+
+        <argument
+            android:name="deckId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_flashcard_to_result"
+            app:destination="@id/session_result_fragment"
+            app:popUpTo="@id/flashcard_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/session_result_fragment"
+        android:name="com.learninge.app.ui.study.SessionResultFragment"
+        tools:layout="@layout/fragment_session_result">
+
+        <argument
+            android:name="kind"
+            app:argType="com.learninge.app.data.model.ActivityType" />
+
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+
+        <argument
+            android:name="displayName"
+            app:argType="string" />
+
+        <argument
+            android:name="remembered"
+            app:argType="integer" />
+
+        <argument
+            android:name="forgotten"
+            app:argType="integer" />
+
+        <argument
+            android:name="streakBefore"
+            app:argType="integer" />
+
+        <argument
+            android:name="streak"
+            app:argType="integer" />
+
+        <argument
+            android:name="xp"
+            app:argType="integer" />
+
+        <argument
+            android:name="isXpCapped"
+            app:argType="boolean" />
+
+        <argument
+            android:name="boxesBefore"
+            app:argType="integer[]" />
+
+        <argument
+            android:name="boxesAfter"
+            app:argType="integer[]" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_deck_detail"
+        app:destination="@id/deck_detail_fragment" />
+
+    <fragment
+        android:id="@+id/deck_detail_fragment"
+        android:name="com.learninge.app.ui.deck.DeckDetailFragment"
+        tools:layout="@layout/fragment_deck_detail">
+
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_deck_edit"
+        app:destination="@id/deck_edit_fragment" />
+
+    <fragment
+        android:id="@+id/deck_edit_fragment"
+        android:name="com.learninge.app.ui.deck.DeckEditFragment"
+        tools:layout="@layout/fragment_deck_edit">
+
+        <argument
+            android:name="deckId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_word_edit"
+        app:destination="@id/word_edit_fragment" />
+
+    <fragment
+        android:id="@+id/word_edit_fragment"
+        android:name="com.learninge.app.ui.deck.WordEditFragment"
+        tools:layout="@layout/fragment_word_edit">
+
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+
+        <argument
+            android:name="wordId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_leaderboard"
+        app:destination="@id/leaderboard_fragment" />
+
+    <fragment
+        android:id="@+id/leaderboard_fragment"
+        android:name="com.learninge.app.ui.leaderboard.LeaderboardFragment"
+        tools:layout="@layout/fragment_leaderboard" />
+
+    <action
+        android:id="@+id/action_global_sync"
+        app:destination="@id/sync_fragment" />
+
+    <fragment
+        android:id="@+id/sync_fragment"
+        android:name="com.learninge.app.ui.me.SyncFragment"
+        tools:layout="@layout/fragment_sync" />
+
+    <action
+        android:id="@+id/action_global_exam_hub"
+        app:destination="@id/exam_hub_fragment" />
+
+    <fragment
+        android:id="@+id/exam_hub_fragment"
+        android:name="com.learninge.app.ui.exam.ExamHubFragment"
+        tools:layout="@layout/fragment_exam_hub" />
+
+    <action
+        android:id="@+id/action_global_exam"
+        app:destination="@id/exam_fragment" />
+
+    <fragment
+        android:id="@+id/exam_fragment"
+        android:name="com.learninge.app.ui.exam.ExamFragment"
+        tools:layout="@layout/fragment_exam">
+
+        <argument
+            android:name="testCode"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_exam_to_result"
+            app:destination="@id/exam_result_fragment"
+            app:popUpTo="@id/exam_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_exam_result"
+        app:destination="@id/exam_result_fragment" />
+
+    <fragment
+        android:id="@+id/exam_result_fragment"
+        android:name="com.learninge.app.ui.exam.ExamResultFragment"
+        tools:layout="@layout/fragment_exam_result">
+
+        <argument
+            android:name="attemptId"
+            app:argType="long" />
+
+        <argument
+            android:name="isTimeUp"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_result_to_exam"
+            app:destination="@id/exam_fragment"
+            app:popUpTo="@id/exam_result_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_exam_history"
+        app:destination="@id/exam_history_fragment" />
+
+    <fragment
+        android:id="@+id/exam_history_fragment"
+        android:name="com.learninge.app.ui.exam.ExamHistoryFragment"
+        tools:layout="@layout/fragment_exam_history" />
+
+    <action
+        android:id="@+id/action_global_exam_resources"
+        app:destination="@id/exam_resources_fragment" />
+
+    <fragment
+        android:id="@+id/exam_resources_fragment"
+        android:name="com.learninge.app.ui.exam.ExamResourcesFragment"
+        tools:layout="@layout/fragment_exam_resources" />
+
+    <action
+        android:id="@+id/action_global_import"
+        app:destination="@id/import_fragment" />
+
+    <fragment
+        android:id="@+id/import_fragment"
+        android:name="com.learninge.app.ui.deck.ImportFragment"
+        tools:layout="@layout/fragment_import">
+
+        <argument
+            android:name="uri"
+            app:argType="string" />
+    </fragment>
+
+    <navigation
+        android:id="@+id/home_graph"
+        app:startDestination="@id/home_fragment">
+
+        <fragment
+            android:id="@+id/home_fragment"
+            android:name="com.learninge.app.ui.home.HomeFragment"
+            tools:layout="@layout/fragment_home" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/learn_graph"
+        app:startDestination="@id/learn_fragment">
+
+        <fragment
+            android:id="@+id/learn_fragment"
+            android:name="com.learninge.app.ui.learn.LearnFragment"
+            tools:layout="@layout/fragment_learn" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/practice_graph"
+        app:startDestination="@id/practice_fragment">
+
+        <fragment
+            android:id="@+id/practice_fragment"
+            android:name="com.learninge.app.ui.practice.PracticeFragment"
+            tools:layout="@layout/fragment_practice" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/search_graph"
+        app:startDestination="@id/search_fragment">
+
+        <fragment
+            android:id="@+id/search_fragment"
+            android:name="com.learninge.app.ui.search.SearchFragment"
+            tools:layout="@layout/fragment_placeholder" />
+    </navigation>
+
+    <navigation
+        android:id="@+id/me_graph"
+        app:startDestination="@id/me_fragment">
+
+        <fragment
+            android:id="@+id/me_fragment"
+            android:name="com.learninge.app.ui.me.MeFragment"
+            tools:layout="@layout/fragment_me" />
+    </navigation>
+</navigation>

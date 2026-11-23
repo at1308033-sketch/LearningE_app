@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_option"
+    style="@style/Widget.LearningE.Card.Outlined"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_3"
+    android:checkable="true"
+    app:cardForegroundColor="@android:color/transparent"
+    app:checkedIcon="@null">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/button_height_l"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_3"
+        android:paddingVertical="@dimen/space_2">
+
+        <TextView
+            android:id="@+id/tv_letter"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_blob"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LearningE.Label"
+            tools:text="A" />
+
+        <TextView
+            android:id="@+id/tv_option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_3"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+            tools:text="submitted" />
+
+        <ImageView
+            android:id="@+id/iv_option_check"
+            android:layout_width="@dimen/icon_m"
+            android:layout_height="@dimen/icon_m"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_check"
+            app:tint="@color/feat_exam" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

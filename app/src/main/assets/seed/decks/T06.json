@@ -1,0 +1,197 @@
+{
+  "deck": {
+    "code": "T06",
+    "version": 1,
+    "name": "Động vật",
+    "name_en": "Animals",
+    "description": "Từ vựng về các con vật quen thuộc",
+    "language": "en",
+    "icon": "t06-animals",
+    "level": "A1",
+    "exam_tag": null,
+    "sort_order": 6
+  },
+  "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
+  "words": [
+    {
+      "uid": "T06-0001",
+      "term": "dog",
+      "reading": "/dɔːɡ/",
+      "pos": "danh từ",
+      "meaning": "con chó",
+      "example": "My dog sleeps near the door.",
+      "example_translation": "Con chó của tôi ngủ gần cửa."
+    },
+    {
+      "uid": "T06-0002",
+      "term": "cat",
+      "reading": "/kæt/",
+      "pos": "danh từ",
+      "meaning": "con mèo",
+      "example": "The cat is on the chair.",
+      "example_translation": "Con mèo ở trên ghế."
+    },
+    {
+      "uid": "T06-0003",
+      "term": "bird",
+      "reading": "/bɜːrd/",
+      "pos": "danh từ",
+      "meaning": "con chim",
+      "example": "A small bird sings in the tree.",
+      "example_translation": "Một con chim nhỏ hót trên cây."
+    },
+    {
+      "uid": "T06-0004",
+      "term": "chicken",
+      "reading": "/ˈtʃɪkɪn/",
+      "pos": "danh từ",
+      "meaning": "con gà",
+      "example": "My grandmother has ten chickens.",
+      "example_translation": "Bà tôi có mười con gà."
+    },
+    {
+      "uid": "T06-0005",
+      "term": "duck",
+      "reading": "/dʌk/",
+      "pos": "danh từ",
+      "meaning": "con vịt",
+      "example": "The ducks swim in the lake.",
+      "example_translation": "Những con vịt bơi trong hồ."
+    },
+    {
+      "uid": "T06-0006",
+      "term": "cow",
+      "reading": "/kaʊ/",
+      "pos": "danh từ",
+      "meaning": "con bò",
+      "example": "The cow gives us milk.",
+      "example_translation": "Con bò cho chúng ta sữa."
+    },
+    {
+      "uid": "T06-0007",
+      "term": "pig",
+      "reading": "/pɪɡ/",
+      "pos": "danh từ",
+      "meaning": "con lợn",
+      "example": "The pig eats a lot.",
+      "example_translation": "Con lợn ăn rất nhiều."
+    },
+    {
+      "uid": "T06-0008",
+      "term": "horse",
+      "reading": "/hɔːrs/",
+      "pos": "danh từ",
+      "meaning": "con ngựa",
+      "example": "She can ride a horse.",
+      "example_translation": "Cô ấy biết cưỡi ngựa."
+    },
+    {
+      "uid": "T06-0009",
+      "term": "sheep",
+      "reading": "/ʃiːp/",
+      "pos": "danh từ",
+      "meaning": "con cừu",
+      "example": "There are many sheep on the hill.",
+      "example_translation": "Có nhiều cừu trên đồi."
+    },
+    {
+      "uid": "T06-0010",
+      "term": "rabbit",
+      "reading": "/ˈræbɪt/",
+      "pos": "danh từ",
+      "meaning": "con thỏ",
+      "example": "The rabbit has long ears.",
+      "example_translation": "Con thỏ có đôi tai dài."
+    },
+    {
+      "uid": "T06-0011",
+      "term": "mouse",
+      "reading": "/maʊs/",
+      "pos": "danh từ",
+      "meaning": "con chuột",
+      "example": "A mouse is hiding under the bed.",
+      "example_translation": "Một con chuột đang trốn dưới giường."
+    },
+    {
+      "uid": "T06-0012",
+      "term": "monkey",
+      "reading": "/ˈmʌŋki/",
+      "pos": "danh từ",
+      "meaning": "con khỉ",
+      "example": "Monkeys love bananas.",
+      "example_translation": "Khỉ rất thích chuối."
+    },
+    {
+      "uid": "T06-0013",
+      "term": "elephant",
+      "reading": "/ˈelɪfənt/",
+      "pos": "danh từ",
+      "meaning": "con voi",
+      "example": "The elephant is very big.",
+      "example_translation": "Con voi rất to."
+    },
+    {
+      "uid": "T06-0014",
+      "term": "tiger",
+      "reading": "/ˈtaɪɡər/",
+      "pos": "danh từ",
+      "meaning": "con hổ",
+      "example": "We saw a tiger at the zoo.",
+      "example_translation": "Chúng tôi thấy một con hổ ở sở thú."
+    },
+    {
+      "uid": "T06-0015",
+      "term": "lion",
+      "reading": "/ˈlaɪən/",
+      "pos": "danh từ",
+      "meaning": "con sư tử",
+      "example": "The lion sleeps all day.",
+      "example_translation": "Con sư tử ngủ cả ngày."
+    },
+    {
+      "uid": "T06-0016",
+      "term": "bear",
+      "reading": "/ber/",
+      "pos": "danh từ",
+      "meaning": "con gấu",
+      "example": "The bear eats fish from the river.",
+      "example_translation": "Con gấu ăn cá dưới sông."
+    },
+    {
+      "uid": "T06-0017",
+      "term": "snake",
+      "reading": "/sneɪk/",
+      "pos": "danh từ",
+      "meaning": "con rắn",
+      "example": "He is afraid of snakes.",
+      "example_translation": "Anh ấy sợ rắn."
+    },
+    {
+      "uid": "T06-0018",
+      "term": "frog",
+      "reading": "/frɔːɡ/",
+      "pos": "danh từ",
+      "meaning": "con ếch",
+      "example": "The green frog jumps into the water.",
+      "example_translation": "Con ếch xanh nhảy xuống nước."
+    },
+    {
+      "uid": "T06-0019",
+      "term": "bee",
+      "reading": "/biː/",
+      "pos": "danh từ",
+      "meaning": "con ong",
+      "example": "Bees make honey.",
+      "example_translation": "Ong làm ra mật."
+    },
+    {
+      "uid": "T06-0020",
+      "term": "pet",
+      "reading": "/pet/",
+      "pos": "danh từ",
+      "meaning": "thú cưng",
+      "example": "Do you have a pet at home?",
+      "example_translation": "Ở nhà bạn có thú cưng không?"
+    }
+  ]
+}

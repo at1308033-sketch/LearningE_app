@@ -1,0 +1,287 @@
+{
+  "deck": {
+    "code": "X03",
+    "version": 1,
+    "name": "Từ vựng Aptis",
+    "name_en": "Aptis vocabulary",
+    "description": "Từ hay gặp khi nói và viết về đời sống, công việc, xã hội",
+    "language": "en",
+    "icon": null,
+    "level": "B1",
+    "exam_tag": "APTIS",
+    "sort_order": 103
+  },
+  "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
+  "words": [
+    {
+      "uid": "X03-0001",
+      "term": "opinion",
+      "reading": "/əˈpɪnjən/",
+      "pos": "danh từ",
+      "meaning": "ý kiến",
+      "example": "In my opinion, public transport should be free.",
+      "example_translation": "Theo ý kiến tôi, giao thông công cộng nên miễn phí."
+    },
+    {
+      "uid": "X03-0002",
+      "term": "describe",
+      "reading": "/dɪˈskraɪb/",
+      "pos": "động từ",
+      "meaning": "mô tả",
+      "example": "Describe the place where you live.",
+      "example_translation": "Hãy mô tả nơi bạn sống."
+    },
+    {
+      "uid": "X03-0003",
+      "term": "compare",
+      "reading": "/kəmˈper/",
+      "pos": "động từ",
+      "meaning": "so sánh",
+      "example": "Compare the two pictures.",
+      "example_translation": "Hãy so sánh hai bức ảnh."
+    },
+    {
+      "uid": "X03-0004",
+      "term": "prefer",
+      "reading": "/prɪˈfɜːr/",
+      "pos": "động từ",
+      "meaning": "thích hơn",
+      "example": "I prefer working in a small team.",
+      "example_translation": "Tôi thích làm việc trong nhóm nhỏ hơn."
+    },
+    {
+      "uid": "X03-0005",
+      "term": "suggest",
+      "reading": "/səˈdʒest/",
+      "pos": "động từ",
+      "meaning": "đề xuất",
+      "example": "I suggest meeting on Friday afternoon.",
+      "example_translation": "Tôi đề xuất họp vào chiều thứ Sáu."
+    },
+    {
+      "uid": "X03-0006",
+      "term": "recommend",
+      "reading": "/ˌrekəˈmend/",
+      "pos": "động từ",
+      "meaning": "giới thiệu, khuyên dùng",
+      "example": "Can you recommend a good restaurant?",
+      "example_translation": "Bạn giới thiệu giúp một nhà hàng ngon được không?"
+    },
+    {
+      "uid": "X03-0007",
+      "term": "apologize",
+      "reading": "/əˈpɑːlədʒaɪz/",
+      "pos": "động từ",
+      "meaning": "xin lỗi",
+      "example": "I apologize for the late reply.",
+      "example_translation": "Tôi xin lỗi vì trả lời muộn."
+    },
+    {
+      "uid": "X03-0008",
+      "term": "complain",
+      "reading": "/kəmˈpleɪn/",
+      "pos": "động từ",
+      "meaning": "phàn nàn",
+      "example": "Several members complained about the new price.",
+      "example_translation": "Một số hội viên phàn nàn về mức giá mới."
+    },
+    {
+      "uid": "X03-0009",
+      "term": "improve",
+      "reading": "/ɪmˈpruːv/",
+      "pos": "động từ",
+      "meaning": "cải thiện",
+      "example": "The club wants to improve its website.",
+      "example_translation": "Câu lạc bộ muốn cải thiện trang web."
+    },
+    {
+      "uid": "X03-0010",
+      "term": "organize",
+      "reading": "/ˈɔːrɡənaɪz/",
+      "pos": "động từ",
+      "meaning": "tổ chức",
+      "example": "They are organizing a trip for students.",
+      "example_translation": "Họ đang tổ chức một chuyến đi cho sinh viên."
+    },
+    {
+      "uid": "X03-0011",
+      "term": "attend",
+      "reading": "/əˈtend/",
+      "pos": "động từ",
+      "meaning": "tham dự",
+      "example": "More than fifty people attended the talk.",
+      "example_translation": "Hơn năm mươi người tham dự buổi nói chuyện."
+    },
+    {
+      "uid": "X03-0012",
+      "term": "avoid",
+      "reading": "/əˈvɔɪd/",
+      "pos": "động từ",
+      "meaning": "tránh",
+      "example": "Try to avoid driving at rush hour.",
+      "example_translation": "Cố gắng tránh lái xe giờ cao điểm."
+    },
+    {
+      "uid": "X03-0013",
+      "term": "experience",
+      "reading": "/ɪkˈspɪriəns/",
+      "pos": "danh từ",
+      "meaning": "kinh nghiệm, trải nghiệm",
+      "example": "Living abroad was a useful experience.",
+      "example_translation": "Sống ở nước ngoài là một trải nghiệm hữu ích."
+    },
+    {
+      "uid": "X03-0014",
+      "term": "advantage",
+      "reading": "/ədˈvæntɪdʒ/",
+      "pos": "danh từ",
+      "meaning": "lợi thế, ưu điểm",
+      "example": "One advantage of online classes is flexibility.",
+      "example_translation": "Một ưu điểm của lớp học trực tuyến là linh hoạt."
+    },
+    {
+      "uid": "X03-0015",
+      "term": "disadvantage",
+      "reading": "/ˌdɪsədˈvæntɪdʒ/",
+      "pos": "danh từ",
+      "meaning": "bất lợi, nhược điểm",
+      "example": "The main disadvantage is the cost.",
+      "example_translation": "Nhược điểm chính là chi phí."
+    },
+    {
+      "uid": "X03-0016",
+      "term": "environment",
+      "reading": "/ɪnˈvaɪrənmənt/",
+      "pos": "danh từ",
+      "meaning": "môi trường",
+      "example": "Plastic bags harm the environment.",
+      "example_translation": "Túi ni lông gây hại cho môi trường."
+    },
+    {
+      "uid": "X03-0017",
+      "term": "community",
+      "reading": "/kəˈmjuːnəti/",
+      "pos": "danh từ",
+      "meaning": "cộng đồng",
+      "example": "The park is important to the local community.",
+      "example_translation": "Công viên quan trọng với cộng đồng địa phương."
+    },
+    {
+      "uid": "X03-0018",
+      "term": "opportunity",
+      "reading": "/ˌɑːpərˈtuːnəti/",
+      "pos": "danh từ",
+      "meaning": "cơ hội",
+      "example": "This course is a great opportunity to meet people.",
+      "example_translation": "Khóa học này là cơ hội tốt để gặp gỡ mọi người."
+    },
+    {
+      "uid": "X03-0019",
+      "term": "membership",
+      "reading": "/ˈmembərʃɪp/",
+      "pos": "danh từ",
+      "meaning": "tư cách hội viên",
+      "example": "My gym membership ends in June.",
+      "example_translation": "Thẻ hội viên phòng tập của tôi hết hạn vào tháng Sáu."
+    },
+    {
+      "uid": "X03-0020",
+      "term": "colleague",
+      "reading": "/ˈkɑːliːɡ/",
+      "pos": "danh từ",
+      "meaning": "đồng nghiệp",
+      "example": "A colleague showed me how to use the system.",
+      "example_translation": "Một đồng nghiệp chỉ tôi cách dùng hệ thống."
+    },
+    {
+      "uid": "X03-0021",
+      "term": "neighborhood",
+      "reading": "/ˈneɪbərhʊd/",
+      "pos": "danh từ",
+      "meaning": "khu phố, khu dân cư",
+      "example": "It is a quiet neighborhood with many trees.",
+      "example_translation": "Đó là khu phố yên tĩnh nhiều cây."
+    },
+    {
+      "uid": "X03-0022",
+      "term": "leisure",
+      "reading": "/ˈliːʒər/",
+      "pos": "danh từ",
+      "meaning": "thời gian rảnh",
+      "example": "What do you do in your leisure time?",
+      "example_translation": "Bạn làm gì lúc rảnh rỗi?"
+    },
+    {
+      "uid": "X03-0023",
+      "term": "habit",
+      "reading": "/ˈhæbɪt/",
+      "pos": "danh từ",
+      "meaning": "thói quen",
+      "example": "Reading before bed is a good habit.",
+      "example_translation": "Đọc sách trước khi ngủ là thói quen tốt."
+    },
+    {
+      "uid": "X03-0024",
+      "term": "healthy",
+      "reading": "/ˈhelθi/",
+      "pos": "tính từ",
+      "meaning": "lành mạnh, khỏe mạnh",
+      "example": "A healthy breakfast gives you energy.",
+      "example_translation": "Bữa sáng lành mạnh cho bạn năng lượng."
+    },
+    {
+      "uid": "X03-0025",
+      "term": "convenient",
+      "reading": "/kənˈviːniənt/",
+      "pos": "tính từ",
+      "meaning": "thuận tiện",
+      "example": "Online shopping is convenient for busy people.",
+      "example_translation": "Mua sắm trực tuyến tiện cho người bận rộn."
+    },
+    {
+      "uid": "X03-0026",
+      "term": "expensive",
+      "reading": "/ɪkˈspensɪv/",
+      "pos": "tính từ",
+      "meaning": "đắt",
+      "example": "City apartments are too expensive for students.",
+      "example_translation": "Căn hộ trong thành phố quá đắt với sinh viên."
+    },
+    {
+      "uid": "X03-0027",
+      "term": "available",
+      "reading": "/əˈveɪləbl/",
+      "pos": "tính từ",
+      "meaning": "có sẵn, rảnh",
+      "example": "The manager is available after three o'clock.",
+      "example_translation": "Quản lý rảnh sau ba giờ."
+    },
+    {
+      "uid": "X03-0028",
+      "term": "disappointed",
+      "reading": "/ˌdɪsəˈpɔɪntɪd/",
+      "pos": "tính từ",
+      "meaning": "thất vọng",
+      "example": "We were disappointed with the service.",
+      "example_translation": "Chúng tôi thất vọng với dịch vụ."
+    },
+    {
+      "uid": "X03-0029",
+      "term": "probably",
+      "reading": "/ˈprɑːbəbli/",
+      "pos": "trạng từ",
+      "meaning": "có lẽ",
+      "example": "I will probably stay at home this weekend.",
+      "example_translation": "Có lẽ cuối tuần này tôi ở nhà."
+    },
+    {
+      "uid": "X03-0030",
+      "term": "look forward to",
+      "reading": "/lʊk ˈfɔːrwərd tuː/",
+      "pos": "cụm động từ",
+      "meaning": "mong chờ",
+      "example": "I look forward to hearing from you.",
+      "example_translation": "Tôi mong nhận được phản hồi của bạn."
+    }
+  ]
+}

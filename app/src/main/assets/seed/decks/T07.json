@@ -1,0 +1,197 @@
+{
+  "deck": {
+    "code": "T07",
+    "version": 1,
+    "name": "Nhà cửa & đồ dùng",
+    "name_en": "House & Home",
+    "description": "Từ vựng về các phòng và đồ dùng trong nhà",
+    "language": "en",
+    "icon": "t07-house-home",
+    "level": "A1",
+    "exam_tag": null,
+    "sort_order": 7
+  },
+  "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
+  "words": [
+    {
+      "uid": "T07-0001",
+      "term": "house",
+      "reading": "/haʊs/",
+      "pos": "danh từ",
+      "meaning": "ngôi nhà",
+      "example": "Our house has two floors.",
+      "example_translation": "Nhà chúng tôi có hai tầng."
+    },
+    {
+      "uid": "T07-0002",
+      "term": "room",
+      "reading": "/ruːm/",
+      "pos": "danh từ",
+      "meaning": "căn phòng",
+      "example": "My room is small but clean.",
+      "example_translation": "Phòng tôi nhỏ nhưng sạch."
+    },
+    {
+      "uid": "T07-0003",
+      "term": "kitchen",
+      "reading": "/ˈkɪtʃɪn/",
+      "pos": "danh từ",
+      "meaning": "nhà bếp",
+      "example": "My mother is cooking in the kitchen.",
+      "example_translation": "Mẹ tôi đang nấu ăn trong bếp."
+    },
+    {
+      "uid": "T07-0004",
+      "term": "bedroom",
+      "reading": "/ˈbedruːm/",
+      "pos": "danh từ",
+      "meaning": "phòng ngủ",
+      "example": "There is a desk in my bedroom.",
+      "example_translation": "Có một cái bàn trong phòng ngủ của tôi."
+    },
+    {
+      "uid": "T07-0005",
+      "term": "bathroom",
+      "reading": "/ˈbæθruːm/",
+      "pos": "danh từ",
+      "meaning": "phòng tắm",
+      "example": "The bathroom is next to the kitchen.",
+      "example_translation": "Phòng tắm ở cạnh nhà bếp."
+    },
+    {
+      "uid": "T07-0006",
+      "term": "living room",
+      "reading": "/ˈlɪvɪŋ ruːm/",
+      "pos": "danh từ",
+      "meaning": "phòng khách",
+      "example": "We watch TV in the living room.",
+      "example_translation": "Chúng tôi xem tivi ở phòng khách."
+    },
+    {
+      "uid": "T07-0007",
+      "term": "door",
+      "reading": "/dɔːr/",
+      "pos": "danh từ",
+      "meaning": "cửa ra vào",
+      "example": "Please close the door.",
+      "example_translation": "Làm ơn đóng cửa lại."
+    },
+    {
+      "uid": "T07-0008",
+      "term": "window",
+      "reading": "/ˈwɪndoʊ/",
+      "pos": "danh từ",
+      "meaning": "cửa sổ",
+      "example": "Open the window, it is hot.",
+      "example_translation": "Mở cửa sổ ra, trời nóng quá."
+    },
+    {
+      "uid": "T07-0009",
+      "term": "table",
+      "reading": "/ˈteɪbl/",
+      "pos": "danh từ",
+      "meaning": "cái bàn",
+      "example": "The keys are on the table.",
+      "example_translation": "Chìa khóa ở trên bàn."
+    },
+    {
+      "uid": "T07-0010",
+      "term": "chair",
+      "reading": "/tʃer/",
+      "pos": "danh từ",
+      "meaning": "cái ghế",
+      "example": "Sit on this chair, please.",
+      "example_translation": "Mời bạn ngồi ghế này."
+    },
+    {
+      "uid": "T07-0011",
+      "term": "bed",
+      "reading": "/bed/",
+      "pos": "danh từ",
+      "meaning": "cái giường",
+      "example": "I go to bed at ten.",
+      "example_translation": "Tôi đi ngủ lúc mười giờ."
+    },
+    {
+      "uid": "T07-0012",
+      "term": "lamp",
+      "reading": "/læmp/",
+      "pos": "danh từ",
+      "meaning": "cái đèn",
+      "example": "Turn on the lamp, please.",
+      "example_translation": "Làm ơn bật đèn lên."
+    },
+    {
+      "uid": "T07-0013",
+      "term": "sofa",
+      "reading": "/ˈsoʊfə/",
+      "pos": "danh từ",
+      "meaning": "ghế sô pha",
+      "example": "The cat sleeps on the sofa.",
+      "example_translation": "Con mèo ngủ trên ghế sô pha."
+    },
+    {
+      "uid": "T07-0014",
+      "term": "mirror",
+      "reading": "/ˈmɪrər/",
+      "pos": "danh từ",
+      "meaning": "cái gương",
+      "example": "She looks at herself in the mirror.",
+      "example_translation": "Cô ấy soi mình trong gương."
+    },
+    {
+      "uid": "T07-0015",
+      "term": "fridge",
+      "reading": "/frɪdʒ/",
+      "pos": "danh từ",
+      "meaning": "tủ lạnh",
+      "example": "The milk is in the fridge.",
+      "example_translation": "Sữa ở trong tủ lạnh."
+    },
+    {
+      "uid": "T07-0016",
+      "term": "clock",
+      "reading": "/klɑːk/",
+      "pos": "danh từ",
+      "meaning": "đồng hồ treo tường",
+      "example": "The clock on the wall is slow.",
+      "example_translation": "Đồng hồ trên tường chạy chậm."
+    },
+    {
+      "uid": "T07-0017",
+      "term": "key",
+      "reading": "/kiː/",
+      "pos": "danh từ",
+      "meaning": "chìa khóa",
+      "example": "I cannot find my key.",
+      "example_translation": "Tôi không tìm thấy chìa khóa."
+    },
+    {
+      "uid": "T07-0018",
+      "term": "floor",
+      "reading": "/flɔːr/",
+      "pos": "danh từ",
+      "meaning": "sàn nhà",
+      "example": "The floor is wet, be careful.",
+      "example_translation": "Sàn ướt đấy, cẩn thận."
+    },
+    {
+      "uid": "T07-0019",
+      "term": "wall",
+      "reading": "/wɔːl/",
+      "pos": "danh từ",
+      "meaning": "bức tường",
+      "example": "There is a picture on the wall.",
+      "example_translation": "Có một bức tranh trên tường."
+    },
+    {
+      "uid": "T07-0020",
+      "term": "garden",
+      "reading": "/ˈɡɑːrdn/",
+      "pos": "danh từ",
+      "meaning": "khu vườn",
+      "example": "We grow flowers in the garden.",
+      "example_translation": "Chúng tôi trồng hoa trong vườn."
+    }
+  ]
+}

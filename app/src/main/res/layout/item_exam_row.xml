@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/button_height_l"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_4"
+    android:paddingVertical="@dimen/space_2">
+
+    <ImageView
+        android:id="@+id/iv_row"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:importantForAccessibility="no"
+        app:tint="@color/feat_exam"
+        tools:src="@drawable/ic_clipboard_check" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_3"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_row_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+            tools:text="Reading Part 5 — Đề 1" />
+
+        <TextView
+            android:id="@+id/tv_row_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+            tools:text="20 câu · 15 phút" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_row"
+            style="@style/Widget.LearningE.Button.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_2"
+            tools:text="Làm bài" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_row_chevron"
+        android:layout_width="@dimen/icon_m"
+        android:layout_height="@dimen/icon_m"
+        android:importantForAccessibility="no"
+        app:srcCompat="@drawable/ic_chevron_right"
+        app:tint="@color/on_surface_variant" />
+</LinearLayout>

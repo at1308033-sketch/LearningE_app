@@ -1,0 +1,65 @@
+syntax = "proto3";
+package learninge.app.v1;
+import "learninge/app/v1/common.proto";
+option java_multiple_files = true;
+option java_package = "com.learninge.proto.app.v1";
+option java_outer_classname = "AuthProto";
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (AuthSession);                              // EP-02
+  rpc Login(LoginRequest) returns (AuthSession);                                    // EP-03
+  rpc Logout(LogoutRequest) returns (LogoutResponse);                               // EP-04
+  rpc GetMe(GetMeRequest) returns (GetMeResponse);                                  // EP-05
+  rpc UpdateMe(UpdateMeRequest) returns (UpdateMeResponse);                         // EP-06
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);       // EP-07
+  rpc GetResetQuestion(GetResetQuestionRequest) returns (GetResetQuestionResponse); // EP-08
+  rpc ResetPassword(ResetPasswordRequest) returns (AuthSession);                    // EP-09
+  rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);          // EP-10
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string nickname = 3;
+  string display_name = 4;
+  int32 security_question_id = 5;   // 1..5
+  string security_answer = 6;
+  string device_name = 7;           // "" = không có
+}
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  string device_name = 3;
+}
+message LogoutRequest {}
+message LogoutResponse {}
+message GetMeRequest {}
+message GetMeResponse {
+  User user = 1;
+  Stats stats = 2;
+  bool stats_partial = 3;           // true khi sync/gamification không trả lời kịp
+}
+message UpdateMeRequest {
+  optional string nickname = 1;     // không có = không đổi
+  optional string display_name = 2;
+}
+message UpdateMeResponse { User user = 1; }
+message ChangePasswordRequest {
+  string current_password = 1;
+  string new_password = 2;
+  string device_name = 3;
+}
+message ChangePasswordResponse {
+  string token = 1;
+  int64 expires_at_ms = 2;
+}
+message GetResetQuestionRequest { string email = 1; }
+message GetResetQuestionResponse { int32 security_question_id = 1; }
+message ResetPasswordRequest {
+  string email = 1;
+  string security_answer = 2;
+  string new_password = 3;
+  string device_name = 4;
+}
+message DeleteAccountRequest { string password = 1; }
+message DeleteAccountResponse {}

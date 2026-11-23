@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t08-school.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M1 5h1v9h-1zM2 4h1v1h-1zM2 14h12v1h-12zM3 3h1v1h-1zM4 1h1v1h-1zM4 2h8v1h-8zM5 0h6v1h-6zM7 10h2v1h-2zM11 1h1v1h-1zM12 3h1v1h-1zM13 4h1v1h-1zM14 5h1v9h-1z" />
+    <path
+        android:fillColor="#1E40AF"
+        android:pathData="M2 13h12v1h-12zM13 7h1v6h-1z" />
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M2 5h1v2h-1zM2 8h2v5h-2zM2 7h11v1h-11zM3 4h10v1h-10zM4 3h8v1h-8zM4 5h10v2h-10zM5 1h6v1h-6zM12 8h1v5h-1z" />
+    <path
+        android:fillColor="#A5A0FF"
+        android:pathData="M3 5h1v2h-1z" />
+    <path
+        android:fillColor="#FFB020"
+        android:pathData="M4 12h8v1h-8z" />
+    <path
+        android:fillColor="#FFC93C"
+        android:pathData="M4 9h1v1h-1zM4 10h3v1h-3zM4 8h8v1h-8zM4 11h8v1h-8zM6 9h6v1h-6zM9 10h3v1h-3z" />
+    <path
+        android:fillColor="#FFF1D6"
+        android:pathData="M5 9h1v1h-1z" />
+</vector>

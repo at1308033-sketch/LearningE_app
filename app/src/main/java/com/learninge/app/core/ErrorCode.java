@@ -1,0 +1,39 @@
+package com.learninge.app.core;
+
+/**
+ * Mã lỗi Service trả cho giao diện (API-SPECIFICATION §2, SYSTEM-BLUEPRINT §Mô hình lỗi).
+ */
+public enum ErrorCode {
+    // Nghiệp vụ trên máy
+    VALIDATION,
+    WRONG_PASSWORD,
+    SAME_PASSWORD,
+    NOT_FOUND,
+    DUPLICATE,
+    READ_ONLY,
+    NOTHING_TO_STUDY,
+    FILE_TOO_LARGE,
+    FILE_FORMAT,
+    NO_VALID_ROWS,
+    IO,
+    DB,
+    TTS_UNAVAILABLE,
+    PERMISSION_DENIED,
+    TIME_UP,
+
+    // Mạng và server
+    NETWORK_OFFLINE,
+    NETWORK_TIMEOUT,
+    SERVER_UNAVAILABLE,
+    UNAUTHENTICATED,
+    INVALID_CREDENTIALS,
+    INVALID_SECURITY_ANSWER,
+    ACCOUNT_DELETED,
+    ACCOUNT_LOCKED,
+    RESET_LOCKED,
+    RATE_LIMITED,
+    EMAIL_TAKEN,
+    NICKNAME_TAKEN,
+    UPGRADE_REQUIRED,
+    BAD_RESPONSE
+}
