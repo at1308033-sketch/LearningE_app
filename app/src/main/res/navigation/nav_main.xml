@@ -102,6 +102,14 @@
             app:argType="integer" />
 
         <argument
+            android:name="xp"
+            app:argType="integer" />
+
+        <argument
+            android:name="isXpCapped"
+            app:argType="boolean" />
+
+        <argument
             android:name="boxesBefore"
             app:argType="integer[]" />
 
@@ -157,6 +165,15 @@
             android:defaultValue="-1L"
             app:argType="long" />
     </fragment>
+
+    <action
+        android:id="@+id/action_global_leaderboard"
+        app:destination="@id/leaderboard_fragment" />
+
+    <fragment
+        android:id="@+id/leaderboard_fragment"
+        android:name="com.learninge.app.ui.leaderboard.LeaderboardFragment"
+        tools:layout="@layout/fragment_leaderboard" />
 
     <navigation
         android:id="@+id/home_graph"

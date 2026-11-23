@@ -40,6 +40,7 @@ public class FlashcardViewModel extends BaseViewModel {
     private int streakBefore;
     private List<Integer> boxesBefore;
     private boolean isSaving;
+    private boolean isFinished;
 
     public FlashcardViewModel(@NonNull Application application) {
         super(application);
@@ -107,8 +108,19 @@ public class FlashcardViewModel extends BaseViewModel {
         }
     }
 
+    @Override
+    protected void onCleared() {
+        if (!isFinished && remembered + forgotten > 0) {
+            services.executors().dbWrite().execute(() -> {
+                services.studyService().leaveSession(remembered, forgotten);
+                services.syncScheduler().onActivityFinished();
+            });
+        }
+    }
+
     private void finish() {
         isSaving = true;
+        isFinished = true;
         ActivityType kind = source == StudySource.NEW ? ActivityType.LEARN : ActivityType.REVIEW;
         services.executors().dbWrite().execute(() -> {
             Result<SessionSummary> summary = services.studyService().finishSession(kind, deckId, remembered,

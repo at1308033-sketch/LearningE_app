@@ -12,6 +12,7 @@ import com.learninge.app.NavMainDirections;
 import com.learninge.app.R;
 import com.learninge.app.data.model.ActivityType;
 import com.learninge.app.data.model.SessionSummary;
+import com.learninge.app.data.model.XpGain;
 import com.learninge.app.databinding.FragmentSessionResultBinding;
 import com.learninge.app.ui.common.BaseFragment;
 
@@ -41,6 +42,9 @@ public class SessionResultFragment extends BaseFragment {
         binding.tvResultCards.setText(String.valueOf(summary.total()));
         binding.tvResultPercent.setText(getString(R.string.result_percent, summary.percent()));
         binding.tvResultStreak.setText(String.valueOf(summary.streak()));
+        binding.tvResultXp.setText(getString(services().networkMonitor().isOnline() ? R.string.result_xp
+                : R.string.result_xp_offline, summary.xp().xp()));
+        binding.tvResultCap.setVisibility(summary.xp().isCapped() ? View.VISIBLE : View.GONE);
         binding.headerResult.setContentDescription(getString(R.string.result_description, summary.displayName(),
                 summary.total(), summary.percent(), summary.streak()));
         binding.btnDone.setOnClickListener(v -> nav.navigateUp());
@@ -53,7 +57,8 @@ public class SessionResultFragment extends BaseFragment {
 
     private static SessionSummary summary(SessionResultFragmentArgs args) {
         return new SessionSummary(args.getKind(), args.getDeckId(), args.getDisplayName(), args.getRemembered(),
-                args.getForgotten(), args.getStreakBefore(), args.getStreak(), toList(args.getBoxesBefore()),
+                args.getForgotten(), args.getStreakBefore(), args.getStreak(),
+                new XpGain(args.getXp(), args.getIsXpCapped()), toList(args.getBoxesBefore()),
                 toList(args.getBoxesAfter()));
     }
 

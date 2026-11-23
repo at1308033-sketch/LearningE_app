@@ -42,7 +42,16 @@ public class HomeFragment extends BaseFragment {
         padStatusBar(binding.llHome);
         HomeViewModel viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         viewModel.today().observe(getViewLifecycleOwner(), result -> render(binding, viewModel, result));
-        viewModel.load();
+        viewModel.weekRank().observe(getViewLifecycleOwner(), rank -> binding.tvHomeRank.setText(rank.rank() == 0
+                ? getString(R.string.home_week_xp, rank.xp()) : getString(R.string.home_rank, rank.rank(), rank.xp())));
+        binding.cardLeaderboard.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalLeaderboard()));
+        // Dữ liệu vừa kéo về thì hiện ngay; trạng thái đầu tiên luôn là "không chạy" nên cũng là lần tải đầu.
+        viewModel.syncStatus().observe(getViewLifecycleOwner(), status -> {
+            if (!status.isRunning()) {
+                viewModel.load();
+            }
+        });
     }
 
     private void render(FragmentHomeBinding binding, HomeViewModel viewModel, Result<TodaySummary> result) {

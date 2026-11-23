@@ -15,6 +15,7 @@ import com.learninge.app.data.model.SessionSummary;
 import com.learninge.app.data.model.User;
 import com.learninge.app.data.model.WordDetail;
 import com.learninge.app.data.model.WordItem;
+import com.learninge.app.data.model.XpGain;
 import com.learninge.app.data.repo.StudyRepository;
 import com.learninge.app.domain.rules.LeitnerScheduler;
 import com.learninge.app.domain.rules.StreakCalculator.Streak;
@@ -23,6 +24,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Phiên học thẻ (API-SPECIFICATION §3.3): học từ mới và ôn tập.
@@ -38,12 +40,13 @@ public class StudyService {
     private final UserDao users;
     private final DeckService decks;
     private final ProgressService progress;
+    private final XpService xp;
     private final SessionStore session;
     private final Clock clock;
 
     public StudyService(WordDao words, CardProgressDao cards, StudyRepository study, StatisticsDao statistics,
-                        UserDao users, DeckService decks, ProgressService progress, SessionStore session,
-                        Clock clock) {
+                        UserDao users, DeckService decks, ProgressService progress, XpService xp,
+                        SessionStore session, Clock clock) {
         this.words = words;
         this.cards = cards;
         this.study = study;
@@ -51,6 +54,7 @@ public class StudyService {
         this.users = users;
         this.decks = decks;
         this.progress = progress;
+        this.xp = xp;
         this.session = session;
         this.clock = clock;
     }
@@ -118,9 +122,17 @@ public class StudyService {
         if (!streak.isOk()) {
             return Result.errorOf(streak);
         }
+        Result<XpGain> gain = xp.recordCards(UUID.randomUUID().toString(), remembered, forgotten);
         User user = users.findById(session.userId());
         return Result.ok(new SessionSummary(kind, deckId, user == null ? "" : user.displayName(), remembered, forgotten,
-                streakBefore, streak.value.current, boxesBefore, boxCounts()));
+                streakBefore, streak.value.current, gain.isOk() ? gain.value : XpGain.NONE, boxesBefore, boxCounts()));
+    }
+
+    /**
+     * Thoát giữa phiên: không tính là hoạt động học nhưng vẫn được XP của các thẻ đã đánh giá (BR-065).
+     */
+    public void leaveSession(int remembered, int forgotten) {
+        xp.recordCards(UUID.randomUUID().toString(), remembered, forgotten);
     }
 
     private Result<List<WordDetail>> cardsOf(List<WordItem> items) {

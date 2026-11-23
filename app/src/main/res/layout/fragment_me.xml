@@ -43,6 +43,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/me_progress"
                 app:drawableStartCompat="@drawable/ic_bar_chart" />
+
+            <TextView
+                android:id="@+id/row_leaderboard"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/leaderboard_title"
+                app:drawableStartCompat="@drawable/ic_target" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

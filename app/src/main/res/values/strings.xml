@@ -17,6 +17,7 @@
 
     <!-- Dùng chung -->
     <string name="common_retry">Thử lại</string>
+    <string name="common_loading">Đang tải</string>
     <string name="common_cancel">Hủy</string>
     <string name="common_delete">Xóa</string>
     <string name="common_close">Đóng</string>
@@ -127,6 +128,9 @@
     <string name="home_continue_label">Học tiếp chủ đề</string>
     <string name="home_first_label">Bắt đầu</string>
     <string name="home_first_topic">Chọn chủ đề đầu tiên</string>
+    <string name="home_leaderboard">Bảng xếp hạng tuần</string>
+    <string name="home_rank">Hạng %1$d · %2$d XP</string>
+    <string name="home_week_xp">%1$d XP tuần này</string>
     <string name="home_deck_count">%1$d/%2$d từ</string>
     <plurals name="days">
         <item quantity="other">%d ngày</item>
@@ -197,6 +201,9 @@
     <string name="result_cards">Thẻ đã ôn</string>
     <string name="result_correct">Trả lời đúng</string>
     <string name="result_streak">Chuỗi ngày</string>
+    <string name="result_xp">+%1$d XP</string>
+    <string name="result_xp_offline">+%1$d XP (sẽ được tính khi đồng bộ)</string>
+    <string name="result_xp_capped">Bạn đã đạt tối đa 500 XP hôm nay</string>
     <string name="result_done">Xong</string>
     <string name="result_continue">Học tiếp chủ đề</string>
     <string name="result_description">Tuyệt vời, %1$s. Đã ôn %2$d thẻ, đúng %3$d phần trăm, chuỗi %4$d ngày</string>
@@ -240,6 +247,23 @@
     <string name="word_error_meaning">Vui lòng nhập nghĩa</string>
     <string name="word_error_example">Tối đa 300 ký tự</string>
     <string name="word_error_duplicate">Từ này đã có trong bộ</string>
+
+    <!-- SCR-34 Bảng xếp hạng -->
+    <string name="xp">%1$d XP</string>
+    <string name="time_today">%1$s hôm nay</string>
+    <string name="leaderboard_title">Bảng xếp hạng</string>
+    <string name="leaderboard_week">Tuần %1$d · %2$s – %3$s</string>
+    <string name="leaderboard_countdown">Kết thúc sau %1$d ngày %2$02d:%3$02d</string>
+    <string name="leaderboard_updated">Top 50 theo XP tuần · Cập nhật lúc %1$s</string>
+    <string name="leaderboard_saved">Dữ liệu đã lưu · Cập nhật lúc %1$s</string>
+    <string name="leaderboard_you">Bạn</string>
+    <string name="leaderboard_my_rank">Bạn · Hạng %1$d</string>
+    <string name="leaderboard_no_rank">Bạn chưa có XP tuần này</string>
+    <string name="leaderboard_no_rank_short">–</string>
+    <string name="leaderboard_to_next">Còn %1$d XP để lên hạng %2$d</string>
+    <string name="leaderboard_row">Hạng %1$d, %2$s, %3$d XP, chuỗi %4$d ngày</string>
+    <string name="leaderboard_need_network">Cần kết nối mạng để xem bảng xếp hạng</string>
+    <string name="leaderboard_new_week">Tuần mới vừa bắt đầu — học một phiên để lên bảng</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>

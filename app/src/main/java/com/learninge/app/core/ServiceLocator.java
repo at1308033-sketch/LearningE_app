@@ -11,14 +11,17 @@ import com.learninge.app.data.dao.CardProgressDao;
 import com.learninge.app.data.dao.DeckDao;
 import com.learninge.app.data.dao.FavoriteDao;
 import com.learninge.app.data.dao.LanguageDao;
+import com.learninge.app.data.dao.LeaderboardCacheDao;
 import com.learninge.app.data.dao.SettingsDao;
 import com.learninge.app.data.dao.StatisticsDao;
 import com.learninge.app.data.dao.UserDao;
 import com.learninge.app.data.dao.WordDao;
+import com.learninge.app.data.dao.XpDao;
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
 import com.learninge.app.data.remote.AuthRemote;
 import com.learninge.app.data.remote.GrpcClient;
+import com.learninge.app.data.remote.LeaderboardRemote;
 import com.learninge.app.data.remote.NetworkMonitor;
 import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.SyncRemote;
@@ -32,9 +35,11 @@ import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
 import com.learninge.app.domain.LanguageRegistry;
+import com.learninge.app.domain.LeaderboardService;
 import com.learninge.app.domain.ProgressService;
 import com.learninge.app.domain.StatisticsService;
 import com.learninge.app.domain.StudyService;
+import com.learninge.app.domain.XpService;
 import com.learninge.app.sync.SyncManager;
 import com.learninge.app.sync.SyncScheduler;
 
@@ -174,8 +179,17 @@ public final class ServiceLocator {
 
     public StudyService studyService() {
         return new StudyService(new WordDao(database), new CardProgressDao(database), new StudyRepository(database),
-                new StatisticsDao(database), new UserDao(database), deckService(), progressService(), sessionStore,
-                clock());
+                new StatisticsDao(database), new UserDao(database), deckService(), progressService(), xpService(),
+                sessionStore, clock());
+    }
+
+    public XpService xpService() {
+        return new XpService(new XpDao(database), sessionStore, clock());
+    }
+
+    public LeaderboardService leaderboardService() {
+        return new LeaderboardService(() -> new LeaderboardRemote(grpcClient()), new LeaderboardCacheDao(database),
+                sessionStore, executors, clock());
     }
 
     /**

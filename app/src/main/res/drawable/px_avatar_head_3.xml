@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/pixel/avatar-head-3.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportWidth="12"
+    android:viewportHeight="12">
+    <path
+        android:fillColor="#14B8A6"
+        android:pathData="M1 10h10v1h-10zM2 9h8v1h-8zM3 8h6v1h-6z" />
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M0 10h1v1h-1zM1 3h1v4h-1zM1 9h1v1h-1zM1 11h10v1h-10zM2 2h1v1h-1zM2 7h1v2h-1zM3 1h1v1h-1zM4 5h1v1h-1zM4 0h4v1h-4zM7 5h1v1h-1zM8 1h1v1h-1zM9 2h1v1h-1zM9 7h1v2h-1zM10 3h1v4h-1zM10 9h1v1h-1zM11 10h1v1h-1z" />
+    <path
+        android:fillColor="#2B2340"
+        android:pathData="M2 5h1v1h-1zM2 4h2v1h-2zM2 3h8v1h-8zM3 2h6v1h-6zM4 1h4v1h-4zM8 4h2v1h-2zM9 5h1v1h-1z" />
+    <path
+        android:fillColor="#C98B62"
+        android:pathData="M2 6h8v1h-8zM3 5h1v1h-1zM3 7h6v1h-6zM4 4h4v1h-4zM5 5h2v1h-2zM8 5h1v1h-1z" />
+</vector>

@@ -40,4 +40,5 @@
     <dimen name="flash_blob_offset">-60dp</dimen>
     <dimen name="flash_speak">64dp</dimen>
     <dimen name="fab_space">88dp</dimen>
+    <dimen name="rank_row">56dp</dimen>
 </resources>

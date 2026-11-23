@@ -138,8 +138,8 @@ public class FlashcardFragment extends BaseFragment {
     private void openResult(SessionSummary summary) {
         NavHostFragment.findNavController(this).navigate(FlashcardFragmentDirections.actionFlashcardToResult(
                 summary.kind(), summary.deckId(), summary.displayName(), summary.remembered(), summary.forgotten(),
-                summary.streakBefore(), summary.streak(), toArray(summary.boxesBefore()),
-                toArray(summary.boxesAfter())));
+                summary.streakBefore(), summary.streak(), summary.xp().xp(), summary.xp().isCapped(),
+                toArray(summary.boxesBefore()), toArray(summary.boxesAfter())));
     }
 
     private static int[] toArray(java.util.List<Integer> values) {

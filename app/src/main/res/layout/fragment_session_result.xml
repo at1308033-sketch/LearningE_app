@@ -47,14 +47,37 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_2"
                 android:gravity="center_horizontal"
-                android:orientation="vertical" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_result_xp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill"
+                    android:backgroundTint="@color/feat_streak_decor"
+                    android:paddingHorizontal="@dimen/space_3"
+                    android:paddingVertical="@dimen/space_1"
+                    android:textAppearance="@style/TextAppearance.LearningE.Label"
+                    android:textColor="@color/on_sun"
+                    tools:text="+29 XP" />
+
+                <TextView
+                    android:id="@+id/tv_result_cap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:text="@string/result_xp_capped"
+                    android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_4"
             android:baselineAligned="false"
+            android:clipToPadding="false"
+            android:padding="@dimen/space_4"
             android:orientation="horizontal">
 
             <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">

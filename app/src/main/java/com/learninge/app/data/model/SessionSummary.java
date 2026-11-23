@@ -9,7 +9,8 @@ import java.util.List;
  * @param boxesBefore số thẻ ở hộp 1..5 trước phiên (BR-071)
  */
 public record SessionSummary(ActivityType kind, long deckId, String displayName, int remembered, int forgotten,
-                             int streakBefore, int streak, List<Integer> boxesBefore, List<Integer> boxesAfter) {
+                             int streakBefore, int streak, XpGain xp, List<Integer> boxesBefore,
+                             List<Integer> boxesAfter) {
 
     public int total() {
         return remembered + forgotten;
