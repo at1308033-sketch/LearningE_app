@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/header_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_container"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:subtitle="@string/register_subtitle"
+            app:title="@string/register_title" />
+
+        <ImageView
+            android:layout_width="@dimen/header_art_width"
+            android:layout_height="@dimen/header_art_height"
+            android:layout_marginEnd="@dimen/space_3"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ill_onboarding_goal" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4">
+
+            <com.learninge.app.ui.common.FeedbackBannerView
+                android:id="@+id/banner_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_3"
+                android:visibility="gone" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_display_name"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_display_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_display_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="30" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_email"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/login_email">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="emailAddress"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="254" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_nickname"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/register_nickname"
+                app:helperText="@string/register_nickname_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="username"
+                    android:inputType="textNoSuggestions"
+                    android:maxLength="20" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_password"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/login_password"
+                app:endIconContentDescription="@string/login_show_password"
+                app:endIconMode="password_toggle"
+                app:errorIconDrawable="@null"
+                app:helperText="@string/register_password_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="newPassword"
+                    android:inputType="textPassword"
+                    android:maxLength="64" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_confirm"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/register_confirm"
+                app:endIconContentDescription="@string/login_show_password"
+                app:endIconMode="password_toggle"
+                app:errorIconDrawable="@null">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="newPassword"
+                    android:inputType="textPassword"
+                    android:maxLength="64" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_question"
+                style="@style/Widget.LearningE.Dropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/register_question">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/act_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_answer"
+                style="@style/Widget.LearningE.TextField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:hint="@string/register_answer"
+                app:helperText="@string/register_answer_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:maxLength="50" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_register"
+                style="@style/Widget.LearningE.Button.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:text="@string/register_submit" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

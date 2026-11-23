@@ -20,5 +20,15 @@
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.learninge.app.ui.auth.LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_login_to_register"
+            app:destination="@id/register_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/register_fragment"
+        android:name="com.learninge.app.ui.auth.RegisterFragment"
+        tools:layout="@layout/fragment_register" />
 </navigation>
