@@ -51,6 +51,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/leaderboard_title"
                 app:drawableStartCompat="@drawable/ic_target" />
+
+            <TextView
+                android:id="@+id/row_sync"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sync_title"
+                app:drawableStartCompat="@drawable/ic_refresh" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

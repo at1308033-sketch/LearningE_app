@@ -7,14 +7,20 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.LearningE.Learn">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_word"
+    <FrameLayout
+        android:id="@+id/header_word"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/menu_word"
-        app:navigationContentDescription="@string/common_back"
-        app:navigationIcon="@drawable/ic_arrow_left"
-        app:title="@string/word_title" />
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/menu_word"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:title="@string/word_title" />
+    </FrameLayout>
 
     <com.learninge.app.ui.common.EmptyStateView
         android:id="@+id/es_word"

@@ -32,6 +32,8 @@ public class MeFragment extends BaseFragment {
         padStatusBar(binding.headerMe);
         binding.rowProgress.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalProgress()));
+        binding.rowSync.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalSync()));
         binding.rowLeaderboard.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalLeaderboard()));
     }

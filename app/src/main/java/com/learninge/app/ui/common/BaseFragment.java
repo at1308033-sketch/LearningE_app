@@ -35,8 +35,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        WindowCompat.getInsetsController(requireActivity().getWindow(), requireView())
-                .setAppearanceLightStatusBars(!hasDarkHeader());
+        if (requireActivity() instanceof StatusBarHost) {
+            ((StatusBarHost) requireActivity()).setDarkHeader(hasDarkHeader());
+        } else {
+            WindowCompat.getInsetsController(requireActivity().getWindow(), requireView())
+                    .setAppearanceLightStatusBars(!hasDarkHeader());
+        }
     }
 
     /**

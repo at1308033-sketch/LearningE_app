@@ -5,6 +5,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/ll_offline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:accessibilityLiveRegion="polite"
+        android:background="@color/surface_variant"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_4"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_wifi_off"
+            app:tint="@color/on_surface" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            android:layout_weight="1"
+            android:paddingVertical="@dimen/space_2"
+            android:text="@string/offline_banner"
+            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+            android:textColor="@color/on_surface" />
+    </LinearLayout>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_main"
         android:name="androidx.navigation.fragment.NavHostFragment"

@@ -265,6 +265,31 @@
     <string name="leaderboard_need_network">Cần kết nối mạng để xem bảng xếp hạng</string>
     <string name="leaderboard_new_week">Tuần mới vừa bắt đầu — học một phiên để lên bảng</string>
 
+    <!-- Thanh ngoại tuyến, SCR-35 Đồng bộ -->
+    <string name="offline_banner">Đang ngoại tuyến · sẽ đồng bộ khi có mạng</string>
+    <string name="sync_title">Đồng bộ</string>
+    <string name="sync_now">Đồng bộ ngay</string>
+    <string name="sync_running">Đang đồng bộ…</string>
+    <string name="sync_running_note">Đang trao đổi dữ liệu với máy chủ</string>
+    <string name="sync_progress">Đẩy %1$d/%2$d bản ghi</string>
+    <string name="sync_pending">Có thay đổi chờ đẩy lên</string>
+    <string name="sync_pending_note">Sẽ tự đồng bộ khi mở app, sau mỗi phiên học và khi có mạng.</string>
+    <string name="sync_done">Đã đồng bộ</string>
+    <string name="sync_done_note">Dữ liệu trên máy khớp với máy chủ.</string>
+    <string name="sync_error">Đồng bộ chưa thành công</string>
+    <string name="sync_error_note">Dữ liệu vẫn an toàn trên máy.</string>
+    <string name="sync_offline">Đang ngoại tuyến</string>
+    <string name="sync_offline_note">Bạn vẫn học bình thường, dữ liệu sẽ được đẩy lên khi có mạng.</string>
+    <string name="sync_need_network">Cần kết nối mạng để đồng bộ</string>
+    <string name="sync_last">Lần đồng bộ cuối</string>
+    <string name="sync_never">Chưa đồng bộ</string>
+    <string name="sync_pending_count">Thay đổi chờ đẩy</string>
+    <string name="sync_last_error">Lỗi gần nhất</string>
+    <string name="sync_no_error">Không có</string>
+    <string name="sync_record_rejected">Máy chủ từ chối một bản ghi (%1$s)</string>
+    <string name="sync_server">Máy chủ (bản debug)</string>
+    <string name="sync_safe_note">Dữ liệu chưa đồng bộ luôn được giữ trên máy; đăng xuất không làm mất chúng cho tới khi đẩy xong.</string>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

@@ -175,6 +175,15 @@
         android:name="com.learninge.app.ui.leaderboard.LeaderboardFragment"
         tools:layout="@layout/fragment_leaderboard" />
 
+    <action
+        android:id="@+id/action_global_sync"
+        app:destination="@id/sync_fragment" />
+
+    <fragment
+        android:id="@+id/sync_fragment"
+        android:name="com.learninge.app.ui.me.SyncFragment"
+        tools:layout="@layout/fragment_sync" />
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">

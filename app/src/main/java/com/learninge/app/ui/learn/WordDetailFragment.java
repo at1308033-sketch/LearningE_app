@@ -41,7 +41,7 @@ public class WordDetailFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FragmentWordDetailBinding binding = FragmentWordDetailBinding.bind(view);
-        padStatusBar(binding.toolbarWord);
+        padStatusBar(binding.headerWord);
         binding.toolbarWord.setNavigationOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
         TtsHelper tts = new TtsHelper(requireContext(), getViewLifecycleOwner());
         WordDetailViewModel viewModel = new ViewModelProvider(this).get(WordDetailViewModel.class);

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/header_sync"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_sync"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:title="@string/sync_title" />
+    </FrameLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4">
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_4">
+
+                    <ImageView
+                        android:id="@+id/iv_sync"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_blob"
+                        android:importantForAccessibility="no"
+                        android:padding="@dimen/space_4"
+                        tools:src="@drawable/ic_cloud" />
+
+                    <TextView
+                        android:id="@+id/tv_sync_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:accessibilityLiveRegion="polite"
+                        android:textAppearance="@style/TextAppearance.LearningE.TitleL"
+                        tools:text="@string/sync_pending" />
+
+                    <TextView
+                        android:id="@+id/tv_sync_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                        tools:text="@string/sync_pending_note" />
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/pi_sync"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_3"
+                        android:contentDescription="@string/sync_running"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/space_4"
+                    android:showDividers="middle">
+
+                    <LinearLayout style="@style/Widget.LearningE.InfoRow">
+
+                        <TextView
+                            style="@style/Widget.LearningE.InfoLabel"
+                            android:text="@string/sync_last" />
+
+                        <TextView
+                            android:id="@+id/tv_last_sync"
+                            style="@style/Widget.LearningE.InfoValue"
+                            tools:text="20:41 hôm nay" />
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/Widget.LearningE.InfoRow">
+
+                        <TextView
+                            style="@style/Widget.LearningE.InfoLabel"
+                            android:text="@string/sync_pending_count" />
+
+                        <TextView
+                            android:id="@+id/tv_pending"
+                            style="@style/Widget.LearningE.InfoValue"
+                            tools:text="3" />
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/Widget.LearningE.InfoRow">
+
+                        <TextView
+                            style="@style/Widget.LearningE.InfoLabel"
+                            android:text="@string/sync_last_error" />
+
+                        <TextView
+                            android:id="@+id/tv_last_error"
+                            style="@style/Widget.LearningE.InfoValue"
+                            tools:text="Không có" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/row_server"
+                        style="@style/Widget.LearningE.InfoRow">
+
+                        <TextView
+                            style="@style/Widget.LearningE.InfoLabel"
+                            android:text="@string/sync_server" />
+
+                        <TextView
+                            android:id="@+id/tv_server"
+                            style="@style/Widget.LearningE.InfoValue"
+                            tools:text="10.0.2.2:50051" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_sync"
+                style="@style/Widget.LearningE.Button.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:text="@string/sync_now"
+                app:icon="@drawable/ic_refresh"
+                app:iconGravity="textStart" />
+
+            <TextView
+                android:id="@+id/tv_sync_disabled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_1"
+                android:gravity="center"
+                android:text="@string/sync_need_network"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                android:visibility="gone" />
+
+            <com.learninge.app.ui.common.FeedbackBannerView
+                android:id="@+id/banner_sync"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

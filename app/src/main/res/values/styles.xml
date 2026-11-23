@@ -132,6 +132,29 @@
         <item name="android:textColor">@color/chip_text</item>
     </style>
 
+    <style name="Widget.LearningE.InfoRow" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="Widget.LearningE.InfoLabel" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.BodyM</item>
+    </style>
+
+    <style name="Widget.LearningE.InfoValue" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.Label</item>
+    </style>
+
     <style name="Widget.LearningE.Badge" parent="">
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
         <item name="android:background">@drawable/bg_pill</item>
