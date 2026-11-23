@@ -24,11 +24,13 @@ import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
 import com.learninge.app.data.repo.ProgressRepository;
+import com.learninge.app.data.repo.StudyRepository;
 import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckService;
 import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.ProgressService;
 import com.learninge.app.domain.StatisticsService;
+import com.learninge.app.domain.StudyService;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -138,6 +140,12 @@ public final class ServiceLocator {
     public StatisticsService statisticsService() {
         return new StatisticsService(new StatisticsDao(database), new CardProgressDao(database),
                 new ProgressRepository(database), deckService(), sessionStore, clock());
+    }
+
+    public StudyService studyService() {
+        return new StudyService(new WordDao(database), new CardProgressDao(database), new StudyRepository(database),
+                new StatisticsDao(database), new UserDao(database), deckService(), progressService(), sessionStore,
+                clock());
     }
 
     /**

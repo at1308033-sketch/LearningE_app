@@ -34,4 +34,7 @@
     <dimen name="badge_padding">3dp</dimen>
     <dimen name="chart_height">160dp</dimen>
     <dimen name="chart_text">12sp</dimen>
+    <dimen name="flash_blob">160dp</dimen>
+    <dimen name="flash_blob_offset">-60dp</dimen>
+    <dimen name="flash_speak">64dp</dimen>
 </resources>

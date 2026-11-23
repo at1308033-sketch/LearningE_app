@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.LearningE.Learn">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/space_4">
+
+        <LinearLayout
+            android:id="@+id/header_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_header_streak_tint"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/space_5">
+
+            <FrameLayout
+                android:id="@+id/fl_celebration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_result_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                tools:text="Tuyệt vời, Minh!" />
+
+            <TextView
+                android:id="@+id/tv_result_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+                tools:text="Bạn đã ôn xong 16 thẻ đến hạn." />
+
+            <LinearLayout
+                android:id="@+id/ll_result_chips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_4"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_cards"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/feat_learn"
+                        tools:text="16" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_cards" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.StatCard"
+                android:layout_marginHorizontal="@dimen/space_2">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_percent"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/success"
+                        tools:text="81%" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_correct" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView style="@style/Widget.LearningE.StatCard">
+
+                <LinearLayout style="@style/Widget.LearningE.StatCardContent">
+
+                    <TextView
+                        android:id="@+id/tv_result_streak"
+                        style="@style/Widget.LearningE.StatNumber"
+                        android:textColor="@color/feat_streak"
+                        tools:text="6" />
+
+                    <TextView
+                        style="@style/Widget.LearningE.StatLabel"
+                        android:text="@string/result_streak" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_chests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_done"
+            style="@style/Widget.LearningE.Button.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_2"
+            android:text="@string/result_done" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_continue"
+            style="@style/Widget.LearningE.Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:text="@string/result_continue" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

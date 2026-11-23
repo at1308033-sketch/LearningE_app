@@ -43,6 +43,73 @@
             app:argType="long" />
     </fragment>
 
+    <action
+        android:id="@+id/action_global_flashcard"
+        app:destination="@id/flashcard_fragment" />
+
+    <fragment
+        android:id="@+id/flashcard_fragment"
+        android:name="com.learninge.app.ui.study.FlashcardFragment"
+        tools:layout="@layout/fragment_flashcard">
+
+        <argument
+            android:name="source"
+            app:argType="com.learninge.app.ui.study.StudySource" />
+
+        <argument
+            android:name="deckId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+
+        <action
+            android:id="@+id/action_flashcard_to_result"
+            app:destination="@id/session_result_fragment"
+            app:popUpTo="@id/flashcard_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/session_result_fragment"
+        android:name="com.learninge.app.ui.study.SessionResultFragment"
+        tools:layout="@layout/fragment_session_result">
+
+        <argument
+            android:name="kind"
+            app:argType="com.learninge.app.data.model.ActivityType" />
+
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+
+        <argument
+            android:name="displayName"
+            app:argType="string" />
+
+        <argument
+            android:name="remembered"
+            app:argType="integer" />
+
+        <argument
+            android:name="forgotten"
+            app:argType="integer" />
+
+        <argument
+            android:name="streakBefore"
+            app:argType="integer" />
+
+        <argument
+            android:name="streak"
+            app:argType="integer" />
+
+        <argument
+            android:name="boxesBefore"
+            app:argType="integer[]" />
+
+        <argument
+            android:name="boxesAfter"
+            app:argType="integer[]" />
+    </fragment>
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">

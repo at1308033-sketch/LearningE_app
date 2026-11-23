@@ -103,6 +103,20 @@
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
     </style>
 
+    <style name="Widget.LearningE.StatCard" parent="Widget.LearningE.Card">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="Widget.LearningE.StatCardContent" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/space_3</item>
+    </style>
+
     <style name="Widget.LearningE.Badge" parent="">
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
         <item name="android:background">@drawable/bg_pill</item>
@@ -115,8 +129,15 @@
     <style name="Widget.LearningE.RoundButton" parent="Widget.Material3.Button.IconButton.Filled">
         <item name="android:layout_width">@dimen/touch_target_min</item>
         <item name="android:layout_height">@dimen/touch_target_min</item>
+        <item name="android:insetLeft">0dp</item>
         <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
     </style>
 
     <style name="Widget.LearningE.RoundButton.Heart">

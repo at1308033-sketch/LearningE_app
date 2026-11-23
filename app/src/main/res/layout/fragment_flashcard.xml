@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Learn">
+
+    <LinearLayout
+        android:id="@+id/header_flashcard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/space_4">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_close"
+            style="@style/Widget.LearningE.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/common_close"
+            app:icon="@drawable/ic_x" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/pi_session"
+            style="@style/Widget.LearningE.Progress"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/tv_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            android:textAppearance="@style/TextAppearance.LearningE.Label"
+            tools:text="3/10" />
+    </LinearLayout>
+
+    <com.learninge.app.ui.common.EmptyStateView
+        android:id="@+id/es_flashcard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        app:emptyArt="@drawable/ill_streak_mascot" />
+
+    <LinearLayout
+        android:id="@+id/group_study"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/space_4">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_deck"
+                style="@style/Widget.LearningE.Badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/feat_learn_container"
+                android:textColor="@color/feat_learn"
+                tools:text="Gia đình" />
+
+            <TextView
+                android:id="@+id/tv_source"
+                style="@style/Widget.LearningE.Badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2"
+                android:background="@drawable/bg_pill_outlined"
+                tools:text="Học mới" />
+        </LinearLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_flash"
+            style="@style/Widget.LearningE.Card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/space_3"
+            android:layout_weight="1"
+            app:cardCornerRadius="@dimen/radius_xl"
+            app:cardElevation="@dimen/elevation_2">
+
+            <View
+                android:layout_width="@dimen/flash_blob"
+                android:layout_height="@dimen/flash_blob"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="@dimen/flash_blob_offset"
+                android:layout_marginTop="@dimen/flash_blob_offset"
+                android:background="@drawable/bg_blob"
+                android:backgroundTint="@color/feat_learn_container" />
+
+            <View
+                android:layout_width="@dimen/flash_blob"
+                android:layout_height="@dimen/flash_blob"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="@dimen/flash_blob_offset"
+                android:layout_marginBottom="@dimen/flash_blob_offset"
+                android:background="@drawable/bg_blob"
+                android:backgroundTint="@color/feat_learn_container" />
+
+            <LinearLayout
+                android:id="@+id/ll_front"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/space_5">
+
+                <TextView
+                    android:id="@+id/tv_flash_level"
+                    style="@style/Widget.LearningE.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="A1" />
+
+                <TextView
+                    android:id="@+id/tv_front"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.LearningE.Display"
+                    tools:text="mother" />
+
+                <TextView
+                    android:id="@+id/tv_front_reading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.LearningE.Ipa"
+                    android:textColor="@color/feat_learn"
+                    tools:text="/ˈmʌðər/" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_flash_speak"
+                    style="@style/Widget.LearningE.RoundButton"
+                    android:layout_width="@dimen/flash_speak"
+                    android:layout_height="@dimen/flash_speak"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:contentDescription="@string/word_speak"
+                    app:icon="@drawable/ic_volume" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/space_5"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_back_term"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.LearningE.Ipa"
+                    tools:text="mother /ˈmʌðər/" />
+
+                <TextView
+                    android:id="@+id/tv_back_meaning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                    android:textColor="@color/feat_learn"
+                    tools:text="mẹ" />
+
+                <TextView
+                    android:id="@+id/tv_back_pos"
+                    style="@style/Widget.LearningE.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:background="@drawable/bg_pill_outlined"
+                    tools:text="danh từ" />
+
+                <LinearLayout
+                    android:id="@+id/ll_back_example"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:background="@drawable/bg_card_tint"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_4">
+
+                    <TextView
+                        android:id="@+id/tv_back_example"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+                        tools:text="My mother cooks dinner every evening." />
+
+                    <TextView
+                        android:id="@+id/tv_back_translation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+                        tools:text="Mẹ tôi nấu bữa tối mỗi tối." />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_flip_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/space_4"
+                android:text="@string/study_flip_hint"
+                android:textAppearance="@style/TextAppearance.LearningE.Caption" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/ll_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_forgot"
+                style="@style/Widget.LearningE.Button.Danger"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="@dimen/button_height_l"
+                android:text="@string/study_forgot"
+                app:icon="@drawable/ic_x"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_remembered"
+                style="@style/Widget.LearningE.Button.Success"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_3"
+                android:layout_weight="1"
+                android:minHeight="@dimen/button_height_l"
+                android:text="@string/study_remembered"
+                app:icon="@drawable/ic_check"
+                app:iconGravity="textStart" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

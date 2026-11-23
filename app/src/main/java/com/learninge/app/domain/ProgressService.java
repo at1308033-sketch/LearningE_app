@@ -56,6 +56,17 @@ public class ProgressService {
     }
 
     /**
+     * Chuỗi ngày tính đến hôm nay.
+     */
+    public Result<Integer> currentStreak() {
+        try {
+            return Result.ok(progress.streakOf(session.userId()).displayOn(LocalDate.now(clock)));
+        } catch (SQLException failed) {
+            return Result.error(ErrorCode.DB, failed.getMessage());
+        }
+    }
+
+    /**
      * Số liệu Trang chủ (US-016). Gọi trên {@code dbRead}.
      */
     public Result<TodaySummary> today() {

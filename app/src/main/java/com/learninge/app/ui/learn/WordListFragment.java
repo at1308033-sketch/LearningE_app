@@ -19,6 +19,7 @@ import com.learninge.app.ui.common.Badges;
 import com.learninge.app.ui.common.BaseFragment;
 import com.learninge.app.ui.common.ErrorMessages;
 import com.learninge.app.ui.common.TopicArt;
+import com.learninge.app.ui.study.StudySource;
 
 /**
  * SCR-07 Danh sách từ của chủ đề (US-008).
@@ -69,5 +70,10 @@ public class WordListFragment extends BaseFragment {
         binding.tvDeckMastered.setText(getString(R.string.word_list_mastered, deck.mastered(), deck.total()));
         binding.piDeck.setMax(Math.max(1, deck.total()));
         binding.piDeck.setProgress(deck.mastered());
+        boolean hasNew = deck.newWords() > 0;
+        binding.btnLearnNew.setVisibility(hasNew ? View.VISIBLE : View.GONE);
+        binding.tvAllLearned.setVisibility(hasNew ? View.GONE : View.VISIBLE);
+        binding.btnLearnNew.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalFlashcard(StudySource.NEW).setDeckId(deck.deck().id())));
     }
 }

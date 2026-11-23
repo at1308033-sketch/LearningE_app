@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -22,6 +23,7 @@ import com.learninge.app.databinding.FragmentHomeBinding;
 import com.learninge.app.ui.common.BaseFragment;
 import com.learninge.app.ui.common.ErrorMessages;
 import com.learninge.app.ui.common.TopicArt;
+import com.learninge.app.ui.study.StudySource;
 
 /**
  * SCR-05 Trang chủ (US-016): một hành động chính là "Bắt đầu học".
@@ -74,8 +76,12 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void start(TodaySummary today) {
-        if (today.lastDeck() != null) {
-            openDeck(today.lastDeck());
+        NavController nav = NavHostFragment.findNavController(this);
+        if (today.due() > 0) {
+            nav.navigate(NavMainDirections.actionGlobalFlashcard(StudySource.REVIEW));
+        } else if (today.lastDeck() != null && today.lastDeck().newWords() > 0) {
+            nav.navigate(NavMainDirections.actionGlobalFlashcard(StudySource.NEW)
+                    .setDeckId(today.lastDeck().deck().id()));
         } else {
             openLearnTab();
         }

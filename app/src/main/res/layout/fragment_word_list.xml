@@ -85,6 +85,28 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_deck_icon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_learn_new"
+            style="@style/Widget.LearningE.Button.White"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_3"
+            android:text="@string/word_list_learn"
+            app:icon="@drawable/ic_book_open"
+            app:iconGravity="textStart" />
+
+        <TextView
+            android:id="@+id/tv_all_learned"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginTop="@dimen/space_3"
+            android:text="@string/study_no_new"
+            android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+            android:textColor="@color/on_hero"
+            android:visibility="gone" />
     </LinearLayout>
 
     <FrameLayout

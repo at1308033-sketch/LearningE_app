@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-032, T-033: `StudyService` (học từ mới, ôn tập ≤ 50 thẻ), SCR-09 Flashcard lật 350 ms, SCR-10 Kết quả phiên; Trang chủ mở thẳng phiên học.
 - T-031: SCR-08 Chi tiết từ, `TtsHelper` (báo thiếu giọng đọc), `FavoriteDao` và nút yêu thích.
 - T-051: SCR-21 Tiến độ với biểu đồ cột 7 ngày tự vẽ (`BarChartView`), `StatisticsService`.
 - T-050: `StudyLogDao`, `ProgressService` (hoạt động học, chuỗi ngày), SCR-05 Trang chủ.

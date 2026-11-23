@@ -74,6 +74,14 @@ public class DeckService {
         return found == null ? null : found.level();
     }
 
+    /**
+     * Mục tiêu từ mới mỗi ngày.
+     */
+    public int dailyGoal() {
+        Settings found = settings.find(session.userId());
+        return found == null ? 0 : found.dailyGoal();
+    }
+
     public Result<DeckSummary> getDeck(long deckId) {
         try {
             DeckSummary found = decks.findSummary(session.userId(), today(), deckId);

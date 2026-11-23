@@ -30,6 +30,22 @@ public final class WordDao {
     }
 
     /**
+     * Từ chưa học của bộ, theo thứ tự trong bộ.
+     */
+    public List<WordItem> listNew(long userId, long deckId, int limit) {
+        return list("w.deck_id = CAST(?2 AS INTEGER) AND p.box IS NULL ORDER BY w.sort_order, w.id "
+                + "LIMIT CAST(?3 AS INTEGER)", String.valueOf(userId), String.valueOf(deckId), String.valueOf(limit));
+    }
+
+    /**
+     * Thẻ đến hạn: ngày ôn sớm nhất trước, rồi hộp thấp trước (BR-013).
+     */
+    public List<WordItem> listDue(long userId, String today, int limit) {
+        return list("p.next_review_date <= ?2 ORDER BY p.next_review_date, p.box, w.id LIMIT CAST(?3 AS INTEGER)",
+                String.valueOf(userId), today, String.valueOf(limit));
+    }
+
+    /**
      * null nếu từ không tồn tại hoặc thuộc bộ của người khác.
      */
     public WordItem findById(long userId, long wordId) {

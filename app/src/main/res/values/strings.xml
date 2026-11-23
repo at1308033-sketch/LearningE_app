@@ -17,6 +17,7 @@
 
     <!-- Dùng chung -->
     <string name="common_retry">Thử lại</string>
+    <string name="common_close">Đóng</string>
     <string name="common_back">Quay lại</string>
     <string name="common_sending">Đang gửi…</string>
 
@@ -98,6 +99,7 @@
     <!-- SCR-07 Danh sách từ -->
     <string name="word_list_counts">%1$d từ · %2$d đang học</string>
     <string name="word_list_mastered">Đã thuộc %1$d/%2$d từ</string>
+    <string name="word_list_learn">Học từ mới</string>
     <string name="word_list_empty">Bộ này chưa có từ nào</string>
     <string name="word_status_new">Mới</string>
     <string name="word_status_learning">Đang học</string>
@@ -165,6 +167,31 @@
     <string name="tts_unavailable">Máy chưa có giọng đọc %1$s</string>
     <string name="tts_settings">Cài đặt</string>
     <string name="tts_no_settings">Không mở được cài đặt giọng đọc</string>
+
+    <!-- SCR-09 Flashcard -->
+    <string name="study_new">Học mới</string>
+    <string name="study_review">Ôn tập</string>
+    <string name="study_position">%1$d/%2$d</string>
+    <string name="study_term_reading">%1$s  %2$s</string>
+    <string name="study_flip_hint">Chạm để lật thẻ</string>
+    <string name="study_forgot">Chưa nhớ</string>
+    <string name="study_remembered">Đã nhớ</string>
+    <string name="study_card_front">Lật thẻ. %1$s %2$s</string>
+    <string name="study_card_back">%1$s: %2$s. Chạm để lật lại</string>
+    <string name="study_no_new">Bạn đã học hết từ mới của chủ đề này</string>
+    <string name="study_no_due">Hôm nay không có thẻ cần ôn</string>
+
+    <!-- SCR-10 Kết quả phiên -->
+    <string name="result_title">Tuyệt vời, %1$s!</string>
+    <string name="result_new">Bạn đã học xong %1$d từ mới.</string>
+    <string name="result_review">Bạn đã ôn xong %1$d thẻ đến hạn.</string>
+    <string name="result_percent">%1$d%%</string>
+    <string name="result_cards">Thẻ đã ôn</string>
+    <string name="result_correct">Trả lời đúng</string>
+    <string name="result_streak">Chuỗi ngày</string>
+    <string name="result_done">Xong</string>
+    <string name="result_continue">Học tiếp chủ đề</string>
+    <string name="result_description">Tuyệt vời, %1$s. Đã ôn %2$d thẻ, đúng %3$d phần trăm, chuỗi %4$d ngày</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
