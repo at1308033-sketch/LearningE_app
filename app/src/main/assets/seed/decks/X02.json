@@ -1,0 +1,287 @@
+{
+  "deck": {
+    "code": "X02",
+    "version": 1,
+    "name": "Từ vựng IELTS",
+    "name_en": "IELTS vocabulary",
+    "description": "Từ học thuật hay gặp trong bài đọc và bài viết",
+    "language": "en",
+    "icon": null,
+    "level": "B1",
+    "exam_tag": "IELTS",
+    "sort_order": 102
+  },
+  "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
+  "words": [
+    {
+      "uid": "X02-0001",
+      "term": "significant",
+      "reading": "/sɪɡˈnɪfɪkənt/",
+      "pos": "tính từ",
+      "meaning": "đáng kể, quan trọng",
+      "example": "There was a significant rise in sales.",
+      "example_translation": "Doanh số tăng đáng kể."
+    },
+    {
+      "uid": "X02-0002",
+      "term": "increase",
+      "reading": "/ɪnˈkriːs/",
+      "pos": "động từ",
+      "meaning": "tăng",
+      "example": "The population will increase by ten percent.",
+      "example_translation": "Dân số sẽ tăng mười phần trăm."
+    },
+    {
+      "uid": "X02-0003",
+      "term": "decrease",
+      "reading": "/dɪˈkriːs/",
+      "pos": "động từ",
+      "meaning": "giảm",
+      "example": "Water use decreased during the winter.",
+      "example_translation": "Lượng nước dùng giảm trong mùa đông."
+    },
+    {
+      "uid": "X02-0004",
+      "term": "trend",
+      "reading": "/trend/",
+      "pos": "danh từ",
+      "meaning": "xu hướng",
+      "example": "The chart shows an upward trend.",
+      "example_translation": "Biểu đồ cho thấy xu hướng tăng."
+    },
+    {
+      "uid": "X02-0005",
+      "term": "rapidly",
+      "reading": "/ˈræpɪdli/",
+      "pos": "trạng từ",
+      "meaning": "nhanh chóng",
+      "example": "The city has grown rapidly since 2000.",
+      "example_translation": "Thành phố phát triển nhanh chóng từ năm 2000."
+    },
+    {
+      "uid": "X02-0006",
+      "term": "gradually",
+      "reading": "/ˈɡrædʒuəli/",
+      "pos": "trạng từ",
+      "meaning": "dần dần",
+      "example": "Prices gradually went up.",
+      "example_translation": "Giá tăng dần."
+    },
+    {
+      "uid": "X02-0007",
+      "term": "proportion",
+      "reading": "/prəˈpɔːrʃn/",
+      "pos": "danh từ",
+      "meaning": "tỷ lệ",
+      "example": "A large proportion of students work part-time.",
+      "example_translation": "Một tỷ lệ lớn sinh viên làm thêm."
+    },
+    {
+      "uid": "X02-0008",
+      "term": "majority",
+      "reading": "/məˈdʒɔːrəti/",
+      "pos": "danh từ",
+      "meaning": "phần lớn",
+      "example": "The majority of people agreed.",
+      "example_translation": "Phần lớn mọi người đồng ý."
+    },
+    {
+      "uid": "X02-0009",
+      "term": "average",
+      "reading": "/ˈævərɪdʒ/",
+      "pos": "danh từ",
+      "meaning": "trung bình",
+      "example": "The average was higher in cities.",
+      "example_translation": "Mức trung bình cao hơn ở các thành phố."
+    },
+    {
+      "uid": "X02-0010",
+      "term": "approximately",
+      "reading": "/əˈprɑːksɪmətli/",
+      "pos": "trạng từ",
+      "meaning": "xấp xỉ",
+      "example": "It takes approximately two hours.",
+      "example_translation": "Mất xấp xỉ hai giờ."
+    },
+    {
+      "uid": "X02-0011",
+      "term": "evidence",
+      "reading": "/ˈevɪdəns/",
+      "pos": "danh từ",
+      "meaning": "bằng chứng",
+      "example": "There is strong evidence for this theory.",
+      "example_translation": "Có bằng chứng mạnh cho lý thuyết này."
+    },
+    {
+      "uid": "X02-0012",
+      "term": "research",
+      "reading": "/ˈriːsɜːrtʃ/",
+      "pos": "danh từ",
+      "meaning": "nghiên cứu",
+      "example": "Recent research supports this idea.",
+      "example_translation": "Nghiên cứu gần đây ủng hộ ý kiến này."
+    },
+    {
+      "uid": "X02-0013",
+      "term": "analyze",
+      "reading": "/ˈænəlaɪz/",
+      "pos": "động từ",
+      "meaning": "phân tích",
+      "example": "Scientists analyzed the samples.",
+      "example_translation": "Các nhà khoa học phân tích các mẫu."
+    },
+    {
+      "uid": "X02-0014",
+      "term": "factor",
+      "reading": "/ˈfæktər/",
+      "pos": "danh từ",
+      "meaning": "yếu tố",
+      "example": "Cost is an important factor.",
+      "example_translation": "Chi phí là một yếu tố quan trọng."
+    },
+    {
+      "uid": "X02-0015",
+      "term": "consequence",
+      "reading": "/ˈkɑːnsəkwens/",
+      "pos": "danh từ",
+      "meaning": "hậu quả",
+      "example": "Pollution has serious consequences.",
+      "example_translation": "Ô nhiễm có hậu quả nghiêm trọng."
+    },
+    {
+      "uid": "X02-0016",
+      "term": "benefit",
+      "reading": "/ˈbenɪfɪt/",
+      "pos": "danh từ",
+      "meaning": "lợi ích",
+      "example": "Exercise has many benefits.",
+      "example_translation": "Tập thể dục có nhiều lợi ích."
+    },
+    {
+      "uid": "X02-0017",
+      "term": "impact",
+      "reading": "/ˈɪmpækt/",
+      "pos": "danh từ",
+      "meaning": "tác động",
+      "example": "Tourism has an impact on local life.",
+      "example_translation": "Du lịch có tác động đến đời sống địa phương."
+    },
+    {
+      "uid": "X02-0018",
+      "term": "policy",
+      "reading": "/ˈpɑːləsi/",
+      "pos": "danh từ",
+      "meaning": "chính sách",
+      "example": "The new policy starts next year.",
+      "example_translation": "Chính sách mới bắt đầu từ năm sau."
+    },
+    {
+      "uid": "X02-0019",
+      "term": "government",
+      "reading": "/ˈɡʌvərnmənt/",
+      "pos": "danh từ",
+      "meaning": "chính phủ",
+      "example": "The government should invest in schools.",
+      "example_translation": "Chính phủ nên đầu tư vào trường học."
+    },
+    {
+      "uid": "X02-0020",
+      "term": "society",
+      "reading": "/səˈsaɪəti/",
+      "pos": "danh từ",
+      "meaning": "xã hội",
+      "example": "Technology has changed our society.",
+      "example_translation": "Công nghệ đã thay đổi xã hội của chúng ta."
+    },
+    {
+      "uid": "X02-0021",
+      "term": "education",
+      "reading": "/ˌedʒuˈkeɪʃn/",
+      "pos": "danh từ",
+      "meaning": "giáo dục",
+      "example": "Education is the key to success.",
+      "example_translation": "Giáo dục là chìa khóa của thành công."
+    },
+    {
+      "uid": "X02-0022",
+      "term": "resource",
+      "reading": "/ˈriːsɔːrs/",
+      "pos": "danh từ",
+      "meaning": "tài nguyên, nguồn lực",
+      "example": "Water is a limited resource.",
+      "example_translation": "Nước là nguồn tài nguyên có hạn."
+    },
+    {
+      "uid": "X02-0023",
+      "term": "sustainable",
+      "reading": "/səˈsteɪnəbl/",
+      "pos": "tính từ",
+      "meaning": "bền vững",
+      "example": "We need sustainable energy.",
+      "example_translation": "Chúng ta cần năng lượng bền vững."
+    },
+    {
+      "uid": "X02-0024",
+      "term": "global",
+      "reading": "/ˈɡloʊbl/",
+      "pos": "tính từ",
+      "meaning": "toàn cầu",
+      "example": "Climate change is a global problem.",
+      "example_translation": "Biến đổi khí hậu là vấn đề toàn cầu."
+    },
+    {
+      "uid": "X02-0025",
+      "term": "urban",
+      "reading": "/ˈɜːrbən/",
+      "pos": "tính từ",
+      "meaning": "thuộc đô thị",
+      "example": "Urban areas need more green space.",
+      "example_translation": "Các khu đô thị cần thêm không gian xanh."
+    },
+    {
+      "uid": "X02-0026",
+      "term": "rural",
+      "reading": "/ˈrʊrəl/",
+      "pos": "tính từ",
+      "meaning": "thuộc nông thôn",
+      "example": "Many young people leave rural areas.",
+      "example_translation": "Nhiều người trẻ rời vùng nông thôn."
+    },
+    {
+      "uid": "X02-0027",
+      "term": "solution",
+      "reading": "/səˈluːʃn/",
+      "pos": "danh từ",
+      "meaning": "giải pháp",
+      "example": "One solution is to reduce traffic.",
+      "example_translation": "Một giải pháp là giảm lưu lượng xe."
+    },
+    {
+      "uid": "X02-0028",
+      "term": "argue",
+      "reading": "/ˈɑːrɡjuː/",
+      "pos": "động từ",
+      "meaning": "lập luận, tranh luận",
+      "example": "Some people argue that exams are unfair.",
+      "example_translation": "Một số người lập luận rằng thi cử không công bằng."
+    },
+    {
+      "uid": "X02-0029",
+      "term": "conclude",
+      "reading": "/kənˈkluːd/",
+      "pos": "động từ",
+      "meaning": "kết luận",
+      "example": "The report concludes that change is needed.",
+      "example_translation": "Báo cáo kết luận rằng cần thay đổi."
+    },
+    {
+      "uid": "X02-0030",
+      "term": "despite",
+      "reading": "/dɪˈspaɪt/",
+      "pos": "giới từ",
+      "meaning": "mặc dù",
+      "example": "Despite the rain, many people came.",
+      "example_translation": "Mặc dù trời mưa, nhiều người vẫn đến."
+    }
+  ]
+}
