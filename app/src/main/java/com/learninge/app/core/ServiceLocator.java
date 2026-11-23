@@ -28,6 +28,7 @@ public final class ServiceLocator {
     private final DatabaseHelper database;
     private final TokenStore tokenStore;
     private final NetworkMonitor networkMonitor;
+    private final SessionEvents sessionEvents = new SessionEvents();
     private GrpcClient grpcClient;
 
     public ServiceLocator(Context context) {
@@ -62,6 +63,10 @@ public final class ServiceLocator {
         return tokenStore;
     }
 
+    public SessionEvents sessionEvents() {
+        return sessionEvents;
+    }
+
     public NetworkMonitor networkMonitor() {
         return networkMonitor;
     }
@@ -72,6 +77,10 @@ public final class ServiceLocator {
     public synchronized GrpcClient grpcClient() {
         if (grpcClient == null) {
             grpcClient = new GrpcClient(ServerConfig.load(context), tokenStore, networkMonitor, executors.io());
+            grpcClient.setSessionListener(reason -> {
+                authService().endSession(reason);
+                sessionEvents.publish(reason);
+            });
         }
         return grpcClient;
     }

@@ -45,6 +45,15 @@
     <string name="login_error_password_empty">Vui lòng nhập mật khẩu</string>
     <string name="login_locked">Thử lại sau %1$d giây</string>
 
+    <string name="auth_offline">Không có kết nối mạng — bước này cần Internet. Bật Wi-Fi hoặc dữ liệu di động rồi thử lại.</string>
+    <string name="login_session_expired">Phiên đăng nhập đã hết hạn. Đăng nhập lại để tiếp tục — dữ liệu chưa đồng bộ vẫn được giữ trên máy.</string>
+    <string name="login_switch_title">Đổi tài khoản?</string>
+    <plurals name="login_switch_message">
+        <item quantity="other">Tài khoản trước trên máy này còn %d thay đổi chưa đồng bộ. Nếu đăng nhập tài khoản khác, các thay đổi đó sẽ mất.</item>
+    </plurals>
+    <string name="login_switch_stay">Ở lại</string>
+    <string name="login_switch_continue">Vẫn đăng nhập</string>
+
     <!-- SCR-03 Đăng ký -->
     <string name="register_title">Tạo tài khoản</string>
     <string name="register_subtitle">Bước nhỏ, bắt đầu lớn</string>

@@ -48,7 +48,9 @@ abstract class AuthFormFragment extends BaseFragment {
     void renderForm(AuthFormState state, MaterialButton submit, @StringRes int label, FeedbackBannerView banner) {
         stopLockTimer();
         submit.setEnabled(!state.isLoading());
-        submit.setText(state.isLoading() ? R.string.common_sending : label);
+        boolean canRetry = isNetworkError(state.error());
+        submit.setText(state.isLoading() ? R.string.common_sending : canRetry ? R.string.common_retry : label);
+        submit.setIconResource(canRetry ? R.drawable.ic_refresh : 0);
         renderBanner(state, banner);
         if (state.isDone()) {
             startActivity(new Intent(requireContext(), MainActivity.class));
@@ -62,9 +64,25 @@ abstract class AuthFormFragment extends BaseFragment {
         boolean isShownAtField = state.error() == ErrorCode.EMAIL_TAKEN || state.error() == ErrorCode.NICKNAME_TAKEN;
         if (state.error() == null || isShownAtField) {
             banner.hide();
+        } else if (state.error() == ErrorCode.NETWORK_OFFLINE) {
+            banner.show(FeedbackBannerView.Kind.WARNING, getString(R.string.auth_offline));
         } else {
             banner.show(FeedbackBannerView.Kind.ERROR, ErrorMessages.of(requireContext(), state.error()));
         }
+    }
+
+    /**
+     * Khóa mọi trường khi đang gửi.
+     */
+    static void setFieldsEnabled(boolean isEnabled, TextInputLayout... fields) {
+        for (TextInputLayout field : fields) {
+            field.setEnabled(isEnabled);
+        }
+    }
+
+    private static boolean isNetworkError(ErrorCode error) {
+        return error == ErrorCode.NETWORK_OFFLINE || error == ErrorCode.NETWORK_TIMEOUT
+                || error == ErrorCode.SERVER_UNAVAILABLE;
     }
 
     private void startLockTimer(long until, MaterialButton submit, @StringRes int label) {

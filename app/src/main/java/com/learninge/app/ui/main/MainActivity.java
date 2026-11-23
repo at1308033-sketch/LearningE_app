@@ -12,8 +12,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.learninge.app.LearningEApp;
 import com.learninge.app.R;
+import com.learninge.app.core.SessionEvents;
 import com.learninge.app.databinding.ActivityMainBinding;
+import com.learninge.app.ui.auth.AuthActivity;
 
 import java.util.Set;
 
@@ -33,6 +36,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // BR-059: phiên bị máy chủ kết thúc thì về đăng nhập, xóa ngăn xếp.
+        SessionEvents events = LearningEApp.services(this).sessionEvents();
+        events.ended().observe(this, reason -> {
+            if (reason != null) {
+                events.consume();
+                startActivity(AuthActivity.newTask(this, reason));
+            }
+        });
 
         NavHostFragment host = binding.navHostMain.getFragment();
         NavController navController = host.getNavController();

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -16,18 +17,31 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.learninge.app.BuildConfig;
 import com.learninge.app.R;
+import com.learninge.app.core.ErrorCode;
 
 /**
  * Luồng chưa đăng nhập (SCR-01, 02, 03, 25). Tách khỏi {@code MainActivity} để nút back không quay lại màn đăng nhập.
  */
 public class AuthActivity extends AppCompatActivity {
 
+    private static final String EXTRA_REASON = "reason";
+
     /**
-     * Mở lại luồng đăng nhập và xóa ngăn xếp của luồng chính.
+     * Mở lại luồng đăng nhập và xóa ngăn xếp của luồng chính. {@code reason} null = người dùng tự đăng xuất.
      */
-    public static Intent newTask(Context context) {
+    public static Intent newTask(Context context, @Nullable ErrorCode reason) {
         return new Intent(context, AuthActivity.class)
+                .putExtra(EXTRA_REASON, reason == null ? null : reason.name())
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    }
+
+    /**
+     * Vì sao phiên trước kết thúc, null nếu không phải do máy chủ.
+     */
+    @Nullable
+    ErrorCode endReason() {
+        String name = getIntent().getStringExtra(EXTRA_REASON);
+        return name == null ? null : ErrorCode.valueOf(name);
     }
 
     @Override

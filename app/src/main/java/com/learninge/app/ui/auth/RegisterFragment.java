@@ -36,6 +36,7 @@ public class RegisterFragment extends AuthFormFragment {
                 com.google.android.material.R.layout.m3_auto_complete_simple_item, questions));
         AuthFormViewModel viewModel = new ViewModelProvider(this).get(AuthFormViewModel.class);
         viewModel.state().observe(getViewLifecycleOwner(), state -> render(binding, state));
+        services().networkMonitor().online().observe(getViewLifecycleOwner(), viewModel::onNetworkChanged);
         binding.toolbarRegister.setNavigationOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
         binding.btnRegister.setOnClickListener(v -> viewModel.register(form(binding, questions)));
     }
@@ -49,6 +50,8 @@ public class RegisterFragment extends AuthFormFragment {
 
     private void render(FragmentRegisterBinding binding, AuthFormState state) {
         renderForm(state, binding.btnRegister, R.string.register_submit, binding.bannerRegister);
+        setFieldsEnabled(!state.isLoading(), binding.tilDisplayName, binding.tilEmail, binding.tilNickname,
+                binding.tilPassword, binding.tilConfirm, binding.tilQuestion, binding.tilAnswer);
         Set<Field> errors = state.fieldErrors();
         showFieldError(binding.tilEmail, errors.contains(Field.EMAIL), state.error() == ErrorCode.EMAIL_TAKEN
                 ? R.string.register_error_email_taken : R.string.register_error_email);
