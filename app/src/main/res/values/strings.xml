@@ -103,6 +103,29 @@
     <string name="word_status_learning">Đang học</string>
     <string name="word_status_mastered">Đã thuộc</string>
 
+    <!-- SCR-05 Trang chủ -->
+    <string name="home_morning">Chào buổi sáng,</string>
+    <string name="home_afternoon">Chào buổi chiều,</string>
+    <string name="home_evening">Chào buổi tối,</string>
+    <string name="home_session_label">Phiên học hôm nay</string>
+    <string name="home_cards">thẻ</string>
+    <string name="home_minutes">Khoảng %1$d phút</string>
+    <string name="home_nothing_due">Hôm nay không có thẻ cần ôn</string>
+    <string name="home_due">%1$d thẻ cần ôn</string>
+    <string name="home_new_words">%1$d từ mới</string>
+    <string name="home_goal_label">Mục tiêu hôm nay</string>
+    <string name="home_goal">%1$d/%2$d từ</string>
+    <string name="home_goal_met">Bạn đã đạt mục tiêu hôm nay!</string>
+    <string name="home_goal_not_met">Học xong phiên này để tiến gần mục tiêu ngày.</string>
+    <string name="home_start">Bắt đầu học</string>
+    <string name="home_continue_label">Học tiếp chủ đề</string>
+    <string name="home_first_label">Bắt đầu</string>
+    <string name="home_first_topic">Chọn chủ đề đầu tiên</string>
+    <string name="home_deck_count">%1$d/%2$d từ</string>
+    <plurals name="days">
+        <item quantity="other">%d ngày</item>
+    </plurals>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

@@ -8,6 +8,7 @@ import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.DbContract;
 import com.learninge.app.data.db.DbContract.Sync;
 import com.learninge.app.data.model.Settings;
+import com.learninge.app.domain.rules.StreakCalculator;
 
 /**
  * Bảng {@code user_settings}.
@@ -31,6 +32,19 @@ public final class SettingsDao {
         values.put(Sync.UPDATED_AT, 0);
         database.getWritableDatabase().insertWithOnConflict(DbContract.Settings.TABLE, null, values,
                 SQLiteDatabase.CONFLICT_IGNORE);
+    }
+
+    /**
+     * Chuỗi ngày tính lại được từ nhật ký nên không đánh dấu chờ đẩy.
+     */
+    public void saveStreak(long userId, StreakCalculator.Streak streak) {
+        ContentValues values = new ContentValues();
+        values.put(DbContract.Settings.CURRENT_STREAK, streak.current);
+        values.put(DbContract.Settings.LONGEST_STREAK, streak.longest);
+        values.put(DbContract.Settings.LAST_STUDY_DATE,
+                streak.lastStudyDate == null ? null : streak.lastStudyDate.toString());
+        database.getWritableDatabase().update(DbContract.Settings.TABLE, values,
+                DbContract.Settings.USER_ID + " = ?", new String[]{String.valueOf(userId)});
     }
 
     public Settings find(long userId) {

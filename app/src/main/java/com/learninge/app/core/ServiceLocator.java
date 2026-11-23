@@ -7,8 +7,10 @@ import android.os.Build;
 
 import androidx.annotation.VisibleForTesting;
 
+import com.learninge.app.data.dao.CardProgressDao;
 import com.learninge.app.data.dao.DeckDao;
 import com.learninge.app.data.dao.SettingsDao;
+import com.learninge.app.data.dao.UserDao;
 import com.learninge.app.data.dao.WordDao;
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
@@ -18,8 +20,10 @@ import com.learninge.app.data.remote.NetworkMonitor;
 import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
+import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckService;
+import com.learninge.app.domain.ProgressService;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -113,6 +117,11 @@ public final class ServiceLocator {
     public DeckService deckService() {
         return new DeckService(new DeckDao(database), new WordDao(database), new SettingsDao(database), sessionStore,
                 clock());
+    }
+
+    public ProgressService progressService() {
+        return new ProgressService(new ProgressRepository(database), new CardProgressDao(database),
+                new DeckDao(database), new SettingsDao(database), new UserDao(database), sessionStore, clock());
     }
 
     /**
