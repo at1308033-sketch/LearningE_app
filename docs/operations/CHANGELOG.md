@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-002: rà tương phản và cỡ chữ 200% ở 360 dp: viền thẻ rõ hơn, nút trái tim có viền, đầu danh sách từ và bài thi không còn chồng chữ.
 - T-080: test hợp đồng DAO trên SQLite thật (cờ đồng bộ, không trùng dòng, CASCADE khi xóa tài khoản, index).
 - T-123 (Could): tải bộ từ và đề thi mới từ máy chủ khi mở app (`ContentService`, `ContentWriter` dùng chung với seed), ghi tất cả trong một giao dịch.
 - T-093: nhập/xuất CSV qua SAF (`ImportExportService`, SCR-28 Xem trước import, Xuất CSV ở SCR-19), tối đa 1 MB/2000 dòng, một giao dịch.

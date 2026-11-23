@@ -56,7 +56,6 @@
                 android:layout_marginStart="@dimen/space_2"
                 android:textAppearance="@style/TextAppearance.LearningE.Caption"
                 android:textColor="@color/on_hero_variant"
-                app:layout_constraintBottom_toBottomOf="@id/tv_deck_level"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_deck_level"
                 app:layout_constraintTop_toTopOf="@id/tv_deck_level"
@@ -69,10 +68,24 @@
                 android:layout_marginStart="@dimen/space_3"
                 android:textAppearance="@style/TextAppearance.LearningE.TitleM"
                 android:textColor="@color/on_hero"
-                app:layout_constraintBottom_toBottomOf="@id/iv_deck_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_deck_icon"
+                app:layout_constraintTop_toBottomOf="@id/b_deck_counts"
                 tools:text="Đã thuộc 16/20 từ" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/b_deck_counts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="tv_deck_level,tv_deck_counts" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/b_deck_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="iv_deck_icon,tv_deck_mastered" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/pi_deck"
@@ -83,7 +96,7 @@
                 android:importantForAccessibility="no"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_deck_icon" />
+                app:layout_constraintTop_toBottomOf="@id/b_deck_header" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton

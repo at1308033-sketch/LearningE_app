@@ -38,13 +38,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/ll_history"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_history"
+                style="@style/Widget.LearningE.Card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:divider="@drawable/divider"
-                android:orientation="vertical"
-                android:showDividers="middle" />
+                android:layout_margin="@dimen/space_4">
+
+                <LinearLayout
+                    android:id="@+id/ll_history"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+            </com.google.android.material.card.MaterialCardView>
         </androidx.core.widget.NestedScrollView>
     </FrameLayout>
 </LinearLayout>

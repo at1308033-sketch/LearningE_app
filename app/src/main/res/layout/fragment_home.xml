@@ -84,11 +84,13 @@
 
             <TextView
                 android:id="@+id/tv_session_label"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/hero_art_width"
                 android:text="@string/home_session_label"
                 android:textAppearance="@style/TextAppearance.LearningE.Overline"
                 android:textColor="@color/on_hero_variant"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -169,6 +171,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
+                android:layout_marginEnd="@dimen/space_2"
                 android:text="@string/home_goal_label"
                 android:textAppearance="@style/TextAppearance.LearningE.Label"
                 android:textColor="@color/on_hero"

@@ -40,6 +40,7 @@ public class ExamHistoryFragment extends BaseFragment {
             binding.llHistory.removeAllViews();
             boolean isEmpty = !result.isOk() || result.value.isEmpty();
             binding.esHistory.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            binding.cardHistory.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
             if (result.isOk()) {
                 result.value.forEach(attempt -> add(binding.llHistory, nav, attempt));
             } else {

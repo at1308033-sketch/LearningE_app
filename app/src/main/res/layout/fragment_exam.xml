@@ -169,7 +169,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/exam_previous" />
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
+                android:text="@string/exam_previous"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_flag"
@@ -178,9 +183,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/space_2"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
                 android:text="@string/exam_flag"
                 android:textColor="@color/feat_streak"
-                app:strokeColor="@color/feat_streak" />
+                app:strokeColor="@color/feat_streak"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_next"
@@ -188,7 +198,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/exam_next" />
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/space_2"
+                android:text="@string/exam_next"
+                app:autoSizeMaxTextSize="14sp"
+                app:autoSizeMinTextSize="7sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

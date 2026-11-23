@@ -19,6 +19,8 @@
     <color name="on_surface_variant">#5A5775</color>
     <color name="outline">#DDDBEE</color>
     <!-- Viền của thành phần bấm/nhập được: >= 3:1 trên nền và trên thẻ (WCAG 1.4.11); outline chỉ để phân cách. -->
+    <!-- Viền thẻ bấm được: thấy rõ mép trên nền tím nhạt mà không nặng như viền nút. -->
+    <color name="outline_card">#BDB8D8</color>
     <color name="outline_strong">#7F7B9F</color>
     <!-- Viền nhãn không bấm được, nhạt hơn để không nhầm với nút. -->
     <color name="outline_label">#B3AFCB</color>

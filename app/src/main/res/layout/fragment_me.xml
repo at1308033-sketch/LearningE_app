@@ -34,7 +34,9 @@
             android:id="@+id/ll_me_rows"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:showDividers="middle">
 
             <TextView
                 android:id="@+id/row_progress"

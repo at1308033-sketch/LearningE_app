@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.LearningE.Card"
     android:layout_width="match_parent"
@@ -25,6 +26,11 @@
                 android:background="@drawable/bg_tile"
                 android:gravity="center"
                 android:importantForAccessibility="no"
+                android:maxLines="1"
+                android:paddingHorizontal="2dp"
+                app:autoSizeMaxTextSize="12sp"
+                app:autoSizeMinTextSize="4sp"
+                app:autoSizeTextType="uniform"
                 android:textAppearance="@style/TextAppearance.LearningE.Caption"
                 android:textColor="@color/on_primary"
                 tools:text="TOEIC" />

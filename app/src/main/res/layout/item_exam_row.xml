@@ -39,14 +39,15 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.LearningE.Caption"
             tools:text="20 câu · 15 phút" />
-    </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_row"
-        style="@style/Widget.LearningE.Button.Tonal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Làm bài" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_row"
+            style="@style/Widget.LearningE.Button.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/space_2"
+            tools:text="Làm bài" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_row_chevron"
