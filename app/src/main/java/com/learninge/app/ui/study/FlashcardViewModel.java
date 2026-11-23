@@ -114,6 +114,7 @@ public class FlashcardViewModel extends BaseViewModel {
             Result<SessionSummary> summary = services.studyService().finishSession(kind, deckId, remembered,
                     forgotten, streakBefore, boxesBefore);
             if (summary.isOk()) {
+                services.syncScheduler().onActivityFinished();
                 finished.postValue(summary.value);
             } else {
                 state.postValue(new State(List.of(), 0, false, summary.error));

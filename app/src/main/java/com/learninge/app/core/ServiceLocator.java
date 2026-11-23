@@ -21,11 +21,13 @@ import com.learninge.app.data.remote.AuthRemote;
 import com.learninge.app.data.remote.GrpcClient;
 import com.learninge.app.data.remote.NetworkMonitor;
 import com.learninge.app.data.remote.ServerConfig;
+import com.learninge.app.data.remote.SyncRemote;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
 import com.learninge.app.data.repo.DeckRepository;
 import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.data.repo.StudyRepository;
+import com.learninge.app.data.repo.SyncRepository;
 import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
@@ -33,6 +35,8 @@ import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.ProgressService;
 import com.learninge.app.domain.StatisticsService;
 import com.learninge.app.domain.StudyService;
+import com.learninge.app.sync.SyncManager;
+import com.learninge.app.sync.SyncScheduler;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -50,6 +54,9 @@ public final class ServiceLocator {
     private final TokenStore tokenStore;
     private final NetworkMonitor networkMonitor;
     private final SessionEvents sessionEvents = new SessionEvents();
+    private final SyncRepository syncRepository;
+    private final SyncManager syncManager;
+    private final SyncScheduler syncScheduler;
     private GrpcClient grpcClient;
 
     public ServiceLocator(Context context) {
@@ -65,6 +72,10 @@ public final class ServiceLocator {
         languages = new LanguageRegistry(new LanguageDao(database));
         tokenStore = new TokenStore(context);
         networkMonitor = new NetworkMonitor(context);
+        syncRepository = new SyncRepository(database);
+        syncManager = new SyncManager(() -> new SyncRemote(grpcClient()), syncRepository, sessionStore, executors,
+                clock());
+        syncScheduler = new SyncScheduler(syncManager, syncRepository, sessionStore, networkMonitor, executors);
     }
 
     /**
@@ -96,6 +107,18 @@ public final class ServiceLocator {
 
     public TokenStore tokenStore() {
         return tokenStore;
+    }
+
+    public SyncRepository syncRepository() {
+        return syncRepository;
+    }
+
+    public SyncManager syncManager() {
+        return syncManager;
+    }
+
+    public SyncScheduler syncScheduler() {
+        return syncScheduler;
     }
 
     public SessionEvents sessionEvents() {

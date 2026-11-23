@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-122: đồng bộ hai chiều (`SyncManager`, `SyncScheduler`, `SyncRemote`, `SyncMapper`, `SyncOutbox`, `SyncInbox`): đẩy ≤ 500 bản ghi/lô, kéo theo trang, xử lý trùng bộ/từ giữa hai máy.
 - T-090: bộ từ cá nhân (`DeckEditor`, `DeckRules`): SCR-26 Bộ của tôi với "Yêu thích", SCR-27 Tạo/sửa bộ, SCR-19 Chi tiết bộ, SCR-20 Thêm/sửa từ, "Lưu vào bộ" ở SCR-08.
 - T-032, T-033: `StudyService` (học từ mới, ôn tập ≤ 50 thẻ), SCR-09 Flashcard lật 350 ms, SCR-10 Kết quả phiên; Trang chủ mở thẳng phiên học.
 - T-031: SCR-08 Chi tiết từ, `TtsHelper` (báo thiếu giọng đọc), `FavoriteDao` và nút yêu thích.

@@ -63,6 +63,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LearningEApp.services(this).syncScheduler().onForeground();
+    }
+
     // Thanh tab tự chừa chỗ cho thanh điều hướng hệ thống; khi ẩn thanh tab thì nội dung phải tự chừa.
     private void applyBottomPadding() {
         boolean tabVisible = binding.bottomNav.getVisibility() == View.VISIBLE;

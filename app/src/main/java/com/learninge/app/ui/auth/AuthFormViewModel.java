@@ -92,6 +92,10 @@ public class AuthFormViewModel extends BaseViewModel {
         state.setValue(AuthFormState.LOADING);
         services.executors().io().execute(() -> {
             Result<User> result = request.get();
+            if (result.isOk()) {
+                // Máy thứ hai kéo dữ liệu về ngay (AC-002.5).
+                services.syncScheduler().onSignedIn();
+            }
             state.postValue(result.isOk() ? AuthFormState.DONE
                     : AuthFormState.failed(result, SystemClock.elapsedRealtime()));
         });

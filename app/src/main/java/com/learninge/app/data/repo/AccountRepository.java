@@ -70,7 +70,8 @@ public final class AccountRepository {
         users.delete(userId);
     }
 
-    // BR-046: thời điểm sửa = lúc tạo tài khoản, nên bản trên máy chủ (nếu đã có) luôn mới hơn hoặc bằng bản này.
+    // BR-046: server tự tạo bộ này khi đăng ký nên bản trên máy chưa cần đẩy; lần đồng bộ đầu kéo trước, nếu server
+    // chưa có thì SyncOutbox.queueMissingNotebook mới đẩy.
     private static void insertNotebook(SQLiteDatabase db, long userId, RemoteSession session) {
         ContentValues values = new ContentValues();
         values.put(Sync.UUID, NotebookId.of(session.userId()));
@@ -81,6 +82,7 @@ public final class AccountRepository {
         values.put(Decks.IS_DEFAULT, 1);
         values.put(Decks.CREATED_AT, session.createdAtMillis());
         values.put(Sync.UPDATED_AT, session.createdAtMillis());
+        values.put(Sync.DIRTY, 0);
         db.insertWithOnConflict(Decks.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
     }
 }
