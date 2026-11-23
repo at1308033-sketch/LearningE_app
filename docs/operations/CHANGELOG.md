@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-003: `DatabaseHelper` phiên bản 1 theo DATABASE-DESIGN phần A (cột đồng bộ, `sync_state`, `xp_events`, `leaderboard_cache`, `content_version`) với test trên SQLite thật.
 - T-005: gói `core` (`ServiceLocator`, `AppExecutors`, `Result`, `ErrorCode`, `SessionStore`), `AuthActivity` + `MainActivity` 5 tab với Navigation + Safe Args, StrictMode bản debug.
 - T-007: `LeitnerScheduler` (BR-010..014) và `StreakCalculator` (BR-031) với unit test.
 - T-006: `TextNormalizer` chuẩn hóa chữ, bỏ dấu tiếng Việt và khóa tra từ theo ngôn ngữ (BR-053).
