@@ -150,6 +150,22 @@
         <item>CN</item>
     </string-array>
 
+    <!-- SCR-08 Chi tiết từ -->
+    <string name="word_title">Chi tiết từ</string>
+    <string name="word_meaning">Nghĩa</string>
+    <string name="word_example">Ví dụ</string>
+    <string name="word_speak">Phát âm</string>
+    <string name="word_speak_example">Phát âm câu ví dụ</string>
+    <string name="word_box_new">Chưa học từ này</string>
+    <string name="word_box_due">Hộp %1$d/5 · cần ôn hôm nay</string>
+    <string name="word_box_in_days">Hộp %1$d/5 · ôn lại sau %2$d ngày</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="favorite_on">đã thích</string>
+    <string name="favorite_off">chưa thích</string>
+    <string name="tts_unavailable">Máy chưa có giọng đọc %1$s</string>
+    <string name="tts_settings">Cài đặt</string>
+    <string name="tts_no_settings">Không mở được cài đặt giọng đọc</string>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

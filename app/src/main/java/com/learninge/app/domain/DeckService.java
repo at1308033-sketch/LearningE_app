@@ -6,10 +6,12 @@ import com.learninge.app.core.ErrorCode;
 import com.learninge.app.core.Result;
 import com.learninge.app.core.SessionStore;
 import com.learninge.app.data.dao.DeckDao;
+import com.learninge.app.data.dao.FavoriteDao;
 import com.learninge.app.data.dao.SettingsDao;
 import com.learninge.app.data.dao.WordDao;
 import com.learninge.app.data.model.DeckSummary;
 import com.learninge.app.data.model.Settings;
+import com.learninge.app.data.model.WordDetail;
 import com.learninge.app.data.model.WordItem;
 
 import java.time.Clock;
@@ -27,13 +29,18 @@ public class DeckService {
     private final DeckDao decks;
     private final WordDao words;
     private final SettingsDao settings;
+    private final FavoriteDao favorites;
+    private final LanguageRegistry languages;
     private final SessionStore session;
     private final Clock clock;
 
-    public DeckService(DeckDao decks, WordDao words, SettingsDao settings, SessionStore session, Clock clock) {
+    public DeckService(DeckDao decks, WordDao words, SettingsDao settings, FavoriteDao favorites,
+                       LanguageRegistry languages, SessionStore session, Clock clock) {
         this.decks = decks;
         this.words = words;
         this.settings = settings;
+        this.favorites = favorites;
+        this.languages = languages;
         this.session = session;
         this.clock = clock;
     }
@@ -79,6 +86,37 @@ public class DeckService {
     public Result<List<WordItem>> listWords(long deckId) {
         Result<DeckSummary> deck = getDeck(deckId);
         return deck.isOk() ? Result.ok(words.listByDeck(session.userId(), deckId)) : Result.errorOf(deck);
+    }
+
+    public Result<WordDetail> getWord(long wordId) {
+        try {
+            WordItem item = words.findById(session.userId(), wordId);
+            if (item == null) {
+                return Result.error(ErrorCode.NOT_FOUND);
+            }
+            Result<DeckSummary> deck = getDeck(item.word().deckId());
+            return deck.isOk() ? Result.ok(new WordDetail(item, deck.value.deck(),
+                    languages.get(deck.value.deck().languageCode()))) : Result.errorOf(deck);
+        } catch (SQLException failed) {
+            return Result.error(ErrorCode.DB, failed.getMessage());
+        }
+    }
+
+    /**
+     * Đổi trạng thái yêu thích, trả trạng thái mới (US-011). Một câu lệnh nên không cần giao dịch riêng.
+     */
+    public Result<Boolean> toggleFavorite(long wordId) {
+        try {
+            long userId = session.userId();
+            if (words.findById(userId, wordId) == null) {
+                return Result.error(ErrorCode.NOT_FOUND);
+            }
+            boolean isFavorite = !favorites.isFavorite(userId, wordId);
+            favorites.set(userId, wordId, isFavorite, clock.millis());
+            return Result.ok(isFavorite);
+        } catch (SQLException failed) {
+            return Result.error(ErrorCode.DB, failed.getMessage());
+        }
     }
 
     private String today() {

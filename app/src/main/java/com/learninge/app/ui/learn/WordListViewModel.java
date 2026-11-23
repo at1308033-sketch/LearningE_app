@@ -31,6 +31,13 @@ public class WordListViewModel extends BaseViewModel {
         return state;
     }
 
+    void toggleFavorite(long deckId, long wordId) {
+        services.executors().dbWrite().execute(() -> {
+            services.deckService().toggleFavorite(wordId);
+            load(deckId);
+        });
+    }
+
     void load(long deckId) {
         services.executors().dbRead().execute(() -> {
             Result<DeckSummary> deck = services.deckService().getDeck(deckId);

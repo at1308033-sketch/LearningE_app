@@ -29,6 +29,17 @@ public final class WordDao {
         return list("w.deck_id = ?2 ORDER BY w.sort_order, w.id", String.valueOf(userId), String.valueOf(deckId));
     }
 
+    /**
+     * null nếu từ không tồn tại hoặc thuộc bộ của người khác.
+     */
+    public WordItem findById(long userId, long wordId) {
+        List<WordItem> found = list("w.id = CAST(?2 AS INTEGER) AND EXISTS (SELECT 1 FROM decks d "
+                + "WHERE d.id = w.deck_id AND d.deleted = 0 "
+                + "AND (d.owner_user_id IS NULL OR d.owner_user_id = CAST(?1 AS INTEGER)))",
+                String.valueOf(userId), String.valueOf(wordId));
+        return found.isEmpty() ? null : found.get(0);
+    }
+
     private List<WordItem> list(String where, String... args) {
         List<WordItem> result = new ArrayList<>();
         try (Cursor cursor = database.getReadableDatabase().rawQuery(SELECT + where, args)) {

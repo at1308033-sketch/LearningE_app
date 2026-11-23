@@ -29,6 +29,20 @@
         android:name="com.learninge.app.ui.me.ProgressFragment"
         tools:layout="@layout/fragment_progress" />
 
+    <action
+        android:id="@+id/action_global_word_detail"
+        app:destination="@id/word_detail_fragment" />
+
+    <fragment
+        android:id="@+id/word_detail_fragment"
+        android:name="com.learninge.app.ui.learn.WordDetailFragment"
+        tools:layout="@layout/fragment_word_detail">
+
+        <argument
+            android:name="wordId"
+            app:argType="long" />
+    </fragment>
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">

@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.learninge.app.NavMainDirections;
 import com.learninge.app.R;
 import com.learninge.app.core.Result;
 import com.learninge.app.data.model.DeckSummary;
@@ -38,11 +39,14 @@ public class WordListFragment extends BaseFragment {
         FragmentWordListBinding binding = FragmentWordListBinding.bind(view);
         padStatusBar(binding.headerWordList);
         binding.toolbarWordList.setNavigationOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
-        WordAdapter adapter = new WordAdapter();
-        binding.rvWords.setAdapter(adapter);
         WordListViewModel viewModel = new ViewModelProvider(this).get(WordListViewModel.class);
+        long deckId = WordListFragmentArgs.fromBundle(requireArguments()).getDeckId();
+        WordAdapter adapter = new WordAdapter(item -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalWordDetail(item.word().id())),
+                item -> viewModel.toggleFavorite(deckId, item.word().id()));
+        binding.rvWords.setAdapter(adapter);
         viewModel.state().observe(getViewLifecycleOwner(), state -> render(binding, adapter, state));
-        viewModel.load(WordListFragmentArgs.fromBundle(requireArguments()).getDeckId());
+        viewModel.load(deckId);
     }
 
     private void render(FragmentWordListBinding binding, WordAdapter adapter, Result<WordListViewModel.State> result) {

@@ -9,6 +9,8 @@ import androidx.annotation.VisibleForTesting;
 
 import com.learninge.app.data.dao.CardProgressDao;
 import com.learninge.app.data.dao.DeckDao;
+import com.learninge.app.data.dao.FavoriteDao;
+import com.learninge.app.data.dao.LanguageDao;
 import com.learninge.app.data.dao.SettingsDao;
 import com.learninge.app.data.dao.StatisticsDao;
 import com.learninge.app.data.dao.UserDao;
@@ -24,6 +26,7 @@ import com.learninge.app.data.repo.AccountRepository;
 import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckService;
+import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.ProgressService;
 import com.learninge.app.domain.StatisticsService;
 
@@ -39,6 +42,7 @@ public final class ServiceLocator {
     private final Clock fixedClock;
     private final SessionStore sessionStore;
     private final DatabaseHelper database;
+    private final LanguageRegistry languages;
     private final TokenStore tokenStore;
     private final NetworkMonitor networkMonitor;
     private final SessionEvents sessionEvents = new SessionEvents();
@@ -54,6 +58,7 @@ public final class ServiceLocator {
         sessionStore = new SessionStore(context);
         // Chỉ mở tệp CSDL ở lần truy vấn đầu tiên, trên luồng nền.
         this.database = database;
+        languages = new LanguageRegistry(new LanguageDao(database));
         tokenStore = new TokenStore(context);
         networkMonitor = new NetworkMonitor(context);
     }
@@ -117,8 +122,12 @@ public final class ServiceLocator {
     }
 
     public DeckService deckService() {
-        return new DeckService(new DeckDao(database), new WordDao(database), new SettingsDao(database), sessionStore,
-                clock());
+        return new DeckService(new DeckDao(database), new WordDao(database), new SettingsDao(database),
+                new FavoriteDao(database), languages, sessionStore, clock());
+    }
+
+    public LanguageRegistry languages() {
+        return languages;
     }
 
     public ProgressService progressService() {

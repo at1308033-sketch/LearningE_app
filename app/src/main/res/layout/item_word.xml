@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.LearningE.Card"
     android:layout_width="match_parent"
@@ -9,6 +10,7 @@
 
     <LinearLayout
         android:id="@+id/ll_word"
+        android:background="?attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -16,7 +18,7 @@
         android:orientation="horizontal"
         android:paddingVertical="@dimen/space_3"
         android:paddingStart="@dimen/space_4"
-        android:paddingEnd="@dimen/space_3">
+        android:paddingEnd="@dimen/space_1">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -54,5 +56,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/space_2"
             tools:text="Đang học" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_word_favorite"
+            style="@style/Widget.LearningE.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/favorite"
+            app:icon="@drawable/ic_heart"
+            app:iconTint="@color/feat_deck" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

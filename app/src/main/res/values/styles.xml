@@ -112,6 +112,18 @@
         <item name="android:paddingBottom">@dimen/badge_padding</item>
     </style>
 
+    <style name="Widget.LearningE.RoundButton" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="android:layout_width">@dimen/touch_target_min</item>
+        <item name="android:layout_height">@dimen/touch_target_min</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.LearningE.RoundButton.Heart">
+        <item name="backgroundTint">@color/feat_deck_container</item>
+        <item name="iconTint">@color/feat_deck</item>
+    </style>
+
     <style name="Widget.LearningE.Card" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardElevation">@dimen/elevation_1</item>
