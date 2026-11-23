@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-120: tầng gRPC `data.remote` (`GrpcClient` một kênh dùng chung, deadline, `RetryPolicy` BR-077, `GrpcErrorMapper`, `TokenStore` mã hóa Keystore, `NetworkMonitor`, chặn plaintext), chép proto kèm `proto.lock`.
 - T-098: bộ luyện thi X03 Aptis (30 từ).
 - T-011: dữ liệu bộ T05 Đồ ăn & thức uống, T06 Động vật, T07 Nhà cửa & đồ dùng, T08 Trường học (80 từ).
 - T-004: `SeedLoader` nạp `assets/seed` trong một giao dịch, sửa tại chỗ theo `uid`; `languages.json`; unit test kiểm tra mọi file seed (thêm `org.json` ở phạm vi test).

@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
+import com.learninge.app.data.remote.GrpcClient;
+import com.learninge.app.data.remote.NetworkMonitor;
+import com.learninge.app.data.remote.ServerConfig;
+import com.learninge.app.data.remote.TokenStore;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -18,12 +22,17 @@ public final class ServiceLocator {
     private final AppExecutors executors = new AppExecutors();
     private final SessionStore sessionStore;
     private final DatabaseHelper database;
+    private final TokenStore tokenStore;
+    private final NetworkMonitor networkMonitor;
+    private GrpcClient grpcClient;
 
     public ServiceLocator(Context context) {
         this.context = context.getApplicationContext();
         sessionStore = new SessionStore(context);
         // Chỉ mở tệp CSDL ở lần truy vấn đầu tiên, trên luồng nền.
         database = new DatabaseHelper(context);
+        tokenStore = new TokenStore(context);
+        networkMonitor = new NetworkMonitor(context);
     }
 
     public AppExecutors executors() {
@@ -43,6 +52,24 @@ public final class ServiceLocator {
 
     public DatabaseHelper database() {
         return database;
+    }
+
+    public TokenStore tokenStore() {
+        return tokenStore;
+    }
+
+    public NetworkMonitor networkMonitor() {
+        return networkMonitor;
+    }
+
+    /**
+     * Tạo ở lần gọi mạng đầu tiên; gọi trên luồng {@code io}.
+     */
+    public synchronized GrpcClient grpcClient() {
+        if (grpcClient == null) {
+            grpcClient = new GrpcClient(ServerConfig.load(context), tokenStore, networkMonitor, executors.io());
+        }
+        return grpcClient;
     }
 
     /**

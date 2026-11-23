@@ -1,0 +1,26 @@
+syntax = "proto3";
+package learninge.app.v1;
+option java_multiple_files = true;
+option java_package = "com.learninge.proto.app.v1";
+option java_outer_classname = "LeaderboardProto";
+
+service LeaderboardService {
+  rpc GetWeekly(GetWeeklyRequest) returns (GetWeeklyResponse);   // EP-13
+}
+enum WeekSelector { WEEK_SELECTOR_UNSPECIFIED = 0; WEEK_SELECTOR_CURRENT = 1; WEEK_SELECTOR_PREVIOUS = 2; }
+message GetWeeklyRequest { WeekSelector week = 1; }   // UNSPECIFIED = CURRENT
+message GetWeeklyResponse {
+  string week_start = 1;            // thứ Hai, "yyyy-MM-dd"
+  string week_end = 2;              // Chủ nhật
+  string timezone = 3;              // "Asia/Ho_Chi_Minh"
+  int64 generated_at_ms = 4;
+  repeated LeaderboardEntry entries = 5;   // ≤ 50
+  LeaderboardEntry me = 6;                 // luôn có
+}
+message LeaderboardEntry {
+  int32 rank = 1;                   // 0 = chưa có hạng (thay cho null của REST)
+  string nickname = 2;
+  int32 xp = 3;
+  int32 streak = 4;
+  bool is_me = 5;
+}

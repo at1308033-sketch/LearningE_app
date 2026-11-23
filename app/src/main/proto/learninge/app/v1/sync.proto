@@ -1,0 +1,143 @@
+syntax = "proto3";
+package learninge.app.v1;
+option java_multiple_files = true;
+option java_package = "com.learninge.proto.app.v1";
+option java_outer_classname = "SyncProto";
+
+service SyncService {
+  rpc Push(PushRequest) returns (PushResponse);   // EP-11
+  rpc Pull(PullRequest) returns (PullResponse);   // EP-12
+}
+
+message PushRequest {
+  string device_id = 1;             // UUID v4 của máy (sync_state.device_id)
+  repeated Change changes = 2;      // ≤ 500 phần tử
+}
+message PushResponse {
+  int64 server_time_ms = 1;
+  repeated ChangeResult results = 2; // cùng số phần tử, cùng thứ tự với changes
+}
+message PullRequest {
+  int64 since = 1;                  // cursor, ≥ 0; lần đầu = 0
+  int32 limit = 2;                  // 1..500; 0 = 500
+}
+message PullResponse {
+  repeated Change changes = 1;      // sắp tăng theo server_seq, gồm cả tombstone
+  int64 next_cursor = 2;
+  bool has_more = 3;
+  int64 server_time_ms = 4;
+}
+
+// Một bản ghi đồng bộ. Loại bản ghi = trường đang đặt trong oneof `data` (thay cho "entity" của REST).
+message Change {
+  string record_id = 1;   // uuid (deck, word, study_log, quiz_attempt, exam_attempt, xp_event)
+                          // | word_uid (card_progress, favorite) | "" (settings)
+  int64 updated_at_ms = 2;
+  bool deleted = 3;
+  int64 server_seq = 4;   // chỉ server đặt (Pull, ChangeResult.current); Push: bỏ qua
+  oneof data {
+    SettingsData settings = 10;
+    DeckData deck = 11;
+    WordData word = 12;
+    CardProgressData card_progress = 13;
+    FavoriteData favorite = 14;
+    StudyLogData study_log = 15;
+    QuizAttemptData quiz_attempt = 16;
+    ExamAttemptData exam_attempt = 17;
+    XpEventData xp_event = 18;
+  }
+}
+
+enum ChangeStatus {
+  CHANGE_STATUS_UNSPECIFIED = 0;
+  CHANGE_STATUS_APPLIED = 1;
+  CHANGE_STATUS_STALE = 2;      // card_progress cũ hơn bản server → app ghi đè bằng `current`
+  CHANGE_STATUS_DUPLICATE = 3;  // bản ghi chỉ-thêm đã có
+  CHANGE_STATUS_REJECTED = 4;
+}
+message ChangeResult {
+  int32 index = 1;              // vị trí trong PushRequest.changes (record_id có thể trùng giữa các loại)
+  string record_id = 2;
+  ChangeStatus status = 3;
+  int64 server_seq = 4;
+  Change current = 5;           // STALE: bản server; xp_event APPLIED/DUPLICATE: có xp_awarded
+  RecordError error = 6;        // chỉ khi REJECTED
+}
+message RecordError {
+  string code = 1;              // DECK_NOT_OWNED | UNKNOWN_ENTITY | INVALID_RECORD | UNKNOWN_TEST
+  string message = 2;           // tiếng Việt, hiển thị được
+}
+
+enum CefrLevel { CEFR_LEVEL_UNSPECIFIED = 0; CEFR_LEVEL_A1 = 1; CEFR_LEVEL_A2 = 2; CEFR_LEVEL_B1 = 3; }
+enum ActivityType {
+  ACTIVITY_TYPE_UNSPECIFIED = 0; ACTIVITY_TYPE_LEARN = 1; ACTIVITY_TYPE_REVIEW = 2;
+  ACTIVITY_TYPE_QUIZ = 3; ACTIVITY_TYPE_EXAM = 4;
+}
+enum QuizSourceType { QUIZ_SOURCE_TYPE_UNSPECIFIED = 0; QUIZ_SOURCE_TYPE_DECK = 1; }
+enum XpSourceType {
+  XP_SOURCE_TYPE_UNSPECIFIED = 0; XP_SOURCE_TYPE_CARD_SESSION = 1;
+  XP_SOURCE_TYPE_QUIZ = 2; XP_SOURCE_TYPE_EXAM = 3;
+}
+
+message SettingsData { CefrLevel level = 1; int32 daily_goal = 2; }        // 5 | 10 | 15 | 20
+message DeckData {
+  string name = 1;
+  optional string description = 2;
+  string language_code = 3;
+  optional string icon = 4;
+  bool is_default = 5;
+  int32 sort_order = 6;
+  int64 created_at_ms = 7;
+}
+message WordData {
+  string deck_uuid = 1;
+  string term = 2;
+  optional string reading = 3;
+  optional string part_of_speech = 4;
+  string meaning_vi = 5;
+  optional string example = 6;
+  optional string example_translation = 7;
+  int32 sort_order = 8;
+  int64 created_at_ms = 9;
+}
+message CardProgressData {
+  int32 box = 1;                        // 1..5
+  string next_review_date = 2;
+  string first_learned_date = 3;
+  optional int64 last_reviewed_at_ms = 4;
+  int32 review_count = 5;
+}
+message FavoriteData { int64 created_at_ms = 1; }
+message StudyLogData {
+  ActivityType activity_type = 1;
+  optional string ref_uuid = 2;
+  string study_date = 3;
+  int64 created_at_ms = 4;
+}
+message QuizAttemptData {
+  QuizSourceType source_type = 1;
+  optional string deck_ref = 2;         // decks.uuid
+  int32 score = 3;                      // 0..100
+  int32 correct_count = 4;
+  int32 total_count = 5;
+  int32 duration_sec = 6;
+  int64 created_at_ms = 7;
+}
+message ExamAttemptData {               // chỉ lượt SUBMITTED
+  string test_code = 1;
+  int32 score = 2;
+  int32 correct_count = 3;
+  int32 total_count = 4;
+  int32 duration_sec = 5;
+  int64 started_at_ms = 6;
+  int64 submitted_at_ms = 7;
+}
+message XpEventData {
+  XpSourceType source_type = 1;
+  optional string ref_uuid = 2;
+  int32 correct_count = 3;              // 0..200
+  int32 wrong_count = 4;                // 0..200
+  int32 total_count = 5;                // = correct + wrong
+  int64 occurred_at_ms = 6;
+  optional int32 xp_awarded = 7;        // CHỈ server đặt (BR-066); giá trị app gửi bị bỏ qua
+}

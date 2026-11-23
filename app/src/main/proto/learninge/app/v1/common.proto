@@ -1,0 +1,28 @@
+syntax = "proto3";
+package learninge.app.v1;
+option java_multiple_files = true;
+option java_package = "com.learninge.proto.app.v1";
+option java_outer_classname = "CommonProto";
+
+// Mọi thời điểm: epoch milliseconds UTC (int64, hậu tố _ms). Ngày lịch: chuỗi "yyyy-MM-dd".
+message User {
+  string id = 1;              // users.uuid (UUID v4 chữ thường)
+  string email = 2;           // chỉ trả cho chính chủ
+  string nickname = 3;
+  string display_name = 4;
+  int64 created_at_ms = 5;
+}
+
+message Stats {
+  int64 total_xp = 1;
+  int32 week_xp = 2;
+  int32 current_streak = 3;
+  int32 longest_streak = 4;
+  string last_study_date = 5; // "" nếu chưa học ngày nào
+}
+
+message AuthSession {
+  string token = 1;           // 43 ký tự base64url; KHÔNG ghi log
+  int64 expires_at_ms = 2;
+  User user = 3;
+}

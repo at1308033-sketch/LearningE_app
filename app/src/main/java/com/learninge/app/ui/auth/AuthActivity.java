@@ -1,7 +1,10 @@
 package com.learninge.app.ui.auth;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.learninge.app.BuildConfig;
 import com.learninge.app.R;
 
 /**
@@ -37,5 +41,16 @@ public class AuthActivity extends AppCompatActivity {
             view.setPadding(bars.left, 0, bars.right, bars.bottom);
             return insets;
         });
+        requestLocalNetworkForDebug();
+    }
+
+    // Android 17 (API 37) chặn mọi kết nối tới mạng nội bộ, kể cả 10.0.2.2 của emulator, nếu chưa có quyền này.
+    // Chỉ bản debug gọi máy chủ nội bộ; bản release gọi máy chủ công khai qua TLS nên không cần.
+    private void requestLocalNetworkForDebug() {
+        boolean isNeeded = BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN;
+        if (isNeeded && checkSelfPermission(Manifest.permission.ACCESS_LOCAL_NETWORK)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_LOCAL_NETWORK}, 0);
+        }
     }
 }
