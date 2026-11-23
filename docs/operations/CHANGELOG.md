@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-094: `ExamService` (bắt đầu/tiếp tục lượt, lưu từng câu, tính giờ theo `started_at`, tự nộp, chấm điểm, từ sai về hộp 1).
 - T-132: huy hiệu chuỗi ở Trang chủ, ngọn lửa + 5 rương ở Tiến độ, màn ăn mừng (cúp, confetti, rương +/−) ở Kết quả phiên.
 - T-125: thanh "Đang ngoại tuyến" dùng chung và SCR-35 Trạng thái đồng bộ (5 trạng thái, nút "Đồng bộ ngay").
 - T-124: sự kiện XP (`XpRules`, `XpService`, trần 500/ngày), SCR-34 Bảng xếp hạng tuần với bản lưu ngoại tuyến, lối vào ở Trang chủ và tab Tôi.

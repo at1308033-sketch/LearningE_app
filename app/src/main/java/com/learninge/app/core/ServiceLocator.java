@@ -9,6 +9,7 @@ import androidx.annotation.VisibleForTesting;
 
 import com.learninge.app.data.dao.CardProgressDao;
 import com.learninge.app.data.dao.DeckDao;
+import com.learninge.app.data.dao.ExamDao;
 import com.learninge.app.data.dao.FavoriteDao;
 import com.learninge.app.data.dao.LanguageDao;
 import com.learninge.app.data.dao.LeaderboardCacheDao;
@@ -28,12 +29,14 @@ import com.learninge.app.data.remote.SyncRemote;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
 import com.learninge.app.data.repo.DeckRepository;
+import com.learninge.app.data.repo.ExamRepository;
 import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.data.repo.StudyRepository;
 import com.learninge.app.data.repo.SyncRepository;
 import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
+import com.learninge.app.domain.ExamService;
 import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.LeaderboardService;
 import com.learninge.app.domain.ProgressService;
@@ -190,6 +193,11 @@ public final class ServiceLocator {
     public LeaderboardService leaderboardService() {
         return new LeaderboardService(() -> new LeaderboardRemote(grpcClient()), new LeaderboardCacheDao(database),
                 sessionStore, executors, clock());
+    }
+
+    public ExamService examService() {
+        return new ExamService(new ExamDao(database), new ExamRepository(database), progressService(), xpService(),
+                sessionStore, clock());
     }
 
     /**
