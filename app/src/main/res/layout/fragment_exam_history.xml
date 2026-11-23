@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Exam">
+
+    <FrameLayout
+        android:id="@+id/header_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/feat_exam_container">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:title="@string/exam_history" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_history"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            app:emptyArt="@drawable/ill_exam_prep"
+            app:emptyTitle="@string/exam_history_empty" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider"
+                android:orientation="vertical"
+                android:showDividers="middle" />
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</LinearLayout>

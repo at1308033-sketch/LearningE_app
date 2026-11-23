@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_cell"
+    android:layout_width="0dp"
+    android:layout_height="@dimen/touch_target_min"
+    android:layout_margin="@dimen/space_1"
+    android:gravity="center"
+    android:textAppearance="@style/TextAppearance.LearningE.Label"
+    app:layout_columnWeight="1"
+    tools:text="7" />

@@ -184,6 +184,78 @@
         android:name="com.learninge.app.ui.me.SyncFragment"
         tools:layout="@layout/fragment_sync" />
 
+    <action
+        android:id="@+id/action_global_exam_hub"
+        app:destination="@id/exam_hub_fragment" />
+
+    <fragment
+        android:id="@+id/exam_hub_fragment"
+        android:name="com.learninge.app.ui.exam.ExamHubFragment"
+        tools:layout="@layout/fragment_exam_hub" />
+
+    <action
+        android:id="@+id/action_global_exam"
+        app:destination="@id/exam_fragment" />
+
+    <fragment
+        android:id="@+id/exam_fragment"
+        android:name="com.learninge.app.ui.exam.ExamFragment"
+        tools:layout="@layout/fragment_exam">
+
+        <argument
+            android:name="testCode"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_exam_to_result"
+            app:destination="@id/exam_result_fragment"
+            app:popUpTo="@id/exam_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_exam_result"
+        app:destination="@id/exam_result_fragment" />
+
+    <fragment
+        android:id="@+id/exam_result_fragment"
+        android:name="com.learninge.app.ui.exam.ExamResultFragment"
+        tools:layout="@layout/fragment_exam_result">
+
+        <argument
+            android:name="attemptId"
+            app:argType="long" />
+
+        <argument
+            android:name="isTimeUp"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <action
+            android:id="@+id/action_result_to_exam"
+            app:destination="@id/exam_fragment"
+            app:popUpTo="@id/exam_result_fragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_exam_history"
+        app:destination="@id/exam_history_fragment" />
+
+    <fragment
+        android:id="@+id/exam_history_fragment"
+        android:name="com.learninge.app.ui.exam.ExamHistoryFragment"
+        tools:layout="@layout/fragment_exam_history" />
+
+    <action
+        android:id="@+id/action_global_exam_resources"
+        app:destination="@id/exam_resources_fragment" />
+
+    <fragment
+        android:id="@+id/exam_resources_fragment"
+        android:name="com.learninge.app.ui.exam.ExamResourcesFragment"
+        tools:layout="@layout/fragment_exam_resources" />
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">
@@ -211,7 +283,7 @@
         <fragment
             android:id="@+id/practice_fragment"
             android:name="com.learninge.app.ui.practice.PracticeFragment"
-            tools:layout="@layout/fragment_placeholder" />
+            tools:layout="@layout/fragment_practice" />
     </navigation>
 
     <navigation

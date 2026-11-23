@@ -128,6 +128,8 @@
     <string name="home_continue_label">Học tiếp chủ đề</string>
     <string name="home_first_label">Bắt đầu</string>
     <string name="home_first_topic">Chọn chủ đề đầu tiên</string>
+    <string name="home_exam">Thử một đề luyện thi</string>
+    <string name="home_exam_note">TOEIC · IELTS · Aptis</string>
     <string name="home_leaderboard">Bảng xếp hạng tuần</string>
     <string name="home_rank">Hạng %1$d · %2$d XP</string>
     <string name="home_week_xp">%1$d XP tuần này</string>
@@ -307,6 +309,75 @@
     <string name="chest_box">Hộp %1$d</string>
     <string name="chest_description">Hộp %1$d, %2$d thẻ, ôn lại sau %3$d ngày</string>
     <string name="chest_change">Hộp %1$d, %2$d thẻ, thay đổi %3$s</string>
+
+    <!-- SCR-30 Luyện thi -->
+    <string name="exam_hub_title">Luyện thi</string>
+    <string name="exam_hub_note">Bộ từ TOEIC, IELTS, Aptis và đề thi thử</string>
+    <string name="exam_hub_headline">Ôn từ vựng &amp; làm đề thử</string>
+    <string name="exam_hub_source">Đề do nhóm tự soạn theo định dạng, không phải đề chính thức</string>
+    <string name="exam_toeic">Tiếng Anh giao tiếp công việc</string>
+    <string name="exam_ielts">Tiếng Anh học thuật</string>
+    <string name="exam_aptis">Bài thi của British Council</string>
+    <string name="exam_deck">%1$s · %2$d từ</string>
+    <string name="exam_info">%1$d câu · %2$d phút</string>
+    <string name="exam_info_best">%1$d câu · %2$d phút · cao nhất %3$d điểm</string>
+    <string name="exam_start">Làm bài</string>
+    <string name="exam_resume">Làm tiếp</string>
+    <string name="exam_no_content">Chưa có nội dung cho kỳ thi này.</string>
+    <string name="exam_history">Lịch sử thi thử</string>
+    <string name="exam_history_empty">Bạn chưa làm đề nào</string>
+    <string name="exam_history_row">%1$d điểm · %2$d/%3$d câu đúng · %4$s</string>
+
+    <!-- SCR-31 Làm bài -->
+    <string name="exam_position">Câu %1$d/%2$d</string>
+    <string name="exam_done">Đã làm %1$d · Đánh dấu %2$d</string>
+    <string name="exam_question">Câu %1$d</string>
+    <string name="exam_previous">Câu trước</string>
+    <string name="exam_next">Câu sau</string>
+    <string name="exam_flag">Đánh dấu</string>
+    <string name="exam_unflag">Bỏ dấu</string>
+    <string name="exam_grid">Bảng câu hỏi</string>
+    <string name="exam_submit">Nộp bài</string>
+    <string name="exam_submit_title">Nộp bài?</string>
+    <string name="exam_submit_left">Còn %1$d câu chưa làm. Nộp bài?</string>
+    <string name="exam_exit_title">Thoát bài thi?</string>
+    <string name="exam_exit_message">Câu đã chọn được lưu và đồng hồ vẫn chạy. Bạn có thể quay lại làm tiếp trước khi hết giờ.</string>
+    <string name="exam_exit_stay">Ở lại</string>
+    <string name="exam_exit_leave">Thoát</string>
+    <string name="exam_time_left">Còn %1$d phút</string>
+    <string name="exam_legend">Nền xanh nhạt: đã làm %1$d · Nền trắng: chưa làm %2$d · Viền cam: đánh dấu %3$d · Nền xanh đậm: đang xem</string>
+    <string name="exam_cell">Câu %1$d, %2$s %3$s</string>
+    <string name="exam_cell_done">đã làm</string>
+    <string name="exam_cell_empty">chưa làm</string>
+    <string name="exam_cell_flagged">, đã đánh dấu</string>
+
+    <!-- SCR-32 Kết quả thi thử -->
+    <string name="exam_result_title">Hoàn thành bài thi!</string>
+    <string name="exam_points">điểm</string>
+    <string name="exam_summary">%1$d/%2$d câu đúng · %3$d phút %4$d giây</string>
+    <string name="exam_score_note">Điểm luyện tập, không quy đổi sang thang điểm chính thức.</string>
+    <string name="exam_time_up">Hết giờ! Bài của bạn đã được nộp</string>
+    <string name="exam_correct">Đúng</string>
+    <string name="exam_wrong">Sai</string>
+    <string name="exam_answer_right">Câu %1$d: %2$s</string>
+    <string name="exam_answer_wrong">Câu %1$d: bạn chọn “%2$s”</string>
+    <string name="exam_answer_none">Câu %1$d: chưa làm</string>
+    <string name="exam_correct_answer">Đáp án đúng: %1$s</string>
+    <string name="exam_retry">Làm lại</string>
+    <string name="exam_back_to_hub">Về Luyện thi</string>
+
+    <!-- SCR-33 Tài nguyên chính thức -->
+    <string name="resources_title">Tài nguyên chính thức</string>
+    <string name="resources_note">Liên kết mở bằng trình duyệt của máy; phần học của ứng dụng không cần Internet.</string>
+    <string name="resource_toeic">TOEIC — ETS</string>
+    <string name="resource_ielts">IELTS — trang chính thức</string>
+    <string name="resource_aptis">Aptis — British Council</string>
+    <string name="resource_open">Mở trong trình duyệt</string>
+    <string name="resource_description">Mở trang %1$s trong trình duyệt</string>
+    <string name="resource_no_browser">Máy chưa có trình duyệt</string>
+    <string name="url_toeic" translatable="false">https://www.ets.org/toeic.html</string>
+    <string name="url_ielts" translatable="false">https://ielts.org/</string>
+    <string name="url_aptis" translatable="false">https://www.britishcouncil.org/exam/aptis</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>

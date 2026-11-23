@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-095: SCR-30 Luyện thi, SCR-31 Làm bài (đồng hồ, bảng câu hỏi, đánh dấu), SCR-32 Kết quả, lịch sử thi, SCR-33 Tài nguyên chính thức; nút vô hiệu rõ chữ hơn; đề mẫu chỉ ở bản debug.
 - T-094: `ExamService` (bắt đầu/tiếp tục lượt, lưu từng câu, tính giờ theo `started_at`, tự nộp, chấm điểm, từ sai về hộp 1).
 - T-132: huy hiệu chuỗi ở Trang chủ, ngọn lửa + 5 rương ở Tiến độ, màn ăn mừng (cúp, confetti, rương +/−) ở Kết quả phiên.
 - T-125: thanh "Đang ngoại tuyến" dùng chung và SCR-35 Trạng thái đồng bộ (5 trạng thái, nút "Đồng bộ ngay").

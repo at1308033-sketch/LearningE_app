@@ -41,4 +41,8 @@
     <dimen name="flash_speak">64dp</dimen>
     <dimen name="fab_space">88dp</dimen>
     <dimen name="rank_row">56dp</dimen>
+    <dimen name="stroke_selected">2dp</dimen>
+    <dimen name="stroke_flag">2.5dp</dimen>
+    <dimen name="score_ring">140dp</dimen>
+    <dimen name="score_ring_inner">124dp</dimen>
 </resources>

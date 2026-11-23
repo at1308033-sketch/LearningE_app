@@ -3,6 +3,9 @@
 <resources>
 
     <style name="Widget.LearningE.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/button_background</item>
+        <item name="android:textColor">@color/button_text</item>
+        <item name="iconTint">@color/button_text</item>
         <item name="android:minHeight">@dimen/button_height_m</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
@@ -31,7 +34,9 @@
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Label</item>
         <item name="shapeAppearance">@style/ShapeAppearance.LearningE.Full</item>
         <item name="backgroundTint">@color/surface</item>
-        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/button_outline_text</item>
+        <item name="iconTint">@color/button_outline_text</item>
+        <item name="strokeColor">@color/button_stroke</item>
         <item name="strokeWidth">@dimen/stroke_button</item>
     </style>
 

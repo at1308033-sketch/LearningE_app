@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "code": "E01",
+      "version": 1,
+      "exam_tag": "TOEIC",
+      "title": "TOEIC Reading Part 5 — Đề mẫu",
+      "part_label": "Part 5",
+      "duration_sec": 600,
+      "description": "Đề mẫu 6 câu để thử backend; đề chính thức 30 câu / 20 phút (BR-054)",
+      "sort_order": 1,
+      "questions": [
+        {"number": 1, "question": "Please submit the report before the ___.", "options": ["deadline", "invoice", "applicant", "budget"], "correct_index": 0, "explanation": "deadline = hạn chót.", "deck_code": "X01", "term": "deadline"},
+        {"number": 2, "question": "The manager asked us to ___ the meeting until next week.", "options": ["reimburse", "postpone", "schedule", "apply"], "correct_index": 1, "explanation": "postpone = hoãn lại.", "deck_code": "X01", "term": "postpone"},
+        {"number": 3, "question": "Every ___ must attend an interview.", "options": ["colleague", "invoice", "applicant", "budget"], "correct_index": 2, "explanation": "applicant = người nộp đơn.", "deck_code": "X01", "term": "applicant"},
+        {"number": 4, "question": "Travel expenses will be ___ within two weeks.", "options": ["reimbursed", "postponed", "scheduled", "budgeted"], "correct_index": 0, "explanation": "reimburse = hoàn tiền.", "deck_code": "X01", "term": "reimburse"},
+        {"number": 5, "question": "The ___ for marketing was increased this year.", "options": ["deadline", "budget", "colleague", "schedule"], "correct_index": 1, "explanation": "budget = ngân sách.", "deck_code": "X01", "term": "budget"},
+        {"number": 6, "question": "She ___ her emails every morning.", "options": ["check", "checks", "checking", "to check"], "correct_index": 1, "explanation": "Hiện tại đơn, chủ ngữ she → checks."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.LearningE.Exam">
+
+    <LinearLayout
+        android:id="@+id/header_exam_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero_exam"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/space_4">
+
+        <TextView
+            android:id="@+id/tv_exam_result_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+            android:textColor="@color/on_hero_variant"
+            tools:text="TOEIC Part 5 — Đề 1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/exam_result_title"
+            android:textAppearance="@style/TextAppearance.LearningE.TitleL"
+            android:textColor="@color/on_hero" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="@dimen/score_ring"
+                android:layout_height="@dimen/score_ring"
+                android:background="@drawable/bg_hero_card">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/pi_exam_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"
+                    app:indicatorColor="@color/success"
+                    app:indicatorSize="@dimen/score_ring_inner"
+                    app:trackColor="@color/outline"
+                    app:trackThickness="10dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_exam_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.LearningE.Display"
+                        tools:text="80" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/exam_points"
+                        android:textAppearance="@style/TextAppearance.LearningE.Caption" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <ImageView
+                android:layout_width="144dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="@dimen/space_3"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ill_celebration" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_exam_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LearningE.Label"
+            android:textColor="@color/on_hero"
+            tools:text="16/20 câu đúng · 18 phút 20 giây" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4">
+
+            <com.learninge.app.ui.common.FeedbackBannerView
+                android:id="@+id/banner_exam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LearningE.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_3">
+
+                <LinearLayout
+                    android:id="@+id/ll_answers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/divider"
+                    android:orientation="vertical"
+                    android:showDividers="middle" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_exam_done"
+                    style="@style/Widget.LearningE.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_3"
+                    android:layout_weight="1"
+                    android:text="@string/exam_back_to_hub" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_exam_retry"
+                    style="@style/Widget.LearningE.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/exam_retry"
+                    app:icon="@drawable/ic_refresh"
+                    app:iconGravity="textStart" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

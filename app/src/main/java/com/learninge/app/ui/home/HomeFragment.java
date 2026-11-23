@@ -44,6 +44,8 @@ public class HomeFragment extends BaseFragment {
         viewModel.today().observe(getViewLifecycleOwner(), result -> render(binding, viewModel, result));
         viewModel.weekRank().observe(getViewLifecycleOwner(), rank -> binding.tvHomeRank.setText(rank.rank() == 0
                 ? getString(R.string.home_week_xp, rank.xp()) : getString(R.string.home_rank, rank.rank(), rank.xp())));
+        binding.cardHomeExam.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalExamHub()));
         binding.cardLeaderboard.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalLeaderboard()));
         // Dữ liệu vừa kéo về thì hiện ngay; trạng thái đầu tiên luôn là "không chạy" nên cũng là lần tải đầu.

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/space_4"
+    android:theme="@style/ThemeOverlay.LearningE.Exam">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exam_grid"
+        android:textAppearance="@style/TextAppearance.LearningE.TitleL" />
+
+    <TextView
+        android:id="@+id/tv_legend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_2"
+        android:textAppearance="@style/TextAppearance.LearningE.BodyM"
+        tools:text="Đã làm 8 (nền xanh nhạt)" />
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gl_questions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_3"
+        app:columnCount="6" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sheet_submit"
+        style="@style/Widget.LearningE.Button.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_4"
+        android:text="@string/exam_submit"
+        app:icon="@drawable/ic_check"
+        app:iconGravity="textStart" />
+</LinearLayout>

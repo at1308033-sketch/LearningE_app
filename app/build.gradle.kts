@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.gridlayout)
 
     implementation(libs.grpc.okhttp)
     implementation(libs.grpc.protobuf.lite)
