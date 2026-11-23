@@ -56,6 +56,11 @@
 
     <style name="ThemeOverlay.LearningE" parent="" />
 
+    <style name="ThemeOverlay.LearningE.OnHero">
+        <item name="colorControlNormal">@color/on_hero</item>
+        <item name="colorOnSurfaceVariant">@color/on_hero</item>
+    </style>
+
     <style name="ThemeOverlay.LearningE.Learn">
         <item name="colorPrimary">@color/feat_learn</item>
         <item name="colorOnPrimary">@color/on_feat_learn</item>

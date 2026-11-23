@@ -11,28 +11,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_hero_learn"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingHorizontal="@dimen/space_4"
         android:paddingTop="@dimen/space_3"
         android:paddingBottom="@dimen/space_4">
 
-        <TextView
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/tab_learn"
-            android:textAppearance="@style/TextAppearance.LearningE.Headline"
-            android:textColor="@color/on_hero" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="@dimen/hero_art_width"
-            android:layout_height="@dimen/hero_art_height"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ill_onboarding_level" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tab_learn"
+                android:textAppearance="@style/TextAppearance.LearningE.Headline"
+                android:textColor="@color/on_hero" />
+
+            <ImageView
+                android:layout_width="@dimen/hero_art_width"
+                android:layout_height="@dimen/hero_art_height"
+                android:importantForAccessibility="no"
+                app:srcCompat="@drawable/ill_onboarding_level" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/tg_learn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tab_topics"
+                style="@style/Widget.LearningE.Segment"
+                android:text="@string/learn_topics" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tab_decks"
+                style="@style/Widget.LearningE.Segment"
+                android:text="@string/learn_my_decks" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
     </LinearLayout>
 
     <HorizontalScrollView
+        android:id="@+id/hs_levels"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/space_4"
@@ -77,7 +103,16 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fcv_decks"
+        android:name="com.learninge.app.ui.deck.MyDecksFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
     <FrameLayout
+        android:id="@+id/fl_topics"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">

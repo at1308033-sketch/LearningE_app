@@ -11,6 +11,7 @@
         android:id="@+id/toolbar_word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:menu="@menu/menu_word"
         app:navigationContentDescription="@string/common_back"
         app:navigationIcon="@drawable/ic_arrow_left"
         app:title="@string/word_title" />
@@ -102,6 +103,13 @@
                             android:layout_marginStart="@dimen/space_3"
                             android:contentDescription="@string/favorite"
                             app:icon="@drawable/ic_heart" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_save_to_deck"
+                            style="@style/Widget.LearningE.RoundButton.Light"
+                            android:layout_marginStart="@dimen/space_3"
+                            android:contentDescription="@string/word_save_to_deck"
+                            app:icon="@drawable/ic_notebook" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

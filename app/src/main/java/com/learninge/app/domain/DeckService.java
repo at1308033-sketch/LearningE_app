@@ -9,13 +9,16 @@ import com.learninge.app.data.dao.DeckDao;
 import com.learninge.app.data.dao.FavoriteDao;
 import com.learninge.app.data.dao.SettingsDao;
 import com.learninge.app.data.dao.WordDao;
+import com.learninge.app.data.model.Deck;
 import com.learninge.app.data.model.DeckSummary;
 import com.learninge.app.data.model.Settings;
 import com.learninge.app.data.model.WordDetail;
 import com.learninge.app.data.model.WordItem;
+import com.learninge.app.domain.rules.LeitnerScheduler;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,12 @@ import java.util.stream.Collectors;
  * Bộ từ và từ (API-SPECIFICATION §3.2). Phương thức đọc gọi trên {@code dbRead}, phương thức ghi trên {@code dbWrite}.
  */
 public class DeckService {
+    /**
+     * Khóa của bộ ảo "Yêu thích": gom các từ có trái tim, chỉ đọc.
+     */
+    public static final long FAVORITES = -2;
+    public static final String FAVORITES_NAME = "Yêu thích";
+
     // Chủ đề là bộ có sẵn mã Txx; Xxx là bộ luyện thi, Jxx là bộ tiếng Nhật.
     private static final String TOPIC_PREFIX = "T";
 
@@ -67,6 +76,40 @@ public class DeckService {
     }
 
     /**
+     * SCR-26: "Yêu thích", bộ của người dùng, rồi bộ có sẵn không phải chủ đề (luyện thi, tiếng Nhật).
+     */
+    public Result<List<DeckSummary>> listMyDecks() {
+        try {
+            List<DeckSummary> result = new ArrayList<>();
+            result.add(favorites());
+            result.addAll(decks.listOwned(session.userId(), today()));
+            for (DeckSummary builtin : decks.listBuiltin(session.userId(), today(), null, null)) {
+                if (!builtin.deck().code().startsWith(TOPIC_PREFIX)) {
+                    result.add(builtin);
+                }
+            }
+            return Result.ok(result);
+        } catch (SQLException failed) {
+            return Result.error(ErrorCode.DB, failed.getMessage());
+        }
+    }
+
+    private DeckSummary favorites() {
+        List<WordItem> items = words.listFavorites(session.userId());
+        String today = today();
+        int mastered = 0;
+        int learning = 0;
+        int due = 0;
+        for (WordItem item : items) {
+            mastered += item.status() == LeitnerScheduler.Status.MASTERED ? 1 : 0;
+            learning += item.status() == LeitnerScheduler.Status.LEARNING ? 1 : 0;
+            due += item.nextReviewDate() != null && item.nextReviewDate().compareTo(today) <= 0 ? 1 : 0;
+        }
+        Deck deck = new Deck(FAVORITES, "", null, null, FAVORITES_NAME, null, "en", null, null, null, false, 0);
+        return new DeckSummary(deck, items.size(), mastered, learning, due);
+    }
+
+    /**
      * Cấp độ trong cài đặt, là bộ lọc mặc định của SCR-06 (AC-007.2).
      */
     public String userLevel() {
@@ -84,7 +127,8 @@ public class DeckService {
 
     public Result<DeckSummary> getDeck(long deckId) {
         try {
-            DeckSummary found = decks.findSummary(session.userId(), today(), deckId);
+            DeckSummary found = deckId == FAVORITES ? favorites()
+                    : decks.findSummary(session.userId(), today(), deckId);
             return found == null ? Result.error(ErrorCode.NOT_FOUND) : Result.ok(found);
         } catch (SQLException failed) {
             return Result.error(ErrorCode.DB, failed.getMessage());
@@ -92,6 +136,9 @@ public class DeckService {
     }
 
     public Result<List<WordItem>> listWords(long deckId) {
+        if (deckId == FAVORITES) {
+            return Result.ok(words.listFavorites(session.userId()));
+        }
         Result<DeckSummary> deck = getDeck(deckId);
         return deck.isOk() ? Result.ok(words.listByDeck(session.userId(), deckId)) : Result.errorOf(deck);
     }

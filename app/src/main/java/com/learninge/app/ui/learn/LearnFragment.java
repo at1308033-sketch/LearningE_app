@@ -41,7 +41,20 @@ public class LearnFragment extends BaseFragment {
         binding.rvTopics.setAdapter(adapter);
         LearnViewModel viewModel = new ViewModelProvider(this).get(LearnViewModel.class);
         viewModel.state().observe(getViewLifecycleOwner(), state -> render(binding, adapter, viewModel, state));
+        binding.tgLearn.addOnButtonCheckedListener((group, id, isChecked) -> {
+            if (isChecked) {
+                viewModel.showDecks(id == R.id.btn_tab_decks);
+            }
+        });
+        viewModel.isDecksShown().observe(getViewLifecycleOwner(), isDecks -> showTab(binding, isDecks));
         viewModel.load();
+    }
+
+    private static void showTab(FragmentLearnBinding binding, boolean isDecks) {
+        binding.tgLearn.check(isDecks ? R.id.btn_tab_decks : R.id.btn_tab_topics);
+        binding.fcvDecks.setVisibility(isDecks ? View.VISIBLE : View.GONE);
+        binding.flTopics.setVisibility(isDecks ? View.GONE : View.VISIBLE);
+        binding.hsLevels.setVisibility(isDecks ? View.GONE : View.VISIBLE);
     }
 
     private void render(FragmentLearnBinding binding, TopicAdapter adapter, LearnViewModel viewModel,

@@ -66,7 +66,8 @@ public class StudyService {
             }
             int size = LeitnerScheduler.newSessionSize(decks.dailyGoal(),
                     cards.countLearnedOn(session.userId(), LocalDate.now(clock).toString()), deck.value.newWords());
-            return cardsOf(words.listNew(session.userId(), deckId, size));
+            return cardsOf(deckId == DeckService.FAVORITES ? words.listNewFavorites(session.userId(), size)
+                    : words.listNew(session.userId(), deckId, size));
         } catch (SQLException failed) {
             return Result.error(ErrorCode.DB, failed.getMessage());
         }
@@ -111,7 +112,8 @@ public class StudyService {
      */
     public Result<SessionSummary> finishSession(ActivityType kind, long deckId, int remembered, int forgotten,
                                                 int streakBefore, List<Integer> boxesBefore) {
-        Result<DeckSummary> deck = deckId == NO_DECK ? null : decks.getDeck(deckId);
+        // Bộ ảo "Yêu thích" và phiên ôn tập không gắn với bộ nào.
+        Result<DeckSummary> deck = deckId < 0 ? null : decks.getDeck(deckId);
         Result<Streak> streak = progress.record(kind, deck == null || !deck.isOk() ? null : deck.value.deck().uuid());
         if (!streak.isOk()) {
             return Result.errorOf(streak);

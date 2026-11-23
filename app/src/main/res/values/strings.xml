@@ -17,6 +17,8 @@
 
     <!-- Dùng chung -->
     <string name="common_retry">Thử lại</string>
+    <string name="common_cancel">Hủy</string>
+    <string name="common_delete">Xóa</string>
     <string name="common_close">Đóng</string>
     <string name="common_back">Quay lại</string>
     <string name="common_sending">Đang gửi…</string>
@@ -90,6 +92,8 @@
     <string name="level_b1">B1</string>
 
     <!-- SCR-06 Học -->
+    <string name="learn_topics">Chủ đề có sẵn</string>
+    <string name="learn_my_decks">Bộ của tôi</string>
     <string name="learn_level_all">Tất cả</string>
     <string name="learn_empty_title">Chưa có chủ đề</string>
     <string name="learn_empty_message">Không có chủ đề nào ở cấp độ này.</string>
@@ -161,6 +165,10 @@
     <string name="word_box_new">Chưa học từ này</string>
     <string name="word_box_due">Hộp %1$d/5 · cần ôn hôm nay</string>
     <string name="word_box_in_days">Hộp %1$d/5 · ôn lại sau %2$d ngày</string>
+    <string name="word_save_to_deck">Lưu vào bộ</string>
+    <string name="word_saved">Đã lưu từ vào bộ</string>
+    <string name="word_delete">Xóa từ</string>
+    <string name="word_delete_title">Xóa từ này khỏi bộ?</string>
     <string name="favorite">Yêu thích</string>
     <string name="favorite_on">đã thích</string>
     <string name="favorite_off">chưa thích</string>
@@ -192,6 +200,46 @@
     <string name="result_done">Xong</string>
     <string name="result_continue">Học tiếp chủ đề</string>
     <string name="result_description">Tuyệt vời, %1$s. Đã ôn %2$d thẻ, đúng %3$d phần trăm, chuỗi %4$d ngày</string>
+
+    <!-- SCR-26, SCR-27, SCR-19 Bộ từ -->
+    <plurals name="words">
+        <item quantity="other">%d từ</item>
+    </plurals>
+    <string name="deck_create">Tạo bộ</string>
+    <string name="deck_create_title">Tạo bộ mới</string>
+    <string name="deck_edit_title">Sửa bộ</string>
+    <string name="deck_save">Lưu bộ</string>
+    <string name="deck_name">Tên bộ *</string>
+    <string name="deck_name_hint">1–50 ký tự</string>
+    <string name="deck_description">Mô tả</string>
+    <string name="deck_description_hint">Tối đa 200 ký tự</string>
+    <string name="deck_language">Ngôn ngữ</string>
+    <string name="deck_language_locked">Chỉ đổi ngôn ngữ khi bộ chưa có từ</string>
+    <string name="deck_due">%1$d cần ôn</string>
+    <string name="deck_info">%1$s · %2$d từ · %3$d thẻ cần ôn</string>
+    <string name="deck_read_only">Bộ có sẵn — chỉ đọc</string>
+    <string name="deck_delete">Xóa bộ</string>
+    <string name="deck_delete_title">Xóa bộ này?</string>
+    <string name="deck_delete_message">Mọi từ và tiến độ học của bộ sẽ bị xóa.</string>
+    <string name="deck_error_name">Vui lòng nhập tên bộ</string>
+    <string name="deck_error_duplicate">Bạn đã có bộ tên này</string>
+    <string name="deck_error_description">Mô tả tối đa 200 ký tự</string>
+    <string name="favorites_empty">Chưa có từ yêu thích — bấm trái tim khi xem từ</string>
+
+    <!-- SCR-20 Thêm/sửa từ -->
+    <string name="word_add_title">Thêm từ</string>
+    <string name="word_edit_title">Sửa từ</string>
+    <string name="word_edit_subtitle">vào bộ %1$s · %2$s</string>
+    <string name="word_term">Từ *</string>
+    <string name="word_reading">Cách đọc</string>
+    <string name="word_meaning_required">Nghĩa *</string>
+    <string name="word_translation">Bản dịch ví dụ</string>
+    <string name="word_save">Lưu từ</string>
+    <string name="word_error_term">Vui lòng nhập từ</string>
+    <string name="word_error_reading">Phiên âm tối đa 60 ký tự</string>
+    <string name="word_error_meaning">Vui lòng nhập nghĩa</string>
+    <string name="word_error_example">Tối đa 300 ký tự</string>
+    <string name="word_error_duplicate">Từ này đã có trong bộ</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>

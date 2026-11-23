@@ -25,6 +25,7 @@ public class LearnViewModel extends BaseViewModel {
     }
 
     private final MutableLiveData<State> state = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isDecksShown = new MutableLiveData<>(false);
     private String level;
     private boolean isLevelChosen;
 
@@ -34,6 +35,17 @@ public class LearnViewModel extends BaseViewModel {
 
     LiveData<State> state() {
         return state;
+    }
+
+    /**
+     * false = "Chủ đề có sẵn", true = "Bộ của tôi".
+     */
+    LiveData<Boolean> isDecksShown() {
+        return isDecksShown;
+    }
+
+    void showDecks(boolean isShown) {
+        isDecksShown.setValue(isShown);
     }
 
     void chooseLevel(String chosen) {

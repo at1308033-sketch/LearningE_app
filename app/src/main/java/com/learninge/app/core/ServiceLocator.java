@@ -23,9 +23,11 @@ import com.learninge.app.data.remote.NetworkMonitor;
 import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
+import com.learninge.app.data.repo.DeckRepository;
 import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.data.repo.StudyRepository;
 import com.learninge.app.domain.AuthService;
+import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
 import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.ProgressService;
@@ -126,6 +128,11 @@ public final class ServiceLocator {
     public DeckService deckService() {
         return new DeckService(new DeckDao(database), new WordDao(database), new SettingsDao(database),
                 new FavoriteDao(database), languages, sessionStore, clock());
+    }
+
+    public DeckEditor deckEditor() {
+        return new DeckEditor(new DeckDao(database), new WordDao(database), new DeckRepository(database),
+                deckService(), sessionStore, clock());
     }
 
     public LanguageRegistry languages() {
