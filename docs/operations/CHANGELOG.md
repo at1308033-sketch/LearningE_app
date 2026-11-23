@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-131: 10 khung ngọn lửa, huy hiệu, 5 rương, cúp, confetti dạng VectorDrawable (≤ 30 path, không gradient); `FlameStage` (BR-070).
 - T-002: tăng tương phản viền nút, ô nhập, chip, thẻ (token `outline_strong` ≥ 3:1), chip đang chọn tô đặc màu khu vực, cột biểu đồ và thanh tiến độ rõ hơn.
 - T-122: đồng bộ hai chiều (`SyncManager`, `SyncScheduler`, `SyncRemote`, `SyncMapper`, `SyncOutbox`, `SyncInbox`): đẩy ≤ 500 bản ghi/lô, kéo theo trang, xử lý trùng bộ/từ giữa hai máy.
 - T-090: bộ từ cá nhân (`DeckEditor`, `DeckRules`): SCR-26 Bộ của tôi với "Yêu thích", SCR-27 Tạo/sửa bộ, SCR-19 Chi tiết bộ, SCR-20 Thêm/sửa từ, "Lưu vào bộ" ở SCR-08.
