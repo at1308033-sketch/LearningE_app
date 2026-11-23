@@ -204,6 +204,9 @@
     <string name="result_xp">+%1$d XP</string>
     <string name="result_xp_offline">+%1$d XP (sẽ được tính khi đồng bộ)</string>
     <string name="result_xp_capped">Bạn đã đạt tối đa 500 XP hôm nay</string>
+    <string name="result_boxes">Thẻ đã đổi hộp</string>
+    <string name="result_moves">%1$d lên hộp · %2$d về hộp 1</string>
+    <string name="result_new_stage">Ngọn lửa đã lên giai đoạn %1$d!</string>
     <string name="result_done">Xong</string>
     <string name="result_continue">Học tiếp chủ đề</string>
     <string name="result_description">Tuyệt vời, %1$s. Đã ôn %2$d thẻ, đúng %3$d phần trăm, chuỗi %4$d ngày</string>
@@ -289,6 +292,21 @@
     <string name="sync_record_rejected">Máy chủ từ chối một bản ghi (%1$s)</string>
     <string name="sync_server">Máy chủ (bản debug)</string>
     <string name="sync_safe_note">Dữ liệu chưa đồng bộ luôn được giữ trên máy; đăng xuất không làm mất chúng cho tới khi đẩy xong.</string>
+
+    <!-- Ngọn lửa và rương -->
+    <string name="flame_stage">Ngọn lửa giai đoạn %1$d</string>
+    <string name="flame_days">%1$d/%2$d ngày</string>
+    <string name="flame_note">Còn %1$d ngày nữa để lên giai đoạn %2$d.</string>
+    <string name="flame_note_max">Ngọn lửa đã lớn nhất — hãy giữ lửa!</string>
+    <string name="flame_description">Chuỗi %1$d ngày, giai đoạn %2$d, còn %3$d ngày nữa lên giai đoạn %4$d</string>
+    <string name="flame_max">Chuỗi %1$d ngày, giai đoạn cao nhất</string>
+    <string name="chests_title">Rương ôn tập</string>
+    <string name="chests_note">Thẻ ở hộp càng cao thì càng lâu mới ôn lại.</string>
+    <string name="chests_total">%1$d thẻ</string>
+    <string name="chests_review">Ôn %1$d thẻ đến hạn</string>
+    <string name="chest_box">Hộp %1$d</string>
+    <string name="chest_description">Hộp %1$d, %2$d thẻ, ôn lại sau %3$d ngày</string>
+    <string name="chest_change">Hộp %1$d, %2$d thẻ, thay đổi %3$s</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>

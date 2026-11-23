@@ -84,4 +84,5 @@
     <color name="on_hero_variant">#ECEAF7</color>
     <color name="chart_bar">#8A83EE</color>
     <color name="hero_track">#471E1B3A</color>
+    <color name="disabled_background">#DEDCEA</color>
 </resources>

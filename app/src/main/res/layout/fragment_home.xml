@@ -58,11 +58,11 @@
 
                 <ImageView
                     android:id="@+id/iv_streak"
-                    android:layout_width="@dimen/icon_m"
-                    android:layout_height="@dimen/icon_m"
+                    android:layout_width="20dp"
+                    android:layout_height="26dp"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_flame"
-                    app:tint="@color/on_sun" />
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/px_flame_badge" />
 
                 <TextView
                     android:id="@+id/tv_streak"

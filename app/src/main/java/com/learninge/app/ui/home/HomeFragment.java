@@ -65,6 +65,8 @@ public class HomeFragment extends BaseFragment {
         binding.tvGreeting.setText(hour < NOON ? R.string.home_morning
                 : hour < EVENING ? R.string.home_afternoon : R.string.home_evening);
         binding.tvName.setText(today.displayName());
+        binding.ivStreak.setImageResource(today.streak() > 0 ? R.drawable.px_flame_badge
+                : R.drawable.px_flame_badge_off);
         binding.tvStreak.setText(getResources().getQuantityString(R.plurals.days, today.streak(), today.streak()));
         renderSession(binding, today);
         renderLastDeck(binding, today.lastDeck());

@@ -21,9 +21,11 @@
             android:padding="@dimen/space_5">
 
             <FrameLayout
-                android:id="@+id/fl_celebration"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/view_celebration" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_result_title"
@@ -48,6 +50,15 @@
                 android:layout_marginTop="@dimen/space_2"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_result_stage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_2"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+                    android:textColor="@color/feat_streak"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_result_xp"
@@ -131,11 +142,39 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/fl_chests"
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LearningE.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_4" />
+            android:layout_marginHorizontal="@dimen/space_4"
+            android:layout_marginBottom="@dimen/space_3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_4">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/result_boxes"
+                    android:textAppearance="@style/TextAppearance.LearningE.TitleS" />
+
+                <TextView
+                    android:id="@+id/tv_result_moves"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.LearningE.Caption"
+                    tools:text="13 lên hộp · 3 về hộp 1" />
+
+                <com.learninge.app.ui.common.ChestRowView
+                    android:id="@+id/chests_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_3" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_done"
