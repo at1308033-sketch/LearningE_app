@@ -18,15 +18,17 @@ public class SyncScheduler {
     private final SessionStore session;
     private final NetworkMonitor network;
     private final AppExecutors executors;
+    private final Runnable contentUpdate;
     private long lastForegroundAt;
 
     public SyncScheduler(SyncManager manager, SyncRepository repository, SessionStore session, NetworkMonitor network,
-                         AppExecutors executors) {
+                         AppExecutors executors, Runnable contentUpdate) {
         this.manager = manager;
         this.repository = repository;
         this.session = session;
         this.network = network;
         this.executors = executors;
+        this.contentUpdate = contentUpdate;
         network.addOnAvailable(this::onNetworkAvailable);
     }
 
@@ -45,6 +47,9 @@ public class SyncScheduler {
         if (lastForegroundAt == 0 || now - lastForegroundAt >= FOREGROUND_INTERVAL_MILLIS) {
             lastForegroundAt = now;
             requestIfOnline();
+            if (network.isOnline()) {
+                executors.io().execute(contentUpdate);
+            }
         }
     }
 

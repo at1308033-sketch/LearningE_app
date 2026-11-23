@@ -22,6 +22,7 @@ import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
 import com.learninge.app.data.io.SafFiles;
 import com.learninge.app.data.remote.AuthRemote;
+import com.learninge.app.data.remote.ContentRemote;
 import com.learninge.app.data.remote.GrpcClient;
 import com.learninge.app.data.remote.LeaderboardRemote;
 import com.learninge.app.data.remote.NetworkMonitor;
@@ -29,12 +30,14 @@ import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.SyncRemote;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
+import com.learninge.app.data.repo.ContentRepository;
 import com.learninge.app.data.repo.DeckRepository;
 import com.learninge.app.data.repo.ExamRepository;
 import com.learninge.app.data.repo.ProgressRepository;
 import com.learninge.app.data.repo.StudyRepository;
 import com.learninge.app.data.repo.SyncRepository;
 import com.learninge.app.domain.AuthService;
+import com.learninge.app.domain.ContentService;
 import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
 import com.learninge.app.domain.ExamService;
@@ -85,7 +88,8 @@ public final class ServiceLocator {
         syncRepository = new SyncRepository(database);
         syncManager = new SyncManager(() -> new SyncRemote(grpcClient()), syncRepository, sessionStore, executors,
                 clock());
-        syncScheduler = new SyncScheduler(syncManager, syncRepository, sessionStore, networkMonitor, executors);
+        syncScheduler = new SyncScheduler(syncManager, syncRepository, sessionStore, networkMonitor, executors,
+                () -> contentService().update());
     }
 
     /**
@@ -205,6 +209,11 @@ public final class ServiceLocator {
     public ImportExportService importExportService() {
         return new ImportExportService(new SafFiles(context), new DeckDao(database), new WordDao(database),
                 new DeckRepository(database), deckService(), sessionStore, executors, clock());
+    }
+
+    public ContentService contentService() {
+        return new ContentService(() -> new ContentRemote(grpcClient()), new ContentRepository(database, clock()),
+                executors);
     }
 
     /**

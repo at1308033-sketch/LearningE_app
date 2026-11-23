@@ -71,7 +71,7 @@ public final class SeedParser {
             }
             list.add(new SeedQuestion(question.getInt("number"), optional(question, "passage"),
                     question.getString("question"), options.toString(), correct, optional(question, "explanation"),
-                    optional(question, "deck_code"), optional(question, "term")));
+                    optional(question, "deck_code"), optional(question, "term"), null));
         }
         return new SeedExam(test.getString("code"), test.optInt("version", 1), test.getString("exam_tag"),
                 test.getString("title"), optional(test, "part_label"), test.getInt("duration_sec"),

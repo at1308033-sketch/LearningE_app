@@ -19,7 +19,7 @@ public final class SeedContent {
     }
 
     public record SeedQuestion(int number, String passage, String question, String optionsJson, int correctIndex,
-                               String explanation, String deckCode, String term) {
+                               String explanation, String deckCode, String term, String wordUid) {
     }
 
     public record SeedExam(String code, int version, String examTag, String title, String partLabel, int durationSec,
