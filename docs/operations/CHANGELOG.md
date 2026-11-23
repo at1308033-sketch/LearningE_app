@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-011: dữ liệu bộ T05 Đồ ăn & thức uống, T06 Động vật, T07 Nhà cửa & đồ dùng, T08 Trường học (80 từ).
 - T-004: `SeedLoader` nạp `assets/seed` trong một giao dịch, sửa tại chỗ theo `uid`; `languages.json`; unit test kiểm tra mọi file seed (thêm `org.json` ở phạm vi test).
 - T-003: `DatabaseHelper` phiên bản 1 theo DATABASE-DESIGN phần A (cột đồng bộ, `sync_state`, `xp_events`, `leaderboard_cache`, `content_version`) với test trên SQLite thật.
 - T-005: gói `core` (`ServiceLocator`, `AppExecutors`, `Result`, `ErrorCode`, `SessionStore`), `AuthActivity` + `MainActivity` 5 tab với Navigation + Safe Args, StrictMode bản debug.
