@@ -13,6 +13,11 @@
     <string name="splash_slogan">Học tiếng Anh mỗi ngày —\nhọc được cả khi mất mạng</string>
     <string name="splash_loading">Đang chuẩn bị dữ liệu học…</string>
 
+    <string name="splash_seed_failed">Không chuẩn bị được dữ liệu học.</string>
+
+    <!-- Dùng chung -->
+    <string name="common_retry">Thử lại</string>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

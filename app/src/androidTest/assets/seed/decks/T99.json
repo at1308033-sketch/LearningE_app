@@ -1,0 +1,8 @@
+{
+  "deck": { "code": "T99", "version": 1, "name": "Bộ thử", "description": null, "language": "en", "icon": null, "level": "A1", "exam_tag": null, "sort_order": 99 },
+  "source": "Chỉ dùng cho test",
+  "words": [
+    { "uid": "T99-0001", "term": "apple", "reading": "/ˈæpl/", "pos": "danh từ", "meaning": "quả táo", "example": "I eat an apple.", "example_translation": "Tôi ăn một quả táo." },
+    { "uid": "T99-0002", "term": "bread", "reading": "/bred/", "pos": "danh từ", "meaning": "bánh mì", "example": "Bread is cheap.", "example_translation": "Bánh mì rẻ." }
+  ]
+}
