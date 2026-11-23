@@ -20,6 +20,8 @@
         <item name="android:insetBottom">0dp</item>
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Label</item>
         <item name="shapeAppearance">@style/ShapeAppearance.LearningE.Full</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="strokeWidth">@dimen/stroke_card</item>
     </style>
 
     <style name="Widget.LearningE.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
@@ -28,6 +30,9 @@
         <item name="android:insetBottom">0dp</item>
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Label</item>
         <item name="shapeAppearance">@style/ShapeAppearance.LearningE.Full</item>
+        <item name="backgroundTint">@color/surface</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="strokeWidth">@dimen/stroke_button</item>
     </style>
 
     <style name="Widget.LearningE.Button.Text" parent="Widget.Material3.Button.TextButton">
@@ -118,6 +123,15 @@
         <item name="android:padding">@dimen/space_3</item>
     </style>
 
+    <style name="Widget.LearningE.FilterChip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipStrokeColor">@color/chip_stroke</item>
+        <item name="chipStrokeWidth">@dimen/stroke_card</item>
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipMinHeight">@dimen/badge_s</item>
+        <item name="checkedIconTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">@color/chip_text</item>
+    </style>
+
     <style name="Widget.LearningE.Badge" parent="">
         <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
         <item name="android:background">@drawable/bg_pill</item>
@@ -144,6 +158,8 @@
     <style name="Widget.LearningE.RoundButton.Light">
         <item name="backgroundTint">@color/surface</item>
         <item name="iconTint">?attr/colorPrimary</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="strokeWidth">@dimen/stroke_button</item>
     </style>
 
     <style name="Widget.LearningE.Segment" parent="Widget.Material3.Button.OutlinedButton">
@@ -166,13 +182,16 @@
 
     <style name="Widget.LearningE.Card" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">@color/surface</item>
-        <item name="cardElevation">@dimen/elevation_1</item>
+        <item name="cardElevation">@dimen/elevation_2</item>
+        <item name="strokeColor">@color/outline</item>
+        <item name="strokeWidth">@dimen/stroke_card</item>
         <item name="shapeAppearance">@style/ShapeAppearance.LearningE.Large</item>
     </style>
 
     <style name="Widget.LearningE.Card.Outlined" parent="Widget.Material3.CardView.Outlined">
         <item name="cardBackgroundColor">@color/surface</item>
-        <item name="strokeColor">@color/outline</item>
+        <item name="strokeColor">@color/outline_strong</item>
+        <item name="strokeWidth">@dimen/stroke_card</item>
         <item name="shapeAppearance">@style/ShapeAppearance.LearningE.Large</item>
     </style>
 
@@ -190,7 +209,7 @@
     <style name="Widget.LearningE.Progress" parent="Widget.Material3.LinearProgressIndicator">
         <item name="trackThickness">@dimen/progress_thickness</item>
         <item name="trackCornerRadius">@dimen/space_1</item>
-        <item name="trackColor">@color/surface_variant</item>
+        <item name="trackColor">@color/outline</item>
         <item name="trackStopIndicatorSize">0dp</item>
     </style>
 

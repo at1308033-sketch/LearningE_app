@@ -18,6 +18,10 @@
     <color name="on_surface">#1E1B3A</color>
     <color name="on_surface_variant">#5A5775</color>
     <color name="outline">#DDDBEE</color>
+    <!-- Viền của thành phần bấm/nhập được: >= 3:1 trên nền và trên thẻ (WCAG 1.4.11); outline chỉ để phân cách. -->
+    <color name="outline_strong">#7F7B9F</color>
+    <!-- Viền nhãn không bấm được, nhạt hơn để không nhầm với nút. -->
+    <color name="outline_label">#B3AFCB</color>
     <color name="success">#15803D</color>
     <color name="success_container">#DCFCE7</color>
     <color name="error">#C62828</color>
@@ -78,5 +82,6 @@
     <color name="hero_streak_end">#FFB020</color>
     <color name="on_hero">#FFFFFF</color>
     <color name="on_hero_variant">#ECEAF7</color>
+    <color name="chart_bar">#8A83EE</color>
     <color name="hero_track">#471E1B3A</color>
 </resources>

@@ -39,7 +39,7 @@ public final class BarChartView extends View {
 
     public BarChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        normalColor = ContextCompat.getColor(context, R.color.primary_container);
+        normalColor = ContextCompat.getColor(context, R.color.chart_bar);
         todayColor = ContextCompat.getColor(context, R.color.primary);
         gap = getResources().getDimension(R.dimen.space_2);
         radius = getResources().getDimension(R.dimen.radius_s);

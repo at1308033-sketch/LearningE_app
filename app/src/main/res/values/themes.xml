@@ -23,7 +23,7 @@
         <item name="colorSurfaceContainerHigh">@color/surface</item>
         <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
         <item name="colorSurfaceContainerLow">@color/surface</item>
-        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutline">@color/outline_strong</item>
         <item name="colorOutlineVariant">@color/outline</item>
         <item name="colorError">@color/error</item>
         <item name="colorErrorContainer">@color/error_container</item>
