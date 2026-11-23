@@ -1,16 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Theme Material 3 DayNight gắn token màu. Font Baloo 2 (tiêu đề) + Lexend (nội dung) và TextAppearance riêng: T-002. -->
+<!-- Theme Material 3, chỉ chế độ sáng (REQ-013 Won't). Màu theo khu vực: đặt android:theme="@style/ThemeOverlay.LearningE.<Nhóm>" ở layout gốc. -->
 <resources>
-    <style name="Theme.LearningE" parent="Theme.Material3.DayNight.NoActionBar">
+
+    <style name="Theme.LearningE" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="colorOnSecondary">@color/on_accent</item>
+        <item name="colorSecondaryContainer">@color/primary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_primary_container</item>
+        <item name="colorTertiary">@color/sun</item>
+        <item name="colorOnTertiary">@color/on_sun</item>
         <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/on_surface</item>
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorSurfaceContainer">@color/surface</item>
+        <item name="colorSurfaceContainerHigh">@color/surface</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_variant</item>
+        <item name="colorSurfaceContainerLow">@color/surface</item>
         <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline</item>
         <item name="colorError">@color/error</item>
         <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/error</item>
+
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.LearningE.DisplayNum</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.LearningE.Display</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.LearningE.Headline</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.LearningE.TitleL</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.LearningE.TitleM</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.LearningE.Label</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.LearningE.TitleL</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.LearningE.Caption</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.LearningE.BodyL</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.LearningE.BodyM</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.LearningE.Label</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.LearningE.Caption</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.LearningE.Overline</item>
+
+        <!-- Thẻ trắng giữ đúng màu surface, độ nổi chỉ thể hiện bằng bóng. -->
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="materialButtonStyle">@style/Widget.LearningE.Button</item>
+        <item name="materialCardViewStyle">@style/Widget.LearningE.Card</item>
+        <item name="textInputStyle">@style/Widget.LearningE.TextField</item>
+        <item name="toolbarStyle">@style/Widget.LearningE.Toolbar</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.LearningE.Progress</item>
+    </style>
+
+    <style name="ThemeOverlay.LearningE" parent="" />
+
+    <style name="ThemeOverlay.LearningE.Learn">
+        <item name="colorPrimary">@color/feat_learn</item>
+        <item name="colorOnPrimary">@color/on_feat_learn</item>
+        <item name="colorPrimaryContainer">@color/feat_learn_container</item>
+        <item name="colorOnPrimaryContainer">@color/feat_learn</item>
+        <item name="colorSecondaryContainer">@color/feat_learn_container</item>
+        <item name="colorOnSecondaryContainer">@color/feat_learn</item>
+    </style>
+
+    <style name="ThemeOverlay.LearningE.Quiz">
+        <item name="colorPrimary">@color/feat_quiz</item>
+        <item name="colorOnPrimary">@color/on_feat_quiz</item>
+        <item name="colorPrimaryContainer">@color/feat_quiz_container</item>
+        <item name="colorOnPrimaryContainer">@color/feat_quiz</item>
+        <item name="colorSecondaryContainer">@color/feat_quiz_container</item>
+        <item name="colorOnSecondaryContainer">@color/feat_quiz</item>
+    </style>
+
+    <style name="ThemeOverlay.LearningE.Exam">
+        <item name="colorPrimary">@color/feat_exam</item>
+        <item name="colorOnPrimary">@color/on_feat_exam</item>
+        <item name="colorPrimaryContainer">@color/feat_exam_container</item>
+        <item name="colorOnPrimaryContainer">@color/feat_exam</item>
+        <item name="colorSecondaryContainer">@color/feat_exam_container</item>
+        <item name="colorOnSecondaryContainer">@color/feat_exam</item>
+    </style>
+
+    <style name="ThemeOverlay.LearningE.Deck">
+        <item name="colorPrimary">@color/feat_deck</item>
+        <item name="colorOnPrimary">@color/on_feat_deck</item>
+        <item name="colorPrimaryContainer">@color/feat_deck_container</item>
+        <item name="colorOnPrimaryContainer">@color/feat_deck</item>
+        <item name="colorSecondaryContainer">@color/feat_deck_container</item>
+        <item name="colorOnSecondaryContainer">@color/feat_deck</item>
+    </style>
+
+    <style name="ThemeOverlay.LearningE.Streak">
+        <item name="colorPrimary">@color/feat_streak</item>
+        <item name="colorOnPrimary">@color/on_feat_streak</item>
+        <item name="colorPrimaryContainer">@color/feat_streak_container</item>
+        <item name="colorOnPrimaryContainer">@color/feat_streak</item>
+        <item name="colorSecondaryContainer">@color/feat_streak_container</item>
+        <item name="colorOnSecondaryContainer">@color/feat_streak</item>
     </style>
 </resources>

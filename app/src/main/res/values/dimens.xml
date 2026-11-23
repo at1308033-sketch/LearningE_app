@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Khoảng cách và bo góc (DESIGN_SYSTEM §Spacing). -->
+<!-- Khoảng cách, bo góc, bóng (UI-UX-SPECIFICATION §Spacing). -->
 <resources>
     <dimen name="space_1">4dp</dimen>
     <dimen name="space_2">8dp</dimen>
@@ -10,7 +10,15 @@
     <dimen name="space_7">32dp</dimen>
     <dimen name="space_8">40dp</dimen>
     <dimen name="radius_s">8dp</dimen>
-    <dimen name="radius_m">16dp</dimen>
-    <dimen name="radius_l">28dp</dimen>
+    <dimen name="radius_m">12dp</dimen>
+    <dimen name="radius_l">16dp</dimen>
+    <dimen name="radius_xl">28dp</dimen>
+    <dimen name="elevation_1">1dp</dimen>
+    <dimen name="elevation_2">3dp</dimen>
     <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="button_height_m">48dp</dimen>
+    <dimen name="button_height_l">56dp</dimen>
+    <dimen name="progress_thickness">8dp</dimen>
+    <dimen name="badge_m">48dp</dimen>
+    <dimen name="badge_s">40dp</dimen>
 </resources>

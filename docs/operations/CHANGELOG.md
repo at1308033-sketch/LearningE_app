@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-002: theme Material 3 sáng với token màu v2, màu theo khu vực, kiểu chữ Baloo 2/Lexend/Noto Sans (kèm giấy phép OFL), 26 icon Lucide; bỏ `values-night` (dark mode là Won't).
 - Nâng `minSdk` từ 24 lên 29: ứng dụng chạy trên Android 10 (API 29) trở lên. Bỏ core library desugaring (`java.time` có sẵn), băm mật khẩu dùng `PBKDF2WithHmacSHA256` của hệ thống (thông số không đổi). Vẫn không dùng UPSERT của SQLite vì cần API 30.
 - Hướng dẫn mở, đồng bộ và chạy dự án trong Android Studio 2026.2 (Gradle JDK = JBR đi kèm, `JAVA_HOME` trỏ về `<Android Studio>\jbr` khi dùng dòng lệnh); cập nhật ma trận thiết bị kiểm thử (API 29, 33, 37) và mục xử lý sự cố.
 - T-001: tạo khung project Android (Java 17, minSdk 24, compile/targetSdk 37, AGP 9.5.1, Gradle 9.6.0), version catalog, theme Material 3 sáng/tối với token màu, CI GitHub Actions, CONTRIBUTING.md.

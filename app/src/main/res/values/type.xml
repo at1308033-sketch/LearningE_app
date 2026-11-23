@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kiểu chữ (UI-UX-SPECIFICATION §Typography): Baloo 2 cho tiêu đề và số, Lexend cho nội dung, Noto Sans cho phiên âm. -->
+<resources>
+    <style name="TextAppearance.LearningE.DisplayNum" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/baloo2</item>
+        <item name="android:fontFamily">@font/baloo2</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:textSize">44sp</item>
+        <item name="lineHeight">48sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Display" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/baloo2</item>
+        <item name="android:fontFamily">@font/baloo2</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">40sp</item>
+        <item name="lineHeight">48sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Headline" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/baloo2</item>
+        <item name="android:fontFamily">@font/baloo2</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">28sp</item>
+        <item name="lineHeight">36sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.TitleL" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/baloo2</item>
+        <item name="android:fontFamily">@font/baloo2</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">22sp</item>
+        <item name="lineHeight">28sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.TitleM" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">18sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.BodyL" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.BodyM" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Label" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textSize">14sp</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Caption" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textSize">12sp</item>
+        <item name="lineHeight">16sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Overline" parent="TextAppearance.Material3.LabelSmall">
+        <item name="fontFamily">@font/lexend</item>
+        <item name="android:fontFamily">@font/lexend</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textSize">11sp</item>
+        <item name="lineHeight">16sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:letterSpacing">0.07</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.LearningE.Ipa" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/noto_sans_regular</item>
+        <item name="android:fontFamily">@font/noto_sans_regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+</resources>
