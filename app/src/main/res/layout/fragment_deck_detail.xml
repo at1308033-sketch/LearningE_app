@@ -68,6 +68,17 @@
                     android:text="@string/tab_learn"
                     app:icon="@drawable/ic_book_open"
                     app:iconGravity="textStart" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_deck_export"
+                    style="@style/Widget.LearningE.Button.White"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_3"
+                    android:layout_weight="1"
+                    android:text="@string/deck_export"
+                    app:icon="@drawable/ic_download"
+                    app:iconGravity="textStart" />
             </LinearLayout>
         </LinearLayout>
 

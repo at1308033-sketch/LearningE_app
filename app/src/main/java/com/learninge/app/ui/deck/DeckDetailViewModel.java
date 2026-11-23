@@ -1,6 +1,7 @@
 package com.learninge.app.ui.deck;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -22,6 +23,7 @@ public class DeckDetailViewModel extends BaseViewModel {
     }
 
     private final MutableLiveData<Result<State>> state = new MutableLiveData<>();
+    private final MutableLiveData<Result<Integer>> exported = new MutableLiveData<>();
     private final MutableLiveData<Result<Void>> deleted = new MutableLiveData<>();
 
     public DeckDetailViewModel(@NonNull Application application) {
@@ -34,6 +36,15 @@ public class DeckDetailViewModel extends BaseViewModel {
 
     LiveData<Result<Void>> deleted() {
         return deleted;
+    }
+
+    LiveData<Result<Integer>> exported() {
+        return exported;
+    }
+
+    void export(long deckId, Uri target) {
+        services.executors().io().execute(() ->
+                exported.postValue(services.importExportService().export(deckId, target)));
     }
 
     void load(long deckId) {

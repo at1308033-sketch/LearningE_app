@@ -46,6 +46,16 @@ public final class ErrorMessages {
                 return R.string.error_account_deleted;
             case UNAUTHENTICATED:
                 return R.string.error_session_expired;
+            case FILE_TOO_LARGE:
+                return R.string.error_file_too_large;
+            case FILE_FORMAT:
+                return R.string.error_file_format;
+            case NO_VALID_ROWS:
+                return R.string.error_no_valid_rows;
+            case IO:
+                return R.string.error_io;
+            case READ_ONLY:
+                return R.string.deck_read_only;
             case NOT_FOUND:
                 return R.string.error_not_found;
             default:

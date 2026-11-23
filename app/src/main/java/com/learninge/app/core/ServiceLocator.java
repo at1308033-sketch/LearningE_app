@@ -20,6 +20,7 @@ import com.learninge.app.data.dao.WordDao;
 import com.learninge.app.data.dao.XpDao;
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
+import com.learninge.app.data.io.SafFiles;
 import com.learninge.app.data.remote.AuthRemote;
 import com.learninge.app.data.remote.GrpcClient;
 import com.learninge.app.data.remote.LeaderboardRemote;
@@ -37,6 +38,7 @@ import com.learninge.app.domain.AuthService;
 import com.learninge.app.domain.DeckEditor;
 import com.learninge.app.domain.DeckService;
 import com.learninge.app.domain.ExamService;
+import com.learninge.app.domain.ImportExportService;
 import com.learninge.app.domain.LanguageRegistry;
 import com.learninge.app.domain.LeaderboardService;
 import com.learninge.app.domain.ProgressService;
@@ -198,6 +200,11 @@ public final class ServiceLocator {
     public ExamService examService() {
         return new ExamService(new ExamDao(database), new ExamRepository(database), progressService(), xpService(),
                 sessionStore, clock());
+    }
+
+    public ImportExportService importExportService() {
+        return new ImportExportService(new SafFiles(context), new DeckDao(database), new WordDao(database),
+                new DeckRepository(database), deckService(), sessionStore, executors, clock());
     }
 
     /**

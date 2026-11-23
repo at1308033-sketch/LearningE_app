@@ -1,9 +1,12 @@
 package com.learninge.app.ui.deck;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,6 +35,8 @@ import java.util.Locale;
  */
 public class DeckDetailFragment extends BaseFragment {
     private long deckId;
+    private final ActivityResultLauncher<String> saver = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("text/csv"), this::export);
 
     public DeckDetailFragment() {
         super(R.layout.fragment_deck_detail);
@@ -66,7 +71,17 @@ public class DeckDetailFragment extends BaseFragment {
                 Snackbar.make(view, ErrorMessages.of(requireContext(), result.error), Snackbar.LENGTH_LONG).show();
             }
         });
+        viewModel.exported().observe(getViewLifecycleOwner(), result -> Snackbar.make(view, result.isOk()
+                ? getResources().getQuantityString(R.plurals.deck_exported, result.value, result.value)
+                : getString(R.string.error_export), Snackbar.LENGTH_LONG).show());
         viewModel.load(deckId);
+    }
+
+    private void export(Uri target) {
+        // Người dùng hủy chọn nơi lưu thì target là null.
+        if (target != null) {
+            new ViewModelProvider(this).get(DeckDetailViewModel.class).export(deckId, target);
+        }
     }
 
     private boolean onMenu(MenuItem item, DeckDetailViewModel viewModel, NavController nav) {
@@ -103,6 +118,9 @@ public class DeckDetailFragment extends BaseFragment {
                 summary.due()));
         binding.tvDeckReadOnly.setVisibility(isEditable ? View.GONE : View.VISIBLE);
         binding.fabAddWord.setVisibility(isEditable ? View.VISIBLE : View.GONE);
+        binding.btnDeckExport.setEnabled(summary.total() > 0);
+        binding.btnDeckExport.setOnClickListener(v ->
+                saver.launch(services().importExportService().exportName(deck.name())));
         binding.btnDeckLearn.setEnabled(summary.newWords() > 0);
         binding.esDeck.setVisibility(summary.total() == 0 ? View.VISIBLE : View.GONE);
         binding.esDeck.setTitle(isFavorites ? R.string.favorites_empty : R.string.word_list_empty);

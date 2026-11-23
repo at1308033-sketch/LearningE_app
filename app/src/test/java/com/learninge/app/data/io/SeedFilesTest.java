@@ -104,7 +104,7 @@ public class SeedFilesTest {
 
     private static String read(File file) throws Exception {
         String text = new String(Files.readAllBytes(file.toPath()), java.nio.charset.StandardCharsets.UTF_8);
-        assertFalse(file + " có BOM", text.startsWith("﻿"));
+        assertFalse(file + " có BOM", text.startsWith("\uFEFF"));
         return text;
     }
 }

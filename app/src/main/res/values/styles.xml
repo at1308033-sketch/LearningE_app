@@ -48,9 +48,9 @@
     </style>
 
     <style name="Widget.LearningE.Button.White">
-        <item name="backgroundTint">@color/surface</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="iconTint">?attr/colorPrimary</item>
+        <item name="backgroundTint">@color/button_white</item>
+        <item name="android:textColor">@color/button_outline_text</item>
+        <item name="iconTint">@color/button_outline_text</item>
     </style>
 
     <style name="Widget.LearningE.Button.Danger" parent="Widget.LearningE.Button.Outlined">

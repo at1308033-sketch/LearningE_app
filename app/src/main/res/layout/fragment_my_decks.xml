@@ -16,6 +16,17 @@
         android:paddingBottom="@dimen/space_2">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_import_deck"
+            style="@style/Widget.LearningE.Button.Tonal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/space_3"
+            android:layout_weight="1"
+            android:text="@string/deck_import"
+            app:icon="@drawable/ic_upload"
+            app:iconGravity="textStart" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_create_deck"
             style="@style/Widget.LearningE.Button.Outlined"
             android:layout_width="0dp"

@@ -2,6 +2,7 @@ package com.learninge.app.data.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.DbContract.Sync;
@@ -95,6 +96,19 @@ public final class WordDao {
         values.put(Words.SORT_ORDER, nextSortOrder(deckId));
         values.put(Words.CREATED_AT, now);
         return database.getWritableDatabase().insertOrThrow(Words.TABLE, null, values);
+    }
+
+    /**
+     * Cho nhập hàng loạt: trùng từ trong bộ thì bỏ qua (dựa trên index duy nhất), trả true nếu đã thêm.
+     */
+    public boolean insertIfAbsent(long deckId, WordInput input, String languageCode, long now) {
+        ContentValues values = content(input, languageCode, now);
+        values.put(Sync.UUID, UUID.randomUUID().toString());
+        values.put(Words.DECK_ID, deckId);
+        values.put(Words.SORT_ORDER, nextSortOrder(deckId));
+        values.put(Words.CREATED_AT, now);
+        return database.getWritableDatabase().insertWithOnConflict(Words.TABLE, null, values,
+                SQLiteDatabase.CONFLICT_IGNORE) != -1;
     }
 
     public void update(long wordId, WordInput input, String languageCode, long now) {

@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-093: nhập/xuất CSV qua SAF (`ImportExportService`, SCR-28 Xem trước import, Xuất CSV ở SCR-19), tối đa 1 MB/2000 dòng, một giao dịch.
 - T-092: `CsvCodec` theo RFC 4180 (BOM, nháy kép, xuống dòng trong ô) với unit test.
 - T-097: bộ luyện thi X02 IELTS (30 từ).
 - T-012: dữ liệu bộ T09 Quần áo & mua sắm, T10 Thời tiết & các mùa, T11 Thành phố & phương tiện, T12 Sở thích & thể thao (80 từ).

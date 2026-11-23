@@ -256,6 +256,20 @@
         android:name="com.learninge.app.ui.exam.ExamResourcesFragment"
         tools:layout="@layout/fragment_exam_resources" />
 
+    <action
+        android:id="@+id/action_global_import"
+        app:destination="@id/import_fragment" />
+
+    <fragment
+        android:id="@+id/import_fragment"
+        android:name="com.learninge.app.ui.deck.ImportFragment"
+        tools:layout="@layout/fragment_import">
+
+        <argument
+            android:name="uri"
+            app:argType="string" />
+    </fragment>
+
     <navigation
         android:id="@+id/home_graph"
         app:startDestination="@id/home_fragment">

@@ -36,6 +36,11 @@
     <string name="error_upgrade_required">Vui lòng cập nhật ứng dụng</string>
     <string name="error_account_deleted">Tài khoản đã bị xóa</string>
     <string name="error_session_expired">Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại</string>
+    <string name="error_file_too_large">File quá lớn (tối đa 1 MB, 2000 dòng)</string>
+    <string name="error_file_format">Sai định dạng tệp</string>
+    <string name="error_no_valid_rows">Không có dòng hợp lệ để nhập</string>
+    <string name="error_io">Không đọc được file, vui lòng chọn lại</string>
+    <string name="error_export">Không thể xuất file</string>
     <string name="error_not_found">Không tìm thấy dữ liệu</string>
 
     <!-- SCR-02 Đăng nhập -->
@@ -378,6 +383,32 @@
     <string name="url_toeic" translatable="false">https://www.ets.org/toeic.html</string>
     <string name="url_ielts" translatable="false">https://ielts.org/</string>
     <string name="url_aptis" translatable="false">https://www.britishcouncil.org/exam/aptis</string>
+
+    <!-- SCR-28, SCR-29 Nhập/xuất -->
+    <string name="deck_import">Nhập CSV</string>
+    <string name="deck_export">Xuất CSV</string>
+    <plurals name="deck_exported">
+        <item quantity="other">Đã xuất %d từ</item>
+    </plurals>
+    <string name="import_title">Xem trước import</string>
+    <string name="import_subtitle">%1$s · %2$d dòng</string>
+    <string name="import_valid">hợp lệ</string>
+    <string name="import_duplicate">trùng</string>
+    <string name="import_errors">lỗi</string>
+    <string name="import_error_title">Dòng lỗi</string>
+    <string name="import_error_line">Dòng %1$d: %2$s</string>
+    <string name="import_error_more">… và %1$d dòng khác</string>
+    <string name="import_error_columns">không đủ 5 cột</string>
+    <string name="import_error_term">thiếu từ hoặc từ dài quá 50 ký tự</string>
+    <string name="import_error_meaning">thiếu nghĩa hoặc nghĩa dài quá 200 ký tự</string>
+    <string name="import_sample">5 dòng đầu</string>
+    <string name="import_sample_line">%1$s — %2$s</string>
+    <string name="import_target">Nhập vào bộ</string>
+    <string name="import_new_deck">Tạo bộ mới: %1$s</string>
+    <string name="import_submit">Nhập %1$d từ</string>
+    <string name="import_nothing">Không có dòng hợp lệ để nhập</string>
+    <string name="import_done">Đã nhập %1$d từ, bỏ qua %2$d</string>
+    <string name="import_format">Sai định dạng: %1$s</string>
 
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
