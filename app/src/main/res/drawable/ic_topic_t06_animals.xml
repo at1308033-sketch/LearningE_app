@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t06-animals.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M0 8h2v1h-2zM0 1h3v1h-3zM1 7h1v1h-1zM1 9h1v2h-1zM2 6h1v1h-1zM2 11h1v2h-1zM3 2h1v1h-1zM3 5h1v1h-1zM3 13h1v1h-1zM4 4h1v1h-1zM4 8h1v2h-1zM4 14h1v1h-1zM4 3h8v1h-8zM5 15h6v1h-6zM7 11h2v1h-2zM7 13h2v1h-2zM11 4h1v1h-1zM11 8h1v2h-1zM11 14h1v1h-1zM12 2h1v1h-1zM12 5h1v1h-1zM12 13h1v1h-1zM13 6h1v1h-1zM13 11h1v2h-1zM13 1h3v1h-3zM14 7h1v1h-1zM14 9h1v2h-1zM14 8h2v1h-2z" />
+    <path
+        android:fillColor="#8B5E3C"
+        android:pathData="M0 7h1v1h-1zM0 6h2v1h-2zM0 2h3v1h-3zM0 5h3v1h-3zM0 3h4v2h-4zM12 3h4v2h-4zM13 2h3v1h-3zM13 5h3v1h-3zM14 6h2v1h-2zM15 7h1v1h-1z" />
+    <path
+        android:fillColor="#FF9B7D"
+        android:pathData="M3 10h1v1h-1zM12 10h1v1h-1z" />
+    <path
+        android:fillColor="#FFB020"
+        android:pathData="M2 10h1v1h-1zM2 8h2v2h-2zM2 7h12v1h-12zM3 6h2v1h-2zM3 11h2v2h-2zM4 10h2v1h-2zM4 13h2v1h-2zM4 5h8v1h-8zM5 4h6v1h-6zM5 8h6v2h-6zM5 14h6v1h-6zM6 6h7v1h-7zM10 10h2v1h-2zM10 13h2v1h-2zM11 11h2v2h-2zM12 8h2v2h-2zM13 10h1v1h-1z" />
+    <path
+        android:fillColor="#FFF1D6"
+        android:pathData="M5 6h1v1h-1zM5 11h2v1h-2zM5 12h6v1h-6zM6 13h1v1h-1zM6 10h4v1h-4zM9 13h1v1h-1zM9 11h2v1h-2z" />
+</vector>

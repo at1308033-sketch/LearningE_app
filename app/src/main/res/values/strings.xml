@@ -83,6 +83,26 @@
         <item>Tên người bạn thân thời nhỏ của bạn?</item>
     </string-array>
 
+    <!-- Cấp độ -->
+    <string name="level_a1">A1</string>
+    <string name="level_a2">A2</string>
+    <string name="level_b1">B1</string>
+
+    <!-- SCR-06 Học -->
+    <string name="learn_level_all">Tất cả</string>
+    <string name="learn_empty_title">Chưa có chủ đề</string>
+    <string name="learn_empty_message">Không có chủ đề nào ở cấp độ này.</string>
+    <string name="topic_progress">Đã thuộc %1$d/%2$d</string>
+    <string name="topic_description">%1$s, %2$s, đã thuộc %3$d trên %4$d từ</string>
+
+    <!-- SCR-07 Danh sách từ -->
+    <string name="word_list_counts">%1$d từ · %2$d đang học</string>
+    <string name="word_list_mastered">Đã thuộc %1$d/%2$d từ</string>
+    <string name="word_list_empty">Bộ này chưa có từ nào</string>
+    <string name="word_status_new">Mới</string>
+    <string name="word_status_learning">Đang học</string>
+    <string name="word_status_mastered">Đã thuộc</string>
+
     <!-- Màn hình chưa làm -->
     <string name="placeholder_title">Sắp có</string>
     <string name="placeholder_message">Màn hình này đang được xây dựng.</string>

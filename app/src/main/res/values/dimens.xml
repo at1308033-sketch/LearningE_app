@@ -27,4 +27,9 @@
     <dimen name="hero_art_height">100dp</dimen>
     <dimen name="header_art_width">78dp</dimen>
     <dimen name="header_art_height">65dp</dimen>
+    <dimen name="radius_tile">18dp</dimen>
+    <dimen name="topic_tile">56dp</dimen>
+    <dimen name="topic_blob">72dp</dimen>
+    <dimen name="topic_blob_offset">-16dp</dimen>
+    <dimen name="badge_padding">3dp</dimen>
 </resources>

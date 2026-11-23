@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t09-clothes-shopping.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M0 3h1v3h-1zM1 2h1v1h-1zM1 6h3v1h-3zM2 1h1v1h-1zM3 5h1v1h-1zM3 7h1v3h-1zM3 0h3v1h-3zM4 10h3v1h-3zM6 1h1v1h-1zM6 7h1v3h-1zM6 11h1v3h-1zM7 6h2v1h-2zM7 0h3v1h-3zM7 14h8v1h-8zM8 5h1v1h-1zM9 4h4v1h-4zM10 1h1v1h-1zM10 6h2v1h-2zM11 2h1v1h-1zM12 3h1v1h-1zM13 5h1v1h-1zM13 6h2v1h-2zM15 7h1v7h-1z" />
+    <path
+        android:fillColor="#6B21A8"
+        android:pathData="M4 9h2v1h-2z" />
+    <path
+        android:fillColor="#9333EA"
+        android:pathData="M1 4h1v1h-1zM1 5h2v1h-2zM1 3h11v1h-11zM2 2h9v1h-9zM3 1h3v1h-3zM3 4h6v1h-6zM4 7h2v2h-2zM4 6h3v1h-3zM4 5h4v1h-4zM7 1h3v1h-3z" />
+    <path
+        android:fillColor="#DB2777"
+        android:pathData="M7 9h2v2h-2zM7 11h3v1h-3zM7 12h4v1h-4zM7 7h8v2h-8zM7 13h8v1h-8zM9 6h1v1h-1zM9 5h4v1h-4zM11 9h1v1h-1zM12 6h1v1h-1zM12 12h3v1h-3zM13 11h2v1h-2zM14 9h1v2h-1z" />
+    <path
+        android:fillColor="#FFF1D6"
+        android:pathData="M2 4h1v1h-1z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M9 9h2v1h-2zM9 10h5v1h-5zM10 11h3v1h-3zM11 12h1v1h-1zM12 9h2v1h-2z" />
+</vector>

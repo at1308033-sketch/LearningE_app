@@ -5,6 +5,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.annotation.VisibleForTesting;
+
+import com.learninge.app.data.dao.DeckDao;
+import com.learninge.app.data.dao.SettingsDao;
+import com.learninge.app.data.dao.WordDao;
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
 import com.learninge.app.data.remote.AuthRemote;
@@ -14,6 +19,7 @@ import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.TokenStore;
 import com.learninge.app.data.repo.AccountRepository;
 import com.learninge.app.domain.AuthService;
+import com.learninge.app.domain.DeckService;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -24,6 +30,7 @@ import java.time.ZoneId;
 public final class ServiceLocator {
     private final Context context;
     private final AppExecutors executors = new AppExecutors();
+    private final Clock fixedClock;
     private final SessionStore sessionStore;
     private final DatabaseHelper database;
     private final TokenStore tokenStore;
@@ -32,12 +39,25 @@ public final class ServiceLocator {
     private GrpcClient grpcClient;
 
     public ServiceLocator(Context context) {
+        this(context, new DatabaseHelper(context), null);
+    }
+
+    private ServiceLocator(Context context, DatabaseHelper database, Clock fixedClock) {
         this.context = context.getApplicationContext();
+        this.fixedClock = fixedClock;
         sessionStore = new SessionStore(context);
         // Chỉ mở tệp CSDL ở lần truy vấn đầu tiên, trên luồng nền.
-        database = new DatabaseHelper(context);
+        this.database = database;
         tokenStore = new TokenStore(context);
         networkMonitor = new NetworkMonitor(context);
+    }
+
+    /**
+     * Dùng cho test: CSDL trong bộ nhớ và giờ cố định.
+     */
+    @VisibleForTesting
+    public static ServiceLocator inMemory(Context context, Clock clock) {
+        return new ServiceLocator(context, new DatabaseHelper(context, null), clock);
     }
 
     public AppExecutors executors() {
@@ -48,7 +68,7 @@ public final class ServiceLocator {
      * Giờ của máy; đổi múi giờ khi app đang chạy thì ngày học theo múi giờ mới (BR-042).
      */
     public Clock clock() {
-        return Clock.system(ZoneId.systemDefault());
+        return fixedClock != null ? fixedClock : Clock.system(ZoneId.systemDefault());
     }
 
     public SessionStore sessionStore() {
@@ -88,6 +108,11 @@ public final class ServiceLocator {
     public AuthService authService() {
         return new AuthService(() -> new AuthRemote(grpcClient(), Build.MODEL), new AccountRepository(database),
                 tokenStore, sessionStore, executors, clock());
+    }
+
+    public DeckService deckService() {
+        return new DeckService(new DeckDao(database), new WordDao(database), new SettingsDao(database), sessionStore,
+                clock());
     }
 
     /**

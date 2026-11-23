@@ -66,6 +66,21 @@
         <item name="subtitleTextAppearance">@style/TextAppearance.LearningE.Caption</item>
     </style>
 
+    <style name="Widget.LearningE.Toolbar.Hero">
+        <item name="titleTextColor">@color/on_hero</item>
+        <item name="subtitleTextColor">@color/on_hero_variant</item>
+        <item name="navigationIconTint">@color/on_hero</item>
+    </style>
+
+    <style name="Widget.LearningE.Badge" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.LearningE.Caption</item>
+        <item name="android:background">@drawable/bg_pill</item>
+        <item name="android:paddingStart">@dimen/space_2</item>
+        <item name="android:paddingEnd">@dimen/space_2</item>
+        <item name="android:paddingTop">@dimen/badge_padding</item>
+        <item name="android:paddingBottom">@dimen/badge_padding</item>
+    </style>
+
     <style name="Widget.LearningE.Card" parent="Widget.Material3.CardView.Elevated">
         <item name="cardBackgroundColor">@color/surface</item>
         <item name="cardElevation">@dimen/elevation_1</item>
@@ -93,6 +108,12 @@
         <item name="trackThickness">@dimen/progress_thickness</item>
         <item name="trackCornerRadius">@dimen/space_1</item>
         <item name="trackColor">@color/surface_variant</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+    </style>
+
+    <style name="Widget.LearningE.Progress.Hero">
+        <item name="indicatorColor">@color/on_hero</item>
+        <item name="trackColor">@color/hero_track</item>
     </style>
 
     <style name="ShapeAppearance.LearningE.Medium" parent="ShapeAppearance.Material3.MediumComponent">

@@ -47,6 +47,22 @@
     <color name="on_feat_streak">#FFFFFF</color>
     <color name="feat_streak_container">#FFF1D6</color>
     <color name="feat_streak_decor">#FFB020</color>
+    <!-- Nền ô icon chủ đề -->
+    <color name="topic_tile_t01">#FFE8E0</color>
+    <color name="topic_tile_t02">#E0ECFF</color>
+    <color name="topic_tile_t03">#FCE7F3</color>
+    <color name="topic_tile_t04">#DDF7F3</color>
+    <color name="topic_tile_t05">#FFF1D6</color>
+    <color name="topic_tile_t06">#E6F4DA</color>
+    <color name="topic_tile_t07">#ECEBFF</color>
+    <color name="topic_tile_t08">#FFF7CC</color>
+    <color name="topic_tile_t09">#F3E8FF</color>
+    <color name="topic_tile_t10">#DCF1FB</color>
+    <color name="topic_tile_t11">#EDEAF4</color>
+    <color name="topic_tile_t12">#D9F5E6</color>
+    <color name="topic_tile_t13">#F3ECE4</color>
+    <color name="topic_tile_t14">#D8F3F6</color>
+    <color name="topic_tile_t15">#FDE8E8</color>
     <!-- Gradient hero (bg_hero_*.xml) -->
     <color name="hero_brand_start">#4F3FD6</color>
     <color name="hero_brand_end">#6C4BF0</color>
@@ -62,4 +78,5 @@
     <color name="hero_streak_end">#FFB020</color>
     <color name="on_hero">#FFFFFF</color>
     <color name="on_hero_variant">#ECEAF7</color>
+    <color name="hero_track">#471E1B3A</color>
 </resources>

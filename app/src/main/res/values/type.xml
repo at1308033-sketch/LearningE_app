@@ -51,6 +51,10 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+    <style name="TextAppearance.LearningE.TitleS" parent="TextAppearance.LearningE.TitleM">
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="TextAppearance.LearningE.BodyL" parent="TextAppearance.Material3.BodyLarge">
         <item name="fontFamily">@font/lexend</item>
         <item name="android:fontFamily">@font/lexend</item>

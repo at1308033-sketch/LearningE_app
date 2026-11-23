@@ -37,6 +37,10 @@ public final class EmptyStateView extends LinearLayout {
         setText(binding.tvEmptyTitle, getContext().getText(title));
     }
 
+    public void setTitle(CharSequence title) {
+        setText(binding.tvEmptyTitle, title);
+    }
+
     public void setMessage(@StringRes int message) {
         setText(binding.tvEmptyMessage, getContext().getText(message));
     }

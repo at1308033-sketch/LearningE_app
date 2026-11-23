@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sinh từ docs/design/topics/t04-body.svg; sửa SVG rồi sinh lại, không sửa tay. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path
+        android:fillColor="#0F766E"
+        android:pathData="M3 9h1v2h-1z" />
+    <path
+        android:fillColor="#14B8A6"
+        android:pathData="M2 9h1v2h-1zM2 8h10v1h-10zM3 7h9v1h-9zM4 9h7v1h-7zM5 10h5v1h-5zM11 5h2v2h-2zM12 4h2v1h-2z" />
+    <path
+        android:fillColor="#1E1B3A"
+        android:pathData="M1 8h1v4h-1zM2 2h1v4h-1zM2 7h1v1h-1zM2 12h3v1h-3zM3 1h1v1h-1zM3 6h1v1h-1zM3 14h9v1h-9zM4 4h1v1h-1zM4 10h1v2h-1zM4 13h1v1h-1zM4 15h3v1h-3zM4 0h5v1h-5zM7 12h1v2h-1zM8 4h1v1h-1zM8 15h3v1h-3zM9 1h1v1h-1zM9 6h2v1h-2zM10 5h1v1h-1zM10 10h1v4h-1zM10 2h2v3h-2zM11 9h1v1h-1zM12 7h1v2h-1zM12 1h2v1h-2zM13 5h1v2h-1zM14 2h1v3h-1z" />
+    <path
+        android:fillColor="#2A2180"
+        android:pathData="M5 12h2v2h-2zM5 11h5v1h-5zM8 12h2v2h-2z" />
+    <path
+        android:fillColor="#2B2340"
+        android:pathData="M3 3h1v1h-1zM3 2h7v1h-7zM4 1h5v1h-5zM9 3h1v1h-1z" />
+    <path
+        android:fillColor="#E3A97F"
+        android:pathData="M2 11h2v1h-2zM3 4h1v2h-1zM4 3h5v1h-5zM4 6h5v1h-5zM5 4h3v2h-3zM9 4h1v2h-1zM12 2h2v2h-2z" />
+    <path
+        android:fillColor="#FF9B7D"
+        android:pathData="M4 5h1v1h-1zM8 5h1v1h-1z" />
+</vector>
