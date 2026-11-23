@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-092: `CsvCodec` theo RFC 4180 (BOM, nháy kép, xuống dòng trong ô) với unit test.
 - T-097: bộ luyện thi X02 IELTS (30 từ).
 - T-012: dữ liệu bộ T09 Quần áo & mua sắm, T10 Thời tiết & các mùa, T11 Thành phố & phương tiện, T12 Sở thích & thể thao (80 từ).
 - T-095: SCR-30 Luyện thi, SCR-31 Làm bài (đồng hồ, bảng câu hỏi, đánh dấu), SCR-32 Kết quả, lịch sử thi, SCR-33 Tài nguyên chính thức; nút vô hiệu rõ chữ hơn; đề mẫu chỉ ở bản debug.
