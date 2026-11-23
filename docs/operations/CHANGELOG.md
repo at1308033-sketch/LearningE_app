@@ -3,6 +3,7 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-020: đăng ký/đăng nhập/đăng xuất qua máy chủ (`AuthService`, `AuthRemote`, `AccountRepository`, `UserDao`, `SettingsDao`), kiểm định dạng ở máy (`AccountRules`), bộ "Sổ tay của tôi" với mã tất định (BR-046).
 - T-120: tầng gRPC `data.remote` (`GrpcClient` một kênh dùng chung, deadline, `RetryPolicy` BR-077, `GrpcErrorMapper`, `TokenStore` mã hóa Keystore, `NetworkMonitor`, chặn plaintext), chép proto kèm `proto.lock`.
 - T-098: bộ luyện thi X03 Aptis (30 từ).
 - T-011: dữ liệu bộ T05 Đồ ăn & thức uống, T06 Động vật, T07 Nhà cửa & đồ dùng, T08 Trường học (80 từ).

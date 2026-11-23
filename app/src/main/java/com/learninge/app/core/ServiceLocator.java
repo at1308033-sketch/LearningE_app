@@ -3,13 +3,17 @@ package com.learninge.app.core;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import com.learninge.app.data.db.DatabaseHelper;
 import com.learninge.app.data.db.SeedLoader;
+import com.learninge.app.data.remote.AuthRemote;
 import com.learninge.app.data.remote.GrpcClient;
 import com.learninge.app.data.remote.NetworkMonitor;
 import com.learninge.app.data.remote.ServerConfig;
 import com.learninge.app.data.remote.TokenStore;
+import com.learninge.app.data.repo.AccountRepository;
+import com.learninge.app.domain.AuthService;
 
 import java.time.Clock;
 import java.time.ZoneId;
@@ -70,6 +74,11 @@ public final class ServiceLocator {
             grpcClient = new GrpcClient(ServerConfig.load(context), tokenStore, networkMonitor, executors.io());
         }
         return grpcClient;
+    }
+
+    public AuthService authService() {
+        return new AuthService(() -> new AuthRemote(grpcClient(), Build.MODEL), new AccountRepository(database),
+                tokenStore, sessionStore, executors, clock());
     }
 
     /**
