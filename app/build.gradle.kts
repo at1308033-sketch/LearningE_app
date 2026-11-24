@@ -145,6 +145,11 @@ val checkReleaseServer by tasks.registering {
     }
 }
 
+// SeedFilesTest đọc thẳng các tệp này nên chúng phải là đầu vào, không thì Gradle bỏ qua test khi chỉ seed đổi.
+tasks.withType<Test>().configureEach {
+    inputs.files("src/main/assets/seed", "src/debug/assets/seed", "seed.lock")
+}
+
 tasks.configureEach {
     if (name.startsWith("generate") && name.endsWith("Proto")) dependsOn(verifyProtoLock)
     if (name == "preReleaseBuild") dependsOn(checkReleaseServer)

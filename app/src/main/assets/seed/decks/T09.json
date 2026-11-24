@@ -13,185 +13,25 @@
   },
   "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
   "words": [
-    {
-      "uid": "T09-0001",
-      "term": "shirt",
-      "reading": "/ʃɜːrt/",
-      "pos": "danh từ",
-      "meaning": "áo sơ mi",
-      "example": "He wears a white shirt to work.",
-      "example_translation": "Anh ấy mặc áo sơ mi trắng đi làm."
-    },
-    {
-      "uid": "T09-0002",
-      "term": "dress",
-      "reading": "/dres/",
-      "pos": "danh từ",
-      "meaning": "váy liền",
-      "example": "She bought a new dress for the party.",
-      "example_translation": "Cô ấy mua một chiếc váy mới để dự tiệc."
-    },
-    {
-      "uid": "T09-0003",
-      "term": "trousers",
-      "reading": "/ˈtraʊzərz/",
-      "pos": "danh từ",
-      "meaning": "quần dài",
-      "example": "These trousers are too long for me.",
-      "example_translation": "Cái quần này dài quá so với tôi."
-    },
-    {
-      "uid": "T09-0004",
-      "term": "jacket",
-      "reading": "/ˈdʒækɪt/",
-      "pos": "danh từ",
-      "meaning": "áo khoác",
-      "example": "Take a jacket, it is cold outside.",
-      "example_translation": "Mang áo khoác đi, ngoài trời lạnh."
-    },
-    {
-      "uid": "T09-0005",
-      "term": "shoes",
-      "reading": "/ʃuːz/",
-      "pos": "danh từ",
-      "meaning": "đôi giày",
-      "example": "My shoes are wet because of the rain.",
-      "example_translation": "Đôi giày của tôi ướt vì mưa."
-    },
-    {
-      "uid": "T09-0006",
-      "term": "socks",
-      "reading": "/sɑːks/",
-      "pos": "danh từ",
-      "meaning": "đôi tất",
-      "example": "I need a pair of warm socks.",
-      "example_translation": "Tôi cần một đôi tất ấm."
-    },
-    {
-      "uid": "T09-0007",
-      "term": "hat",
-      "reading": "/hæt/",
-      "pos": "danh từ",
-      "meaning": "cái mũ",
-      "example": "Wear a hat when the sun is strong.",
-      "example_translation": "Hãy đội mũ khi nắng gắt."
-    },
-    {
-      "uid": "T09-0008",
-      "term": "size",
-      "reading": "/saɪz/",
-      "pos": "danh từ",
-      "meaning": "kích cỡ",
-      "example": "What size do you wear?",
-      "example_translation": "Bạn mặc cỡ nào?"
-    },
-    {
-      "uid": "T09-0009",
-      "term": "price",
-      "reading": "/praɪs/",
-      "pos": "danh từ",
-      "meaning": "giá tiền",
-      "example": "The price is on the label.",
-      "example_translation": "Giá ghi trên nhãn."
-    },
-    {
-      "uid": "T09-0010",
-      "term": "discount",
-      "reading": "/ˈdɪskaʊnt/",
-      "pos": "danh từ",
-      "meaning": "giảm giá",
-      "example": "Students get a ten percent discount.",
-      "example_translation": "Sinh viên được giảm giá mười phần trăm."
-    },
-    {
-      "uid": "T09-0011",
-      "term": "customer",
-      "reading": "/ˈkʌstəmər/",
-      "pos": "danh từ",
-      "meaning": "khách hàng",
-      "example": "The customer asked for a smaller size.",
-      "example_translation": "Khách hàng hỏi cỡ nhỏ hơn."
-    },
-    {
-      "uid": "T09-0012",
-      "term": "cashier",
-      "reading": "/kæˈʃɪr/",
-      "pos": "danh từ",
-      "meaning": "nhân viên thu ngân",
-      "example": "Please pay at the cashier.",
-      "example_translation": "Vui lòng trả tiền ở quầy thu ngân."
-    },
-    {
-      "uid": "T09-0013",
-      "term": "receipt",
-      "reading": "/rɪˈsiːt/",
-      "pos": "danh từ",
-      "meaning": "hóa đơn",
-      "example": "Keep the receipt in case you want to return it.",
-      "example_translation": "Giữ hóa đơn phòng khi bạn muốn trả hàng."
-    },
-    {
-      "uid": "T09-0014",
-      "term": "market",
-      "reading": "/ˈmɑːrkɪt/",
-      "pos": "danh từ",
-      "meaning": "chợ",
-      "example": "We buy vegetables at the market.",
-      "example_translation": "Chúng tôi mua rau ở chợ."
-    },
-    {
-      "uid": "T09-0015",
-      "term": "wear",
-      "reading": "/wer/",
-      "pos": "động từ",
-      "meaning": "mặc, đeo",
-      "example": "Children wear uniforms at this school.",
-      "example_translation": "Trẻ em mặc đồng phục ở trường này."
-    },
-    {
-      "uid": "T09-0016",
-      "term": "try on",
-      "reading": "/traɪ ɑːn/",
-      "pos": "cụm động từ",
-      "meaning": "mặc thử",
-      "example": "Can I try on this shirt?",
-      "example_translation": "Tôi mặc thử áo này được không?"
-    },
-    {
-      "uid": "T09-0017",
-      "term": "fit",
-      "reading": "/fɪt/",
-      "pos": "động từ",
-      "meaning": "vừa vặn",
-      "example": "These jeans fit you very well.",
-      "example_translation": "Chiếc quần bò này rất vừa với bạn."
-    },
-    {
-      "uid": "T09-0018",
-      "term": "choose",
-      "reading": "/tʃuːz/",
-      "pos": "động từ",
-      "meaning": "chọn",
-      "example": "It is hard to choose only one color.",
-      "example_translation": "Thật khó để chọn chỉ một màu."
-    },
-    {
-      "uid": "T09-0019",
-      "term": "cheap",
-      "reading": "/tʃiːp/",
-      "pos": "tính từ",
-      "meaning": "rẻ",
-      "example": "The bag is cheap but good.",
-      "example_translation": "Cái túi rẻ mà tốt."
-    },
-    {
-      "uid": "T09-0020",
-      "term": "fashionable",
-      "reading": "/ˈfæʃnəbl/",
-      "pos": "tính từ",
-      "meaning": "hợp thời trang",
-      "example": "That jacket looks very fashionable.",
-      "example_translation": "Chiếc áo khoác đó trông rất hợp thời trang."
-    }
+    {"uid": "T09-0001", "term": "shirt", "reading": "/ʃɜːrt/", "pos": "danh từ", "meaning": "áo sơ mi", "example": "He wears a white shirt to work.", "example_translation": "Anh ấy mặc áo sơ mi trắng đi làm."},
+    {"uid": "T09-0002", "term": "dress", "reading": "/dres/", "pos": "danh từ", "meaning": "váy liền", "example": "She bought a new dress for the party.", "example_translation": "Cô ấy mua một chiếc váy mới để dự tiệc."},
+    {"uid": "T09-0003", "term": "trousers", "reading": "/ˈtraʊzərz/", "pos": "danh từ", "meaning": "quần dài", "example": "These trousers are too long for me.", "example_translation": "Cái quần này dài quá so với tôi."},
+    {"uid": "T09-0004", "term": "jacket", "reading": "/ˈdʒækɪt/", "pos": "danh từ", "meaning": "áo khoác", "example": "Take a jacket, it is cold outside.", "example_translation": "Mang áo khoác đi, ngoài trời lạnh."},
+    {"uid": "T09-0005", "term": "shoes", "reading": "/ʃuːz/", "pos": "danh từ", "meaning": "đôi giày", "example": "My shoes are wet because of the rain.", "example_translation": "Đôi giày của tôi ướt vì mưa."},
+    {"uid": "T09-0006", "term": "socks", "reading": "/sɑːks/", "pos": "danh từ", "meaning": "đôi tất", "example": "I need a pair of warm socks.", "example_translation": "Tôi cần một đôi tất ấm."},
+    {"uid": "T09-0007", "term": "hat", "reading": "/hæt/", "pos": "danh từ", "meaning": "cái mũ", "example": "Wear a hat when the sun is strong.", "example_translation": "Hãy đội mũ khi nắng gắt."},
+    {"uid": "T09-0008", "term": "size", "reading": "/saɪz/", "pos": "danh từ", "meaning": "kích cỡ", "example": "What size do you wear?", "example_translation": "Bạn mặc cỡ nào?"},
+    {"uid": "T09-0009", "term": "price", "reading": "/praɪs/", "pos": "danh từ", "meaning": "giá tiền", "example": "The price is on the label.", "example_translation": "Giá ghi trên nhãn."},
+    {"uid": "T09-0010", "term": "discount", "reading": "/ˈdɪskaʊnt/", "pos": "danh từ", "meaning": "giảm giá", "example": "Students get a ten percent discount.", "example_translation": "Sinh viên được giảm giá mười phần trăm."},
+    {"uid": "T09-0011", "term": "customer", "reading": "/ˈkʌstəmər/", "pos": "danh từ", "meaning": "khách hàng", "example": "The customer asked for a smaller size.", "example_translation": "Khách hàng hỏi cỡ nhỏ hơn."},
+    {"uid": "T09-0012", "term": "cashier", "reading": "/kæˈʃɪr/", "pos": "danh từ", "meaning": "nhân viên thu ngân", "example": "Please pay at the cashier.", "example_translation": "Vui lòng trả tiền ở quầy thu ngân."},
+    {"uid": "T09-0013", "term": "receipt", "reading": "/rɪˈsiːt/", "pos": "danh từ", "meaning": "hóa đơn", "example": "Keep the receipt in case you want to return it.", "example_translation": "Giữ hóa đơn phòng khi bạn muốn trả hàng."},
+    {"uid": "T09-0014", "term": "market", "reading": "/ˈmɑːrkɪt/", "pos": "danh từ", "meaning": "chợ", "example": "We buy vegetables at the market.", "example_translation": "Chúng tôi mua rau ở chợ."},
+    {"uid": "T09-0015", "term": "wear", "reading": "/wer/", "pos": "động từ", "meaning": "mặc, đeo", "example": "Children wear uniforms at this school.", "example_translation": "Trẻ em mặc đồng phục ở trường này."},
+    {"uid": "T09-0016", "term": "try on", "reading": "/traɪ ɑːn/", "pos": "cụm động từ", "meaning": "mặc thử", "example": "Can I try on this shirt?", "example_translation": "Tôi mặc thử áo này được không?"},
+    {"uid": "T09-0017", "term": "fit", "reading": "/fɪt/", "pos": "động từ", "meaning": "vừa vặn", "example": "These jeans fit you very well.", "example_translation": "Chiếc quần bò này rất vừa với bạn."},
+    {"uid": "T09-0018", "term": "choose", "reading": "/tʃuːz/", "pos": "động từ", "meaning": "chọn", "example": "It is hard to choose only one color.", "example_translation": "Thật khó để chọn chỉ một màu."},
+    {"uid": "T09-0019", "term": "cheap", "reading": "/tʃiːp/", "pos": "tính từ", "meaning": "rẻ", "example": "The bag is cheap but good.", "example_translation": "Cái túi rẻ mà tốt."},
+    {"uid": "T09-0020", "term": "fashionable", "reading": "/ˈfæʃnəbl/", "pos": "tính từ", "meaning": "hợp thời trang", "example": "That jacket looks very fashionable.", "example_translation": "Chiếc áo khoác đó trông rất hợp thời trang."}
   ]
 }

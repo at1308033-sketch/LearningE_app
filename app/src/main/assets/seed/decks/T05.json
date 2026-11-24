@@ -13,185 +13,25 @@
   },
   "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
   "words": [
-    {
-      "uid": "T05-0001",
-      "term": "bread",
-      "reading": "/bred/",
-      "pos": "danh từ",
-      "meaning": "bánh mì",
-      "example": "I eat bread with eggs in the morning.",
-      "example_translation": "Tôi ăn bánh mì với trứng vào buổi sáng."
-    },
-    {
-      "uid": "T05-0002",
-      "term": "rice",
-      "reading": "/raɪs/",
-      "pos": "danh từ",
-      "meaning": "cơm, gạo",
-      "example": "We eat rice every day.",
-      "example_translation": "Chúng tôi ăn cơm mỗi ngày."
-    },
-    {
-      "uid": "T05-0003",
-      "term": "egg",
-      "reading": "/eɡ/",
-      "pos": "danh từ",
-      "meaning": "quả trứng",
-      "example": "She boils two eggs for breakfast.",
-      "example_translation": "Cô ấy luộc hai quả trứng cho bữa sáng."
-    },
-    {
-      "uid": "T05-0004",
-      "term": "meat",
-      "reading": "/miːt/",
-      "pos": "danh từ",
-      "meaning": "thịt",
-      "example": "He does not eat meat.",
-      "example_translation": "Anh ấy không ăn thịt."
-    },
-    {
-      "uid": "T05-0005",
-      "term": "fish",
-      "reading": "/fɪʃ/",
-      "pos": "danh từ",
-      "meaning": "cá",
-      "example": "My father likes fish and soup.",
-      "example_translation": "Bố tôi thích cá và canh."
-    },
-    {
-      "uid": "T05-0006",
-      "term": "vegetable",
-      "reading": "/ˈvedʒtəbl/",
-      "pos": "danh từ",
-      "meaning": "rau củ",
-      "example": "Vegetables are good for you.",
-      "example_translation": "Rau củ tốt cho bạn."
-    },
-    {
-      "uid": "T05-0007",
-      "term": "fruit",
-      "reading": "/fruːt/",
-      "pos": "danh từ",
-      "meaning": "trái cây",
-      "example": "There is some fruit on the table.",
-      "example_translation": "Có ít trái cây trên bàn."
-    },
-    {
-      "uid": "T05-0008",
-      "term": "apple",
-      "reading": "/ˈæpl/",
-      "pos": "danh từ",
-      "meaning": "quả táo",
-      "example": "An apple costs ten thousand dong.",
-      "example_translation": "Một quả táo giá mười nghìn đồng."
-    },
-    {
-      "uid": "T05-0009",
-      "term": "banana",
-      "reading": "/bəˈnænə/",
-      "pos": "danh từ",
-      "meaning": "quả chuối",
-      "example": "The banana is yellow and sweet.",
-      "example_translation": "Quả chuối màu vàng và ngọt."
-    },
-    {
-      "uid": "T05-0010",
-      "term": "orange",
-      "reading": "/ˈɔːrɪndʒ/",
-      "pos": "danh từ",
-      "meaning": "quả cam",
-      "example": "I would like an orange, please.",
-      "example_translation": "Cho tôi một quả cam."
-    },
-    {
-      "uid": "T05-0011",
-      "term": "water",
-      "reading": "/ˈwɔːtər/",
-      "pos": "danh từ",
-      "meaning": "nước",
-      "example": "Please drink more water.",
-      "example_translation": "Hãy uống nhiều nước hơn."
-    },
-    {
-      "uid": "T05-0012",
-      "term": "milk",
-      "reading": "/mɪlk/",
-      "pos": "danh từ",
-      "meaning": "sữa",
-      "example": "The baby drinks warm milk.",
-      "example_translation": "Em bé uống sữa ấm."
-    },
-    {
-      "uid": "T05-0013",
-      "term": "coffee",
-      "reading": "/ˈkɔːfi/",
-      "pos": "danh từ",
-      "meaning": "cà phê",
-      "example": "My mother drinks coffee after lunch.",
-      "example_translation": "Mẹ tôi uống cà phê sau bữa trưa."
-    },
-    {
-      "uid": "T05-0014",
-      "term": "tea",
-      "reading": "/tiː/",
-      "pos": "danh từ",
-      "meaning": "trà",
-      "example": "Would you like a cup of tea?",
-      "example_translation": "Bạn có muốn một tách trà không?"
-    },
-    {
-      "uid": "T05-0015",
-      "term": "juice",
-      "reading": "/dʒuːs/",
-      "pos": "danh từ",
-      "meaning": "nước ép",
-      "example": "Orange juice is my favorite drink.",
-      "example_translation": "Nước cam là đồ uống tôi thích nhất."
-    },
-    {
-      "uid": "T05-0016",
-      "term": "breakfast",
-      "reading": "/ˈbrekfəst/",
-      "pos": "danh từ",
-      "meaning": "bữa sáng",
-      "example": "I have breakfast at seven o'clock.",
-      "example_translation": "Tôi ăn sáng lúc bảy giờ."
-    },
-    {
-      "uid": "T05-0017",
-      "term": "lunch",
-      "reading": "/lʌntʃ/",
-      "pos": "danh từ",
-      "meaning": "bữa trưa",
-      "example": "We have lunch at school.",
-      "example_translation": "Chúng tôi ăn trưa ở trường."
-    },
-    {
-      "uid": "T05-0018",
-      "term": "dinner",
-      "reading": "/ˈdɪnər/",
-      "pos": "danh từ",
-      "meaning": "bữa tối",
-      "example": "Dinner is ready.",
-      "example_translation": "Bữa tối đã sẵn sàng."
-    },
-    {
-      "uid": "T05-0019",
-      "term": "hungry",
-      "reading": "/ˈhʌŋɡri/",
-      "pos": "tính từ",
-      "meaning": "đói",
-      "example": "I am hungry. Let's eat!",
-      "example_translation": "Tôi đói rồi. Ăn thôi!"
-    },
-    {
-      "uid": "T05-0020",
-      "term": "delicious",
-      "reading": "/dɪˈlɪʃəs/",
-      "pos": "tính từ",
-      "meaning": "ngon",
-      "example": "This soup is delicious.",
-      "example_translation": "Món canh này ngon."
-    }
+    {"uid": "T05-0001", "term": "bread", "reading": "/bred/", "pos": "danh từ", "meaning": "bánh mì", "example": "I eat bread with eggs in the morning.", "example_translation": "Tôi ăn bánh mì với trứng vào buổi sáng."},
+    {"uid": "T05-0002", "term": "rice", "reading": "/raɪs/", "pos": "danh từ", "meaning": "cơm, gạo", "example": "We eat rice every day.", "example_translation": "Chúng tôi ăn cơm mỗi ngày."},
+    {"uid": "T05-0003", "term": "egg", "reading": "/eɡ/", "pos": "danh từ", "meaning": "quả trứng", "example": "She boils two eggs for breakfast.", "example_translation": "Cô ấy luộc hai quả trứng cho bữa sáng."},
+    {"uid": "T05-0004", "term": "meat", "reading": "/miːt/", "pos": "danh từ", "meaning": "thịt", "example": "He does not eat meat.", "example_translation": "Anh ấy không ăn thịt."},
+    {"uid": "T05-0005", "term": "fish", "reading": "/fɪʃ/", "pos": "danh từ", "meaning": "cá", "example": "My father likes fish and soup.", "example_translation": "Bố tôi thích cá và canh."},
+    {"uid": "T05-0006", "term": "vegetable", "reading": "/ˈvedʒtəbl/", "pos": "danh từ", "meaning": "rau củ", "example": "Vegetables are good for you.", "example_translation": "Rau củ tốt cho bạn."},
+    {"uid": "T05-0007", "term": "fruit", "reading": "/fruːt/", "pos": "danh từ", "meaning": "trái cây", "example": "There is some fruit on the table.", "example_translation": "Có ít trái cây trên bàn."},
+    {"uid": "T05-0008", "term": "apple", "reading": "/ˈæpl/", "pos": "danh từ", "meaning": "quả táo", "example": "An apple costs ten thousand dong.", "example_translation": "Một quả táo giá mười nghìn đồng."},
+    {"uid": "T05-0009", "term": "banana", "reading": "/bəˈnænə/", "pos": "danh từ", "meaning": "quả chuối", "example": "The banana is yellow and sweet.", "example_translation": "Quả chuối màu vàng và ngọt."},
+    {"uid": "T05-0010", "term": "orange", "reading": "/ˈɔːrɪndʒ/", "pos": "danh từ", "meaning": "quả cam", "example": "I would like an orange, please.", "example_translation": "Cho tôi một quả cam."},
+    {"uid": "T05-0011", "term": "water", "reading": "/ˈwɔːtər/", "pos": "danh từ", "meaning": "nước", "example": "Please drink more water.", "example_translation": "Hãy uống nhiều nước hơn."},
+    {"uid": "T05-0012", "term": "milk", "reading": "/mɪlk/", "pos": "danh từ", "meaning": "sữa", "example": "The baby drinks warm milk.", "example_translation": "Em bé uống sữa ấm."},
+    {"uid": "T05-0013", "term": "coffee", "reading": "/ˈkɔːfi/", "pos": "danh từ", "meaning": "cà phê", "example": "My mother drinks coffee after lunch.", "example_translation": "Mẹ tôi uống cà phê sau bữa trưa."},
+    {"uid": "T05-0014", "term": "tea", "reading": "/tiː/", "pos": "danh từ", "meaning": "trà", "example": "Would you like a cup of tea?", "example_translation": "Bạn có muốn một tách trà không?"},
+    {"uid": "T05-0015", "term": "juice", "reading": "/dʒuːs/", "pos": "danh từ", "meaning": "nước ép", "example": "Orange juice is my favorite drink.", "example_translation": "Nước cam là đồ uống tôi thích nhất."},
+    {"uid": "T05-0016", "term": "breakfast", "reading": "/ˈbrekfəst/", "pos": "danh từ", "meaning": "bữa sáng", "example": "I have breakfast at seven o'clock.", "example_translation": "Tôi ăn sáng lúc bảy giờ."},
+    {"uid": "T05-0017", "term": "lunch", "reading": "/lʌntʃ/", "pos": "danh từ", "meaning": "bữa trưa", "example": "We have lunch at school.", "example_translation": "Chúng tôi ăn trưa ở trường."},
+    {"uid": "T05-0018", "term": "dinner", "reading": "/ˈdɪnər/", "pos": "danh từ", "meaning": "bữa tối", "example": "Dinner is ready.", "example_translation": "Bữa tối đã sẵn sàng."},
+    {"uid": "T05-0019", "term": "hungry", "reading": "/ˈhʌŋɡri/", "pos": "tính từ", "meaning": "đói", "example": "I am hungry. Let's eat!", "example_translation": "Tôi đói rồi. Ăn thôi!"},
+    {"uid": "T05-0020", "term": "delicious", "reading": "/dɪˈlɪʃəs/", "pos": "tính từ", "meaning": "ngon", "example": "This soup is delicious.", "example_translation": "Món canh này ngon."}
   ]
 }

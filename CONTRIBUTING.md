@@ -9,7 +9,7 @@
   - `domain/` — Service; `domain/rules/` — quy tắc Java thuần (Leitner, chuỗi ngày, quiz, CSV, PBKDF2, chuẩn hóa chữ), **không import `android.*`**
   - `reminder/` — receiver nhắc học
   - `ui/<tính năng>/` — Activity/Fragment + ViewModel
-- `app/src/main/assets/seed/` — dữ liệu học có sẵn dạng JSON
+- `app/src/main/assets/seed/` — dữ liệu học có sẵn dạng JSON, **bản chép** từ `content-data/` của LearningE_Server bằng `tools/sync-content.ps1`; không sửa tay (dữ liệu mẫu nằm ở `app/src/debug`, chỉ có trong bản debug)
 - `app/src/test/` — unit test JUnit; `app/src/androidTest/` — instrumented/Espresso
 - `docs/` — tài liệu dự án theo 4 nhóm (project, engineering, quality, operations); danh mục ở `docs/README.md`. Tệp có dòng **TỰ SINH** không sửa trực tiếp
 

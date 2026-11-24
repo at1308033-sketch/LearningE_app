@@ -13,185 +13,25 @@
   },
   "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
   "words": [
-    {
-      "uid": "T12-0001",
-      "term": "hobby",
-      "reading": "/ˈhɑːbi/",
-      "pos": "danh từ",
-      "meaning": "sở thích",
-      "example": "My hobby is taking photos.",
-      "example_translation": "Sở thích của tôi là chụp ảnh."
-    },
-    {
-      "uid": "T12-0002",
-      "term": "music",
-      "reading": "/ˈmjuːzɪk/",
-      "pos": "danh từ",
-      "meaning": "âm nhạc",
-      "example": "She listens to music while working.",
-      "example_translation": "Cô ấy nghe nhạc khi làm việc."
-    },
-    {
-      "uid": "T12-0003",
-      "term": "guitar",
-      "reading": "/ɡɪˈtɑːr/",
-      "pos": "danh từ",
-      "meaning": "đàn ghi-ta",
-      "example": "He plays the guitar every evening.",
-      "example_translation": "Anh ấy chơi ghi-ta mỗi tối."
-    },
-    {
-      "uid": "T12-0004",
-      "term": "painting",
-      "reading": "/ˈpeɪntɪŋ/",
-      "pos": "danh từ",
-      "meaning": "hội họa, bức tranh",
-      "example": "Painting helps me relax.",
-      "example_translation": "Vẽ tranh giúp tôi thư giãn."
-    },
-    {
-      "uid": "T12-0005",
-      "term": "reading",
-      "reading": "/ˈriːdɪŋ/",
-      "pos": "danh từ",
-      "meaning": "việc đọc sách",
-      "example": "Reading is a good way to learn words.",
-      "example_translation": "Đọc sách là cách tốt để học từ."
-    },
-    {
-      "uid": "T12-0006",
-      "term": "gardening",
-      "reading": "/ˈɡɑːrdnɪŋ/",
-      "pos": "danh từ",
-      "meaning": "việc làm vườn",
-      "example": "My grandparents enjoy gardening.",
-      "example_translation": "Ông bà tôi thích làm vườn."
-    },
-    {
-      "uid": "T12-0007",
-      "term": "photography",
-      "reading": "/fəˈtɑːɡrəfi/",
-      "pos": "danh từ",
-      "meaning": "nhiếp ảnh",
-      "example": "She took a course in photography.",
-      "example_translation": "Cô ấy học một khóa nhiếp ảnh."
-    },
-    {
-      "uid": "T12-0008",
-      "term": "football",
-      "reading": "/ˈfʊtbɔːl/",
-      "pos": "danh từ",
-      "meaning": "bóng đá",
-      "example": "We play football on Saturdays.",
-      "example_translation": "Chúng tôi đá bóng vào thứ Bảy."
-    },
-    {
-      "uid": "T12-0009",
-      "term": "basketball",
-      "reading": "/ˈbæskɪtbɔːl/",
-      "pos": "danh từ",
-      "meaning": "bóng rổ",
-      "example": "Basketball is popular at my school.",
-      "example_translation": "Bóng rổ được yêu thích ở trường tôi."
-    },
-    {
-      "uid": "T12-0010",
-      "term": "badminton",
-      "reading": "/ˈbædmɪntən/",
-      "pos": "danh từ",
-      "meaning": "cầu lông",
-      "example": "My sister is good at badminton.",
-      "example_translation": "Chị tôi giỏi cầu lông."
-    },
-    {
-      "uid": "T12-0011",
-      "term": "swimming",
-      "reading": "/ˈswɪmɪŋ/",
-      "pos": "danh từ",
-      "meaning": "bơi lội",
-      "example": "Swimming keeps you healthy.",
-      "example_translation": "Bơi lội giúp bạn khỏe mạnh."
-    },
-    {
-      "uid": "T12-0012",
-      "term": "running",
-      "reading": "/ˈrʌnɪŋ/",
-      "pos": "danh từ",
-      "meaning": "chạy bộ",
-      "example": "I go running before breakfast.",
-      "example_translation": "Tôi chạy bộ trước bữa sáng."
-    },
-    {
-      "uid": "T12-0013",
-      "term": "team",
-      "reading": "/tiːm/",
-      "pos": "danh từ",
-      "meaning": "đội",
-      "example": "Our team won the final match.",
-      "example_translation": "Đội chúng tôi thắng trận chung kết."
-    },
-    {
-      "uid": "T12-0014",
-      "term": "player",
-      "reading": "/ˈpleɪər/",
-      "pos": "danh từ",
-      "meaning": "người chơi, cầu thủ",
-      "example": "The best player scored two goals.",
-      "example_translation": "Cầu thủ giỏi nhất ghi hai bàn."
-    },
-    {
-      "uid": "T12-0015",
-      "term": "match",
-      "reading": "/mætʃ/",
-      "pos": "danh từ",
-      "meaning": "trận đấu",
-      "example": "The match starts at seven.",
-      "example_translation": "Trận đấu bắt đầu lúc bảy giờ."
-    },
-    {
-      "uid": "T12-0016",
-      "term": "win",
-      "reading": "/wɪn/",
-      "pos": "động từ",
-      "meaning": "thắng",
-      "example": "I hope we win the game.",
-      "example_translation": "Tôi hy vọng chúng ta thắng trận này."
-    },
-    {
-      "uid": "T12-0017",
-      "term": "lose",
-      "reading": "/luːz/",
-      "pos": "động từ",
-      "meaning": "thua",
-      "example": "Nobody likes to lose.",
-      "example_translation": "Không ai thích thua."
-    },
-    {
-      "uid": "T12-0018",
-      "term": "collect",
-      "reading": "/kəˈlekt/",
-      "pos": "động từ",
-      "meaning": "sưu tầm",
-      "example": "My brother collects old coins.",
-      "example_translation": "Anh trai tôi sưu tầm đồng xu cổ."
-    },
-    {
-      "uid": "T12-0019",
-      "term": "join",
-      "reading": "/dʒɔɪn/",
-      "pos": "động từ",
-      "meaning": "tham gia",
-      "example": "Would you like to join our club?",
-      "example_translation": "Bạn có muốn tham gia câu lạc bộ của chúng tôi không?"
-    },
-    {
-      "uid": "T12-0020",
-      "term": "exciting",
-      "reading": "/ɪkˈsaɪtɪŋ/",
-      "pos": "tính từ",
-      "meaning": "thú vị, hào hứng",
-      "example": "It was an exciting game.",
-      "example_translation": "Đó là một trận đấu hào hứng."
-    }
+    {"uid": "T12-0001", "term": "hobby", "reading": "/ˈhɑːbi/", "pos": "danh từ", "meaning": "sở thích", "example": "My hobby is taking photos.", "example_translation": "Sở thích của tôi là chụp ảnh."},
+    {"uid": "T12-0002", "term": "music", "reading": "/ˈmjuːzɪk/", "pos": "danh từ", "meaning": "âm nhạc", "example": "She listens to music while working.", "example_translation": "Cô ấy nghe nhạc khi làm việc."},
+    {"uid": "T12-0003", "term": "guitar", "reading": "/ɡɪˈtɑːr/", "pos": "danh từ", "meaning": "đàn ghi-ta", "example": "He plays the guitar every evening.", "example_translation": "Anh ấy chơi ghi-ta mỗi tối."},
+    {"uid": "T12-0004", "term": "painting", "reading": "/ˈpeɪntɪŋ/", "pos": "danh từ", "meaning": "hội họa, bức tranh", "example": "Painting helps me relax.", "example_translation": "Vẽ tranh giúp tôi thư giãn."},
+    {"uid": "T12-0005", "term": "reading", "reading": "/ˈriːdɪŋ/", "pos": "danh từ", "meaning": "việc đọc sách", "example": "Reading is a good way to learn words.", "example_translation": "Đọc sách là cách tốt để học từ."},
+    {"uid": "T12-0006", "term": "gardening", "reading": "/ˈɡɑːrdnɪŋ/", "pos": "danh từ", "meaning": "việc làm vườn", "example": "My grandparents enjoy gardening.", "example_translation": "Ông bà tôi thích làm vườn."},
+    {"uid": "T12-0007", "term": "photography", "reading": "/fəˈtɑːɡrəfi/", "pos": "danh từ", "meaning": "nhiếp ảnh", "example": "She took a course in photography.", "example_translation": "Cô ấy học một khóa nhiếp ảnh."},
+    {"uid": "T12-0008", "term": "football", "reading": "/ˈfʊtbɔːl/", "pos": "danh từ", "meaning": "bóng đá", "example": "We play football on Saturdays.", "example_translation": "Chúng tôi đá bóng vào thứ Bảy."},
+    {"uid": "T12-0009", "term": "basketball", "reading": "/ˈbæskɪtbɔːl/", "pos": "danh từ", "meaning": "bóng rổ", "example": "Basketball is popular at my school.", "example_translation": "Bóng rổ được yêu thích ở trường tôi."},
+    {"uid": "T12-0010", "term": "badminton", "reading": "/ˈbædmɪntən/", "pos": "danh từ", "meaning": "cầu lông", "example": "My sister is good at badminton.", "example_translation": "Chị tôi giỏi cầu lông."},
+    {"uid": "T12-0011", "term": "swimming", "reading": "/ˈswɪmɪŋ/", "pos": "danh từ", "meaning": "bơi lội", "example": "Swimming keeps you healthy.", "example_translation": "Bơi lội giúp bạn khỏe mạnh."},
+    {"uid": "T12-0012", "term": "running", "reading": "/ˈrʌnɪŋ/", "pos": "danh từ", "meaning": "chạy bộ", "example": "I go running before breakfast.", "example_translation": "Tôi chạy bộ trước bữa sáng."},
+    {"uid": "T12-0013", "term": "team", "reading": "/tiːm/", "pos": "danh từ", "meaning": "đội", "example": "Our team won the final match.", "example_translation": "Đội chúng tôi thắng trận chung kết."},
+    {"uid": "T12-0014", "term": "player", "reading": "/ˈpleɪər/", "pos": "danh từ", "meaning": "người chơi, cầu thủ", "example": "The best player scored two goals.", "example_translation": "Cầu thủ giỏi nhất ghi hai bàn."},
+    {"uid": "T12-0015", "term": "match", "reading": "/mætʃ/", "pos": "danh từ", "meaning": "trận đấu", "example": "The match starts at seven.", "example_translation": "Trận đấu bắt đầu lúc bảy giờ."},
+    {"uid": "T12-0016", "term": "win", "reading": "/wɪn/", "pos": "động từ", "meaning": "thắng", "example": "I hope we win the game.", "example_translation": "Tôi hy vọng chúng ta thắng trận này."},
+    {"uid": "T12-0017", "term": "lose", "reading": "/luːz/", "pos": "động từ", "meaning": "thua", "example": "Nobody likes to lose.", "example_translation": "Không ai thích thua."},
+    {"uid": "T12-0018", "term": "collect", "reading": "/kəˈlekt/", "pos": "động từ", "meaning": "sưu tầm", "example": "My brother collects old coins.", "example_translation": "Anh trai tôi sưu tầm đồng xu cổ."},
+    {"uid": "T12-0019", "term": "join", "reading": "/dʒɔɪn/", "pos": "động từ", "meaning": "tham gia", "example": "Would you like to join our club?", "example_translation": "Bạn có muốn tham gia câu lạc bộ của chúng tôi không?"},
+    {"uid": "T12-0020", "term": "exciting", "reading": "/ɪkˈsaɪtɪŋ/", "pos": "tính từ", "meaning": "thú vị, hào hứng", "example": "It was an exciting game.", "example_translation": "Đó là một trận đấu hào hứng."}
   ]
 }
