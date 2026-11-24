@@ -34,8 +34,12 @@ public final class ExamDao {
         this.database = database;
     }
 
+    /**
+     * Đề đã ngừng dùng chỉ hiện khi còn lượt làm dở.
+     */
     public List<ExamTest> listTests(long userId) {
-        return tests("ORDER BY t.sort_order, t.id", String.valueOf(userId));
+        return tests("WHERE t.retired = 0 OR EXISTS (SELECT 1 FROM exam_attempts a WHERE a.test_id = t.id "
+                + "AND a.user_id = ?1 AND a.status = 'IN_PROGRESS') ORDER BY t.sort_order, t.id", String.valueOf(userId));
     }
 
     public ExamTest findTest(long userId, String code) {

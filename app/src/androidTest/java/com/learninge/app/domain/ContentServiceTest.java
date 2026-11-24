@@ -2,6 +2,7 @@ package com.learninge.app.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -20,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
@@ -80,8 +82,52 @@ public class ContentServiceTest {
         assertEquals("mother", app.text("SELECT term FROM words WHERE id = 11"));
     }
 
+    @Test
+    public void update_retiredDeck_isHiddenAndComesBackWithProgress() {
+        remote.isRetired = true;
+        service.update();
+        assertEquals(1, app.number("SELECT deleted FROM decks WHERE code = 'T01'"));
+        assertEquals(1, app.number("SELECT deleted FROM words WHERE id = 11"));
+        assertEquals(3, app.number("SELECT box FROM card_progress WHERE word_id = 11"));
+        assertTrue(app.services.deckService().listTopics(null).value.isEmpty());
+
+        remote.isRetired = false;
+        remote.version = 3;
+        service.update();
+        assertEquals(0, app.number("SELECT deleted FROM words WHERE id = 11"));
+        assertEquals(1, app.services.deckService().listTopics(null).value.size());
+    }
+
+    @Test
+    public void update_retiredExam_isListedOnlyWhileAnAttemptIsOpen() {
+        service.update();
+        assertTrue(app.services.examService().startOrResume("E01").isOk());
+        remote.isRetired = true;
+        remote.version = 3;
+        service.update();
+        assertEquals(1, app.services.examService().listTests().value.size());
+        app.sql("UPDATE exam_attempts SET status = 'SUBMITTED', submitted_at = 1, score = 0, correct_count = 0, "
+                + "duration_sec = 1");
+        assertTrue(app.services.examService().listTests().value.isEmpty());
+        assertEquals(1, app.services.examService().history().value.size());
+    }
+
+    @Test
+    public void update_examQuestionRemovedInTheMiddle_keepsTheOthers() {
+        remote.numbers = List.of(1, 2, 3);
+        service.update();
+        remote.numbers = List.of(1, 3);
+        remote.version = 3;
+        service.update();
+        assertEquals("1,3", app.text("SELECT group_concat(number) FROM (SELECT number FROM exam_questions "
+                + "ORDER BY number)"));
+    }
+
     private static final class FakeRemote extends ContentRemote {
         private boolean isNotModified;
+        private boolean isRetired;
+        private int version = 2;
+        private List<Integer> numbers = List.of(1);
         private ErrorCode examError;
         private int downloads;
         private long askedVersion;
@@ -93,23 +139,27 @@ public class ContentServiceTest {
         @Override
         public Result<Manifest> manifest(long installedVersion) {
             askedVersion = installedVersion;
-            return Result.ok(new Manifest(9, isNotModified, List.of(), List.of(new Item("T01", 2)),
-                    List.of(new Item("E01", 1))));
+            return Result.ok(new Manifest(9, isNotModified, List.of(), List.of(new Item("T01", version)),
+                    List.of(new Item("E01", version))));
         }
 
         @Override
         public Result<SeedDeck> deck(String code) {
             downloads++;
-            return Result.ok(new SeedDeck(code, 2, "Gia đình", null, "en", "A1", null, null, 1, "server",
-                    List.of(new SeedWord("T01-0001", "mum", null, null, "mẹ", null, null))));
+            return Result.ok(new SeedDeck(code, version, "Gia đình", null, "en", "A1", null, null, 1, "server",
+                    List.of(new SeedWord("T01-0001", "mum", null, null, "mẹ", null, null)), isRetired));
         }
 
         @Override
         public Result<SeedExam> exam(String code) {
             downloads++;
-            return examError != null ? Result.error(examError) : Result.ok(new SeedExam(code, 1, "TOEIC", "Đề 1", null,
-                    900, null, 1, List.of(new SeedQuestion(1, null, "?", "[\"a\",\"b\",\"c\",\"d\"]", 0, null, null,
-                    null, "T01-0001"))));
+            List<SeedQuestion> questions = new ArrayList<>();
+            for (int number : numbers) {
+                questions.add(new SeedQuestion(number, null, "?", "[\"a\",\"b\",\"c\",\"d\"]", 0, null, null, null,
+                        "T01-0001"));
+            }
+            return examError != null ? Result.error(examError) : Result.ok(new SeedExam(code, version, "TOEIC",
+                    "Đề 1", null, 900, null, 1, questions, isRetired));
         }
     }
 }

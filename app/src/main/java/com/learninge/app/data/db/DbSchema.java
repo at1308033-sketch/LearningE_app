@@ -1,7 +1,7 @@
 package com.learninge.app.data.db;
 
 /**
- * DDL phiên bản 1. Thời điểm = epoch millis UTC, ngày = yyyy-MM-dd, boolean = 0/1.
+ * DDL theo phiên bản. Thời điểm = epoch millis UTC, ngày = yyyy-MM-dd, boolean = 0/1.
  */
 final class DbSchema {
     private static final String BOOL = " INTEGER NOT NULL DEFAULT 0 CHECK (%1$s IN (0,1))";
@@ -9,6 +9,10 @@ final class DbSchema {
     private static final String SYNC = "updated_at INTEGER NOT NULL, "
             + "dirty INTEGER NOT NULL DEFAULT 1 CHECK (dirty IN (0,1)), server_seq INTEGER";
     private static final String DELETED = "deleted" + String.format(BOOL, "deleted");
+
+    static final String[] V2 = {
+            "ALTER TABLE exam_tests ADD COLUMN retired" + String.format(BOOL, "retired")
+    };
 
     static final String[] V1 = {
             "CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, server_uuid TEXT NOT NULL UNIQUE, "

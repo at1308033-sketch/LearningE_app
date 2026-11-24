@@ -83,7 +83,8 @@ public class ContentRemote {
         return Result.ok(new SeedDeck(deck.getCode(), deck.getVersion(), deck.getName(),
                 deck.hasDescription() ? deck.getDescription() : null, deck.getLanguageCode(),
                 deck.hasLevel() ? deck.getLevel() : null, deck.hasIcon() ? deck.getIcon() : null,
-                deck.hasExamTag() ? deck.getExamTag() : null, deck.getSortOrder(), "server", words));
+                deck.hasExamTag() ? deck.getExamTag() : null, deck.getSortOrder(), "server", words,
+                deck.getRetired()));
     }
 
     public Result<SeedExam> exam(String code) {
@@ -106,7 +107,8 @@ public class ContentRemote {
         }
         return Result.ok(new SeedExam(exam.getCode(), exam.getVersion(), exam.getExamTag(), exam.getTitle(),
                 exam.hasPartLabel() ? exam.getPartLabel() : null, exam.getDurationSec(),
-                exam.hasDescription() ? exam.getDescription() : null, exam.getSortOrder(), questions));
+                exam.hasDescription() ? exam.getDescription() : null, exam.getSortOrder(), questions,
+                exam.getRetired()));
     }
 
     private static List<Item> items(List<ManifestItem> items) {

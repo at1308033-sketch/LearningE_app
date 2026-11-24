@@ -547,7 +547,7 @@ Kiểu SQLite: `INTEGER`, `TEXT`. Thời điểm (`*_at`, `*_until`) = epoch mil
 | `favorites` | + updated_at, deleted, dirty, server_seq | PK(user_id, word_id); bỏ thích = `deleted = 1` (thích lại: `UPDATE deleted = 0`) | Không |
 | `quiz_attempts` | + uuid, updated_at, dirty, server_seq | `source_type` CHECK IN ('DECK') (bỏ GRAMMAR theo C1); chỉ đẩy tóm tắt lượt — `quiz_answers` **không** đồng bộ | Không |
 | `quiz_answers` | như cũ (bỏ `grammar_question_id`) | Chỉ ở máy | Không |
-| `exam_tests`, `exam_questions` | như cũ | Nội dung chỉ đọc; cập nhật từ EP-16 | Không |
+| `exam_tests`, `exam_questions` | + `exam_tests.retired` (CSDL phiên bản 2) | Nội dung chỉ đọc; cập nhật từ EP-16; `retired = 1`: ẩn đề, giữ lịch sử làm bài | Không |
 | `exam_attempts` | + uuid, updated_at, dirty, server_seq | Chỉ lượt `SUBMITTED` được đánh dấu `dirty`; `exam_answers` không đồng bộ | Không |
 | `exam_answers` | như cũ | Chỉ ở máy | Không |
 | `study_log` | + uuid, ref_uuid, updated_at, dirty, server_seq | `ref_uuid` thay `ref_id` (trỏ `decks.uuid`/lượt quiz/thi để có nghĩa trên máy khác) | Không |
