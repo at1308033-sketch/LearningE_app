@@ -39,7 +39,7 @@ sha256 learninge/app/v1/auth.proto <64 hex>
 
 ## Xác thực và phân quyền
 - Cơ chế (Bearer/OAuth/API key), phạm vi quyền, hết hạn, giới hạn tốc độ:
-  - **Bearer token opaque** (DEC-013, BR-057), gửi trong metadata `authorization: Bearer <token>`; token = 32 byte ngẫu nhiên an toàn (`java.security.SecureRandom`) mã hóa base64url không đệm (43 ký tự `[A-Za-z0-9_-]`). `auth` lưu `SHA-256(token)` hex; hạn **30 ngày** kể từ khi cấp, không gia hạn trượt.
+  - **Bearer token opaque** (DEC-013, BR-057), gửi trong metadata `authorization: Bearer <token>`; token = 32 byte ngẫu nhiên an toàn (`java.security.SecureRandom`) mã hóa base64url không đệm (43 ký tự `[A-Za-z0-9_-]`). `auth` lưu `SHA-256(token)` hex; hạn **30 ngày** kể từ khi cấp; dùng token khi đã qua nửa hạn thì hạn lùi tiếp 30 ngày, tối đa 180 ngày kể từ khi đăng nhập (BR-057).
   - Luồng xác thực ở `edge`: đọc `authorization` → tính `SHA-256` → tra cache (≤ 60 s, không quá `expires_at`) → nếu trượt gọi `TokenValidator.ValidateToken(token_sha256)` → gắn metadata nội bộ `x-user-id` (UUID) rồi chuyển tiếp. **Token thô không đi vào mạng nội bộ.** `edge` **xóa** mọi metadata `x-user-id`, `x-internal-*` do client gửi trước khi xử lý (chống giả danh nội bộ).
   - Thu hồi: EP-04 thu hồi token hiện tại; EP-07, EP-09, EP-10 thu hồi **mọi** token của người dùng (BR-058); `edge` xóa ngay các mục cache của người dùng đó khi RPC trả OK — user lấy từ `x-user-id` (EP-04, EP-07, EP-10) hoặc `AuthSession.user.id` trả về (EP-09); cache theo `token_sha256`, TTL = min(60 s, `expires_at`) (chỉ có một `edge` nên cache không lệch; THREAT_MODEL D-12).
   - Một vai trò ("người học"); **phân quyền theo chủ sở hữu**: `user_id` chỉ lấy từ `x-user-id` do `edge` gắn, **không bao giờ** từ message. Bản ghi của người khác coi như không tồn tại (`NOT_FOUND` hoặc `REJECTED` trong sync) — chống IDOR/BOLA (OWASP API1).
@@ -74,12 +74,17 @@ Bảng ánh xạ EP cũ → RPC (ID EP giữ nguyên để SRS, TESTING-STRATEGY
 | EP-08 `AuthService/GetResetQuestion` (`POST /auth/reset/question`) | `GetResetQuestionRequest{email}` | `GetResetQuestionResponse{security_question_id}` | `INVALID_ARGUMENT` · `RESOURCE_EXHAUSTED` · `auth` · 10 s · không | Công khai |
 | EP-09 `AuthService/ResetPassword` (`POST /auth/reset`) | `ResetPasswordRequest` | `AuthSession` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` INVALID_SECURITY_ANSWER · `RESOURCE_EXHAUSTED` RESET_LOCKED/RATE_LIMITED · `auth` · 10 s · không | Công khai |
 | EP-10 `AuthService/DeleteAccount` (`DELETE /auth/account`) | `DeleteAccountRequest{password}` | `DeleteAccountResponse{}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `PERMISSION_DENIED` INVALID_CREDENTIALS · `RESOURCE_EXHAUSTED` · `auth` · 10 s · không | Token |
-| EP-11 `SyncService/Push` (`POST /sync/push`) | `PushRequest{device_id, changes[≤ 500]}` | `PushResponse{server_time_ms, results[]}` | `INVALID_ARGUMENT` BATCH_TOO_LARGE/VALIDATION_ERROR · `RESOURCE_EXHAUSTED` PAYLOAD_TOO_LARGE/RATE_LIMITED · `UNAUTHENTICATED` · `PERMISSION_DENIED` ACCOUNT_DELETED · `UNAVAILABLE` · `sync` · 20 s · thử lại (idempotent) | Token |
-| EP-12 `SyncService/Pull` (`GET /sync/pull`) | `PullRequest{since, limit}` | `PullResponse{changes[], next_cursor, has_more, server_time_ms}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `UNAVAILABLE` · `sync` · 15 s · thử lại | Token |
+| EP-11 `SyncService/Push` (`POST /sync/push`) | `PushRequest{device_id, changes[≤ 500]}` | `PushResponse{server_time_ms, results[], data_epoch}` | `INVALID_ARGUMENT` BATCH_TOO_LARGE/VALIDATION_ERROR · `RESOURCE_EXHAUSTED` PAYLOAD_TOO_LARGE/RATE_LIMITED · `UNAUTHENTICATED` · `PERMISSION_DENIED` ACCOUNT_DELETED · `UNAVAILABLE` · `sync` · 20 s · thử lại (idempotent) | Token |
+| EP-12 `SyncService/Pull` (`GET /sync/pull`) | `PullRequest{since, limit}` | `PullResponse{changes[], next_cursor, has_more, server_time_ms, data_epoch}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `UNAVAILABLE` · `sync` · 15 s · thử lại | Token |
 | EP-13 `LeaderboardService/GetWeekly` (`GET /leaderboard/weekly`) | `GetWeeklyRequest{week}` | `GetWeeklyResponse{week_start, week_end, timezone, generated_at_ms, entries[≤ 50], me}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `UNAVAILABLE` SERVICE_UNAVAILABLE · `gamification` · 5 s · thử lại | Token |
 | EP-14 `ContentService/GetManifest` (`GET /content/manifest`) | `GetManifestRequest{if_version}` | `GetManifestResponse{content_version, not_modified, languages[], decks[], exams[]}` | `UNAUTHENTICATED` · `UNAVAILABLE` · `content` · 15 s · thử lại | Token |
 | EP-15 `ContentService/GetDeck` (`GET /content/decks/{code}`) | `GetDeckRequest{code}` | `GetDeckResponse{deck, words[]}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `NOT_FOUND` · `UNAVAILABLE` · `content` · 15 s · thử lại | Token |
 | EP-16 `ContentService/GetExam` (`GET /content/exams/{code}`) | `GetExamRequest{code}` | `GetExamResponse{exam, questions[]}` | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `NOT_FOUND` · `UNAVAILABLE` · `content` · 15 s · thử lại | Token |
+| EP-17 `AuthService/ListSessions` | `ListSessionsRequest{}` | `ListSessionsResponse{sessions[]}` (dùng gần nhất trước) | `UNAUTHENTICATED` · `UNAVAILABLE` · `auth` · 10 s · thử lại | Token |
+| EP-18 `AuthService/RevokeSession` | `RevokeSessionRequest{id}` | `RevokeSessionResponse{}` | `UNAUTHENTICATED` · `NOT_FOUND` (app coi là đã đăng xuất) · `UNAVAILABLE` · `auth` · 10 s · không | Token |
+| EP-19 `AuthService/RevokeOtherSessions` | `RevokeOtherSessionsRequest{}` | `RevokeOtherSessionsResponse{revoked}` | `UNAUTHENTICATED` · `UNAVAILABLE` · `auth` · 10 s · không | Token |
+| EP-20 `ContentService/GetDecks` | `GetDecksRequest{codes[1..10]}` | `GetDecksResponse{decks[]}` (mã không có thì bỏ qua) | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `UNAVAILABLE` · `content` · 15 s · thử lại | Token |
+| EP-21 `ContentService/GetExams` | `GetExamsRequest{codes[1..10]}` | `GetExamsResponse{exams[]}` (như EP-20) | `INVALID_ARGUMENT` · `UNAUTHENTICATED` · `UNAVAILABLE` · `content` · 15 s · thử lại | Token |
 
 RPC **nội bộ** (`learninge.internal.v1`, chỉ trong mạng nội bộ, app không có stub). Tên service theo SYSTEM-BLUEPRINT §Dịch vụ (`*Backend`, `TokenValidator`, `EventSink`); các `*Backend` **dùng lại message của `learninge.app.v1`** để `edge` chuyển tiếp tường minh không phải chép trường; dịch vụ đích đọc `user_id` từ metadata `x-user-id`:
 | RPC | Gọi bởi → hiện thực | Mục đích | Deadline | Idempotent |
@@ -153,6 +158,9 @@ service AuthService {
   rpc GetResetQuestion(GetResetQuestionRequest) returns (GetResetQuestionResponse); // EP-08
   rpc ResetPassword(ResetPasswordRequest) returns (AuthSession);                    // EP-09
   rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);          // EP-10
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);             // EP-17
+  rpc RevokeSession(RevokeSessionRequest) returns (RevokeSessionResponse);          // EP-18
+  rpc RevokeOtherSessions(RevokeOtherSessionsRequest) returns (RevokeOtherSessionsResponse);  // EP-19
 }
 
 message RegisterRequest {
@@ -201,6 +209,20 @@ message ResetPasswordRequest {
 }
 message DeleteAccountRequest { string password = 1; }
 message DeleteAccountResponse {}
+message ListSessionsRequest {}
+message ListSessionsResponse { repeated DeviceSession sessions = 1; }   // dùng gần nhất trước
+message DeviceSession {
+  int64 id = 1;                     // dùng cho RevokeSession
+  string device_name = 2;           // "" = không có
+  int64 created_at_ms = 3;
+  int64 last_used_at_ms = 4;        // chính xác tới một ngày; 0 = chưa dùng lại sau khi đăng nhập
+  int64 expires_at_ms = 5;
+  bool current = 6;                 // máy đang gọi
+}
+message RevokeSessionRequest { int64 id = 1; }                          // không có phiên đó → NOT_FOUND
+message RevokeSessionResponse {}
+message RevokeOtherSessionsRequest {}
+message RevokeOtherSessionsResponse { int32 revoked = 1; }
 ```
 
 ### `learninge/app/v1/sync.proto` (EP-11, EP-12)
@@ -223,6 +245,7 @@ message PushRequest {
 message PushResponse {
   int64 server_time_ms = 1;
   repeated ChangeResult results = 2; // cùng số phần tử, cùng thứ tự với changes
+  int64 data_epoch = 3;             // xem PullResponse.data_epoch
 }
 message PullRequest {
   int64 since = 1;                  // cursor, ≥ 0; lần đầu = 0
@@ -233,6 +256,7 @@ message PullResponse {
   int64 next_cursor = 2;
   bool has_more = 3;
   int64 server_time_ms = 4;
+  int64 data_epoch = 5;             // khác lần trước = kho vừa khôi phục: app kéo lại từ 0 và đẩy lại mọi bản ghi của mình
 }
 
 // Một bản ghi đồng bộ. Loại bản ghi = trường đang đặt trong oneof `data` (thay cho "entity" của REST).
@@ -350,7 +374,7 @@ message XpEventData {
 }
 ```
 Quy tắc Push (giữ nguyên thay đổi phạm vi, DEC-014; chỉ đổi cách diễn đạt):
-- **≤ 500 phần tử** `changes` và message ≤ 1 MiB; vượt số lượng → `INVALID_ARGUMENT` `BATCH_TOO_LARGE` (`grpc-message` nêu giới hạn 500); vượt kích thước → `RESOURCE_EXHAUSTED` `PAYLOAD_TOO_LARGE` (grpc-java/Netty từ chối khi vượt `maxInboundMessageSize` 1 MiB của edge — thường `RESOURCE_EXHAUSTED` không có `error-code`; mã thực tế xác minh ở S-01', app coi `RESOURCE_EXHAUSTED`/`OUT_OF_RANGE` có reason này hoặc không có chi tiết là "lô quá lớn" và chia đôi lô). App chia lô theo thứ tự cha → con: `settings`, `deck`, `word`, `favorite`, `card_progress`, `study_log`, `quiz_attempt`, `exam_attempt`, `xp_event`.
+- **≤ 500 phần tử** `changes` và message ≤ 1 MiB; vượt số lượng → `INVALID_ARGUMENT` `BATCH_TOO_LARGE` (`grpc-message` nêu giới hạn 500); vượt kích thước → `RESOURCE_EXHAUSTED` `PAYLOAD_TOO_LARGE` (grpc-java/Netty từ chối khi vượt `maxInboundMessageSize` 1 MiB của edge — thường `RESOURCE_EXHAUSTED` không có `error-code`; mã thực tế xác minh ở S-01', app coi `RESOURCE_EXHAUSTED`/`OUT_OF_RANGE` có reason này hoặc không có chi tiết là "lô quá lớn" và chia đôi lô). App chia lô sao cho mỗi lô dưới 900 KiB, chia đôi nếu vẫn bị từ chối, theo thứ tự cha → con: `settings`, `deck`, `word`, `favorite`, `card_progress`, `study_log`, `quiz_attempt`, `exam_attempt`, `xp_event`.
 - Khóa bản ghi: `record_id` = uuid (v4 do app sinh) hoặc `word_uid` (`T01-0007` / uuid từ của người dùng) cho `card_progress`, `favorite`; `settings` không có khóa (1 bản/người dùng). `data` chưa đặt (oneof rỗng, vd app mới gửi loại server cũ chưa biết) → `REJECTED` `UNKNOWN_ENTITY`.
 - **Danh sách trắng trường** (TM-15) nay là chính lược đồ proto: message không có `user_id`, `server_seq` (bị bỏ qua khi Push), `received_at`, `local_date`, `week_start`; `xp_awarded` gửi lên bị bỏ qua. Trường lạ từ client mới hơn được `protobuf-java` giữ ở unknown fields và không bao giờ đọc/lưu.
 - proto3 không phân biệt "thiếu" với giá trị mặc định cho trường không `optional`: trường bắt buộc kiểu chuỗi rỗng `""`, enum `*_UNSPECIFIED`, số ngoài miền → `REJECTED` `INVALID_RECORD`. Trường `optional` không đặt = `NULL`.
@@ -419,6 +443,8 @@ service ContentService {
   rpc GetManifest(GetManifestRequest) returns (GetManifestResponse);   // EP-14
   rpc GetDeck(GetDeckRequest) returns (GetDeckResponse);               // EP-15
   rpc GetExam(GetExamRequest) returns (GetExamResponse);               // EP-16
+  rpc GetDecks(GetDecksRequest) returns (GetDecksResponse);            // EP-20
+  rpc GetExams(GetExamsRequest) returns (GetExamsResponse);            // EP-21
 }
 message GetManifestRequest { int64 if_version = 1; }   // thay If-None-Match; 0 = luôn trả đủ
 message GetManifestResponse {
@@ -437,7 +463,11 @@ message ManifestItem {
   int32 item_count = 3;             // số từ / số câu
   int64 updated_at_ms = 4;
 }
-message GetDeckRequest { string code = 1; }   // ^[A-Z][0-9]{2}$
+message GetDecksRequest { repeated string codes = 1; }                 // 1..10 mã khác nhau
+message GetDecksResponse { repeated GetDeckResponse decks = 1; }       // đúng thứ tự xin; mã không có thì bỏ qua
+message GetExamsRequest { repeated string codes = 1; }                 // 1..10 mã khác nhau
+message GetExamsResponse { repeated GetExamResponse exams = 1; }
+message GetDeckRequest { string code = 1; }   // ^[A-Z][0-9]{2,3}$
 message GetDeckResponse { ContentDeck deck = 1; repeated ContentWord words = 2; }
 message ContentDeck {
   string code = 1; string name = 2; optional string description = 3; string language_code = 4;

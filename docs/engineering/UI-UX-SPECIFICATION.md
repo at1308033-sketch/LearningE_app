@@ -98,6 +98,7 @@ flowchart TD
 | SCR-33 | Tài nguyên chính thức: liên kết ETS/IELTS/British Council | Người học | FLOW-017 |
 | SCR-34 | Bảng xếp hạng tuần: top 50 theo XP tuần, dòng "Bạn" ghim, hạng/avatar/XP/chuỗi, đếm ngược hết tuần; ngoại tuyến hiện bản lưu + "Cập nhật lúc …" | Người học (cần đăng nhập) | FLOW-020 |
 | SCR-35 | Trạng thái đồng bộ: lần đồng bộ cuối, số thay đổi chờ đẩy, lỗi gần nhất, nút "Đồng bộ ngay"; 5 trạng thái chờ đẩy / đang đồng bộ / đã đồng bộ / lỗi / ngoại tuyến | Người học (cần đăng nhập) | FLOW-019 |
+| SCR-36 | Thiết bị đăng nhập (Tôi › Thiết bị đăng nhập): danh sách máy, máy đang dùng ghi "Máy này", "Đăng xuất" từng máy khác hoặc mọi máy khác (hỏi lại trước); cần mạng. Chưa có trong Figma, dựng theo thành phần của SCR-35 | Người học (cần đăng nhập) | — |
 SCR-11 giữ mã để không lệch tài liệu đã duyệt nhưng không có màn hình riêng: **24 màn hình thực tế** cần thiết kế (SCR-04 có 3 bước, SCR-25 có 2 bước, SCR-13 có 5 dạng câu hỏi chủ đề và dạng ngữ pháp). thay đổi phạm vi thêm 8 màn hình (SCR-26..SCR-33) → 32 màn hình; thay đổi phạm vi thêm SCR-34, SCR-35 → **34 màn hình** (SCR-16/17 vẫn tính nhưng không làm ở phiên bản này); SCR-19/SCR-20 đổi từ "Sổ tay" thành "Chi tiết bộ"/"Thêm-sửa từ" dùng cho mọi bộ (sổ tay là bộ mặc định). Tab Học có 2 mục con: Chủ đề có sẵn / Bộ của tôi; tab Luyện tập thêm lối vào Luyện thi.
 
 ## Điều hướng chính
