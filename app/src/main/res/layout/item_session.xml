@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/button_height_l"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_4"
+    android:paddingVertical="@dimen/space_3">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:importantForAccessibility="no"
+        app:srcCompat="@drawable/ic_smartphone" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_3"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_session"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.LearningE.TitleS"
+            tools:text="Pixel 6" />
+
+        <TextView
+            android:id="@+id/tv_session_current"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sessions_current"
+            android:textAppearance="@style/TextAppearance.LearningE.Label"
+            android:textColor="@color/success" />
+
+        <TextView
+            android:id="@+id/tv_session_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.LearningE.Caption"
+            tools:text="Đăng nhập 20:41 09/11 · dùng gần nhất hôm nay" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_revoke"
+            style="@style/Widget.LearningE.Button.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_2"
+            android:text="@string/sessions_revoke" />
+    </LinearLayout>
+</LinearLayout>

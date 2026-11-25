@@ -185,6 +185,15 @@
         tools:layout="@layout/fragment_sync" />
 
     <action
+        android:id="@+id/action_global_sessions"
+        app:destination="@id/sessions_fragment" />
+
+    <fragment
+        android:id="@+id/sessions_fragment"
+        android:name="com.learninge.app.ui.me.SessionsFragment"
+        tools:layout="@layout/fragment_sessions" />
+
+    <action
         android:id="@+id/action_global_exam_hub"
         app:destination="@id/exam_hub_fragment" />
 

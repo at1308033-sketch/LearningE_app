@@ -34,6 +34,8 @@ public class MeFragment extends BaseFragment {
                 .navigate(NavMainDirections.actionGlobalProgress()));
         binding.rowSync.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalSync()));
+        binding.rowSessions.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalSessions()));
         binding.rowLeaderboard.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalLeaderboard()));
     }

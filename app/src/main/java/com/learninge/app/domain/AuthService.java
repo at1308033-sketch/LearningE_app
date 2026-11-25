@@ -6,6 +6,7 @@ import com.learninge.app.core.AppExecutors;
 import com.learninge.app.core.ErrorCode;
 import com.learninge.app.core.Result;
 import com.learninge.app.core.SessionStore;
+import com.learninge.app.data.model.DeviceSession;
 import com.learninge.app.data.model.User;
 import com.learninge.app.data.remote.AuthRemote;
 import com.learninge.app.data.remote.RemoteSession;
@@ -15,6 +16,7 @@ import com.learninge.app.domain.rules.AccountRules;
 import com.learninge.app.domain.rules.RegisterForm;
 
 import java.time.Clock;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -72,6 +74,25 @@ public class AuthService {
             accounts.delete(userId);
             return null;
         });
+    }
+
+    /**
+     * Các máy đang đăng nhập tài khoản này, dùng gần nhất trước.
+     */
+    public Result<List<DeviceSession>> sessions() {
+        return remote.get().sessions();
+    }
+
+    /**
+     * Đăng xuất một máy khác. Phiên đã hết trước đó cũng là thành công.
+     */
+    public Result<Void> revokeSession(long id) {
+        Result<Void> result = remote.get().revokeSession(id);
+        return result.error == ErrorCode.NOT_FOUND ? Result.ok(null) : result;
+    }
+
+    public Result<Void> revokeOtherSessions() {
+        return remote.get().revokeOtherSessions();
     }
 
     public Result<User> currentUser() {
