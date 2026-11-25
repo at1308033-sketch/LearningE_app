@@ -57,10 +57,8 @@ public class SessionResultFragment extends BaseFragment {
                 summary.total(), summary.percent(), summary.streak()));
         binding.btnDone.setOnClickListener(v -> nav.navigateUp());
         binding.btnContinue.setVisibility(isReview ? View.GONE : View.VISIBLE);
-        binding.btnContinue.setOnClickListener(v -> {
-            nav.navigateUp();
-            nav.navigate(NavMainDirections.actionGlobalFlashcard(StudySource.NEW).setDeckId(summary.deckId()));
-        });
+        binding.btnContinue.setOnClickListener(v ->
+                nav.navigate(NavMainDirections.actionGlobalFlashcard(StudySource.NEW).setDeckId(summary.deckId())));
     }
 
     private void renderGame(FragmentSessionResultBinding binding, SessionSummary summary, boolean isFirstTime) {
