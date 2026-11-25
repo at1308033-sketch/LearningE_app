@@ -487,6 +487,8 @@
     <string name="forgot_answer">Cau tra loi bao mat</string>
     <string name="forgot_new_password">Mat khau moi</string>
     <string name="forgot_developing">Tinh nang dang phat trien, vui long lien he ho tro.</string>
+    <string name="forgot_email_not_found">Email không tìm thấy trong hệ thống.</string>
+    <string name="forgot_error_answer">Câu trả lời không đúng hoặc để trống.</string>
 
     <!-- SCR-12/13/14 Quiz chu de -->
     <string name="practice_quiz_title">Quiz chu de</string>
