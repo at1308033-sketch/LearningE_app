@@ -38,5 +38,9 @@ public class MeFragment extends BaseFragment {
                 .navigate(NavMainDirections.actionGlobalSessions()));
         binding.rowLeaderboard.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(NavMainDirections.actionGlobalLeaderboard()));
+        binding.rowChangePassword.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalChangePassword()));
+        binding.rowAbout.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(NavMainDirections.actionGlobalAbout()));
     }
 }

@@ -69,6 +69,22 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sessions_title"
                 app:drawableStartCompat="@drawable/ic_smartphone" />
+
+            <TextView
+                android:id="@+id/row_change_password"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/me_change_password"
+                app:drawableStartCompat="@drawable/ic_lock" />
+
+            <TextView
+                android:id="@+id/row_about"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/me_about"
+                app:drawableStartCompat="@drawable/ic_info" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

@@ -1,166 +1,166 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LearningE</string>
 
     <!-- Thanh tab -->
-    <string name="tab_home">Trang chủ</string>
-    <string name="tab_learn">Học</string>
-    <string name="tab_practice">Luyện tập</string>
-    <string name="tab_search">Tra từ</string>
-    <string name="search_hint">Nhập từ, nghĩa hoặc phiên âm…</string>
-    <string name="search_empty_title">Tìm từ bất kỳ</string>
-    <string name="search_no_results">Không tìm thấy từ nào</string>
-    <string name="tab_me">Tôi</string>
+    <string name="tab_home">Trang chá»§</string>
+    <string name="tab_learn">Há»c</string>
+    <string name="tab_practice">Luyá»‡n táº­p</string>
+    <string name="tab_search">Tra tá»«</string>
+    <string name="search_hint">Nháº­p tá»«, nghÄ©a hoáº·c phiÃªn Ã¢mâ€¦</string>
+    <string name="search_empty_title">TÃ¬m tá»« báº¥t ká»³</string>
+    <string name="search_no_results">KhÃ´ng tÃ¬m tháº¥y tá»« nÃ o</string>
+    <string name="tab_me">TÃ´i</string>
 
-    <!-- SCR-01 Màn hình chờ -->
-    <string name="splash_slogan">Học tiếng Anh mỗi ngày —\nhọc được cả khi mất mạng</string>
-    <string name="splash_loading">Đang chuẩn bị dữ liệu học…</string>
+    <!-- SCR-01 MÃ n hÃ¬nh chá» -->
+    <string name="splash_slogan">Há»c tiáº¿ng Anh má»—i ngÃ y â€”\nhá»c Ä‘Æ°á»£c cáº£ khi máº¥t máº¡ng</string>
+    <string name="splash_loading">Äang chuáº©n bá»‹ dá»¯ liá»‡u há»câ€¦</string>
 
-    <string name="splash_seed_failed">Không chuẩn bị được dữ liệu học.</string>
+    <string name="splash_seed_failed">KhÃ´ng chuáº©n bá»‹ Ä‘Æ°á»£c dá»¯ liá»‡u há»c.</string>
 
-    <!-- Dùng chung -->
-    <string name="common_retry">Thử lại</string>
-    <string name="common_loading">Đang tải</string>
-    <string name="common_cancel">Hủy</string>
-    <string name="common_delete">Xóa</string>
-    <string name="common_close">Đóng</string>
-    <string name="common_back">Quay lại</string>
-    <string name="common_sending">Đang gửi…</string>
+    <!-- DÃ¹ng chung -->
+    <string name="common_retry">Thá»­ láº¡i</string>
+    <string name="common_loading">Äang táº£i</string>
+    <string name="common_cancel">Há»§y</string>
+    <string name="common_delete">XÃ³a</string>
+    <string name="common_close">ÄÃ³ng</string>
+    <string name="common_back">Quay láº¡i</string>
+    <string name="common_sending">Äang gá»­iâ€¦</string>
 
-    <!-- Lỗi chung (ErrorCode) -->
-    <string name="error_generic">Đã có lỗi khi lưu dữ liệu, vui lòng thử lại</string>
-    <string name="error_validation">Dữ liệu chưa hợp lệ</string>
-    <string name="error_invalid_credentials">Email hoặc mật khẩu không đúng</string>
-    <string name="error_wrong_password">Mật khẩu hiện tại không đúng</string>
-    <string name="error_network_offline">Không có kết nối mạng</string>
-    <string name="error_network_timeout">Máy chủ phản hồi chậm, thử lại sau</string>
-    <string name="error_server_unavailable">Máy chủ đang bận. Dữ liệu của bạn không bị mất — thử lại sau ít phút.</string>
-    <string name="error_rate_limited">Bạn đã thử quá nhiều lần. Vui lòng chờ rồi thử lại.</string>
-    <string name="error_upgrade_required">Vui lòng cập nhật ứng dụng</string>
-    <string name="error_payload_too_large">Dữ liệu gửi lên quá lớn</string>
-    <string name="error_account_deleted">Tài khoản đã bị xóa</string>
-    <string name="error_session_expired">Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại</string>
-    <string name="error_file_too_large">File quá lớn (tối đa 1 MB, 2000 dòng)</string>
-    <string name="error_file_format">Sai định dạng tệp</string>
-    <string name="error_no_valid_rows">Không có dòng hợp lệ để nhập</string>
-    <string name="error_io">Không đọc được file, vui lòng chọn lại</string>
-    <string name="error_export">Không thể xuất file</string>
-    <string name="error_not_found">Không tìm thấy dữ liệu</string>
+    <!-- Lá»—i chung (ErrorCode) -->
+    <string name="error_generic">ÄÃ£ cÃ³ lá»—i khi lÆ°u dá»¯ liá»‡u, vui lÃ²ng thá»­ láº¡i</string>
+    <string name="error_validation">Dá»¯ liá»‡u chÆ°a há»£p lá»‡</string>
+    <string name="error_invalid_credentials">Email hoáº·c máº­t kháº©u khÃ´ng Ä‘Ãºng</string>
+    <string name="error_wrong_password">Máº­t kháº©u hiá»‡n táº¡i khÃ´ng Ä‘Ãºng</string>
+    <string name="error_network_offline">KhÃ´ng cÃ³ káº¿t ná»‘i máº¡ng</string>
+    <string name="error_network_timeout">MÃ¡y chá»§ pháº£n há»“i cháº­m, thá»­ láº¡i sau</string>
+    <string name="error_server_unavailable">MÃ¡y chá»§ Ä‘ang báº­n. Dá»¯ liá»‡u cá»§a báº¡n khÃ´ng bá»‹ máº¥t â€” thá»­ láº¡i sau Ã­t phÃºt.</string>
+    <string name="error_rate_limited">Báº¡n Ä‘Ã£ thá»­ quÃ¡ nhiá»u láº§n. Vui lÃ²ng chá» rá»“i thá»­ láº¡i.</string>
+    <string name="error_upgrade_required">Vui lÃ²ng cáº­p nháº­t á»©ng dá»¥ng</string>
+    <string name="error_payload_too_large">Dá»¯ liá»‡u gá»­i lÃªn quÃ¡ lá»›n</string>
+    <string name="error_account_deleted">TÃ i khoáº£n Ä‘Ã£ bá»‹ xÃ³a</string>
+    <string name="error_session_expired">PhiÃªn Ä‘Äƒng nháº­p Ä‘Ã£ háº¿t háº¡n, vui lÃ²ng Ä‘Äƒng nháº­p láº¡i</string>
+    <string name="error_file_too_large">File quÃ¡ lá»›n (tá»‘i Ä‘a 1 MB, 2000 dÃ²ng)</string>
+    <string name="error_file_format">Sai Ä‘á»‹nh dáº¡ng tá»‡p</string>
+    <string name="error_no_valid_rows">KhÃ´ng cÃ³ dÃ²ng há»£p lá»‡ Ä‘á»ƒ nháº­p</string>
+    <string name="error_io">KhÃ´ng Ä‘á»c Ä‘Æ°á»£c file, vui lÃ²ng chá»n láº¡i</string>
+    <string name="error_export">KhÃ´ng thá»ƒ xuáº¥t file</string>
+    <string name="error_not_found">KhÃ´ng tÃ¬m tháº¥y dá»¯ liá»‡u</string>
 
-    <!-- SCR-02 Đăng nhập -->
-    <string name="login_title">Chào mừng trở lại!</string>
-    <string name="login_subtitle">Đăng nhập để học tiếp chuỗi ngày của bạn.</string>
+    <!-- SCR-02 ÄÄƒng nháº­p -->
+    <string name="login_title">ChÃ o má»«ng trá»Ÿ láº¡i!</string>
+    <string name="login_subtitle">ÄÄƒng nháº­p Ä‘á»ƒ há»c tiáº¿p chuá»—i ngÃ y cá»§a báº¡n.</string>
     <string name="login_email">Email</string>
-    <string name="login_password">Mật khẩu</string>
-    <string name="login_show_password">Hiện mật khẩu</string>
-    <string name="login_submit">Đăng nhập</string>
-    <string name="login_no_account">Chưa có tài khoản?</string>
-    <string name="login_error_password_empty">Vui lòng nhập mật khẩu</string>
-    <string name="login_locked">Thử lại sau %1$d giây</string>
+    <string name="login_password">Máº­t kháº©u</string>
+    <string name="login_show_password">Hiá»‡n máº­t kháº©u</string>
+    <string name="login_submit">ÄÄƒng nháº­p</string>
+    <string name="login_no_account">ChÆ°a cÃ³ tÃ i khoáº£n?</string>
+    <string name="login_error_password_empty">Vui lÃ²ng nháº­p máº­t kháº©u</string>
+    <string name="login_locked">Thá»­ láº¡i sau %1$d giÃ¢y</string>
 
-    <string name="auth_offline">Không có kết nối mạng — bước này cần Internet. Bật Wi-Fi hoặc dữ liệu di động rồi thử lại.</string>
-    <string name="login_session_expired">Phiên đăng nhập đã hết hạn. Đăng nhập lại để tiếp tục — dữ liệu chưa đồng bộ vẫn được giữ trên máy.</string>
-    <string name="login_switch_title">Đổi tài khoản?</string>
+    <string name="auth_offline">KhÃ´ng cÃ³ káº¿t ná»‘i máº¡ng â€” bÆ°á»›c nÃ y cáº§n Internet. Báº­t Wi-Fi hoáº·c dá»¯ liá»‡u di Ä‘á»™ng rá»“i thá»­ láº¡i.</string>
+    <string name="login_session_expired">PhiÃªn Ä‘Äƒng nháº­p Ä‘Ã£ háº¿t háº¡n. ÄÄƒng nháº­p láº¡i Ä‘á»ƒ tiáº¿p tá»¥c â€” dá»¯ liá»‡u chÆ°a Ä‘á»“ng bá»™ váº«n Ä‘Æ°á»£c giá»¯ trÃªn mÃ¡y.</string>
+    <string name="login_switch_title">Äá»•i tÃ i khoáº£n?</string>
     <plurals name="login_switch_message">
-        <item quantity="other">Tài khoản trước trên máy này còn %d thay đổi chưa đồng bộ. Nếu đăng nhập tài khoản khác, các thay đổi đó sẽ mất.</item>
+        <item quantity="other">TÃ i khoáº£n trÆ°á»›c trÃªn mÃ¡y nÃ y cÃ²n %d thay Ä‘á»•i chÆ°a Ä‘á»“ng bá»™. Náº¿u Ä‘Äƒng nháº­p tÃ i khoáº£n khÃ¡c, cÃ¡c thay Ä‘á»•i Ä‘Ã³ sáº½ máº¥t.</item>
     </plurals>
-    <string name="login_switch_stay">Ở lại</string>
-    <string name="login_switch_continue">Vẫn đăng nhập</string>
+    <string name="login_switch_stay">á»ž láº¡i</string>
+    <string name="login_switch_continue">Váº«n Ä‘Äƒng nháº­p</string>
 
-    <!-- SCR-03 Đăng ký -->
-    <string name="register_title">Tạo tài khoản</string>
-    <string name="register_subtitle">Bước nhỏ, bắt đầu lớn</string>
-    <string name="register_display_name">Tên hiển thị</string>
-    <string name="register_nickname">Biệt danh công khai</string>
-    <string name="register_nickname_hint">Hiện trên bảng xếp hạng. 3–20 ký tự: chữ không dấu, số, \'.\' hoặc \'_\'</string>
-    <string name="register_password_hint">Ít nhất 8 ký tự, có cả chữ và số</string>
-    <string name="register_confirm">Nhập lại mật khẩu</string>
-    <string name="register_question">Câu hỏi bảo mật</string>
-    <string name="register_answer">Câu trả lời</string>
-    <string name="register_answer_hint">2–50 ký tự, dùng để đặt lại mật khẩu</string>
-    <string name="register_submit">Đăng ký</string>
-    <string name="register_error_email">Email không hợp lệ</string>
-    <string name="register_error_email_taken">Email đã được sử dụng</string>
-    <string name="register_error_nickname">Biệt danh 3–20 ký tự, chỉ gồm chữ không dấu, số, \'.\' hoặc \'_\'</string>
-    <string name="register_error_nickname_taken">Biệt danh đã được sử dụng</string>
-    <string name="register_error_display_name">Tên hiển thị từ 2 đến 30 ký tự</string>
-    <string name="register_error_password">Mật khẩu tối thiểu 8 ký tự, gồm cả chữ và số</string>
-    <string name="register_error_confirm">Mật khẩu xác nhận không khớp</string>
-    <string name="register_error_question">Vui lòng chọn câu hỏi bảo mật</string>
-    <string name="register_error_answer">Câu trả lời từ 2 đến 50 ký tự</string>
+    <!-- SCR-03 ÄÄƒng kÃ½ -->
+    <string name="register_title">Táº¡o tÃ i khoáº£n</string>
+    <string name="register_subtitle">BÆ°á»›c nhá», báº¯t Ä‘áº§u lá»›n</string>
+    <string name="register_display_name">TÃªn hiá»ƒn thá»‹</string>
+    <string name="register_nickname">Biá»‡t danh cÃ´ng khai</string>
+    <string name="register_nickname_hint">Hiá»‡n trÃªn báº£ng xáº¿p háº¡ng. 3â€“20 kÃ½ tá»±: chá»¯ khÃ´ng dáº¥u, sá»‘, \'.\' hoáº·c \'_\'</string>
+    <string name="register_password_hint">Ãt nháº¥t 8 kÃ½ tá»±, cÃ³ cáº£ chá»¯ vÃ  sá»‘</string>
+    <string name="register_confirm">Nháº­p láº¡i máº­t kháº©u</string>
+    <string name="register_question">CÃ¢u há»i báº£o máº­t</string>
+    <string name="register_answer">CÃ¢u tráº£ lá»i</string>
+    <string name="register_answer_hint">2â€“50 kÃ½ tá»±, dÃ¹ng Ä‘á»ƒ Ä‘áº·t láº¡i máº­t kháº©u</string>
+    <string name="register_submit">ÄÄƒng kÃ½</string>
+    <string name="register_error_email">Email khÃ´ng há»£p lá»‡</string>
+    <string name="register_error_email_taken">Email Ä‘Ã£ Ä‘Æ°á»£c sá»­ dá»¥ng</string>
+    <string name="register_error_nickname">Biá»‡t danh 3â€“20 kÃ½ tá»±, chá»‰ gá»“m chá»¯ khÃ´ng dáº¥u, sá»‘, \'.\' hoáº·c \'_\'</string>
+    <string name="register_error_nickname_taken">Biá»‡t danh Ä‘Ã£ Ä‘Æ°á»£c sá»­ dá»¥ng</string>
+    <string name="register_error_display_name">TÃªn hiá»ƒn thá»‹ tá»« 2 Ä‘áº¿n 30 kÃ½ tá»±</string>
+    <string name="register_error_password">Máº­t kháº©u tá»‘i thiá»ƒu 8 kÃ½ tá»±, gá»“m cáº£ chá»¯ vÃ  sá»‘</string>
+    <string name="register_error_confirm">Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p</string>
+    <string name="register_error_question">Vui lÃ²ng chá»n cÃ¢u há»i báº£o máº­t</string>
+    <string name="register_error_answer">CÃ¢u tráº£ lá»i tá»« 2 Ä‘áº¿n 50 kÃ½ tá»±</string>
     <string-array name="security_questions">
-        <item>Tên trường tiểu học đầu tiên của bạn?</item>
-        <item>Tên thú cưng đầu tiên của bạn?</item>
-        <item>Thành phố nơi bạn sinh ra?</item>
-        <item>Món ăn yêu thích của bạn?</item>
-        <item>Tên người bạn thân thời nhỏ của bạn?</item>
+        <item>TÃªn trÆ°á»ng tiá»ƒu há»c Ä‘áº§u tiÃªn cá»§a báº¡n?</item>
+        <item>TÃªn thÃº cÆ°ng Ä‘áº§u tiÃªn cá»§a báº¡n?</item>
+        <item>ThÃ nh phá»‘ nÆ¡i báº¡n sinh ra?</item>
+        <item>MÃ³n Äƒn yÃªu thÃ­ch cá»§a báº¡n?</item>
+        <item>TÃªn ngÆ°á»i báº¡n thÃ¢n thá»i nhá» cá»§a báº¡n?</item>
     </string-array>
 
-    <!-- Cấp độ -->
+    <!-- Cáº¥p Ä‘á»™ -->
     <string name="level_a1">A1</string>
     <string name="level_a2">A2</string>
     <string name="level_b1">B1</string>
 
-    <!-- SCR-06 Học -->
-    <string name="learn_topics">Chủ đề có sẵn</string>
-    <string name="learn_my_decks">Bộ của tôi</string>
-    <string name="learn_level_all">Tất cả</string>
-    <string name="learn_empty_title">Chưa có chủ đề</string>
-    <string name="learn_empty_message">Không có chủ đề nào ở cấp độ này.</string>
-    <string name="topic_progress">Đã thuộc %1$d/%2$d</string>
-    <string name="topic_description">%1$s, %2$s, đã thuộc %3$d trên %4$d từ</string>
+    <!-- SCR-06 Há»c -->
+    <string name="learn_topics">Chá»§ Ä‘á» cÃ³ sáºµn</string>
+    <string name="learn_my_decks">Bá»™ cá»§a tÃ´i</string>
+    <string name="learn_level_all">Táº¥t cáº£</string>
+    <string name="learn_empty_title">ChÆ°a cÃ³ chá»§ Ä‘á»</string>
+    <string name="learn_empty_message">KhÃ´ng cÃ³ chá»§ Ä‘á» nÃ o á»Ÿ cáº¥p Ä‘á»™ nÃ y.</string>
+    <string name="topic_progress">ÄÃ£ thuá»™c %1$d/%2$d</string>
+    <string name="topic_description">%1$s, %2$s, Ä‘Ã£ thuá»™c %3$d trÃªn %4$d tá»«</string>
 
-    <!-- SCR-07 Danh sách từ -->
-    <string name="word_list_counts">%1$d từ · %2$d đang học</string>
-    <string name="word_list_mastered">Đã thuộc %1$d/%2$d từ</string>
-    <string name="word_list_learn">Học từ mới</string>
-    <string name="word_list_empty">Bộ này chưa có từ nào</string>
-    <string name="word_status_new">Mới</string>
-    <string name="word_status_learning">Đang học</string>
-    <string name="word_status_mastered">Đã thuộc</string>
+    <!-- SCR-07 Danh sÃ¡ch tá»« -->
+    <string name="word_list_counts">%1$d tá»« Â· %2$d Ä‘ang há»c</string>
+    <string name="word_list_mastered">ÄÃ£ thuá»™c %1$d/%2$d tá»«</string>
+    <string name="word_list_learn">Há»c tá»« má»›i</string>
+    <string name="word_list_empty">Bá»™ nÃ y chÆ°a cÃ³ tá»« nÃ o</string>
+    <string name="word_status_new">Má»›i</string>
+    <string name="word_status_learning">Äang há»c</string>
+    <string name="word_status_mastered">ÄÃ£ thuá»™c</string>
 
-    <!-- SCR-05 Trang chủ -->
-    <string name="home_morning">Chào buổi sáng,</string>
-    <string name="home_afternoon">Chào buổi chiều,</string>
-    <string name="home_evening">Chào buổi tối,</string>
-    <string name="home_session_label">Phiên học hôm nay</string>
-    <string name="home_cards">thẻ</string>
-    <string name="home_minutes">Khoảng %1$d phút</string>
-    <string name="home_nothing_due">Hôm nay không có thẻ cần ôn</string>
-    <string name="home_due">%1$d thẻ cần ôn</string>
-    <string name="home_new_words">%1$d từ mới</string>
-    <string name="home_goal_label">Mục tiêu hôm nay</string>
-    <string name="home_goal">%1$d/%2$d từ</string>
-    <string name="home_goal_met">Bạn đã đạt mục tiêu hôm nay!</string>
-    <string name="home_goal_not_met">Học xong phiên này để tiến gần mục tiêu ngày.</string>
-    <string name="home_start">Bắt đầu học</string>
-    <string name="home_continue_label">Học tiếp chủ đề</string>
-    <string name="home_first_label">Bắt đầu</string>
-    <string name="home_first_topic">Chọn chủ đề đầu tiên</string>
-    <string name="home_exam">Thử một đề luyện thi</string>
-    <string name="home_exam_note">TOEIC · IELTS · Aptis</string>
-    <string name="home_leaderboard">Bảng xếp hạng tuần</string>
-    <string name="home_rank">Hạng %1$d · %2$d XP</string>
-    <string name="home_week_xp">%1$d XP tuần này</string>
-    <string name="home_deck_count">%1$d/%2$d từ</string>
+    <!-- SCR-05 Trang chá»§ -->
+    <string name="home_morning">ChÃ o buá»•i sÃ¡ng,</string>
+    <string name="home_afternoon">ChÃ o buá»•i chiá»u,</string>
+    <string name="home_evening">ChÃ o buá»•i tá»‘i,</string>
+    <string name="home_session_label">PhiÃªn há»c hÃ´m nay</string>
+    <string name="home_cards">tháº»</string>
+    <string name="home_minutes">Khoáº£ng %1$d phÃºt</string>
+    <string name="home_nothing_due">HÃ´m nay khÃ´ng cÃ³ tháº» cáº§n Ã´n</string>
+    <string name="home_due">%1$d tháº» cáº§n Ã´n</string>
+    <string name="home_new_words">%1$d tá»« má»›i</string>
+    <string name="home_goal_label">Má»¥c tiÃªu hÃ´m nay</string>
+    <string name="home_goal">%1$d/%2$d tá»«</string>
+    <string name="home_goal_met">Báº¡n Ä‘Ã£ Ä‘áº¡t má»¥c tiÃªu hÃ´m nay!</string>
+    <string name="home_goal_not_met">Há»c xong phiÃªn nÃ y Ä‘á»ƒ tiáº¿n gáº§n má»¥c tiÃªu ngÃ y.</string>
+    <string name="home_start">Báº¯t Ä‘áº§u há»c</string>
+    <string name="home_continue_label">Há»c tiáº¿p chá»§ Ä‘á»</string>
+    <string name="home_first_label">Báº¯t Ä‘áº§u</string>
+    <string name="home_first_topic">Chá»n chá»§ Ä‘á» Ä‘áº§u tiÃªn</string>
+    <string name="home_exam">Thá»­ má»™t Ä‘á» luyá»‡n thi</string>
+    <string name="home_exam_note">TOEIC Â· IELTS Â· Aptis</string>
+    <string name="home_leaderboard">Báº£ng xáº¿p háº¡ng tuáº§n</string>
+    <string name="home_rank">Háº¡ng %1$d Â· %2$d XP</string>
+    <string name="home_week_xp">%1$d XP tuáº§n nÃ y</string>
+    <string name="home_deck_count">%1$d/%2$d tá»«</string>
     <plurals name="days">
-        <item quantity="other">%d ngày</item>
+        <item quantity="other">%d ngÃ y</item>
     </plurals>
 
-    <!-- SCR-22 Tôi -->
-    <string name="me_progress">Tiến độ học tập</string>
+    <!-- SCR-22 TÃ´i -->
+    <string name="me_progress">Tiáº¿n Ä‘á»™ há»c táº­p</string>
 
-    <!-- SCR-21 Tiến độ -->
-    <string name="progress_title">Tiến độ</string>
-    <string name="progress_current_streak">Chuỗi hiện tại</string>
-    <string name="progress_days_in_row">ngày liên tiếp</string>
-    <string name="progress_record">Kỷ lục: %1$d ngày</string>
-    <string name="progress_no_streak">Chưa có chuỗi — học hôm nay để thắp lửa</string>
-    <string name="progress_week">Hoạt động 7 ngày</string>
-    <string name="progress_mastered_of">Đã thuộc %1$d/%2$d từ</string>
-    <string name="progress_quiz_average">Điểm quiz trung bình 7 ngày: %1$d</string>
-    <string name="progress_no_quiz">Chưa làm bài quiz nào trong 7 ngày qua</string>
-    <string name="progress_by_topic">Theo chủ đề</string>
+    <!-- SCR-21 Tiáº¿n Ä‘á»™ -->
+    <string name="progress_title">Tiáº¿n Ä‘á»™</string>
+    <string name="progress_current_streak">Chuá»—i hiá»‡n táº¡i</string>
+    <string name="progress_days_in_row">ngÃ y liÃªn tiáº¿p</string>
+    <string name="progress_record">Ká»· lá»¥c: %1$d ngÃ y</string>
+    <string name="progress_no_streak">ChÆ°a cÃ³ chuá»—i â€” há»c hÃ´m nay Ä‘á»ƒ tháº¯p lá»­a</string>
+    <string name="progress_week">Hoáº¡t Ä‘á»™ng 7 ngÃ y</string>
+    <string name="progress_mastered_of">ÄÃ£ thuá»™c %1$d/%2$d tá»«</string>
+    <string name="progress_quiz_average">Äiá»ƒm quiz trung bÃ¬nh 7 ngÃ y: %1$d</string>
+    <string name="progress_no_quiz">ChÆ°a lÃ m bÃ i quiz nÃ o trong 7 ngÃ y qua</string>
+    <string name="progress_by_topic">Theo chá»§ Ä‘á»</string>
     <string-array name="weekdays_short">
         <item>T2</item>
         <item>T3</item>
@@ -171,267 +171,330 @@
         <item>CN</item>
     </string-array>
 
-    <!-- SCR-08 Chi tiết từ -->
-    <string name="word_title">Chi tiết từ</string>
-    <string name="word_meaning">Nghĩa</string>
-    <string name="word_example">Ví dụ</string>
-    <string name="word_speak">Phát âm</string>
-    <string name="word_speak_example">Phát âm câu ví dụ</string>
-    <string name="word_box_new">Chưa học từ này</string>
-    <string name="word_box_due">Hộp %1$d/5 · cần ôn hôm nay</string>
-    <string name="word_box_in_days">Hộp %1$d/5 · ôn lại sau %2$d ngày</string>
-    <string name="word_save_to_deck">Lưu vào bộ</string>
-    <string name="word_saved">Đã lưu từ vào bộ</string>
-    <string name="word_delete">Xóa từ</string>
-    <string name="word_delete_title">Xóa từ này khỏi bộ?</string>
-    <string name="favorite">Yêu thích</string>
-    <string name="favorite_on">đã thích</string>
-    <string name="favorite_off">chưa thích</string>
-    <string name="tts_unavailable">Máy chưa có giọng đọc %1$s</string>
-    <string name="tts_settings">Cài đặt</string>
-    <string name="tts_no_settings">Không mở được cài đặt giọng đọc</string>
+    <!-- SCR-08 Chi tiáº¿t tá»« -->
+    <string name="word_title">Chi tiáº¿t tá»«</string>
+    <string name="word_meaning">NghÄ©a</string>
+    <string name="word_example">VÃ­ dá»¥</string>
+    <string name="word_speak">PhÃ¡t Ã¢m</string>
+    <string name="word_speak_example">PhÃ¡t Ã¢m cÃ¢u vÃ­ dá»¥</string>
+    <string name="word_box_new">ChÆ°a há»c tá»« nÃ y</string>
+    <string name="word_box_due">Há»™p %1$d/5 Â· cáº§n Ã´n hÃ´m nay</string>
+    <string name="word_box_in_days">Há»™p %1$d/5 Â· Ã´n láº¡i sau %2$d ngÃ y</string>
+    <string name="word_save_to_deck">LÆ°u vÃ o bá»™</string>
+    <string name="word_saved">ÄÃ£ lÆ°u tá»« vÃ o bá»™</string>
+    <string name="word_delete">XÃ³a tá»«</string>
+    <string name="word_delete_title">XÃ³a tá»« nÃ y khá»i bá»™?</string>
+    <string name="favorite">YÃªu thÃ­ch</string>
+    <string name="favorite_on">Ä‘Ã£ thÃ­ch</string>
+    <string name="favorite_off">chÆ°a thÃ­ch</string>
+    <string name="tts_unavailable">MÃ¡y chÆ°a cÃ³ giá»ng Ä‘á»c %1$s</string>
+    <string name="tts_settings">CÃ i Ä‘áº·t</string>
+    <string name="tts_no_settings">KhÃ´ng má»Ÿ Ä‘Æ°á»£c cÃ i Ä‘áº·t giá»ng Ä‘á»c</string>
 
     <!-- SCR-09 Flashcard -->
-    <string name="study_new">Học mới</string>
-    <string name="study_review">Ôn tập</string>
+    <string name="study_new">Há»c má»›i</string>
+    <string name="study_review">Ã”n táº­p</string>
     <string name="study_position">%1$d/%2$d</string>
     <string name="study_term_reading">%1$s  %2$s</string>
-    <string name="study_flip_hint">Chạm để lật thẻ</string>
-    <string name="study_forgot">Chưa nhớ</string>
-    <string name="study_remembered">Đã nhớ</string>
-    <string name="study_card_front">Lật thẻ. %1$s %2$s</string>
-    <string name="study_card_back">%1$s: %2$s. Chạm để lật lại</string>
-    <string name="study_no_new">Bạn đã học hết từ mới của chủ đề này</string>
-    <string name="study_no_due">Hôm nay không có thẻ cần ôn</string>
+    <string name="study_flip_hint">Cháº¡m Ä‘á»ƒ láº­t tháº»</string>
+    <string name="study_forgot">ChÆ°a nhá»›</string>
+    <string name="study_remembered">ÄÃ£ nhá»›</string>
+    <string name="study_card_front">Láº­t tháº». %1$s %2$s</string>
+    <string name="study_card_back">%1$s: %2$s. Cháº¡m Ä‘á»ƒ láº­t láº¡i</string>
+    <string name="study_no_new">Báº¡n Ä‘Ã£ há»c háº¿t tá»« má»›i cá»§a chá»§ Ä‘á» nÃ y</string>
+    <string name="study_no_due">HÃ´m nay khÃ´ng cÃ³ tháº» cáº§n Ã´n</string>
 
-    <!-- SCR-10 Kết quả phiên -->
-    <string name="result_title">Tuyệt vời, %1$s!</string>
-    <string name="result_new">Bạn đã học xong %1$d từ mới.</string>
-    <string name="result_review">Bạn đã ôn xong %1$d thẻ đến hạn.</string>
+    <!-- SCR-10 Káº¿t quáº£ phiÃªn -->
+    <string name="result_title">Tuyá»‡t vá»i, %1$s!</string>
+    <string name="result_new">Báº¡n Ä‘Ã£ há»c xong %1$d tá»« má»›i.</string>
+    <string name="result_review">Báº¡n Ä‘Ã£ Ã´n xong %1$d tháº» Ä‘áº¿n háº¡n.</string>
     <string name="result_percent">%1$d%%</string>
-    <string name="result_cards">Thẻ đã ôn</string>
-    <string name="result_correct">Trả lời đúng</string>
-    <string name="result_streak">Chuỗi ngày</string>
+    <string name="result_cards">Tháº» Ä‘Ã£ Ã´n</string>
+    <string name="result_correct">Tráº£ lá»i Ä‘Ãºng</string>
+    <string name="result_streak">Chuá»—i ngÃ y</string>
     <string name="result_xp">+%1$d XP</string>
-    <string name="result_xp_offline">+%1$d XP (sẽ được tính khi đồng bộ)</string>
-    <string name="result_xp_capped">Bạn đã đạt tối đa 500 XP hôm nay</string>
-    <string name="result_boxes">Thẻ đã đổi hộp</string>
-    <string name="result_moves">%1$d lên hộp · %2$d về hộp 1</string>
-    <string name="result_new_stage">Ngọn lửa đã lên giai đoạn %1$d!</string>
+    <string name="result_xp_offline">+%1$d XP (sáº½ Ä‘Æ°á»£c tÃ­nh khi Ä‘á»“ng bá»™)</string>
+    <string name="result_xp_capped">Báº¡n Ä‘Ã£ Ä‘áº¡t tá»‘i Ä‘a 500 XP hÃ´m nay</string>
+    <string name="result_boxes">Tháº» Ä‘Ã£ Ä‘á»•i há»™p</string>
+    <string name="result_moves">%1$d lÃªn há»™p Â· %2$d vá» há»™p 1</string>
+    <string name="result_new_stage">Ngá»n lá»­a Ä‘Ã£ lÃªn giai Ä‘oáº¡n %1$d!</string>
     <string name="result_done">Xong</string>
-    <string name="result_continue">Học tiếp chủ đề</string>
-    <string name="result_description">Tuyệt vời, %1$s. Đã ôn %2$d thẻ, đúng %3$d phần trăm, chuỗi %4$d ngày</string>
+    <string name="result_continue">Há»c tiáº¿p chá»§ Ä‘á»</string>
+    <string name="result_description">Tuyá»‡t vá»i, %1$s. ÄÃ£ Ã´n %2$d tháº», Ä‘Ãºng %3$d pháº§n trÄƒm, chuá»—i %4$d ngÃ y</string>
 
-    <!-- SCR-26, SCR-27, SCR-19 Bộ từ -->
+    <!-- SCR-26, SCR-27, SCR-19 Bá»™ tá»« -->
     <plurals name="words">
-        <item quantity="other">%d từ</item>
+        <item quantity="other">%d tá»«</item>
     </plurals>
-    <string name="deck_create">Tạo bộ</string>
-    <string name="deck_create_title">Tạo bộ mới</string>
-    <string name="deck_edit_title">Sửa bộ</string>
-    <string name="deck_save">Lưu bộ</string>
-    <string name="deck_name">Tên bộ *</string>
-    <string name="deck_name_hint">1–50 ký tự</string>
-    <string name="deck_description">Mô tả</string>
-    <string name="deck_description_hint">Tối đa 200 ký tự</string>
-    <string name="deck_language">Ngôn ngữ</string>
-    <string name="deck_language_locked">Chỉ đổi ngôn ngữ khi bộ chưa có từ</string>
-    <string name="deck_due">%1$d cần ôn</string>
-    <string name="deck_info">%1$s · %2$d từ · %3$d thẻ cần ôn</string>
-    <string name="deck_read_only">Bộ có sẵn — chỉ đọc</string>
-    <string name="deck_delete">Xóa bộ</string>
-    <string name="deck_delete_title">Xóa bộ này?</string>
-    <string name="deck_delete_message">Mọi từ và tiến độ học của bộ sẽ bị xóa.</string>
-    <string name="deck_error_name">Vui lòng nhập tên bộ</string>
-    <string name="deck_error_duplicate">Bạn đã có bộ tên này</string>
-    <string name="deck_error_description">Mô tả tối đa 200 ký tự</string>
-    <string name="favorites_empty">Chưa có từ yêu thích — bấm trái tim khi xem từ</string>
+    <string name="deck_create">Táº¡o bá»™</string>
+    <string name="deck_create_title">Táº¡o bá»™ má»›i</string>
+    <string name="deck_edit_title">Sá»­a bá»™</string>
+    <string name="deck_save">LÆ°u bá»™</string>
+    <string name="deck_name">TÃªn bá»™ *</string>
+    <string name="deck_name_hint">1â€“50 kÃ½ tá»±</string>
+    <string name="deck_description">MÃ´ táº£</string>
+    <string name="deck_description_hint">Tá»‘i Ä‘a 200 kÃ½ tá»±</string>
+    <string name="deck_language">NgÃ´n ngá»¯</string>
+    <string name="deck_language_locked">Chá»‰ Ä‘á»•i ngÃ´n ngá»¯ khi bá»™ chÆ°a cÃ³ tá»«</string>
+    <string name="deck_due">%1$d cáº§n Ã´n</string>
+    <string name="deck_info">%1$s Â· %2$d tá»« Â· %3$d tháº» cáº§n Ã´n</string>
+    <string name="deck_read_only">Bá»™ cÃ³ sáºµn â€” chá»‰ Ä‘á»c</string>
+    <string name="deck_delete">XÃ³a bá»™</string>
+    <string name="deck_delete_title">XÃ³a bá»™ nÃ y?</string>
+    <string name="deck_delete_message">Má»i tá»« vÃ  tiáº¿n Ä‘á»™ há»c cá»§a bá»™ sáº½ bá»‹ xÃ³a.</string>
+    <string name="deck_error_name">Vui lÃ²ng nháº­p tÃªn bá»™</string>
+    <string name="deck_error_duplicate">Báº¡n Ä‘Ã£ cÃ³ bá»™ tÃªn nÃ y</string>
+    <string name="deck_error_description">MÃ´ táº£ tá»‘i Ä‘a 200 kÃ½ tá»±</string>
+    <string name="favorites_empty">ChÆ°a cÃ³ tá»« yÃªu thÃ­ch â€” báº¥m trÃ¡i tim khi xem tá»«</string>
 
-    <!-- SCR-20 Thêm/sửa từ -->
-    <string name="word_add_title">Thêm từ</string>
-    <string name="word_edit_title">Sửa từ</string>
-    <string name="word_edit_subtitle">vào bộ %1$s · %2$s</string>
-    <string name="word_term">Từ *</string>
-    <string name="word_reading">Cách đọc</string>
-    <string name="word_meaning_required">Nghĩa *</string>
-    <string name="word_translation">Bản dịch ví dụ</string>
-    <string name="word_save">Lưu từ</string>
-    <string name="word_error_term">Vui lòng nhập từ</string>
-    <string name="word_error_reading">Phiên âm tối đa 60 ký tự</string>
-    <string name="word_error_meaning">Vui lòng nhập nghĩa</string>
-    <string name="word_error_example">Tối đa 300 ký tự</string>
-    <string name="word_error_duplicate">Từ này đã có trong bộ</string>
+    <!-- SCR-20 ThÃªm/sá»­a tá»« -->
+    <string name="word_add_title">ThÃªm tá»«</string>
+    <string name="word_edit_title">Sá»­a tá»«</string>
+    <string name="word_edit_subtitle">vÃ o bá»™ %1$s Â· %2$s</string>
+    <string name="word_term">Tá»« *</string>
+    <string name="word_reading">CÃ¡ch Ä‘á»c</string>
+    <string name="word_meaning_required">NghÄ©a *</string>
+    <string name="word_translation">Báº£n dá»‹ch vÃ­ dá»¥</string>
+    <string name="word_save">LÆ°u tá»«</string>
+    <string name="word_error_term">Vui lÃ²ng nháº­p tá»«</string>
+    <string name="word_error_reading">PhiÃªn Ã¢m tá»‘i Ä‘a 60 kÃ½ tá»±</string>
+    <string name="word_error_meaning">Vui lÃ²ng nháº­p nghÄ©a</string>
+    <string name="word_error_example">Tá»‘i Ä‘a 300 kÃ½ tá»±</string>
+    <string name="word_error_duplicate">Tá»« nÃ y Ä‘Ã£ cÃ³ trong bá»™</string>
 
-    <!-- SCR-34 Bảng xếp hạng -->
+    <!-- SCR-34 Báº£ng xáº¿p háº¡ng -->
     <string name="xp">%1$d XP</string>
-    <string name="today">hôm nay</string>
-    <string name="time_today">%1$s hôm nay</string>
-    <string name="leaderboard_title">Bảng xếp hạng</string>
-    <string name="leaderboard_week">Tuần %1$d · %2$s – %3$s</string>
-    <string name="leaderboard_countdown">Kết thúc sau %1$d ngày %2$02d:%3$02d</string>
-    <string name="leaderboard_updated">Top 50 theo XP tuần · Cập nhật lúc %1$s</string>
-    <string name="leaderboard_saved">Dữ liệu đã lưu · Cập nhật lúc %1$s</string>
-    <string name="leaderboard_you">Bạn</string>
-    <string name="leaderboard_my_rank">Bạn · Hạng %1$d</string>
-    <string name="leaderboard_no_rank">Bạn chưa có XP tuần này</string>
-    <string name="leaderboard_no_rank_short">–</string>
-    <string name="leaderboard_to_next">Còn %1$d XP để lên hạng %2$d</string>
-    <string name="leaderboard_row">Hạng %1$d, %2$s, %3$d XP, chuỗi %4$d ngày</string>
-    <string name="leaderboard_need_network">Cần kết nối mạng để xem bảng xếp hạng</string>
-    <string name="leaderboard_new_week">Tuần mới vừa bắt đầu — học một phiên để lên bảng</string>
+    <string name="today">hÃ´m nay</string>
+    <string name="time_today">%1$s hÃ´m nay</string>
+    <string name="leaderboard_title">Báº£ng xáº¿p háº¡ng</string>
+    <string name="leaderboard_week">Tuáº§n %1$d Â· %2$s â€“ %3$s</string>
+    <string name="leaderboard_countdown">Káº¿t thÃºc sau %1$d ngÃ y %2$02d:%3$02d</string>
+    <string name="leaderboard_updated">Top 50 theo XP tuáº§n Â· Cáº­p nháº­t lÃºc %1$s</string>
+    <string name="leaderboard_saved">Dá»¯ liá»‡u Ä‘Ã£ lÆ°u Â· Cáº­p nháº­t lÃºc %1$s</string>
+    <string name="leaderboard_you">Báº¡n</string>
+    <string name="leaderboard_my_rank">Báº¡n Â· Háº¡ng %1$d</string>
+    <string name="leaderboard_no_rank">Báº¡n chÆ°a cÃ³ XP tuáº§n nÃ y</string>
+    <string name="leaderboard_no_rank_short">â€“</string>
+    <string name="leaderboard_to_next">CÃ²n %1$d XP Ä‘á»ƒ lÃªn háº¡ng %2$d</string>
+    <string name="leaderboard_row">Háº¡ng %1$d, %2$s, %3$d XP, chuá»—i %4$d ngÃ y</string>
+    <string name="leaderboard_need_network">Cáº§n káº¿t ná»‘i máº¡ng Ä‘á»ƒ xem báº£ng xáº¿p háº¡ng</string>
+    <string name="leaderboard_new_week">Tuáº§n má»›i vá»«a báº¯t Ä‘áº§u â€” há»c má»™t phiÃªn Ä‘á»ƒ lÃªn báº£ng</string>
 
-    <!-- Thanh ngoại tuyến, SCR-35 Đồng bộ -->
-    <string name="offline_banner">Đang ngoại tuyến · sẽ đồng bộ khi có mạng</string>
-    <string name="sync_title">Đồng bộ</string>
-    <string name="sync_now">Đồng bộ ngay</string>
-    <string name="sync_running">Đang đồng bộ…</string>
-    <string name="sync_running_note">Đang trao đổi dữ liệu với máy chủ</string>
-    <string name="sync_progress">Đẩy %1$d/%2$d bản ghi</string>
-    <string name="sync_pending">Có thay đổi chờ đẩy lên</string>
-    <string name="sync_pending_note">Sẽ tự đồng bộ khi mở app, sau mỗi phiên học và khi có mạng.</string>
-    <string name="sync_done">Đã đồng bộ</string>
-    <string name="sync_done_note">Dữ liệu trên máy khớp với máy chủ.</string>
-    <string name="sync_error">Đồng bộ chưa thành công</string>
-    <string name="sync_error_note">Dữ liệu vẫn an toàn trên máy.</string>
-    <string name="sync_offline">Đang ngoại tuyến</string>
-    <string name="sync_offline_note">Bạn vẫn học bình thường, dữ liệu sẽ được đẩy lên khi có mạng.</string>
-    <string name="sync_need_network">Cần kết nối mạng để đồng bộ</string>
-    <string name="sync_last">Lần đồng bộ cuối</string>
-    <string name="sync_never">Chưa đồng bộ</string>
-    <string name="sync_pending_count">Thay đổi chờ đẩy</string>
-    <string name="sync_last_error">Lỗi gần nhất</string>
-    <string name="sync_no_error">Không có</string>
-    <string name="sync_record_rejected">Máy chủ từ chối một bản ghi (%1$s)</string>
-    <string name="sync_server">Máy chủ (bản debug)</string>
-    <string name="sync_safe_note">Dữ liệu chưa đồng bộ luôn được giữ trên máy; đăng xuất không làm mất chúng cho tới khi đẩy xong.</string>
+    <!-- Thanh ngoáº¡i tuyáº¿n, SCR-35 Äá»“ng bá»™ -->
+    <string name="offline_banner">Äang ngoáº¡i tuyáº¿n Â· sáº½ Ä‘á»“ng bá»™ khi cÃ³ máº¡ng</string>
+    <string name="sync_title">Äá»“ng bá»™</string>
+    <string name="sync_now">Äá»“ng bá»™ ngay</string>
+    <string name="sync_running">Äang Ä‘á»“ng bá»™â€¦</string>
+    <string name="sync_running_note">Äang trao Ä‘á»•i dá»¯ liá»‡u vá»›i mÃ¡y chá»§</string>
+    <string name="sync_progress">Äáº©y %1$d/%2$d báº£n ghi</string>
+    <string name="sync_pending">CÃ³ thay Ä‘á»•i chá» Ä‘áº©y lÃªn</string>
+    <string name="sync_pending_note">Sáº½ tá»± Ä‘á»“ng bá»™ khi má»Ÿ app, sau má»—i phiÃªn há»c vÃ  khi cÃ³ máº¡ng.</string>
+    <string name="sync_done">ÄÃ£ Ä‘á»“ng bá»™</string>
+    <string name="sync_done_note">Dá»¯ liá»‡u trÃªn mÃ¡y khá»›p vá»›i mÃ¡y chá»§.</string>
+    <string name="sync_error">Äá»“ng bá»™ chÆ°a thÃ nh cÃ´ng</string>
+    <string name="sync_error_note">Dá»¯ liá»‡u váº«n an toÃ n trÃªn mÃ¡y.</string>
+    <string name="sync_offline">Äang ngoáº¡i tuyáº¿n</string>
+    <string name="sync_offline_note">Báº¡n váº«n há»c bÃ¬nh thÆ°á»ng, dá»¯ liá»‡u sáº½ Ä‘Æ°á»£c Ä‘áº©y lÃªn khi cÃ³ máº¡ng.</string>
+    <string name="sync_need_network">Cáº§n káº¿t ná»‘i máº¡ng Ä‘á»ƒ Ä‘á»“ng bá»™</string>
+    <string name="sync_last">Láº§n Ä‘á»“ng bá»™ cuá»‘i</string>
+    <string name="sync_never">ChÆ°a Ä‘á»“ng bá»™</string>
+    <string name="sync_pending_count">Thay Ä‘á»•i chá» Ä‘áº©y</string>
+    <string name="sync_last_error">Lá»—i gáº§n nháº¥t</string>
+    <string name="sync_no_error">KhÃ´ng cÃ³</string>
+    <string name="sync_record_rejected">MÃ¡y chá»§ tá»« chá»‘i má»™t báº£n ghi (%1$s)</string>
+    <string name="sync_server">MÃ¡y chá»§ (báº£n debug)</string>
+    <string name="sync_safe_note">Dá»¯ liá»‡u chÆ°a Ä‘á»“ng bá»™ luÃ´n Ä‘Æ°á»£c giá»¯ trÃªn mÃ¡y; Ä‘Äƒng xuáº¥t khÃ´ng lÃ m máº¥t chÃºng cho tá»›i khi Ä‘áº©y xong.</string>
 
-    <!-- SCR-36 Thiết bị đăng nhập -->
-    <string name="sessions_title">Thiết bị đăng nhập</string>
-    <string name="sessions_unnamed">Thiết bị không rõ tên</string>
-    <string name="sessions_current">Máy này</string>
-    <string name="sessions_signed_in">Đăng nhập %1$s</string>
-    <string name="sessions_signed_in_used">Đăng nhập %1$s · dùng gần nhất %2$s</string>
-    <string name="sessions_revoke">Đăng xuất</string>
-    <string name="sessions_revoke_device">Đăng xuất %1$s</string>
-    <string name="sessions_revoke_title">Đăng xuất %1$s?</string>
-    <string name="sessions_revoke_others">Đăng xuất mọi thiết bị khác</string>
-    <string name="sessions_revoke_others_title">Đăng xuất mọi thiết bị khác?</string>
-    <string name="sessions_revoke_message">Thiết bị đó phải đăng nhập lại mới đồng bộ tiếp. Dữ liệu chưa đồng bộ trên thiết bị đó vẫn còn.</string>
-    <string name="sessions_note">Không nhận ra thiết bị nào thì hãy đăng xuất thiết bị đó.</string>
-    <string name="sessions_only_this">Tài khoản chỉ đang đăng nhập trên máy này.</string>
-    <string name="sessions_need_network">Cần kết nối mạng để xem thiết bị đăng nhập</string>
+    <!-- SCR-36 Thiáº¿t bá»‹ Ä‘Äƒng nháº­p -->
+    <string name="sessions_title">Thiáº¿t bá»‹ Ä‘Äƒng nháº­p</string>
+    <string name="sessions_unnamed">Thiáº¿t bá»‹ khÃ´ng rÃµ tÃªn</string>
+    <string name="sessions_current">MÃ¡y nÃ y</string>
+    <string name="sessions_signed_in">ÄÄƒng nháº­p %1$s</string>
+    <string name="sessions_signed_in_used">ÄÄƒng nháº­p %1$s Â· dÃ¹ng gáº§n nháº¥t %2$s</string>
+    <string name="sessions_revoke">ÄÄƒng xuáº¥t</string>
+    <string name="sessions_revoke_device">ÄÄƒng xuáº¥t %1$s</string>
+    <string name="sessions_revoke_title">ÄÄƒng xuáº¥t %1$s?</string>
+    <string name="sessions_revoke_others">ÄÄƒng xuáº¥t má»i thiáº¿t bá»‹ khÃ¡c</string>
+    <string name="sessions_revoke_others_title">ÄÄƒng xuáº¥t má»i thiáº¿t bá»‹ khÃ¡c?</string>
+    <string name="sessions_revoke_message">Thiáº¿t bá»‹ Ä‘Ã³ pháº£i Ä‘Äƒng nháº­p láº¡i má»›i Ä‘á»“ng bá»™ tiáº¿p. Dá»¯ liá»‡u chÆ°a Ä‘á»“ng bá»™ trÃªn thiáº¿t bá»‹ Ä‘Ã³ váº«n cÃ²n.</string>
+    <string name="sessions_note">KhÃ´ng nháº­n ra thiáº¿t bá»‹ nÃ o thÃ¬ hÃ£y Ä‘Äƒng xuáº¥t thiáº¿t bá»‹ Ä‘Ã³.</string>
+    <string name="sessions_only_this">TÃ i khoáº£n chá»‰ Ä‘ang Ä‘Äƒng nháº­p trÃªn mÃ¡y nÃ y.</string>
+    <string name="sessions_need_network">Cáº§n káº¿t ná»‘i máº¡ng Ä‘á»ƒ xem thiáº¿t bá»‹ Ä‘Äƒng nháº­p</string>
 
-    <!-- Ngọn lửa và rương -->
-    <string name="flame_stage">Ngọn lửa giai đoạn %1$d</string>
-    <string name="flame_days">%1$d/%2$d ngày</string>
-    <string name="flame_note">Còn %1$d ngày nữa để lên giai đoạn %2$d.</string>
-    <string name="flame_note_max">Ngọn lửa đã lớn nhất — hãy giữ lửa!</string>
-    <string name="flame_description">Chuỗi %1$d ngày, giai đoạn %2$d, còn %3$d ngày nữa lên giai đoạn %4$d</string>
-    <string name="flame_max">Chuỗi %1$d ngày, giai đoạn cao nhất</string>
-    <string name="chests_title">Rương ôn tập</string>
-    <string name="chests_note">Thẻ ở hộp càng cao thì càng lâu mới ôn lại.</string>
-    <string name="chests_total">%1$d thẻ</string>
-    <string name="chests_review">Ôn %1$d thẻ đến hạn</string>
-    <string name="chest_box">Hộp %1$d</string>
-    <string name="chest_description">Hộp %1$d, %2$d thẻ, ôn lại sau %3$d ngày</string>
-    <string name="chest_change">Hộp %1$d, %2$d thẻ, thay đổi %3$s</string>
+    <!-- Ngá»n lá»­a vÃ  rÆ°Æ¡ng -->
+    <string name="flame_stage">Ngá»n lá»­a giai Ä‘oáº¡n %1$d</string>
+    <string name="flame_days">%1$d/%2$d ngÃ y</string>
+    <string name="flame_note">CÃ²n %1$d ngÃ y ná»¯a Ä‘á»ƒ lÃªn giai Ä‘oáº¡n %2$d.</string>
+    <string name="flame_note_max">Ngá»n lá»­a Ä‘Ã£ lá»›n nháº¥t â€” hÃ£y giá»¯ lá»­a!</string>
+    <string name="flame_description">Chuá»—i %1$d ngÃ y, giai Ä‘oáº¡n %2$d, cÃ²n %3$d ngÃ y ná»¯a lÃªn giai Ä‘oáº¡n %4$d</string>
+    <string name="flame_max">Chuá»—i %1$d ngÃ y, giai Ä‘oáº¡n cao nháº¥t</string>
+    <string name="chests_title">RÆ°Æ¡ng Ã´n táº­p</string>
+    <string name="chests_note">Tháº» á»Ÿ há»™p cÃ ng cao thÃ¬ cÃ ng lÃ¢u má»›i Ã´n láº¡i.</string>
+    <string name="chests_total">%1$d tháº»</string>
+    <string name="chests_review">Ã”n %1$d tháº» Ä‘áº¿n háº¡n</string>
+    <string name="chest_box">Há»™p %1$d</string>
+    <string name="chest_description">Há»™p %1$d, %2$d tháº», Ã´n láº¡i sau %3$d ngÃ y</string>
+    <string name="chest_change">Há»™p %1$d, %2$d tháº», thay Ä‘á»•i %3$s</string>
 
-    <!-- SCR-30 Luyện thi -->
-    <string name="exam_hub_title">Luyện thi</string>
-    <string name="exam_hub_note">Bộ từ TOEIC, IELTS, Aptis và đề thi thử</string>
-    <string name="exam_hub_headline">Ôn từ vựng &amp; làm đề thử</string>
-    <string name="exam_hub_source">Đề do nhóm tự soạn theo định dạng, không phải đề chính thức</string>
-    <string name="exam_toeic">Tiếng Anh giao tiếp công việc</string>
-    <string name="exam_ielts">Tiếng Anh học thuật</string>
-    <string name="exam_aptis">Bài thi của British Council</string>
-    <string name="exam_deck">%1$s · %2$d từ</string>
-    <string name="exam_info">%1$d câu · %2$d phút</string>
-    <string name="exam_info_best">%1$d câu · %2$d phút · cao nhất %3$d điểm</string>
-    <string name="exam_start">Làm bài</string>
-    <string name="exam_resume">Làm tiếp</string>
-    <string name="exam_no_content">Chưa có nội dung cho kỳ thi này.</string>
-    <string name="exam_history">Lịch sử thi thử</string>
-    <string name="exam_history_empty">Bạn chưa làm đề nào</string>
-    <string name="exam_history_row">%1$d điểm · %2$d/%3$d câu đúng · %4$s</string>
+    <!-- SCR-30 Luyá»‡n thi -->
+    <string name="exam_hub_title">Luyá»‡n thi</string>
+    <string name="exam_hub_note">Bá»™ tá»« TOEIC, IELTS, Aptis vÃ  Ä‘á» thi thá»­</string>
+    <string name="exam_hub_headline">Ã”n tá»« vá»±ng &amp; lÃ m Ä‘á» thá»­</string>
+    <string name="exam_hub_source">Äá» do nhÃ³m tá»± soáº¡n theo Ä‘á»‹nh dáº¡ng, khÃ´ng pháº£i Ä‘á» chÃ­nh thá»©c</string>
+    <string name="exam_toeic">Tiáº¿ng Anh giao tiáº¿p cÃ´ng viá»‡c</string>
+    <string name="exam_ielts">Tiáº¿ng Anh há»c thuáº­t</string>
+    <string name="exam_aptis">BÃ i thi cá»§a British Council</string>
+    <string name="exam_deck">%1$s Â· %2$d tá»«</string>
+    <string name="exam_info">%1$d cÃ¢u Â· %2$d phÃºt</string>
+    <string name="exam_info_best">%1$d cÃ¢u Â· %2$d phÃºt Â· cao nháº¥t %3$d Ä‘iá»ƒm</string>
+    <string name="exam_start">LÃ m bÃ i</string>
+    <string name="exam_resume">LÃ m tiáº¿p</string>
+    <string name="exam_no_content">ChÆ°a cÃ³ ná»™i dung cho ká»³ thi nÃ y.</string>
+    <string name="exam_history">Lá»‹ch sá»­ thi thá»­</string>
+    <string name="exam_history_empty">Báº¡n chÆ°a lÃ m Ä‘á» nÃ o</string>
+    <string name="exam_history_row">%1$d Ä‘iá»ƒm Â· %2$d/%3$d cÃ¢u Ä‘Ãºng Â· %4$s</string>
 
-    <!-- SCR-31 Làm bài -->
-    <string name="exam_position">Câu %1$d/%2$d</string>
-    <string name="exam_done">Đã làm %1$d · Đánh dấu %2$d</string>
-    <string name="exam_question">Câu %1$d</string>
-    <string name="exam_previous">Câu trước</string>
-    <string name="exam_next">Câu sau</string>
-    <string name="exam_flag">Đánh dấu</string>
-    <string name="exam_unflag">Bỏ dấu</string>
-    <string name="exam_grid">Bảng câu hỏi</string>
-    <string name="exam_submit">Nộp bài</string>
-    <string name="exam_submit_title">Nộp bài?</string>
-    <string name="exam_submit_left">Còn %1$d câu chưa làm. Nộp bài?</string>
-    <string name="exam_exit_title">Thoát bài thi?</string>
-    <string name="exam_exit_message">Câu đã chọn được lưu và đồng hồ vẫn chạy. Bạn có thể quay lại làm tiếp trước khi hết giờ.</string>
-    <string name="exam_exit_stay">Ở lại</string>
-    <string name="exam_exit_leave">Thoát</string>
-    <string name="exam_time_left">Còn %1$d phút</string>
-    <string name="exam_legend">Nền xanh nhạt: đã làm %1$d · Nền trắng: chưa làm %2$d · Viền cam: đánh dấu %3$d · Nền xanh đậm: đang xem</string>
-    <string name="exam_cell">Câu %1$d, %2$s %3$s</string>
-    <string name="exam_cell_done">đã làm</string>
-    <string name="exam_cell_empty">chưa làm</string>
-    <string name="exam_cell_flagged">, đã đánh dấu</string>
+    <!-- SCR-31 LÃ m bÃ i -->
+    <string name="exam_position">CÃ¢u %1$d/%2$d</string>
+    <string name="exam_done">ÄÃ£ lÃ m %1$d Â· ÄÃ¡nh dáº¥u %2$d</string>
+    <string name="exam_question">CÃ¢u %1$d</string>
+    <string name="exam_previous">CÃ¢u trÆ°á»›c</string>
+    <string name="exam_next">CÃ¢u sau</string>
+    <string name="exam_flag">ÄÃ¡nh dáº¥u</string>
+    <string name="exam_unflag">Bá» dáº¥u</string>
+    <string name="exam_grid">Báº£ng cÃ¢u há»i</string>
+    <string name="exam_submit">Ná»™p bÃ i</string>
+    <string name="exam_submit_title">Ná»™p bÃ i?</string>
+    <string name="exam_submit_left">CÃ²n %1$d cÃ¢u chÆ°a lÃ m. Ná»™p bÃ i?</string>
+    <string name="exam_exit_title">ThoÃ¡t bÃ i thi?</string>
+    <string name="exam_exit_message">CÃ¢u Ä‘Ã£ chá»n Ä‘Æ°á»£c lÆ°u vÃ  Ä‘á»“ng há»“ váº«n cháº¡y. Báº¡n cÃ³ thá»ƒ quay láº¡i lÃ m tiáº¿p trÆ°á»›c khi háº¿t giá».</string>
+    <string name="exam_exit_stay">á»ž láº¡i</string>
+    <string name="exam_exit_leave">ThoÃ¡t</string>
+    <string name="exam_time_left">CÃ²n %1$d phÃºt</string>
+    <string name="exam_legend">Ná»n xanh nháº¡t: Ä‘Ã£ lÃ m %1$d Â· Ná»n tráº¯ng: chÆ°a lÃ m %2$d Â· Viá»n cam: Ä‘Ã¡nh dáº¥u %3$d Â· Ná»n xanh Ä‘áº­m: Ä‘ang xem</string>
+    <string name="exam_cell">CÃ¢u %1$d, %2$s %3$s</string>
+    <string name="exam_cell_done">Ä‘Ã£ lÃ m</string>
+    <string name="exam_cell_empty">chÆ°a lÃ m</string>
+    <string name="exam_cell_flagged">, Ä‘Ã£ Ä‘Ã¡nh dáº¥u</string>
 
-    <!-- SCR-32 Kết quả thi thử -->
-    <string name="exam_result_title">Hoàn thành bài thi!</string>
-    <string name="exam_points">điểm</string>
-    <string name="exam_summary">%1$d/%2$d câu đúng · %3$d phút %4$d giây</string>
-    <string name="exam_score_note">Điểm luyện tập, không quy đổi sang thang điểm chính thức.</string>
-    <string name="exam_time_up">Hết giờ! Bài của bạn đã được nộp</string>
-    <string name="exam_correct">Đúng</string>
+    <!-- SCR-32 Káº¿t quáº£ thi thá»­ -->
+    <string name="exam_result_title">HoÃ n thÃ nh bÃ i thi!</string>
+    <string name="exam_points">Ä‘iá»ƒm</string>
+    <string name="exam_summary">%1$d/%2$d cÃ¢u Ä‘Ãºng Â· %3$d phÃºt %4$d giÃ¢y</string>
+    <string name="exam_score_note">Äiá»ƒm luyá»‡n táº­p, khÃ´ng quy Ä‘á»•i sang thang Ä‘iá»ƒm chÃ­nh thá»©c.</string>
+    <string name="exam_time_up">Háº¿t giá»! BÃ i cá»§a báº¡n Ä‘Ã£ Ä‘Æ°á»£c ná»™p</string>
+    <string name="exam_correct">ÄÃºng</string>
     <string name="exam_wrong">Sai</string>
-    <string name="exam_answer_right">Câu %1$d: %2$s</string>
-    <string name="exam_answer_wrong">Câu %1$d: bạn chọn “%2$s”</string>
-    <string name="exam_answer_none">Câu %1$d: chưa làm</string>
-    <string name="exam_correct_answer">Đáp án đúng: %1$s</string>
-    <string name="exam_retry">Làm lại</string>
-    <string name="exam_back_to_hub">Về Luyện thi</string>
+    <string name="exam_answer_right">CÃ¢u %1$d: %2$s</string>
+    <string name="exam_answer_wrong">CÃ¢u %1$d: báº¡n chá»n â€œ%2$sâ€</string>
+    <string name="exam_answer_none">CÃ¢u %1$d: chÆ°a lÃ m</string>
+    <string name="exam_correct_answer">ÄÃ¡p Ã¡n Ä‘Ãºng: %1$s</string>
+    <string name="exam_retry">LÃ m láº¡i</string>
+    <string name="exam_back_to_hub">Vá» Luyá»‡n thi</string>
 
-    <!-- SCR-33 Tài nguyên chính thức -->
-    <string name="resources_title">Tài nguyên chính thức</string>
-    <string name="resources_note">Liên kết mở bằng trình duyệt của máy; phần học của ứng dụng không cần Internet.</string>
-    <string name="resource_toeic">TOEIC — ETS</string>
-    <string name="resource_ielts">IELTS — trang chính thức</string>
-    <string name="resource_aptis">Aptis — British Council</string>
-    <string name="resource_open">Mở trong trình duyệt</string>
-    <string name="resource_description">Mở trang %1$s trong trình duyệt</string>
-    <string name="resource_no_browser">Máy chưa có trình duyệt</string>
+    <!-- SCR-33 TÃ i nguyÃªn chÃ­nh thá»©c -->
+    <string name="resources_title">TÃ i nguyÃªn chÃ­nh thá»©c</string>
+    <string name="resources_note">LiÃªn káº¿t má»Ÿ báº±ng trÃ¬nh duyá»‡t cá»§a mÃ¡y; pháº§n há»c cá»§a á»©ng dá»¥ng khÃ´ng cáº§n Internet.</string>
+    <string name="resource_toeic">TOEIC â€” ETS</string>
+    <string name="resource_ielts">IELTS â€” trang chÃ­nh thá»©c</string>
+    <string name="resource_aptis">Aptis â€” British Council</string>
+    <string name="resource_open">Má»Ÿ trong trÃ¬nh duyá»‡t</string>
+    <string name="resource_description">Má»Ÿ trang %1$s trong trÃ¬nh duyá»‡t</string>
+    <string name="resource_no_browser">MÃ¡y chÆ°a cÃ³ trÃ¬nh duyá»‡t</string>
     <string name="url_toeic" translatable="false">https://www.ets.org/toeic.html</string>
     <string name="url_ielts" translatable="false">https://ielts.org/</string>
     <string name="url_aptis" translatable="false">https://www.britishcouncil.org/exam/aptis</string>
 
-    <!-- SCR-28, SCR-29 Nhập/xuất -->
-    <string name="deck_import">Nhập CSV</string>
-    <string name="deck_export">Xuất CSV</string>
+    <!-- SCR-28, SCR-29 Nháº­p/xuáº¥t -->
+    <string name="deck_import">Nháº­p CSV</string>
+    <string name="deck_export">Xuáº¥t CSV</string>
     <plurals name="deck_exported">
-        <item quantity="other">Đã xuất %d từ</item>
+        <item quantity="other">ÄÃ£ xuáº¥t %d tá»«</item>
     </plurals>
-    <string name="import_title">Xem trước import</string>
-    <string name="import_subtitle">%1$s · %2$d dòng</string>
-    <string name="import_valid">hợp lệ</string>
-    <string name="import_duplicate">trùng</string>
-    <string name="import_errors">lỗi</string>
-    <string name="import_error_title">Dòng lỗi</string>
-    <string name="import_error_line">Dòng %1$d: %2$s</string>
-    <string name="import_error_more">… và %1$d dòng khác</string>
-    <string name="import_error_columns">không đủ 5 cột</string>
-    <string name="import_error_term">thiếu từ hoặc từ dài quá 50 ký tự</string>
-    <string name="import_error_meaning">thiếu nghĩa hoặc nghĩa dài quá 200 ký tự</string>
-    <string name="import_sample">5 dòng đầu</string>
-    <string name="import_sample_line">%1$s — %2$s</string>
-    <string name="import_target">Nhập vào bộ</string>
-    <string name="import_new_deck">Tạo bộ mới: %1$s</string>
-    <string name="import_submit">Nhập %1$d từ</string>
-    <string name="import_nothing">Không có dòng hợp lệ để nhập</string>
-    <string name="import_done">Đã nhập %1$d từ, bỏ qua %2$d</string>
-    <string name="import_format">Sai định dạng: %1$s</string>
+    <string name="import_title">Xem trÆ°á»›c import</string>
+    <string name="import_subtitle">%1$s Â· %2$d dÃ²ng</string>
+    <string name="import_valid">há»£p lá»‡</string>
+    <string name="import_duplicate">trÃ¹ng</string>
+    <string name="import_errors">lá»—i</string>
+    <string name="import_error_title">DÃ²ng lá»—i</string>
+    <string name="import_error_line">DÃ²ng %1$d: %2$s</string>
+    <string name="import_error_more">â€¦ vÃ  %1$d dÃ²ng khÃ¡c</string>
+    <string name="import_error_columns">khÃ´ng Ä‘á»§ 5 cá»™t</string>
+    <string name="import_error_term">thiáº¿u tá»« hoáº·c tá»« dÃ i quÃ¡ 50 kÃ½ tá»±</string>
+    <string name="import_error_meaning">thiáº¿u nghÄ©a hoáº·c nghÄ©a dÃ i quÃ¡ 200 kÃ½ tá»±</string>
+    <string name="import_sample">5 dÃ²ng Ä‘áº§u</string>
+    <string name="import_sample_line">%1$s â€” %2$s</string>
+    <string name="import_target">Nháº­p vÃ o bá»™</string>
+    <string name="import_new_deck">Táº¡o bá»™ má»›i: %1$s</string>
+    <string name="import_submit">Nháº­p %1$d tá»«</string>
+    <string name="import_nothing">KhÃ´ng cÃ³ dÃ²ng há»£p lá»‡ Ä‘á»ƒ nháº­p</string>
+    <string name="import_done">ÄÃ£ nháº­p %1$d tá»«, bá» qua %2$d</string>
+    <string name="import_format">Sai Ä‘á»‹nh dáº¡ng: %1$s</string>
 
-    <!-- Màn hình chưa làm -->
-    <string name="placeholder_title">Sắp có</string>
-    <string name="placeholder_message">Màn hình này đang được xây dựng.</string>
-</resources>
+    <!-- MÃ n hÃ¬nh chÆ°a lÃ m -->
+    <string name="placeholder_title">Sáº¯p cÃ³</string>
+    <string name="placeholder_message">MÃ n hÃ¬nh nÃ y Ä‘ang Ä‘Æ°á»£c xÃ¢y dá»±ng.</string>
+    <string name="change_password_title">Đổi mật khẩu</string>
+    <string name="change_password_current">Mật khẩu hiện tại</string>
+    <string name="change_password_new">Mật khẩu mới</string>
+    <string name="change_password_confirm">Xác nhận mật khẩu mới</string>
+    <string name="change_password_save">Lưu</string>
+    <string name="change_password_success">Đổi mật khẩu thành công</string>
+    <string name="change_password_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="change_password_empty">Vui lòng điền đầy đủ thông tin</string>
+    <string name="about_title">Giới thiệu</string>
+    <string name="about_app_name">LearningE</string>
+    <string name="about_version">Phiên bản %1\</string>
+    <string name="about_team">Nhóm phát triển</string>
+    <string name="about_data_source">Nguồn dữ liệu</string>
+    <string name="about_data_source_detail">Dữ liệu từ bộ từ điển mã nguồn mở: JMdict, CEDICT, Wiktionary</string>
+    <string name="about_libraries">Thư viện sử dụng</string>
+    <string name="about_license">Giấy phép</string>
+    <string name="about_license_detail">MIT License — Copyright © 2024 LearningE Team</string>
+    <string name="me_change_password">Đổi mật khẩu</string>
+    <string name="me_about">Giới thiệu</string>
+
+    <!-- SCR-04 Thiet lap lan dau -->
+    <string name="setup_title">Thiet lap</string>
+    <string name="setup_subtitle">Chi mat 1 phut</string>
+    <string name="setup_next">Tiep theo</string>
+    <string name="setup_start">Bat dau hoc</string>
+    <string name="setup_level_title">Trinh do cua ban?</string>
+    <string name="setup_level_desc">Chung toi se goi y bai hoc phu hop voi trinh do hien tai.</string>
+    <string name="setup_level_a1">A1 — Moi bat dau</string>
+    <string name="setup_level_a2">A2 — Co ban</string>
+    <string name="setup_level_b1">B1 — Trung cap</string>
+    <string name="setup_goal_title">Muc tieu hang ngay?</string>
+    <string name="setup_goal_desc">Hoc deu dan moi ngay hieu qua hon hoc don mot luc.</string>
+    <string name="setup_goal_5">5 tu / ngay</string>
+    <string name="setup_goal_10">10 tu / ngay</string>
+    <string name="setup_goal_20">20 tu / ngay</string>
+    <string name="setup_reminder_title">Nhac hoc</string>
+    <string name="setup_reminder_desc">Nhan thong bao nhac ban hoc dung gio.</string>
+    <string name="setup_reminder_enable">Bat nhac hoc hang ngay</string>
+    <string name="setup_reminder_time">Gio nhac</string>
+    <string name="setup_reminder_default_time">08:00</string>
+
+    <!-- SCR-25 Quen mat khau -->
+    <string name="login_forgot_password">Quen mat khau?</string>
+    <string name="forgot_title">Quen mat khau</string>
+    <string name="forgot_step1_title">Nhap email tai khoan</string>
+    <string name="forgot_step1_desc">Nhap dia chi email ban da dang ky de tiep tuc.</string>
+    <string name="forgot_step1_submit">Tiep theo</string>
+    <string name="forgot_step2_title">Xac minh danh tinh</string>
+    <string name="forgot_step2_desc">Tra loi cau hoi bao mat va nhap mat khau moi.</string>
+    <string name="forgot_step2_submit">Dat lai mat khau</string>
+    <string name="forgot_answer">Cau tra loi bao mat</string>
+    <string name="forgot_new_password">Mat khau moi</string>
+    <string name="forgot_developing">Tinh nang dang phat trien, vui long lien he ho tro.</string>
+
+    <!-- SCR-12/13/14 Quiz chu de -->
+    <string name="practice_quiz_title">Quiz chu de</string>
+    <string name="practice_quiz_note">Chon bo tu de kiem tra</string>
+    <string name="quiz_exit_title">Thoat quiz?</string>
+    <string name="quiz_exit_message">Tien do hien tai se khong duoc luu.</string>
+    <string name="quiz_result_score">%1$d/%2$d cau dung</string>
+    <string name="quiz_retry">Lam lai</string>
+    <string name="quiz_back_to_practice">Ve luyen tap</string>
+    <string name="quiz_too_few_words">Can it nhat 2 tu de quiz</string></resources>
+
