@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "learninge.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         this(context, DATABASE_NAME);
@@ -31,13 +31,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        for (String statement : DbSchema.V1) {
-            db.execSQL(statement);
-        }
+        run(db, DbSchema.V1);
+        run(db, DbSchema.V2);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Chưa có phiên bản 2. Mỗi phiên bản mới thêm một bước ALTER/CREATE, không xóa dữ liệu người dùng (NFR-E3).
+        // Mỗi phiên bản mới thêm một bước ALTER/CREATE, không xóa dữ liệu người dùng (NFR-E3).
+        if (oldVersion < 2) {
+            run(db, DbSchema.V2);
+        }
+    }
+
+    private static void run(SQLiteDatabase db, String[] statements) {
+        for (String statement : statements) {
+            db.execSQL(statement);
+        }
     }
 }

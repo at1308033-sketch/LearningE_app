@@ -32,6 +32,7 @@ message ContentDeck {
   string code = 1; string name = 2; optional string description = 3; string language_code = 4;
   optional string level = 5; optional string icon = 6; optional string exam_tag = 7;
   int32 sort_order = 8; int32 version = 9;
+  bool retired = 10;                // ngừng dùng: app ẩn bộ, giữ tiến độ
 }
 message ContentWord {
   string uid = 1;                   // "T01-0007": khóa card_progress/favorite
@@ -46,6 +47,7 @@ message ContentExam {
   string code = 1; optional string exam_tag = 2; string title = 3; optional string part_label = 4;
   int32 question_count = 5; int32 duration_sec = 6; optional string description = 7;
   int32 sort_order = 8; int32 version = 9;
+  bool retired = 10;                // ngừng dùng: app ẩn đề, giữ lịch sử làm bài
 }
 message ExamQuestion {
   int32 number = 1; optional string passage = 2; string question = 3;

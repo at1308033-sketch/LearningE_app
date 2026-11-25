@@ -1,0 +1,29 @@
+{
+  "deck": {
+    "code": "T01",
+    "version": 1,
+    "name": "Gia đình",
+    "name_en": "Family",
+    "description": "Từ vựng về các thành viên trong gia đình",
+    "language": "en",
+    "icon": "t01-family",
+    "level": "A1",
+    "exam_tag": null,
+    "sort_order": 1
+  },
+  "source": "Dữ liệu mẫu; thay bằng bộ chính thức của nhóm",
+  "words": [
+    {"uid": "T01-0001", "term": "mother", "reading": "/ˈmʌðər/", "pos": "danh từ", "meaning": "mẹ", "example": "My mother is a teacher.", "example_translation": "Mẹ tôi là giáo viên."},
+    {"uid": "T01-0002", "term": "father", "reading": "/ˈfɑːðər/", "pos": "danh từ", "meaning": "bố", "example": "My father cooks dinner on Sundays.", "example_translation": "Bố tôi nấu bữa tối vào Chủ nhật."},
+    {"uid": "T01-0003", "term": "sister", "reading": "/ˈsɪstər/", "pos": "danh từ", "meaning": "chị gái, em gái", "example": "My sister plays the piano.", "example_translation": "Chị tôi chơi đàn piano."},
+    {"uid": "T01-0004", "term": "brother", "reading": "/ˈbrʌðər/", "pos": "danh từ", "meaning": "anh trai, em trai", "example": "Her brother works in a bank.", "example_translation": "Anh trai cô ấy làm ở ngân hàng."},
+    {"uid": "T01-0005", "term": "grandmother", "reading": "/ˈɡrænˌmʌðər/", "pos": "danh từ", "meaning": "bà", "example": "My grandmother tells funny stories.", "example_translation": "Bà tôi kể những câu chuyện vui."},
+    {"uid": "T01-0006", "term": "grandfather", "reading": "/ˈɡrænˌfɑːðər/", "pos": "danh từ", "meaning": "ông", "example": "Our grandfather walks every morning.", "example_translation": "Ông chúng tôi đi bộ mỗi sáng."},
+    {"uid": "T01-0007", "term": "uncle", "reading": "/ˈʌŋkəl/", "pos": "danh từ", "meaning": "chú, bác, cậu", "example": "My uncle lives in Da Nang.", "example_translation": "Chú tôi sống ở Đà Nẵng."},
+    {"uid": "T01-0008", "term": "aunt", "reading": "/ænt/", "pos": "danh từ", "meaning": "cô, dì, thím", "example": "My aunt gave me a book.", "example_translation": "Cô tôi tặng tôi một quyển sách."},
+    {"uid": "T01-0009", "term": "cousin", "reading": "/ˈkʌzən/", "pos": "danh từ", "meaning": "anh chị em họ", "example": "I visit my cousin every summer.", "example_translation": "Tôi thăm anh họ mỗi mùa hè."},
+    {"uid": "T01-0010", "term": "parents", "reading": "/ˈperənts/", "pos": "danh từ", "meaning": "bố mẹ", "example": "My parents met at university.", "example_translation": "Bố mẹ tôi gặp nhau ở trường đại học."},
+    {"uid": "T01-0011", "term": "son", "reading": "/sʌn/", "pos": "danh từ", "meaning": "con trai", "example": "Their son is five years old.", "example_translation": "Con trai họ năm tuổi."},
+    {"uid": "T01-0012", "term": "daughter", "reading": "/ˈdɔːtər/", "pos": "danh từ", "meaning": "con gái", "example": "Their daughter loves drawing.", "example_translation": "Con gái họ thích vẽ."}
+  ]
+}

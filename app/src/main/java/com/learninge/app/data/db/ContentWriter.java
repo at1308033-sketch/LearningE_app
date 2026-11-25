@@ -19,6 +19,8 @@ import com.learninge.app.data.io.SeedContent.SeedWord;
 import com.learninge.app.domain.rules.TextNormalizer;
 
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Ghi nội dung có sẵn (seed hoặc tải từ server) vào CSDL; sửa tại chỗ theo mã nên tiến độ học không mất. Nơi gọi mở
@@ -58,7 +60,7 @@ public final class ContentWriter {
         values.put(Decks.SORT_ORDER, deck.sortOrder());
         values.put(Decks.CREATED_AT, now);
         values.put(Sync.UPDATED_AT, now);
-        values.put(Sync.DELETED, 0);
+        values.put(Sync.DELETED, deck.isRetired() ? 1 : 0);
         values.put(Sync.DIRTY, 0);
         long deckId = updateOrInsert(Decks.TABLE, values, Sync.UUID, deck.code());
 
@@ -68,12 +70,13 @@ public final class ContentWriter {
         db.update(Words.TABLE, hidden, Words.DECK_ID + " = ?", new String[]{String.valueOf(deckId)});
         int order = 0;
         for (SeedWord word : deck.words()) {
-            putWord(deckId, deck.language(), ++order, word, now);
+            // Bộ ngừng dùng thì ẩn luôn từ để không còn tới hạn ôn, vẫn giữ tiến độ phòng khi mở lại.
+            putWord(deckId, deck.language(), ++order, word, deck.isRetired(), now);
         }
         installed("deck:" + deck.code(), deck.version());
     }
 
-    private void putWord(long deckId, String language, int order, SeedWord word, long now) {
+    private void putWord(long deckId, String language, int order, SeedWord word, boolean isHidden, long now) {
         ContentValues values = new ContentValues();
         values.put(Sync.UUID, word.uid());
         values.put(Words.DECK_ID, deckId);
@@ -89,7 +92,7 @@ public final class ContentWriter {
         values.put(Words.SORT_ORDER, order);
         values.put(Words.CREATED_AT, now);
         values.put(Sync.UPDATED_AT, now);
-        values.put(Sync.DELETED, 0);
+        values.put(Sync.DELETED, isHidden ? 1 : 0);
         values.put(Sync.DIRTY, 0);
         updateOrInsert(Words.TABLE, values, Sync.UUID, word.uid());
     }
@@ -104,12 +107,16 @@ public final class ContentWriter {
         values.put(ExamTests.DURATION_SEC, exam.durationSec());
         values.put(ExamTests.DESCRIPTION, exam.description());
         values.put(ExamTests.SORT_ORDER, exam.sortOrder());
+        values.put(ExamTests.RETIRED, exam.isRetired() ? 1 : 0);
         long testId = updateOrInsert(ExamTests.TABLE, values, ExamTests.CODE, exam.code());
+        List<String> numbers = new ArrayList<>();
         for (SeedQuestion question : exam.questions()) {
             putQuestion(testId, question);
+            numbers.add(String.valueOf(question.number()));
         }
-        db.delete(ExamQuestions.TABLE, ExamQuestions.TEST_ID + " = ? AND " + ExamQuestions.NUMBER + " > ?",
-                new String[]{String.valueOf(testId), String.valueOf(exam.questions().size())});
+        // Bỏ theo số câu thật, không theo số lượng: số câu có thể không liên tục. numbers chỉ gồm số nguyên.
+        db.delete(ExamQuestions.TABLE, ExamQuestions.TEST_ID + " = ? AND " + ExamQuestions.NUMBER + " NOT IN ("
+                + String.join(",", numbers) + ")", new String[]{String.valueOf(testId)});
         installed("exam:" + exam.code(), exam.version());
     }
 

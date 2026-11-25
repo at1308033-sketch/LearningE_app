@@ -13,185 +13,25 @@
   },
   "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
   "words": [
-    {
-      "uid": "T11-0001",
-      "term": "street",
-      "reading": "/striːt/",
-      "pos": "danh từ",
-      "meaning": "đường phố",
-      "example": "The street is full of motorbikes.",
-      "example_translation": "Đường phố đầy xe máy."
-    },
-    {
-      "uid": "T11-0002",
-      "term": "building",
-      "reading": "/ˈbɪldɪŋ/",
-      "pos": "danh từ",
-      "meaning": "tòa nhà",
-      "example": "Our office is in that tall building.",
-      "example_translation": "Văn phòng chúng tôi ở trong tòa nhà cao kia."
-    },
-    {
-      "uid": "T11-0003",
-      "term": "bridge",
-      "reading": "/brɪdʒ/",
-      "pos": "danh từ",
-      "meaning": "cây cầu",
-      "example": "We crossed the bridge on foot.",
-      "example_translation": "Chúng tôi đi bộ qua cầu."
-    },
-    {
-      "uid": "T11-0004",
-      "term": "park",
-      "reading": "/pɑːrk/",
-      "pos": "danh từ",
-      "meaning": "công viên",
-      "example": "Children play in the park after school.",
-      "example_translation": "Trẻ em chơi trong công viên sau giờ học."
-    },
-    {
-      "uid": "T11-0005",
-      "term": "hospital",
-      "reading": "/ˈhɑːspɪtl/",
-      "pos": "danh từ",
-      "meaning": "bệnh viện",
-      "example": "The hospital is open all night.",
-      "example_translation": "Bệnh viện mở cửa suốt đêm."
-    },
-    {
-      "uid": "T11-0006",
-      "term": "bank",
-      "reading": "/bæŋk/",
-      "pos": "danh từ",
-      "meaning": "ngân hàng",
-      "example": "The bank closes at five o'clock.",
-      "example_translation": "Ngân hàng đóng cửa lúc năm giờ."
-    },
-    {
-      "uid": "T11-0007",
-      "term": "post office",
-      "reading": "/ˈpoʊst ɔːfɪs/",
-      "pos": "danh từ",
-      "meaning": "bưu điện",
-      "example": "I sent the package at the post office.",
-      "example_translation": "Tôi gửi gói hàng ở bưu điện."
-    },
-    {
-      "uid": "T11-0008",
-      "term": "museum",
-      "reading": "/mjuˈziːəm/",
-      "pos": "danh từ",
-      "meaning": "bảo tàng",
-      "example": "The museum is free on Sundays.",
-      "example_translation": "Bảo tàng miễn phí vào Chủ nhật."
-    },
-    {
-      "uid": "T11-0009",
-      "term": "traffic",
-      "reading": "/ˈtræfɪk/",
-      "pos": "danh từ",
-      "meaning": "giao thông",
-      "example": "The traffic is heavy in the morning.",
-      "example_translation": "Giao thông đông đúc vào buổi sáng."
-    },
-    {
-      "uid": "T11-0010",
-      "term": "traffic light",
-      "reading": "/ˈtræfɪk laɪt/",
-      "pos": "danh từ",
-      "meaning": "đèn giao thông",
-      "example": "Stop when the traffic light is red.",
-      "example_translation": "Dừng lại khi đèn giao thông đỏ."
-    },
-    {
-      "uid": "T11-0011",
-      "term": "bus stop",
-      "reading": "/ˈbʌs stɑːp/",
-      "pos": "danh từ",
-      "meaning": "trạm xe buýt",
-      "example": "Wait for me at the bus stop.",
-      "example_translation": "Chờ tôi ở trạm xe buýt nhé."
-    },
-    {
-      "uid": "T11-0012",
-      "term": "train",
-      "reading": "/treɪn/",
-      "pos": "danh từ",
-      "meaning": "tàu hỏa",
-      "example": "The train leaves at nine.",
-      "example_translation": "Tàu rời ga lúc chín giờ."
-    },
-    {
-      "uid": "T11-0013",
-      "term": "station",
-      "reading": "/ˈsteɪʃn/",
-      "pos": "danh từ",
-      "meaning": "nhà ga",
-      "example": "The station is ten minutes from here.",
-      "example_translation": "Nhà ga cách đây mười phút."
-    },
-    {
-      "uid": "T11-0014",
-      "term": "motorbike",
-      "reading": "/ˈmoʊtərbaɪk/",
-      "pos": "danh từ",
-      "meaning": "xe máy",
-      "example": "He goes to work by motorbike.",
-      "example_translation": "Anh ấy đi làm bằng xe máy."
-    },
-    {
-      "uid": "T11-0015",
-      "term": "bicycle",
-      "reading": "/ˈbaɪsɪkl/",
-      "pos": "danh từ",
-      "meaning": "xe đạp",
-      "example": "Riding a bicycle is good exercise.",
-      "example_translation": "Đi xe đạp là cách tập thể dục tốt."
-    },
-    {
-      "uid": "T11-0016",
-      "term": "taxi",
-      "reading": "/ˈtæksi/",
-      "pos": "danh từ",
-      "meaning": "xe taxi",
-      "example": "Let's take a taxi to the airport.",
-      "example_translation": "Chúng ta đi taxi ra sân bay đi."
-    },
-    {
-      "uid": "T11-0017",
-      "term": "ticket",
-      "reading": "/ˈtɪkɪt/",
-      "pos": "danh từ",
-      "meaning": "vé",
-      "example": "You can buy a ticket online.",
-      "example_translation": "Bạn có thể mua vé trực tuyến."
-    },
-    {
-      "uid": "T11-0018",
-      "term": "passenger",
-      "reading": "/ˈpæsɪndʒər/",
-      "pos": "danh từ",
-      "meaning": "hành khách",
-      "example": "Every passenger must wear a seat belt.",
-      "example_translation": "Mọi hành khách phải thắt dây an toàn."
-    },
-    {
-      "uid": "T11-0019",
-      "term": "crowded",
-      "reading": "/ˈkraʊdɪd/",
-      "pos": "tính từ",
-      "meaning": "đông đúc",
-      "example": "The bus is crowded at six.",
-      "example_translation": "Xe buýt đông đúc lúc sáu giờ."
-    },
-    {
-      "uid": "T11-0020",
-      "term": "turn left",
-      "reading": "/tɜːrn left/",
-      "pos": "cụm động từ",
-      "meaning": "rẽ trái",
-      "example": "Turn left after the bank.",
-      "example_translation": "Rẽ trái sau ngân hàng."
-    }
+    {"uid": "T11-0001", "term": "street", "reading": "/striːt/", "pos": "danh từ", "meaning": "đường phố", "example": "The street is full of motorbikes.", "example_translation": "Đường phố đầy xe máy."},
+    {"uid": "T11-0002", "term": "building", "reading": "/ˈbɪldɪŋ/", "pos": "danh từ", "meaning": "tòa nhà", "example": "Our office is in that tall building.", "example_translation": "Văn phòng chúng tôi ở trong tòa nhà cao kia."},
+    {"uid": "T11-0003", "term": "bridge", "reading": "/brɪdʒ/", "pos": "danh từ", "meaning": "cây cầu", "example": "We crossed the bridge on foot.", "example_translation": "Chúng tôi đi bộ qua cầu."},
+    {"uid": "T11-0004", "term": "park", "reading": "/pɑːrk/", "pos": "danh từ", "meaning": "công viên", "example": "Children play in the park after school.", "example_translation": "Trẻ em chơi trong công viên sau giờ học."},
+    {"uid": "T11-0005", "term": "hospital", "reading": "/ˈhɑːspɪtl/", "pos": "danh từ", "meaning": "bệnh viện", "example": "The hospital is open all night.", "example_translation": "Bệnh viện mở cửa suốt đêm."},
+    {"uid": "T11-0006", "term": "bank", "reading": "/bæŋk/", "pos": "danh từ", "meaning": "ngân hàng", "example": "The bank closes at five o'clock.", "example_translation": "Ngân hàng đóng cửa lúc năm giờ."},
+    {"uid": "T11-0007", "term": "post office", "reading": "/ˈpoʊst ɔːfɪs/", "pos": "danh từ", "meaning": "bưu điện", "example": "I sent the package at the post office.", "example_translation": "Tôi gửi gói hàng ở bưu điện."},
+    {"uid": "T11-0008", "term": "museum", "reading": "/mjuˈziːəm/", "pos": "danh từ", "meaning": "bảo tàng", "example": "The museum is free on Sundays.", "example_translation": "Bảo tàng miễn phí vào Chủ nhật."},
+    {"uid": "T11-0009", "term": "traffic", "reading": "/ˈtræfɪk/", "pos": "danh từ", "meaning": "giao thông", "example": "The traffic is heavy in the morning.", "example_translation": "Giao thông đông đúc vào buổi sáng."},
+    {"uid": "T11-0010", "term": "traffic light", "reading": "/ˈtræfɪk laɪt/", "pos": "danh từ", "meaning": "đèn giao thông", "example": "Stop when the traffic light is red.", "example_translation": "Dừng lại khi đèn giao thông đỏ."},
+    {"uid": "T11-0011", "term": "bus stop", "reading": "/ˈbʌs stɑːp/", "pos": "danh từ", "meaning": "trạm xe buýt", "example": "Wait for me at the bus stop.", "example_translation": "Chờ tôi ở trạm xe buýt nhé."},
+    {"uid": "T11-0012", "term": "train", "reading": "/treɪn/", "pos": "danh từ", "meaning": "tàu hỏa", "example": "The train leaves at nine.", "example_translation": "Tàu rời ga lúc chín giờ."},
+    {"uid": "T11-0013", "term": "station", "reading": "/ˈsteɪʃn/", "pos": "danh từ", "meaning": "nhà ga", "example": "The station is ten minutes from here.", "example_translation": "Nhà ga cách đây mười phút."},
+    {"uid": "T11-0014", "term": "motorbike", "reading": "/ˈmoʊtərbaɪk/", "pos": "danh từ", "meaning": "xe máy", "example": "He goes to work by motorbike.", "example_translation": "Anh ấy đi làm bằng xe máy."},
+    {"uid": "T11-0015", "term": "bicycle", "reading": "/ˈbaɪsɪkl/", "pos": "danh từ", "meaning": "xe đạp", "example": "Riding a bicycle is good exercise.", "example_translation": "Đi xe đạp là cách tập thể dục tốt."},
+    {"uid": "T11-0016", "term": "taxi", "reading": "/ˈtæksi/", "pos": "danh từ", "meaning": "xe taxi", "example": "Let's take a taxi to the airport.", "example_translation": "Chúng ta đi taxi ra sân bay đi."},
+    {"uid": "T11-0017", "term": "ticket", "reading": "/ˈtɪkɪt/", "pos": "danh từ", "meaning": "vé", "example": "You can buy a ticket online.", "example_translation": "Bạn có thể mua vé trực tuyến."},
+    {"uid": "T11-0018", "term": "passenger", "reading": "/ˈpæsɪndʒər/", "pos": "danh từ", "meaning": "hành khách", "example": "Every passenger must wear a seat belt.", "example_translation": "Mọi hành khách phải thắt dây an toàn."},
+    {"uid": "T11-0019", "term": "crowded", "reading": "/ˈkraʊdɪd/", "pos": "tính từ", "meaning": "đông đúc", "example": "The bus is crowded at six.", "example_translation": "Xe buýt đông đúc lúc sáu giờ."},
+    {"uid": "T11-0020", "term": "turn left", "reading": "/tɜːrn left/", "pos": "cụm động từ", "meaning": "rẽ trái", "example": "Turn left after the bank.", "example_translation": "Rẽ trái sau ngân hàng."}
   ]
 }

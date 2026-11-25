@@ -47,7 +47,7 @@ public final class SeedParser {
         return new SeedDeck(deck.getString("code"), deck.getInt("version"), deck.getString("name"),
                 optional(deck, "description"), deck.getString("language"), optional(deck, "level"),
                 optional(deck, "icon"), optional(deck, "exam_tag"), deck.getInt("sort_order"),
-                root.getString("source"), list);
+                root.getString("source"), list, deck.optBoolean("retired"));
     }
 
     public static List<SeedExam> exams(String json) throws JSONException {
@@ -75,7 +75,7 @@ public final class SeedParser {
         }
         return new SeedExam(test.getString("code"), test.optInt("version", 1), test.getString("exam_tag"),
                 test.getString("title"), optional(test, "part_label"), test.getInt("duration_sec"),
-                optional(test, "description"), test.optInt("sort_order", 0), list);
+                optional(test, "description"), test.optInt("sort_order", 0), list, test.optBoolean("retired"));
     }
 
     private static String optional(JSONObject object, String key) throws JSONException {

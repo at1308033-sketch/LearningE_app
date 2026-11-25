@@ -93,6 +93,22 @@ public class DatabaseHelperTest {
         }
     }
 
+    @Test
+    public void upgradeFromVersion1_addsRetiredAndKeepsRows() {
+        try (SQLiteDatabase old = SQLiteDatabase.create(null)) {
+            for (String statement : DbSchema.V1) {
+                old.execSQL(statement);
+            }
+            old.execSQL("INSERT INTO exam_tests (code, exam_tag, title, question_count, duration_sec) "
+                    + "VALUES ('E01', 'TOEIC', 'Đề', 1, 60)");
+            helper.onUpgrade(old, 1, 2);
+            try (Cursor cursor = old.rawQuery("SELECT retired FROM exam_tests WHERE code = 'E01'", null)) {
+                assertTrue(cursor.moveToFirst());
+                assertEquals(0, cursor.getInt(0));
+            }
+        }
+    }
+
     private void deck(int id, String uuid, String owner, String nameNorm, int deleted) {
         db.execSQL("INSERT INTO decks (id, uuid, owner_user_id, name, name_norm, language_code, created_at, "
                 + "updated_at, deleted) VALUES (" + id + ", '" + uuid + "', " + owner + ", 'x', '" + nameNorm

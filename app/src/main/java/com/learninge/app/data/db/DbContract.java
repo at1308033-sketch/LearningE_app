@@ -176,6 +176,7 @@ public final class DbContract {
         public static final String DURATION_SEC = "duration_sec";
         public static final String DESCRIPTION = "description";
         public static final String SORT_ORDER = "sort_order";
+        public static final String RETIRED = "retired";
 
         private ExamTests() {
         }

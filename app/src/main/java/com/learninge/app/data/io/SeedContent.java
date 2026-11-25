@@ -15,7 +15,8 @@ public final class SeedContent {
     }
 
     public record SeedDeck(String code, int version, String name, String description, String language, String level,
-                           String icon, String examTag, int sortOrder, String source, List<SeedWord> words) {
+                           String icon, String examTag, int sortOrder, String source, List<SeedWord> words,
+                           boolean isRetired) {
     }
 
     public record SeedQuestion(int number, String passage, String question, String optionsJson, int correctIndex,
@@ -23,7 +24,7 @@ public final class SeedContent {
     }
 
     public record SeedExam(String code, int version, String examTag, String title, String partLabel, int durationSec,
-                           String description, int sortOrder, List<SeedQuestion> questions) {
+                           String description, int sortOrder, List<SeedQuestion> questions, boolean isRetired) {
     }
 
     private SeedContent() {

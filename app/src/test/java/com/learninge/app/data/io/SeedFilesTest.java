@@ -12,16 +12,22 @@ import com.learninge.app.domain.rules.TextNormalizer;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Kiểm tra mọi file seed trong assets: đủ trường, không trùng, đúng số lượng đã chốt (C4, C5).
+ * Kiểm tra mọi file seed trong assets: đủ trường, không trùng, đủ số lượng tối thiểu đã chốt (C4, C5), đúng là
+ * bản chép từ LearningE_Server.
  */
 public class SeedFilesTest {
     private static final File SEED = new File("src/main/assets/seed");
@@ -46,10 +52,10 @@ public class SeedFilesTest {
             assertTrue(code + " language", Set.of("en", "ja", "zh", "ko").contains(deck.language()));
             if (code.startsWith("T")) {
                 assertTrue(code + " level", Set.of("A1", "A2", "B1").contains(deck.level()));
-                assertEquals(code + " words", TOPIC_WORDS, deck.words().size());
+                assertTrue(code + " words", deck.words().size() >= TOPIC_WORDS);
             }
             if (EXAM_WORDS.containsKey(code)) {
-                assertEquals(code + " words", (int) EXAM_WORDS.get(code), deck.words().size());
+                assertTrue(code + " words", deck.words().size() >= EXAM_WORDS.get(code));
                 assertFalse(code + " exam_tag", deck.examTag() == null);
             }
         }
@@ -57,15 +63,17 @@ public class SeedFilesTest {
 
     @Test
     public void words_areValid() throws Exception {
+        Set<String> uids = new HashSet<>();
         for (SeedDeck deck : decks()) {
-            int number = 0;
             for (SeedWord word : deck.words()) {
                 String uid = word.uid();
-                assertEquals("uid phải liên tục", String.format("%s-%04d", deck.code(), ++number), uid);
+                // Không cần liên tục: từ bị xóa để lại khoảng trống vì uid không được dùng lại.
+                assertTrue(uid, uid.matches(deck.code() + "-[0-9]{4}"));
+                assertTrue("trùng uid " + uid, uids.add(uid));
                 length(uid + " term", word.term(), 1, 50);
                 length(uid + " meaning", word.meaning(), 1, 200);
                 length(uid + " reading", word.reading(), 1, 60);
-                length(uid + " pos", word.partOfSpeech(), 1, 30);
+                length(uid + " pos", word.partOfSpeech(), 1, 20);
                 length(uid + " example", word.example(), 1, 300);
                 length(uid + " example_translation", word.exampleTranslation(), 1, 300);
                 if (deck.language().equals("en")) {
@@ -86,6 +94,38 @@ public class SeedFilesTest {
         }
     }
 
+    /**
+     * Sửa seed bằng tay thì lần chép sau mất, nên bản chép phải khớp {@code seed.lock}.
+     */
+    @Test
+    public void files_matchSeedLock() throws Exception {
+        Map<String, String> locked = new TreeMap<>();
+        for (String line : read(new File("seed.lock")).split("\\R")) {
+            if (line.startsWith("sha256 ")) {
+                String[] parts = line.split(" ");
+                locked.put(parts[1], parts[2]);
+            }
+        }
+        Map<String, String> actual = new TreeMap<>();
+        for (String root : List.of("main", "debug")) {
+            Path folder = Path.of("src", root, "assets", "seed");
+            if (!Files.exists(folder)) {
+                continue;
+            }
+            try (Stream<Path> files = Files.walk(folder)) {
+                for (Path file : files.filter(Files::isRegularFile).collect(Collectors.toList())) {
+                    byte[] text = read(file.toFile()).replace("\r\n", "\n").getBytes(StandardCharsets.UTF_8);
+                    StringBuilder hash = new StringBuilder();
+                    for (byte b : MessageDigest.getInstance("SHA-256").digest(text)) {
+                        hash.append(String.format("%02x", b));
+                    }
+                    actual.put(root + "/" + folder.relativize(file).toString().replace('\\', '/'), hash.toString());
+                }
+            }
+        }
+        assertEquals("seed khác seed.lock; chạy tools/sync-content.ps1 thay vì sửa tay", locked, actual);
+    }
+
     private static void length(String what, String text, int min, int max) {
         assertTrue(what + " rỗng", text != null && text.strip().equals(text) && text.length() >= min);
         assertTrue(what + " quá " + max + " ký tự", text.length() <= max);
@@ -103,7 +143,7 @@ public class SeedFilesTest {
     }
 
     private static String read(File file) throws Exception {
-        String text = new String(Files.readAllBytes(file.toPath()), java.nio.charset.StandardCharsets.UTF_8);
+        String text = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
         assertFalse(file + " có BOM", text.startsWith("\uFEFF"));
         return text;
     }

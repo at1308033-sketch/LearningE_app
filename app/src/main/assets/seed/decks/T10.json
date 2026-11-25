@@ -13,185 +13,25 @@
   },
   "source": "Tự soạn cho LearningE; phiên âm kiểu Mỹ",
   "words": [
-    {
-      "uid": "T10-0001",
-      "term": "weather",
-      "reading": "/ˈweðər/",
-      "pos": "danh từ",
-      "meaning": "thời tiết",
-      "example": "What is the weather like today?",
-      "example_translation": "Hôm nay thời tiết thế nào?"
-    },
-    {
-      "uid": "T10-0002",
-      "term": "season",
-      "reading": "/ˈsiːzn/",
-      "pos": "danh từ",
-      "meaning": "mùa",
-      "example": "Autumn is my favorite season.",
-      "example_translation": "Mùa thu là mùa tôi thích nhất."
-    },
-    {
-      "uid": "T10-0003",
-      "term": "spring",
-      "reading": "/sprɪŋ/",
-      "pos": "danh từ",
-      "meaning": "mùa xuân",
-      "example": "Flowers open in spring.",
-      "example_translation": "Hoa nở vào mùa xuân."
-    },
-    {
-      "uid": "T10-0004",
-      "term": "summer",
-      "reading": "/ˈsʌmər/",
-      "pos": "danh từ",
-      "meaning": "mùa hè",
-      "example": "We go to the beach in summer.",
-      "example_translation": "Chúng tôi đi biển vào mùa hè."
-    },
-    {
-      "uid": "T10-0005",
-      "term": "autumn",
-      "reading": "/ˈɔːtəm/",
-      "pos": "danh từ",
-      "meaning": "mùa thu",
-      "example": "The leaves turn yellow in autumn.",
-      "example_translation": "Lá chuyển vàng vào mùa thu."
-    },
-    {
-      "uid": "T10-0006",
-      "term": "winter",
-      "reading": "/ˈwɪntər/",
-      "pos": "danh từ",
-      "meaning": "mùa đông",
-      "example": "It sometimes snows in winter.",
-      "example_translation": "Thỉnh thoảng có tuyết vào mùa đông."
-    },
-    {
-      "uid": "T10-0007",
-      "term": "rain",
-      "reading": "/reɪn/",
-      "pos": "danh từ",
-      "meaning": "mưa",
-      "example": "The rain stopped in the afternoon.",
-      "example_translation": "Cơn mưa tạnh vào buổi chiều."
-    },
-    {
-      "uid": "T10-0008",
-      "term": "snow",
-      "reading": "/snoʊ/",
-      "pos": "danh từ",
-      "meaning": "tuyết",
-      "example": "The mountain is covered with snow.",
-      "example_translation": "Ngọn núi phủ đầy tuyết."
-    },
-    {
-      "uid": "T10-0009",
-      "term": "wind",
-      "reading": "/wɪnd/",
-      "pos": "danh từ",
-      "meaning": "gió",
-      "example": "The wind is strong near the sea.",
-      "example_translation": "Gió mạnh gần biển."
-    },
-    {
-      "uid": "T10-0010",
-      "term": "cloud",
-      "reading": "/klaʊd/",
-      "pos": "danh từ",
-      "meaning": "đám mây",
-      "example": "There is not a cloud in the sky.",
-      "example_translation": "Trên trời không một gợn mây."
-    },
-    {
-      "uid": "T10-0011",
-      "term": "storm",
-      "reading": "/stɔːrm/",
-      "pos": "danh từ",
-      "meaning": "cơn bão",
-      "example": "The storm damaged many houses.",
-      "example_translation": "Cơn bão làm hư hại nhiều ngôi nhà."
-    },
-    {
-      "uid": "T10-0012",
-      "term": "fog",
-      "reading": "/fɔːɡ/",
-      "pos": "danh từ",
-      "meaning": "sương mù",
-      "example": "Drive slowly in the fog.",
-      "example_translation": "Hãy lái xe chậm trong sương mù."
-    },
-    {
-      "uid": "T10-0013",
-      "term": "temperature",
-      "reading": "/ˈtemprətʃər/",
-      "pos": "danh từ",
-      "meaning": "nhiệt độ",
-      "example": "The temperature is thirty degrees.",
-      "example_translation": "Nhiệt độ là ba mươi độ."
-    },
-    {
-      "uid": "T10-0014",
-      "term": "umbrella",
-      "reading": "/ʌmˈbrelə/",
-      "pos": "danh từ",
-      "meaning": "cái ô",
-      "example": "Don't forget your umbrella.",
-      "example_translation": "Đừng quên mang ô."
-    },
-    {
-      "uid": "T10-0015",
-      "term": "sunny",
-      "reading": "/ˈsʌni/",
-      "pos": "tính từ",
-      "meaning": "có nắng",
-      "example": "It will be sunny tomorrow.",
-      "example_translation": "Ngày mai trời sẽ nắng."
-    },
-    {
-      "uid": "T10-0016",
-      "term": "cloudy",
-      "reading": "/ˈklaʊdi/",
-      "pos": "tính từ",
-      "meaning": "nhiều mây",
-      "example": "The sky is cloudy this morning.",
-      "example_translation": "Sáng nay trời nhiều mây."
-    },
-    {
-      "uid": "T10-0017",
-      "term": "windy",
-      "reading": "/ˈwɪndi/",
-      "pos": "tính từ",
-      "meaning": "nhiều gió",
-      "example": "It is too windy to ride a bike.",
-      "example_translation": "Trời nhiều gió quá, không đạp xe được."
-    },
-    {
-      "uid": "T10-0018",
-      "term": "humid",
-      "reading": "/ˈhjuːmɪd/",
-      "pos": "tính từ",
-      "meaning": "ẩm ướt",
-      "example": "The air is hot and humid.",
-      "example_translation": "Không khí nóng và ẩm."
-    },
-    {
-      "uid": "T10-0019",
-      "term": "freezing",
-      "reading": "/ˈfriːzɪŋ/",
-      "pos": "tính từ",
-      "meaning": "lạnh cóng",
-      "example": "It is freezing in this room.",
-      "example_translation": "Trong phòng này lạnh cóng."
-    },
-    {
-      "uid": "T10-0020",
-      "term": "forecast",
-      "reading": "/ˈfɔːrkæst/",
-      "pos": "danh từ",
-      "meaning": "dự báo",
-      "example": "The forecast says it will rain.",
-      "example_translation": "Dự báo nói trời sẽ mưa."
-    }
+    {"uid": "T10-0001", "term": "weather", "reading": "/ˈweðər/", "pos": "danh từ", "meaning": "thời tiết", "example": "What is the weather like today?", "example_translation": "Hôm nay thời tiết thế nào?"},
+    {"uid": "T10-0002", "term": "season", "reading": "/ˈsiːzn/", "pos": "danh từ", "meaning": "mùa", "example": "Autumn is my favorite season.", "example_translation": "Mùa thu là mùa tôi thích nhất."},
+    {"uid": "T10-0003", "term": "spring", "reading": "/sprɪŋ/", "pos": "danh từ", "meaning": "mùa xuân", "example": "Flowers open in spring.", "example_translation": "Hoa nở vào mùa xuân."},
+    {"uid": "T10-0004", "term": "summer", "reading": "/ˈsʌmər/", "pos": "danh từ", "meaning": "mùa hè", "example": "We go to the beach in summer.", "example_translation": "Chúng tôi đi biển vào mùa hè."},
+    {"uid": "T10-0005", "term": "autumn", "reading": "/ˈɔːtəm/", "pos": "danh từ", "meaning": "mùa thu", "example": "The leaves turn yellow in autumn.", "example_translation": "Lá chuyển vàng vào mùa thu."},
+    {"uid": "T10-0006", "term": "winter", "reading": "/ˈwɪntər/", "pos": "danh từ", "meaning": "mùa đông", "example": "It sometimes snows in winter.", "example_translation": "Thỉnh thoảng có tuyết vào mùa đông."},
+    {"uid": "T10-0007", "term": "rain", "reading": "/reɪn/", "pos": "danh từ", "meaning": "mưa", "example": "The rain stopped in the afternoon.", "example_translation": "Cơn mưa tạnh vào buổi chiều."},
+    {"uid": "T10-0008", "term": "snow", "reading": "/snoʊ/", "pos": "danh từ", "meaning": "tuyết", "example": "The mountain is covered with snow.", "example_translation": "Ngọn núi phủ đầy tuyết."},
+    {"uid": "T10-0009", "term": "wind", "reading": "/wɪnd/", "pos": "danh từ", "meaning": "gió", "example": "The wind is strong near the sea.", "example_translation": "Gió mạnh gần biển."},
+    {"uid": "T10-0010", "term": "cloud", "reading": "/klaʊd/", "pos": "danh từ", "meaning": "đám mây", "example": "There is not a cloud in the sky.", "example_translation": "Trên trời không một gợn mây."},
+    {"uid": "T10-0011", "term": "storm", "reading": "/stɔːrm/", "pos": "danh từ", "meaning": "cơn bão", "example": "The storm damaged many houses.", "example_translation": "Cơn bão làm hư hại nhiều ngôi nhà."},
+    {"uid": "T10-0012", "term": "fog", "reading": "/fɔːɡ/", "pos": "danh từ", "meaning": "sương mù", "example": "Drive slowly in the fog.", "example_translation": "Hãy lái xe chậm trong sương mù."},
+    {"uid": "T10-0013", "term": "temperature", "reading": "/ˈtemprətʃər/", "pos": "danh từ", "meaning": "nhiệt độ", "example": "The temperature is thirty degrees.", "example_translation": "Nhiệt độ là ba mươi độ."},
+    {"uid": "T10-0014", "term": "umbrella", "reading": "/ʌmˈbrelə/", "pos": "danh từ", "meaning": "cái ô", "example": "Don't forget your umbrella.", "example_translation": "Đừng quên mang ô."},
+    {"uid": "T10-0015", "term": "sunny", "reading": "/ˈsʌni/", "pos": "tính từ", "meaning": "có nắng", "example": "It will be sunny tomorrow.", "example_translation": "Ngày mai trời sẽ nắng."},
+    {"uid": "T10-0016", "term": "cloudy", "reading": "/ˈklaʊdi/", "pos": "tính từ", "meaning": "nhiều mây", "example": "The sky is cloudy this morning.", "example_translation": "Sáng nay trời nhiều mây."},
+    {"uid": "T10-0017", "term": "windy", "reading": "/ˈwɪndi/", "pos": "tính từ", "meaning": "nhiều gió", "example": "It is too windy to ride a bike.", "example_translation": "Trời nhiều gió quá, không đạp xe được."},
+    {"uid": "T10-0018", "term": "humid", "reading": "/ˈhjuːmɪd/", "pos": "tính từ", "meaning": "ẩm ướt", "example": "The air is hot and humid.", "example_translation": "Không khí nóng và ẩm."},
+    {"uid": "T10-0019", "term": "freezing", "reading": "/ˈfriːzɪŋ/", "pos": "tính từ", "meaning": "lạnh cóng", "example": "It is freezing in this room.", "example_translation": "Trong phòng này lạnh cóng."},
+    {"uid": "T10-0020", "term": "forecast", "reading": "/ˈfɔːrkæst/", "pos": "danh từ", "meaning": "dự báo", "example": "The forecast says it will rain.", "example_translation": "Dự báo nói trời sẽ mưa."}
   ]
 }
