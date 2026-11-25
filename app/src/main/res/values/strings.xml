@@ -454,49 +454,49 @@
     <string name="me_change_password">Đổi mật khẩu</string>
     <string name="me_about">Giới thiệu</string>
 
-    <!-- SCR-04 Thiet lap lan dau -->
-    <string name="setup_title">Thiet lap</string>
-    <string name="setup_subtitle">Chi mat 1 phut</string>
-    <string name="setup_next">Tiep theo</string>
-    <string name="setup_start">Bat dau hoc</string>
-    <string name="setup_level_title">Trinh do cua ban?</string>
-    <string name="setup_level_desc">Chung toi se goi y bai hoc phu hop voi trinh do hien tai.</string>
-    <string name="setup_level_a1">A1 — Moi bat dau</string>
-    <string name="setup_level_a2">A2 — Co ban</string>
-    <string name="setup_level_b1">B1 — Trung cap</string>
-    <string name="setup_goal_title">Muc tieu hang ngay?</string>
-    <string name="setup_goal_desc">Hoc deu dan moi ngay hieu qua hon hoc don mot luc.</string>
-    <string name="setup_goal_5">5 tu / ngay</string>
-    <string name="setup_goal_10">10 tu / ngay</string>
-    <string name="setup_goal_20">20 tu / ngay</string>
-    <string name="setup_reminder_title">Nhac hoc</string>
-    <string name="setup_reminder_desc">Nhan thong bao nhac ban hoc dung gio.</string>
-    <string name="setup_reminder_enable">Bat nhac hoc hang ngay</string>
-    <string name="setup_reminder_time">Gio nhac</string>
+    <!-- SCR-04 Thiết lập lần đầu -->
+    <string name="setup_title">Thiết lập</string>
+    <string name="setup_subtitle">Chỉ mất 1 phút</string>
+    <string name="setup_next">Tiếp theo</string>
+    <string name="setup_start">Bắt đầu học</string>
+    <string name="setup_level_title">Trình độ của bạn?</string>
+    <string name="setup_level_desc">Chúng tôi sẽ gợi ý bài học phù hợp với trình độ hiện tại.</string>
+    <string name="setup_level_a1">A1 — Mới bắt đầu</string>
+    <string name="setup_level_a2">A2 — Cơ bản</string>
+    <string name="setup_level_b1">B1 — Trung cấp</string>
+    <string name="setup_goal_title">Mục tiêu hàng ngày?</string>
+    <string name="setup_goal_desc">Học đều đặn mỗi ngày hiệu quả hơn học dồn một lúc.</string>
+    <string name="setup_goal_5">5 từ / ngày</string>
+    <string name="setup_goal_10">10 từ / ngày</string>
+    <string name="setup_goal_20">20 từ / ngày</string>
+    <string name="setup_reminder_title">Nhắc học</string>
+    <string name="setup_reminder_desc">Nhận thông báo nhắc bạn học đúng giờ.</string>
+    <string name="setup_reminder_enable">Bật nhắc học hàng ngày</string>
+    <string name="setup_reminder_time">Giờ nhắc</string>
     <string name="setup_reminder_default_time">08:00</string>
 
-    <!-- SCR-25 Quen mat khau -->
-    <string name="login_forgot_password">Quen mat khau?</string>
-    <string name="forgot_title">Quen mat khau</string>
-    <string name="forgot_step1_title">Nhap email tai khoan</string>
-    <string name="forgot_step1_desc">Nhap dia chi email ban da dang ky de tiep tuc.</string>
-    <string name="forgot_step1_submit">Tiep theo</string>
-    <string name="forgot_step2_title">Xac minh danh tinh</string>
-    <string name="forgot_step2_desc">Tra loi cau hoi bao mat va nhap mat khau moi.</string>
-    <string name="forgot_step2_submit">Dat lai mat khau</string>
-    <string name="forgot_answer">Cau tra loi bao mat</string>
-    <string name="forgot_new_password">Mat khau moi</string>
-    <string name="forgot_developing">Tinh nang dang phat trien, vui long lien he ho tro.</string>
+    <!-- SCR-25 Quên mật khẩu -->
+    <string name="login_forgot_password">Quên mật khẩu?</string>
+    <string name="forgot_title">Quên mật khẩu</string>
+    <string name="forgot_step1_title">Nhập email tài khoản</string>
+    <string name="forgot_step1_desc">Nhập địa chỉ email bạn đã đăng ký để tiếp tục.</string>
+    <string name="forgot_step1_submit">Tiếp theo</string>
+    <string name="forgot_step2_title">Xác minh danh tính</string>
+    <string name="forgot_step2_desc">Trả lời câu hỏi bảo mật và nhập mật khẩu mới.</string>
+    <string name="forgot_step2_submit">Đặt lại mật khẩu</string>
+    <string name="forgot_answer">Câu trả lời bảo mật</string>
+    <string name="forgot_new_password">Mật khẩu mới</string>
+    <string name="forgot_developing">Tính năng đang phát triển, vui lòng liên hệ hỗ trợ.</string>
     <string name="forgot_email_not_found">Email không tìm thấy trong hệ thống.</string>
     <string name="forgot_error_answer">Câu trả lời không đúng hoặc để trống.</string>
 
-    <!-- SCR-12/13/14 Quiz chu de -->
-    <string name="practice_quiz_title">Quiz chu de</string>
-    <string name="practice_quiz_note">Chon bo tu de kiem tra</string>
-    <string name="quiz_exit_title">Thoat quiz?</string>
-    <string name="quiz_exit_message">Tien do hien tai se khong duoc luu.</string>
-    <string name="quiz_result_score">%1$d/%2$d cau dung</string>
-    <string name="quiz_retry">Lam lai</string>
-    <string name="quiz_back_to_practice">Ve luyen tap</string>
-    <string name="quiz_too_few_words">Can it nhat 2 tu de quiz</string></resources>
+    <!-- SCR-12/13/14 Quiz chủ đề -->
+    <string name="practice_quiz_title">Quiz chủ đề</string>
+    <string name="practice_quiz_note">Chọn bộ từ để kiểm tra</string>
+    <string name="quiz_exit_title">Thoát quiz?</string>
+    <string name="quiz_exit_message">Tiến độ hiện tại sẽ không được lưu.</string>
+    <string name="quiz_result_score">%1$d/%2$d câu đúng</string>
+    <string name="quiz_retry">Làm lại</string>
+    <string name="quiz_back_to_practice">Về luyện tập</string>
+    <string name="quiz_too_few_words">Cần ít nhất 2 từ để quiz</string></resources>
 
