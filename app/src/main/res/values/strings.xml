@@ -444,7 +444,7 @@
     <string name="change_password_empty">Vui lòng điền đầy đủ thông tin</string>
     <string name="about_title">Giới thiệu</string>
     <string name="about_app_name">LearningE</string>
-    <string name="about_version">Phiên bản %1\</string>
+    <string name="about_version">Phiên bản %1$s</string>
     <string name="about_team">Nhóm phát triển</string>
     <string name="about_data_source">Nguồn dữ liệu</string>
     <string name="about_data_source_detail">Dữ liệu từ bộ từ điển mã nguồn mở: JMdict, CEDICT, Wiktionary</string>
