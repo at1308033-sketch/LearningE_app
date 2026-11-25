@@ -143,6 +143,10 @@ public class DeckService {
         return deck.isOk() ? Result.ok(words.listByDeck(session.userId(), deckId)) : Result.errorOf(deck);
     }
 
+    public List<WordItem> searchWords(String query) {
+        return words.search(session.userId(), query);
+    }
+
     public Result<WordDetail> getWord(long wordId) {
         try {
             WordItem item = words.findById(session.userId(), wordId);

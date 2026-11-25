@@ -78,6 +78,18 @@ public final class WordDao {
         return found.isEmpty() ? null : found.get(0);
     }
 
+    /**
+     * Tìm từ theo term/reading/nghĩa. Trả tối đa 50 kết quả, ưu tiên khớp term trước.
+     */
+    public List<WordItem> search(long userId, String query) {
+        String key = TextNormalizer.stripMarks(query.trim().toLowerCase());
+        if (key.isEmpty()) return new ArrayList<>();
+        String like = "%" + key + "%";
+        return list("(w.search_term LIKE ?2 OR w.search_reading LIKE ?2 OR w.search_meaning LIKE ?2) "
+                + "ORDER BY CASE WHEN w.search_term LIKE ?2 THEN 0 ELSE 1 END, w.id LIMIT 50",
+                String.valueOf(userId), like);
+    }
+
     public boolean existsTerm(long deckId, String searchTerm, long exceptId) {
         try (Cursor cursor = database.getReadableDatabase().rawQuery("SELECT 1 FROM words WHERE deck_id = ? "
                         + "AND search_term = ? AND deleted = 0 AND id <> ?",

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/header_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hero_brand"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_4"
+        android:paddingTop="@dimen/space_5"
+        android:paddingBottom="@dimen/space_4">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_search"
+            android:textAppearance="@style/TextAppearance.LearningE.Headline"
+            android:textColor="@color/on_hero" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            app:boxBackgroundColor="@color/surface"
+            app:boxCornerRadiusTopStart="@dimen/space_6"
+            app:boxCornerRadiusTopEnd="@dimen/space_6"
+            app:boxCornerRadiusBottomStart="@dimen/space_6"
+            app:boxCornerRadiusBottomEnd="@dimen/space_6"
+            app:boxBackgroundMode="outline"
+            app:startIconDrawable="@drawable/ic_search"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_hint"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingVertical="@dimen/space_2"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="visible"
+            app:emptyTitle="@string/search_empty_title"
+            app:emptyMessage="@string/search_hint" />
+
+    </FrameLayout>
+
+</LinearLayout>

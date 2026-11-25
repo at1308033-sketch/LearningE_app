@@ -7,6 +7,9 @@
     <string name="tab_learn">Học</string>
     <string name="tab_practice">Luyện tập</string>
     <string name="tab_search">Tra từ</string>
+    <string name="search_hint">Nhập từ, nghĩa hoặc phiên âm…</string>
+    <string name="search_empty_title">Tìm từ bất kỳ</string>
+    <string name="search_no_results">Không tìm thấy từ nào</string>
     <string name="tab_me">Tôi</string>
 
     <!-- SCR-01 Màn hình chờ -->
