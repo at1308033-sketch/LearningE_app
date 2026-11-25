@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/space_4"
+    android:theme="@style/ThemeOverlay.LearningE.Quiz">
+
+    <TextView
+        android:id="@+id/tv_quiz_result_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.LearningE.TitleL"
+        tools:text="Animals" />
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/pi_quiz_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_6"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/tv_quiz_result_pct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/space_3"
+        android:textAppearance="@style/TextAppearance.LearningE.Headline"
+        tools:text="80%" />
+
+    <TextView
+        android:id="@+id/tv_quiz_result_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/space_2"
+        android:textAppearance="@style/TextAppearance.LearningE.BodyL"
+        tools:text="8/10 câu đúng" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_quiz_retry"
+        style="@style/Widget.LearningE.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_7"
+        android:text="@string/quiz_retry" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_quiz_back"
+        style="@style/Widget.LearningE.Button.Outlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_3"
+        android:text="@string/quiz_back_to_practice" />
+</LinearLayout>

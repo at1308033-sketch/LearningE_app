@@ -49,6 +49,12 @@ public class RegisterFragment extends AuthFormFragment {
     }
 
     private void render(FragmentRegisterBinding binding, AuthFormState state) {
+        if (state.isDone()) {
+            // SCR-04: sau đăng ký → thiết lập lần đầu, không vào MainActivity trực tiếp
+            NavHostFragment.findNavController(this)
+                    .navigate(RegisterFragmentDirections.actionRegisterToSetup());
+            return;
+        }
         renderForm(state, binding.btnRegister, R.string.register_submit, binding.bannerRegister);
         setFieldsEnabled(!state.isLoading(), binding.tilDisplayName, binding.tilEmail, binding.tilNickname,
                 binding.tilPassword, binding.tilConfirm, binding.tilQuestion, binding.tilAnswer);

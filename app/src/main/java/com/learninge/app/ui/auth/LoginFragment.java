@@ -55,6 +55,8 @@ public class LoginFragment extends AuthFormFragment {
         });
         binding.btnToRegister.setOnClickListener(v -> NavHostFragment.findNavController(this)
                 .navigate(LoginFragmentDirections.actionLoginToRegister()));
+        binding.btnForgotPassword.setOnClickListener(v -> NavHostFragment.findNavController(this)
+                .navigate(LoginFragmentDirections.actionLoginToForgotPassword()));
     }
 
     private void submit(FragmentLoginBinding binding, AuthFormViewModel viewModel) {

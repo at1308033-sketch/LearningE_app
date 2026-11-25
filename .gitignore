@@ -38,6 +38,9 @@ GEMINI.md
 .windsurfrules
 .github/copilot-instructions.md
 .mcp.json
+# Script build local (JAVA_HOME khác nhau mỗi máy)
+gw.ps1
+gw.sh
 # Bản nháp báo cáo môn giữ ở máy, nộp trong file zip
 docs/report/
 docs/export/

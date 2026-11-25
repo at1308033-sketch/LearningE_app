@@ -24,52 +24,82 @@
             android:textColor="@color/on_hero" />
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_exam"
-        style="@style/Widget.LearningE.Card"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_4">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="@dimen/space_3">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="96dp"
-                android:layout_height="80dp"
-                android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ill_exam_prep" />
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Luyện thi card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_exam"
+                style="@style/Widget.LearningE.Card"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/space_3"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/space_4">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/exam_hub_title"
-                    android:textAppearance="@style/TextAppearance.LearningE.TitleM" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_3">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/exam_hub_note"
-                    android:textAppearance="@style/TextAppearance.LearningE.BodyM" />
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="96dp"
+                        android:layout_height="80dp"
+                        android:importantForAccessibility="no"
+                        app:srcCompat="@drawable/ill_exam_prep" />
 
-            <ImageView
-                android:layout_width="@dimen/icon_m"
-                android:layout_height="@dimen/icon_m"
-                android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_chevron_right"
-                app:tint="@color/on_surface_variant" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/space_3"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/exam_hub_title"
+                            android:textAppearance="@style/TextAppearance.LearningE.TitleM" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/exam_hub_note"
+                            android:textAppearance="@style/TextAppearance.LearningE.BodyM" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_m"
+                        android:layout_height="@dimen/icon_m"
+                        android:importantForAccessibility="no"
+                        app:srcCompat="@drawable/ic_chevron_right"
+                        app:tint="@color/on_surface_variant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quiz chủ đề section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_2"
+                android:layout_marginBottom="@dimen/space_2"
+                android:text="@string/practice_quiz_title"
+                android:textAppearance="@style/TextAppearance.LearningE.TitleM" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_quiz_topics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/space_4"
+                android:paddingBottom="@dimen/space_4" />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
