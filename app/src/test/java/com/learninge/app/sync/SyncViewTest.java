@@ -34,6 +34,6 @@ public class SyncViewTest {
     }
 
     private static SyncState state(Long lastSyncAt, Long lastErrorAt) {
-        return new SyncState("device", 0, lastSyncAt, lastErrorAt == null ? null : "DB", lastErrorAt);
+        return new SyncState("device", 0, lastSyncAt, lastErrorAt == null ? null : "DB", lastErrorAt, 1);
     }
 }

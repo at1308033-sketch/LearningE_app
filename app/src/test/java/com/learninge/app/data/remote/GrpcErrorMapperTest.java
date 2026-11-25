@@ -41,6 +41,7 @@ public class GrpcErrorMapperTest {
         assertEquals(ErrorCode.ACCOUNT_LOCKED, result.error);
         assertEquals(60, result.detailAsInt(0));
         assertEquals(ErrorCode.RATE_LIMITED, map(Status.RESOURCE_EXHAUSTED, "error-code", "RATE_LIMITED"));
+        assertEquals(ErrorCode.PAYLOAD_TOO_LARGE, map(Status.RESOURCE_EXHAUSTED, "error-code", "PAYLOAD_TOO_LARGE"));
     }
 
     @Test

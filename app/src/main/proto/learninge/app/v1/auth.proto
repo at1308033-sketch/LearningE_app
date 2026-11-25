@@ -15,6 +15,9 @@ service AuthService {
   rpc GetResetQuestion(GetResetQuestionRequest) returns (GetResetQuestionResponse); // EP-08
   rpc ResetPassword(ResetPasswordRequest) returns (AuthSession);                    // EP-09
   rpc DeleteAccount(DeleteAccountRequest) returns (DeleteAccountResponse);          // EP-10
+  rpc ListSessions(ListSessionsRequest) returns (ListSessionsResponse);             // EP-17
+  rpc RevokeSession(RevokeSessionRequest) returns (RevokeSessionResponse);          // EP-18
+  rpc RevokeOtherSessions(RevokeOtherSessionsRequest) returns (RevokeOtherSessionsResponse);  // EP-19
 }
 
 message RegisterRequest {
@@ -63,3 +66,17 @@ message ResetPasswordRequest {
 }
 message DeleteAccountRequest { string password = 1; }
 message DeleteAccountResponse {}
+message ListSessionsRequest {}
+message ListSessionsResponse { repeated DeviceSession sessions = 1; }   // dùng gần nhất trước
+message DeviceSession {
+  int64 id = 1;                     // dùng cho RevokeSession
+  string device_name = 2;           // "" = không có
+  int64 created_at_ms = 3;
+  int64 last_used_at_ms = 4;        // chính xác tới một ngày; 0 = chưa dùng lại sau khi đăng nhập
+  int64 expires_at_ms = 5;
+  bool current = 6;                 // máy đang gọi
+}
+message RevokeSessionRequest { int64 id = 1; }                          // không có phiên đó → NOT_FOUND
+message RevokeSessionResponse {}
+message RevokeOtherSessionsRequest {}
+message RevokeOtherSessionsResponse { int32 revoked = 1; }

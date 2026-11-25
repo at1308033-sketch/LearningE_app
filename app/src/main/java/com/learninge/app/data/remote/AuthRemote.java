@@ -2,13 +2,21 @@ package com.learninge.app.data.remote;
 
 import com.learninge.app.core.ErrorCode;
 import com.learninge.app.core.Result;
+import com.learninge.app.data.model.DeviceSession;
 import com.learninge.app.domain.rules.AccountRules;
 import com.learninge.app.domain.rules.RegisterForm;
 import com.learninge.proto.app.v1.AuthServiceGrpc;
 import com.learninge.proto.app.v1.AuthSession;
+import com.learninge.proto.app.v1.ListSessionsRequest;
+import com.learninge.proto.app.v1.ListSessionsResponse;
 import com.learninge.proto.app.v1.LoginRequest;
 import com.learninge.proto.app.v1.LogoutRequest;
 import com.learninge.proto.app.v1.RegisterRequest;
+import com.learninge.proto.app.v1.RevokeOtherSessionsRequest;
+import com.learninge.proto.app.v1.RevokeSessionRequest;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Gọi {@code learninge.app.v1.AuthService}. Chạy trên luồng {@code io}.
@@ -56,6 +64,40 @@ public class AuthRemote {
     public Result<Void> logout() {
         Result<?> result = client.call(Rpc.LOGOUT, AuthServiceGrpc::newBlockingStub,
                 stub -> stub.logout(LogoutRequest.getDefaultInstance()));
+        return result.isOk() ? Result.ok(null) : Result.errorOf(result);
+    }
+
+    /**
+     * EP-17: các máy đang đăng nhập, dùng gần nhất trước.
+     */
+    public Result<List<DeviceSession>> sessions() {
+        Result<ListSessionsResponse> response = client.call(Rpc.LIST_SESSIONS, AuthServiceGrpc::newBlockingStub,
+                stub -> stub.listSessions(ListSessionsRequest.getDefaultInstance()));
+        if (!response.isOk()) {
+            return Result.errorOf(response);
+        }
+        return Result.ok(response.value.getSessionsList().stream().map(session -> new DeviceSession(session.getId(),
+                session.getDeviceName(), session.getCreatedAtMs(),
+                session.getLastUsedAtMs() == 0 ? null : session.getLastUsedAtMs(), session.getCurrent()))
+                .collect(Collectors.toList()));
+    }
+
+    /**
+     * EP-18.
+     */
+    public Result<Void> revokeSession(long id) {
+        RevokeSessionRequest request = RevokeSessionRequest.newBuilder().setId(id).build();
+        Result<?> result = client.call(Rpc.REVOKE_SESSION, AuthServiceGrpc::newBlockingStub,
+                stub -> stub.revokeSession(request));
+        return result.isOk() ? Result.ok(null) : Result.errorOf(result);
+    }
+
+    /**
+     * EP-19.
+     */
+    public Result<Void> revokeOtherSessions() {
+        Result<?> result = client.call(Rpc.REVOKE_OTHER_SESSIONS, AuthServiceGrpc::newBlockingStub,
+                stub -> stub.revokeOtherSessions(RevokeOtherSessionsRequest.getDefaultInstance()));
         return result.isOk() ? Result.ok(null) : Result.errorOf(result);
     }
 

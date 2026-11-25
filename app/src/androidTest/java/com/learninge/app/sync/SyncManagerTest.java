@@ -14,6 +14,7 @@ import com.learninge.app.core.Result;
 import com.learninge.app.data.model.SyncRecord;
 import com.learninge.app.data.model.SyncType;
 import com.learninge.app.data.remote.PullPage;
+import com.learninge.app.data.remote.PushReply;
 import com.learninge.app.data.remote.PushResult;
 import com.learninge.app.data.remote.SyncRemote;
 import com.learninge.app.data.repo.SyncRepository;
@@ -129,7 +130,7 @@ public class SyncManagerTest {
         app.sql("UPDATE sync_state SET pull_cursor = 0");
         app.sql("INSERT INTO decks (id, uuid, owner_user_id, name, name_norm, language_code, is_default, created_at, "
                 + "updated_at, dirty) VALUES (5, 'note', 1, 'Sổ tay', 'sổ tay', 'en', 1, 0, 0, 0)");
-        remote.pages.add(new PullPage(List.of(deck("note", "Tên mới trên máy khác")), 3, false));
+        remote.pages.add(page(List.of(deck("note", "Tên mới trên máy khác")), 3, false));
         manager.syncOnce();
         assertTrue(remote.pushed.isEmpty());
         assertEquals("Tên mới trên máy khác", app.text("SELECT name FROM decks WHERE id = 5"));
@@ -137,8 +138,8 @@ public class SyncManagerTest {
 
     @Test
     public void pull_childBeforeParent_isAppliedLater() {
-        remote.pages.add(new PullPage(List.of(card("w-new", 3, 100)), 8, true));
-        remote.pages.add(new PullPage(List.of(word("w-new", "d-new", "dog", 100), deck("d-new", "Bộ máy khác")), 10,
+        remote.pages.add(page(List.of(card("w-new", 3, 100)), 8, true));
+        remote.pages.add(page(List.of(word("w-new", "d-new", "dog", 100), deck("d-new", "Bộ máy khác")), 10,
                 false));
         manager.syncOnce();
         assertEquals(3, app.number("SELECT p.box FROM card_progress p JOIN words w ON w.id = p.word_id "
@@ -151,7 +152,7 @@ public class SyncManagerTest {
         app.services.studyService().rate(11, true);
         remote.error = ErrorCode.NETWORK_OFFLINE;
         manager.syncOnce();
-        new SyncRepository(app.services.database()).applyPull(1, new PullPage(List.of(card("w-11", 5, 1)), 9, false),
+        new SyncRepository(app.services.database()).applyPull(1, page(List.of(card("w-11", 5, 1)), 9, false),
                 new ArrayList<>());
         assertEquals(2, app.number("SELECT box FROM card_progress"));
     }
@@ -160,7 +161,7 @@ public class SyncManagerTest {
     public void pull_sameDeckName_isRenamedAndQueued() {
         app.services.deckEditor().createDeck("TOEIC", null, "en");
         manager.syncOnce();
-        remote.pages.add(new PullPage(List.of(deck("d-other", "toeic")), 20, false));
+        remote.pages.add(page(List.of(deck("d-other", "toeic")), 20, false));
         manager.syncOnce();
         assertEquals("toeic (2)", app.text("SELECT name FROM decks WHERE uuid = 'd-other'"));
         assertEquals(1, app.number("SELECT dirty FROM decks WHERE uuid = 'd-other'"));
@@ -173,7 +174,7 @@ public class SyncManagerTest {
         app.services.deckEditor().addWord(deckId, new WordInput("cat", null, "mèo", null, null));
         manager.syncOnce();
         long newer = app.services.clock().millis() + 10;
-        remote.pages.add(new PullPage(List.of(word("w-other", deckUuid, "Cat", newer)), 20, false));
+        remote.pages.add(page(List.of(word("w-other", deckUuid, "Cat", newer)), 20, false));
         manager.syncOnce();
         assertEquals("w-other", app.text("SELECT uuid FROM words WHERE deck_id = " + deckId + " AND deleted = 0"));
         assertEquals(1, app.number("SELECT COUNT(*) FROM words WHERE deck_id = " + deckId
@@ -186,11 +187,142 @@ public class SyncManagerTest {
         fields.put("activity_type", "LEARN");
         fields.put("study_date", "2026-11-09");
         fields.put("created_at", 1L);
-        remote.pages.add(new PullPage(List.of(new SyncRecord(SyncType.STUDY_LOG, "s-1", 1, false, 8, fields),
+        remote.pages.add(page(List.of(new SyncRecord(SyncType.STUDY_LOG, "s-1", 1, false, 8, fields),
                 new SyncRecord(SyncType.STUDY_LOG, "s-1", 1, false, 8, fields)), 8, false));
         manager.syncOnce();
         assertEquals(1, app.number("SELECT COUNT(*) FROM study_log"));
         assertEquals(1, app.number("SELECT current_streak FROM user_settings WHERE user_id = 1"));
+    }
+
+    @Test
+    public void push_tooLarge_usesSmallerBatches() {
+        for (int i = 0; i < 10; i++) {
+            studyLog("s" + i, 1);
+        }
+        remote.maxRecords = 3;
+        assertTrue(manager.syncOnce().isOk());
+        assertEquals(List.of(2, 2, 2, 2, 2), remote.batchSizes);
+        assertEquals(0, app.services.syncRepository().countPending(1));
+    }
+
+    @Test
+    public void restoredServer_foundWhilePulling_getsEverythingAgain() {
+        syncedData();
+        remote.epoch = 2;
+        assertTrue(manager.syncOnce().isOk());
+        assertEquals(List.of(7L, 0L), remote.pulledSince.subList(0, 2));
+        assertEquals(List.of(SyncType.SETTINGS, SyncType.DECK, SyncType.WORD, SyncType.CARD_PROGRESS,
+                SyncType.FAVORITE, SyncType.STUDY_LOG, SyncType.QUIZ_ATTEMPT, SyncType.EXAM_ATTEMPT,
+                SyncType.XP_EVENT), remote.pushed.stream().map(SyncRecord::type).collect(Collectors.toList()));
+        assertEquals(0, app.services.syncRepository().countPending(1));
+        assertEquals(2, app.services.syncRepository().state(1).dataEpoch());
+    }
+
+    @Test
+    public void restoredServer_foundWhilePushing_getsEverythingAgain() {
+        syncedData();
+        studyLog("s-new", 1);
+        remote.epoch = 2;
+        assertTrue(manager.syncOnce().isOk());
+        assertEquals("push", remote.calls.get(0));
+        assertEquals(0L, (long) remote.pulledSince.get(0));
+        assertTrue(remote.pushed.stream().anyMatch(record -> record.key().equals("s-old")));
+        assertTrue(remote.pushed.stream().anyMatch(record -> record.type() == SyncType.CARD_PROGRESS));
+        assertEquals(0, app.services.syncRepository().countPending(1));
+    }
+
+    @Test
+    public void restoredServer_recordsItStillHas_areNotPushed() {
+        studyLog("s-old", 0);
+        app.progress(11, 3, "2026-11-14");
+        remote.epoch = 2;
+        remote.pages.add(page(List.of(), 7, false));
+        remote.pages.add(page(List.of(record(SyncType.STUDY_LOG, "s-old", 1, "activity_type", "QUIZ", "study_date",
+                "2026-11-09", "created_at", 1L), card("w-11", 2, 0)), 9, false));
+        manager.syncOnce();
+        // Cài đặt mặc định (updated_at = 0) cũng không bị đẩy.
+        assertTrue(remote.pushed.isEmpty());
+    }
+
+    @Test
+    public void restoredServer_olderCopy_doesNotReplaceLocal() {
+        app.progress(11, 3, "2026-11-14");
+        app.sql("UPDATE card_progress SET updated_at = 50");
+        remote.epoch = 2;
+        remote.pages.add(page(List.of(), 7, false));
+        remote.pages.add(page(List.of(card("w-11", 1, 20)), 9, false));
+        manager.syncOnce();
+        assertEquals(3, app.number("SELECT box FROM card_progress"));
+        assertTrue(remote.pushed.stream().anyMatch(record -> record.key().equals("w-11")
+                && record.number("box") == 3));
+    }
+
+    @Test
+    public void restoredServer_networkLostMidway_continuesNextTime() {
+        syncedData();
+        remote.epoch = 2;
+        remote.afterPull = () -> remote.error = ErrorCode.NETWORK_OFFLINE;
+        assertFalse(manager.syncOnce().isOk());
+        remote.afterPull = () -> {
+        };
+        remote.error = null;
+        assertTrue(manager.syncOnce().isOk());
+        assertTrue(remote.pushed.stream().anyMatch(record -> record.key().equals("s-old")));
+        assertEquals(0, app.services.syncRepository().countPending(1));
+    }
+
+    @Test
+    public void firstSync_onRestoredServer_keepsServerSettings() {
+        app.sql("UPDATE sync_state SET pull_cursor = 0");
+        app.sql("UPDATE user_settings SET updated_at = 900, dirty = 0");
+        remote.epoch = 3;
+        remote.pages.add(page(List.of(record(SyncType.SETTINGS, "", 100, "level", "B1", "daily_goal", 20)), 5, false));
+        assertTrue(manager.syncOnce().isOk());
+        assertTrue(remote.pushed.isEmpty());
+        assertEquals("B1", app.text("SELECT level FROM user_settings"));
+        assertEquals(3, app.services.syncRepository().state(1).dataEpoch());
+    }
+
+    @Test
+    public void oldServer_withoutEpoch_changesNothing() {
+        syncedData();
+        remote.epoch = 0;
+        assertTrue(manager.syncOnce().isOk());
+        assertTrue(remote.pushed.isEmpty());
+        assertEquals(1, app.services.syncRepository().state(1).dataEpoch());
+    }
+
+    /**
+     * Mỗi loại một bản ghi đã đồng bộ.
+     */
+    private void syncedData() {
+        app.sql("UPDATE user_settings SET updated_at = 5");
+        app.deck(5, "d-mine", 1L, null);
+        app.word(51, 5, "cat");
+        app.progress(11, 3, "2026-11-14");
+        app.sql("INSERT INTO favorites (user_id, word_id, created_at, updated_at, dirty) VALUES (1, 11, 0, 0, 0)");
+        studyLog("s-old", 0);
+        app.sql("INSERT INTO quiz_attempts (uuid, user_id, source_type, score, correct_count, total_count, "
+                + "duration_sec, created_at, updated_at, dirty) VALUES ('q', 1, 'DECK', 80, 8, 10, 60, 0, 0, 0)");
+        app.sql("INSERT INTO exam_tests (id, code, exam_tag, title, question_count, duration_sec) "
+                + "VALUES (1, 'E01', 'TOEIC', 'Đề', 1, 60)");
+        app.sql("INSERT INTO exam_attempts (uuid, user_id, test_id, status, started_at, submitted_at, score, "
+                + "correct_count, total_count, duration_sec, updated_at) "
+                + "VALUES ('e', 1, 1, 'SUBMITTED', 0, 1, 50, 1, 2, 5, 0)");
+        app.sql("INSERT INTO exam_attempts (uuid, user_id, test_id, status, started_at, total_count, updated_at) "
+                + "VALUES ('e-open', 1, 1, 'IN_PROGRESS', 0, 2, 0)");
+        app.sql("INSERT INTO xp_events (uuid, user_id, source_type, correct_count, wrong_count, total_count, "
+                + "xp_local, occurred_at, local_date, updated_at, dirty) "
+                + "VALUES ('x', 1, 'QUIZ', 3, 2, 5, 3, 1, '2026-11-10', 0, 0)");
+    }
+
+    private void studyLog(String uuid, int dirty) {
+        app.sql("INSERT INTO study_log (uuid, user_id, activity_type, study_date, created_at, updated_at, dirty) "
+                + "VALUES ('" + uuid + "', 1, 'QUIZ', '2026-11-09', 0, 1, " + dirty + ")");
+    }
+
+    private static PullPage page(List<SyncRecord> records, long nextCursor, boolean hasMore) {
+        return new PullPage(records, nextCursor, hasMore, 1);
     }
 
     private static SyncRecord card(String word, int box, long updatedAt) {
@@ -226,21 +358,29 @@ public class SyncManagerTest {
         private Runnable beforeReply = () -> {
         };
         private ErrorCode error;
+        private final List<Long> pulledSince = new ArrayList<>();
+        private Runnable afterPull = () -> {
+        };
+        private long epoch = 1;
+        private int maxRecords = Integer.MAX_VALUE;
 
         private FakeRemote() {
             super(null);
         }
 
         @Override
-        public Result<List<PushResult>> push(String deviceId, List<SyncRecord> records) {
+        public Result<PushReply> push(String deviceId, List<SyncRecord> records) {
             calls.add("push");
             if (error != null) {
                 return Result.error(error);
             }
+            if (records.size() > maxRecords) {
+                return Result.error(ErrorCode.PAYLOAD_TOO_LARGE);
+            }
             pushed.addAll(records);
             batchSizes.add(records.size());
             beforeReply.run();
-            return Result.ok(records.stream().map(reply).collect(Collectors.toList()));
+            return Result.ok(new PushReply(records.stream().map(reply).collect(Collectors.toList()), epoch));
         }
 
         @Override
@@ -249,7 +389,10 @@ public class SyncManagerTest {
             if (error != null) {
                 return Result.error(error);
             }
-            return Result.ok(pages.isEmpty() ? new PullPage(List.of(), since, false) : pages.poll());
+            pulledSince.add(since);
+            PullPage page = pages.isEmpty() ? page(List.of(), since, false) : pages.poll();
+            afterPull.run();
+            return Result.ok(new PullPage(page.records(), page.nextCursor(), page.hasMore(), epoch));
         }
     }
 }

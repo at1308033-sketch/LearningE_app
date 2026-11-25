@@ -89,7 +89,9 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:minHeight">@dimen/button_height_l</item>
         <item name="android:paddingStart">@dimen/space_4</item>
+        <item name="android:paddingTop">@dimen/space_2</item>
         <item name="android:paddingEnd">@dimen/space_4</item>
+        <item name="android:paddingBottom">@dimen/space_2</item>
         <item name="android:textAppearance">@style/TextAppearance.LearningE.TitleS</item>
         <item name="drawableEndCompat">@drawable/ic_chevron_right</item>
     </style>

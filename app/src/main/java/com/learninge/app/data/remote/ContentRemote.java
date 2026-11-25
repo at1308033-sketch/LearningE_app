@@ -12,10 +12,12 @@ import com.learninge.proto.app.v1.ContentExam;
 import com.learninge.proto.app.v1.ContentServiceGrpc;
 import com.learninge.proto.app.v1.ContentWord;
 import com.learninge.proto.app.v1.ExamQuestion;
-import com.learninge.proto.app.v1.GetDeckRequest;
 import com.learninge.proto.app.v1.GetDeckResponse;
-import com.learninge.proto.app.v1.GetExamRequest;
+import com.learninge.proto.app.v1.GetDecksRequest;
+import com.learninge.proto.app.v1.GetDecksResponse;
 import com.learninge.proto.app.v1.GetExamResponse;
+import com.learninge.proto.app.v1.GetExamsRequest;
+import com.learninge.proto.app.v1.GetExamsResponse;
 import com.learninge.proto.app.v1.GetManifestRequest;
 import com.learninge.proto.app.v1.GetManifestResponse;
 import com.learninge.proto.app.v1.ManifestItem;
@@ -24,12 +26,17 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Gọi {@code learninge.app.v1.ContentService} (EP-14..EP-16). Chạy trên luồng {@code io}.
+ * Gọi {@code learninge.app.v1.ContentService} (EP-14, EP-20, EP-21). Chạy trên luồng {@code io}.
  */
 public class ContentRemote {
+    /**
+     * Số mã tối đa trong một lời gọi EP-20, EP-21.
+     */
+    public static final int MAX_CODES = 10;
     private static final int OPTION_COUNT = 4;
 
     /**
@@ -66,16 +73,49 @@ public class ContentRemote {
                 items(value.getDecksList()), items(value.getExamsList())));
     }
 
-    public Result<SeedDeck> deck(String code) {
-        GetDeckRequest request = GetDeckRequest.newBuilder().setCode(code).build();
-        Result<GetDeckResponse> response = client.call(Rpc.GET_DECK, ContentServiceGrpc::newBlockingStub,
-                stub -> stub.getDeck(request));
+    /**
+     * EP-20: tối đa {@link #MAX_CODES} bộ; thiếu bộ nào thì cả lời gọi là lỗi.
+     */
+    public Result<List<SeedDeck>> decks(List<String> codes) {
+        GetDecksRequest request = GetDecksRequest.newBuilder().addAllCodes(codes).build();
+        Result<GetDecksResponse> response = client.call(Rpc.GET_DECKS, ContentServiceGrpc::newBlockingStub,
+                stub -> stub.getDecks(request));
+        return all(response, codes, response.isOk() ? response.value.getDecksList() : null, ContentRemote::deck);
+    }
+
+    /**
+     * EP-21: như {@link #decks}.
+     */
+    public Result<List<SeedExam>> exams(List<String> codes) {
+        GetExamsRequest request = GetExamsRequest.newBuilder().addAllCodes(codes).build();
+        Result<GetExamsResponse> response = client.call(Rpc.GET_EXAMS, ContentServiceGrpc::newBlockingStub,
+                stub -> stub.getExams(request));
+        return all(response, codes, response.isOk() ? response.value.getExamsList() : null, ContentRemote::exam);
+    }
+
+    private static <T, R> Result<List<R>> all(Result<?> response, List<String> codes, List<T> items,
+                                              Function<T, Result<R>> convert) {
         if (!response.isOk()) {
             return Result.errorOf(response);
         }
-        ContentDeck deck = response.value.getDeck();
+        if (items.size() != codes.size()) {
+            return Result.error(ErrorCode.NOT_FOUND);
+        }
+        List<R> converted = new ArrayList<>();
+        for (T item : items) {
+            Result<R> result = convert.apply(item);
+            if (!result.isOk()) {
+                return Result.errorOf(result);
+            }
+            converted.add(result.value);
+        }
+        return Result.ok(converted);
+    }
+
+    private static Result<SeedDeck> deck(GetDeckResponse response) {
+        ContentDeck deck = response.getDeck();
         // Từ đã gỡ khỏi bộ không có trong danh sách nên ContentWriter tự ẩn.
-        List<SeedWord> words = response.value.getWordsList().stream().filter(word -> !word.getDeleted())
+        List<SeedWord> words = response.getWordsList().stream().filter(word -> !word.getDeleted())
                 .map(ContentRemote::word).collect(Collectors.toList());
         if (deck.getCode().isEmpty() || words.isEmpty()) {
             return Result.error(ErrorCode.BAD_RESPONSE);
@@ -87,16 +127,10 @@ public class ContentRemote {
                 deck.getRetired()));
     }
 
-    public Result<SeedExam> exam(String code) {
-        GetExamRequest request = GetExamRequest.newBuilder().setCode(code).build();
-        Result<GetExamResponse> response = client.call(Rpc.GET_EXAM, ContentServiceGrpc::newBlockingStub,
-                stub -> stub.getExam(request));
-        if (!response.isOk()) {
-            return Result.errorOf(response);
-        }
-        ContentExam exam = response.value.getExam();
+    private static Result<SeedExam> exam(GetExamResponse response) {
+        ContentExam exam = response.getExam();
         List<SeedQuestion> questions = new ArrayList<>();
-        for (ExamQuestion question : response.value.getQuestionsList()) {
+        for (ExamQuestion question : response.getQuestionsList()) {
             if (question.getOptionsCount() != OPTION_COUNT) {
                 return Result.error(ErrorCode.BAD_RESPONSE);
             }

@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
  */
 public final class TimeText {
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DAY = DateTimeFormatter.ofPattern("dd/MM");
     private static final DateTimeFormatter TIME_DAY = DateTimeFormatter.ofPattern("HH:mm dd/MM");
 
     private TimeText() {
@@ -26,5 +27,14 @@ public final class TimeText {
         ZonedDateTime time = Instant.ofEpochMilli(epochMillis).atZone(clock.getZone());
         return time.toLocalDate().equals(LocalDate.now(clock))
                 ? context.getString(R.string.time_today, TIME.format(time)) : TIME_DAY.format(time);
+    }
+
+    /**
+     * "hôm nay" hoặc "09/11".
+     */
+    public static String day(Context context, long epochMillis) {
+        Clock clock = LearningEApp.services(context).clock();
+        LocalDate day = Instant.ofEpochMilli(epochMillis).atZone(clock.getZone()).toLocalDate();
+        return day.equals(LocalDate.now(clock)) ? context.getString(R.string.today) : DAY.format(day);
     }
 }

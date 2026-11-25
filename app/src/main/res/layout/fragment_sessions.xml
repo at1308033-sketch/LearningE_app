@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/header_sessions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_sessions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationContentDescription="@string/common_back"
+            app:navigationIcon="@drawable/ic_arrow_left"
+            app:title="@string/sessions_title" />
+    </FrameLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pi_sessions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/common_loading"
+        android:indeterminate="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.learninge.app.ui.common.EmptyStateView
+            android:id="@+id/es_sessions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/group_sessions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:padding="@dimen/space_4">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.LearningE.Card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ll_sessions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@drawable/divider"
+                        android:orientation="vertical"
+                        android:showDividers="middle" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_revoke_others"
+                    style="@style/Widget.LearningE.Button.Tonal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:text="@string/sessions_revoke_others"
+                    app:icon="@drawable/ic_log_out"
+                    app:iconGravity="textStart" />
+
+                <com.learninge.app.ui.common.FeedbackBannerView
+                    android:id="@+id/banner_sessions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
+</LinearLayout>

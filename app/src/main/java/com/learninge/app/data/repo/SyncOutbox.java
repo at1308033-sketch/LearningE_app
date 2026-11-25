@@ -42,6 +42,18 @@ public final class SyncOutbox {
                     + "FROM exam_attempts a JOIN exam_tests t ON t.id = a.test_id WHERE a.user_id = ? AND a.dirty = 1",
             SyncType.XP_EVENT, "SELECT uuid AS k, updated_at AS u, 0 AS d, source_type, ref_uuid, correct_count, "
                     + "wrong_count, total_count, occurred_at FROM xp_events WHERE user_id = ? AND dirty = 1");
+    private static final String[] QUEUE_ALL = {
+            // updated_at = 0: cài đặt mặc định chưa ai sửa, máy chủ không nhận.
+            "UPDATE user_settings SET dirty = 1 WHERE user_id = ? AND updated_at > 0",
+            "UPDATE decks SET dirty = 1 WHERE owner_user_id = ?",
+            "UPDATE words SET dirty = 1 WHERE deck_id IN (SELECT id FROM decks WHERE owner_user_id = ?)",
+            "UPDATE card_progress SET dirty = 1 WHERE user_id = ?",
+            "UPDATE favorites SET dirty = 1 WHERE user_id = ?",
+            "UPDATE study_log SET dirty = 1 WHERE user_id = ?",
+            "UPDATE quiz_attempts SET dirty = 1 WHERE user_id = ?",
+            "UPDATE exam_attempts SET dirty = 1 WHERE user_id = ? AND status = 'SUBMITTED'",
+            "UPDATE xp_events SET dirty = 1 WHERE user_id = ?"
+    };
     private static final int META_COLUMNS = 3;
 
     private final DatabaseHelper database;
@@ -94,6 +106,15 @@ public final class SyncOutbox {
     public void queueMissingNotebook(long userId) {
         database.getWritableDatabase().execSQL("UPDATE decks SET dirty = 1 WHERE owner_user_id = ? AND is_default = 1 "
                 + "AND server_seq IS NULL", new Object[]{userId});
+    }
+
+    /**
+     * Đánh dấu chờ đẩy mọi bản ghi của người dùng, kể cả bản đã xóa.
+     */
+    public void queueAll(long userId) {
+        for (String update : QUEUE_ALL) {
+            database.getWritableDatabase().execSQL(update, new Object[]{userId});
+        }
     }
 
     static String table(SyncType type) {

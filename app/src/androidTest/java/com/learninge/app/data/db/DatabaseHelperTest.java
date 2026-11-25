@@ -109,6 +109,25 @@ public class DatabaseHelperTest {
         }
     }
 
+    @Test
+    public void upgradeFromVersion2_addsDataEpochAndKeepsCursor() {
+        try (SQLiteDatabase old = SQLiteDatabase.create(null)) {
+            for (String statement : DbSchema.V1) {
+                old.execSQL(statement);
+            }
+            for (String statement : DbSchema.V2) {
+                old.execSQL(statement);
+            }
+            old.execSQL("INSERT INTO sync_state (user_id, device_id, pull_cursor) VALUES (1, 'device', 42)");
+            helper.onUpgrade(old, 2, 3);
+            try (Cursor cursor = old.rawQuery("SELECT pull_cursor, data_epoch FROM sync_state", null)) {
+                assertTrue(cursor.moveToFirst());
+                assertEquals(42, cursor.getInt(0));
+                assertEquals(1, cursor.getInt(1));
+            }
+        }
+    }
+
     private void deck(int id, String uuid, String owner, String nameNorm, int deleted) {
         db.execSQL("INSERT INTO decks (id, uuid, owner_user_id, name, name_norm, language_code, created_at, "
                 + "updated_at, deleted) VALUES (" + id + ", '" + uuid + "', " + owner + ", 'x', '" + nameNorm

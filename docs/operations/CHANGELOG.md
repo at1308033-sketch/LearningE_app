@@ -3,6 +3,9 @@
 Ghi theo [Keep a Changelog](https://keepachangelog.com/vi/1.1.0/): mỗi PR thêm một dòng vào mục **[Chưa phát hành]**; khi phát hành, đổi tên mục thành phiên bản + ngày (xem [DEPLOYMENT](DEPLOYMENT.md)).
 
 ## [Chưa phát hành]
+- T-122: đồng bộ chịu được việc server khôi phục từ bản sao lưu (`data_epoch`, CSDL phiên bản 3): kéo lại từ đầu, chỉ đẩy phần server đã mất; chia lô đẩy theo byte, chia đôi khi gặp `PAYLOAD_TOO_LARGE`.
+- T-123: tải nội dung 10 bộ/đề mỗi lời gọi (EP-20, EP-21).
+- T-020: SCR-36 Thiết bị đăng nhập: xem và đăng xuất từ xa các máy khác (EP-17..EP-19); proto theo LearningE_Server `ad4c552`.
 - T-123: `content-data/` của LearningE_Server là nguồn nội dung duy nhất, seed là bản chép (`tools/sync-content.ps1`, `seed.lock`); ẩn bộ/đề ngừng dùng (CSDL phiên bản 2), sửa lỗi đề mất câu khi bỏ câu ở giữa.
 - T-002: rà tương phản và cỡ chữ 200% ở 360 dp: viền thẻ rõ hơn, nút trái tim có viền, đầu danh sách từ và bài thi không còn chồng chữ.
 - T-080: test hợp đồng DAO trên SQLite thật (cờ đồng bộ, không trùng dòng, CASCADE khi xóa tài khoản, index).

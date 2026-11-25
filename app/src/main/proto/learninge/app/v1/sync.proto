@@ -16,6 +16,7 @@ message PushRequest {
 message PushResponse {
   int64 server_time_ms = 1;
   repeated ChangeResult results = 2; // cùng số phần tử, cùng thứ tự với changes
+  int64 data_epoch = 3;             // xem PullResponse.data_epoch
 }
 message PullRequest {
   int64 since = 1;                  // cursor, ≥ 0; lần đầu = 0
@@ -26,6 +27,7 @@ message PullResponse {
   int64 next_cursor = 2;
   bool has_more = 3;
   int64 server_time_ms = 4;
+  int64 data_epoch = 5;             // khác lần trước = kho vừa khôi phục: app kéo lại từ 0 và đẩy lại mọi bản ghi của mình
 }
 
 // Một bản ghi đồng bộ. Loại bản ghi = trường đang đặt trong oneof `data` (thay cho "entity" của REST).

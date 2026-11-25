@@ -61,6 +61,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sync_title"
                 app:drawableStartCompat="@drawable/ic_refresh" />
+
+            <TextView
+                android:id="@+id/row_sessions"
+                style="@style/Widget.LearningE.SettingRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sessions_title"
+                app:drawableStartCompat="@drawable/ic_smartphone" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

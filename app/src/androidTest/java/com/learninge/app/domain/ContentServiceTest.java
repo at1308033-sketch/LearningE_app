@@ -23,6 +23,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RunWith(AndroidJUnit4.class)
 public class ContentServiceTest {
@@ -123,11 +125,22 @@ public class ContentServiceTest {
                 + "ORDER BY number)"));
     }
 
+    @Test
+    public void update_manyDecks_downloadsTenAtATime() {
+        remote.deckCodes = IntStream.rangeClosed(1, 23).mapToObj(n -> String.format("T%02d", n))
+                .collect(Collectors.toList());
+        assertEquals(24, (int) service.update().value);
+        assertEquals(List.of(10, 10, 3), remote.askedDecks.stream().map(List::size).collect(Collectors.toList()));
+        assertEquals(23, app.number("SELECT COUNT(*) FROM decks WHERE code LIKE 'T%'"));
+    }
+
     private static final class FakeRemote extends ContentRemote {
         private boolean isNotModified;
         private boolean isRetired;
         private int version = 2;
         private List<Integer> numbers = List.of(1);
+        private List<String> deckCodes = List.of("T01");
+        private final List<List<String>> askedDecks = new ArrayList<>();
         private ErrorCode examError;
         private int downloads;
         private long askedVersion;
@@ -139,27 +152,31 @@ public class ContentServiceTest {
         @Override
         public Result<Manifest> manifest(long installedVersion) {
             askedVersion = installedVersion;
-            return Result.ok(new Manifest(9, isNotModified, List.of(), List.of(new Item("T01", version)),
+            return Result.ok(new Manifest(9, isNotModified, List.of(),
+                    deckCodes.stream().map(code -> new Item(code, version)).collect(Collectors.toList()),
                     List.of(new Item("E01", version))));
         }
 
         @Override
-        public Result<SeedDeck> deck(String code) {
+        public Result<List<SeedDeck>> decks(List<String> codes) {
             downloads++;
-            return Result.ok(new SeedDeck(code, version, "Gia đình", null, "en", "A1", null, null, 1, "server",
-                    List.of(new SeedWord("T01-0001", "mum", null, null, "mẹ", null, null)), isRetired));
+            askedDecks.add(codes);
+            return Result.ok(codes.stream().map(code -> new SeedDeck(code, version, "Gia đình", null, "en", "A1", null,
+                    null, 1, "server", List.of(new SeedWord(code + "-0001", "mum", null, null, "mẹ", null, null)),
+                    isRetired)).collect(Collectors.toList()));
         }
 
         @Override
-        public Result<SeedExam> exam(String code) {
+        public Result<List<SeedExam>> exams(List<String> codes) {
             downloads++;
             List<SeedQuestion> questions = new ArrayList<>();
             for (int number : numbers) {
                 questions.add(new SeedQuestion(number, null, "?", "[\"a\",\"b\",\"c\",\"d\"]", 0, null, null, null,
                         "T01-0001"));
             }
-            return examError != null ? Result.error(examError) : Result.ok(new SeedExam(code, version, "TOEIC",
-                    "Đề 1", null, 900, null, 1, questions, isRetired));
+            return examError != null ? Result.error(examError) : Result.ok(codes.stream()
+                    .map(code -> new SeedExam(code, version, "TOEIC", "Đề 1", null, 900, null, 1, questions, isRetired))
+                    .collect(Collectors.toList()));
         }
     }
 }

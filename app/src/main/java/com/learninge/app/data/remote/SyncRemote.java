@@ -1,5 +1,6 @@
 package com.learninge.app.data.remote;
 
+import com.google.protobuf.CodedOutputStream;
 import com.learninge.app.core.ErrorCode;
 import com.learninge.app.core.Result;
 import com.learninge.app.data.model.SyncRecord;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
  * Gọi {@code learninge.app.v1.SyncService}. Chạy trên luồng {@code io}.
  */
 public class SyncRemote {
+    // Máy chủ nhận tối đa 1 MiB mỗi message; chừa chỗ cho phần đầu gói.
+    private static final int MAX_PUSH_BYTES = 900 * 1024;
+
     private final GrpcClient client;
 
     public SyncRemote(GrpcClient client) {
@@ -27,9 +31,24 @@ public class SyncRemote {
     }
 
     /**
-     * EP-11: kết quả cùng thứ tự với bản ghi đã gửi.
+     * Các bản ghi đầu danh sách vừa một lần đẩy, luôn có ít nhất một bản ghi nếu danh sách không rỗng.
      */
-    public Result<List<PushResult>> push(String deviceId, List<SyncRecord> records) {
+    public static List<SyncRecord> firstFitting(List<SyncRecord> records) {
+        int bytes = 0;
+        for (int i = 0; i < records.size(); i++) {
+            bytes += CodedOutputStream.computeMessageSize(PushRequest.CHANGES_FIELD_NUMBER,
+                    SyncMapper.toProto(records.get(i)));
+            if (bytes > MAX_PUSH_BYTES && i > 0) {
+                return records.subList(0, i);
+            }
+        }
+        return records;
+    }
+
+    /**
+     * EP-11.
+     */
+    public Result<PushReply> push(String deviceId, List<SyncRecord> records) {
         PushRequest request = PushRequest.newBuilder()
                 .setDeviceId(deviceId)
                 .addAllChanges(records.stream().map(SyncMapper::toProto).collect(Collectors.toList()))
@@ -46,7 +65,7 @@ public class SyncRemote {
         for (ChangeResult result : response.value.getResultsList()) {
             results.add(toResult(result));
         }
-        return Result.ok(results);
+        return Result.ok(new PushReply(results, response.value.getDataEpoch()));
     }
 
     /**
@@ -61,7 +80,8 @@ public class SyncRemote {
         }
         List<SyncRecord> records = response.value.getChangesList().stream().map(SyncMapper::fromProto)
                 .filter(Objects::nonNull).collect(Collectors.toList());
-        return Result.ok(new PullPage(records, response.value.getNextCursor(), response.value.getHasMore()));
+        return Result.ok(new PullPage(records, response.value.getNextCursor(), response.value.getHasMore(),
+                response.value.getDataEpoch()));
     }
 
     private static PushResult toResult(ChangeResult result) {

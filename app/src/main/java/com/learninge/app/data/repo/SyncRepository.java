@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.learninge.app.data.dao.SyncStateDao;
 import com.learninge.app.data.db.DatabaseHelper;
+import com.learninge.app.data.db.Tx;
 import com.learninge.app.data.model.SyncRecord;
 import com.learninge.app.data.model.SyncState;
 import com.learninge.app.data.remote.PullPage;
@@ -91,6 +92,29 @@ public final class SyncRepository {
         } finally {
             db.endTransaction();
         }
+    }
+
+    /**
+     * Kho máy chủ vừa được khôi phục từ bản sao lưu (kỷ nguyên đổi) thì kéo lại từ đầu và đẩy lại mọi bản ghi của máy
+     * này, vì máy chủ có thể đã mất phần mới nhất.
+     *
+     * @return true nếu phải kéo lại từ đầu
+     */
+    public boolean enterEpoch(long userId, long epoch) {
+        SyncState current = state.find(userId);
+        if (epoch == 0 || epoch == current.dataEpoch()) {
+            return false;
+        }
+        // Mốc 0: chưa kéo gì, dữ liệu trên máy hoặc đang chờ đẩy sẵn, hoặc chưa từng lên máy chủ.
+        boolean isRestart = current.cursor() > 0;
+        return Tx.run(database, () -> {
+            state.saveEpoch(userId, epoch);
+            if (isRestart) {
+                state.saveCursor(userId, 0);
+                outbox.queueAll(userId);
+            }
+            return isRestart;
+        });
     }
 
     public void queueMissingNotebook(long userId) {

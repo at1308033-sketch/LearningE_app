@@ -10,6 +10,11 @@ final class DbSchema {
             + "dirty INTEGER NOT NULL DEFAULT 1 CHECK (dirty IN (0,1)), server_seq INTEGER";
     private static final String DELETED = "deleted" + String.format(BOOL, "deleted");
 
+    // 1 = kho máy chủ chưa từng được khôi phục.
+    static final String[] V3 = {
+            "ALTER TABLE sync_state ADD COLUMN data_epoch INTEGER NOT NULL DEFAULT 1"
+    };
+
     static final String[] V2 = {
             "ALTER TABLE exam_tests ADD COLUMN retired" + String.format(BOOL, "retired")
     };
