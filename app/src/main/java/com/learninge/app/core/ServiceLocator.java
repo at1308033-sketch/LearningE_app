@@ -74,6 +74,7 @@ public final class ServiceLocator {
 
     public ServiceLocator(Context context) {
         this(context, new DatabaseHelper(context), null);
+        syncScheduler.start();
     }
 
     private ServiceLocator(Context context, DatabaseHelper database, Clock fixedClock) {
@@ -93,7 +94,7 @@ public final class ServiceLocator {
     }
 
     /**
-     * Dùng cho test: CSDL trong bộ nhớ và giờ cố định.
+     * Dùng cho test: CSDL trong bộ nhớ, giờ cố định, không tự đồng bộ khi có mạng.
      */
     @VisibleForTesting
     public static ServiceLocator inMemory(Context context, Clock clock) {

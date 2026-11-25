@@ -35,5 +35,6 @@ public enum ErrorCode {
     EMAIL_TAKEN,
     NICKNAME_TAKEN,
     UPGRADE_REQUIRED,
+    PAYLOAD_TOO_LARGE,
     BAD_RESPONSE
 }

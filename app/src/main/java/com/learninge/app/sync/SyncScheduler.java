@@ -29,6 +29,12 @@ public class SyncScheduler {
         this.network = network;
         this.executors = executors;
         this.contentUpdate = contentUpdate;
+    }
+
+    /**
+     * Từ đây tự đồng bộ mỗi khi có mạng lại.
+     */
+    public void start() {
         network.addOnAvailable(this::onNetworkAvailable);
     }
 

@@ -34,6 +34,7 @@
     <string name="error_server_unavailable">Máy chủ đang bận. Dữ liệu của bạn không bị mất — thử lại sau ít phút.</string>
     <string name="error_rate_limited">Bạn đã thử quá nhiều lần. Vui lòng chờ rồi thử lại.</string>
     <string name="error_upgrade_required">Vui lòng cập nhật ứng dụng</string>
+    <string name="error_payload_too_large">Dữ liệu gửi lên quá lớn</string>
     <string name="error_account_deleted">Tài khoản đã bị xóa</string>
     <string name="error_session_expired">Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại</string>
     <string name="error_file_too_large">File quá lớn (tối đa 1 MB, 2000 dòng)</string>
@@ -260,6 +261,7 @@
 
     <!-- SCR-34 Bảng xếp hạng -->
     <string name="xp">%1$d XP</string>
+    <string name="today">hôm nay</string>
     <string name="time_today">%1$s hôm nay</string>
     <string name="leaderboard_title">Bảng xếp hạng</string>
     <string name="leaderboard_week">Tuần %1$d · %2$s – %3$s</string>
@@ -299,6 +301,22 @@
     <string name="sync_record_rejected">Máy chủ từ chối một bản ghi (%1$s)</string>
     <string name="sync_server">Máy chủ (bản debug)</string>
     <string name="sync_safe_note">Dữ liệu chưa đồng bộ luôn được giữ trên máy; đăng xuất không làm mất chúng cho tới khi đẩy xong.</string>
+
+    <!-- SCR-36 Thiết bị đăng nhập -->
+    <string name="sessions_title">Thiết bị đăng nhập</string>
+    <string name="sessions_unnamed">Thiết bị không rõ tên</string>
+    <string name="sessions_current">Máy này</string>
+    <string name="sessions_signed_in">Đăng nhập %1$s</string>
+    <string name="sessions_signed_in_used">Đăng nhập %1$s · dùng gần nhất %2$s</string>
+    <string name="sessions_revoke">Đăng xuất</string>
+    <string name="sessions_revoke_device">Đăng xuất %1$s</string>
+    <string name="sessions_revoke_title">Đăng xuất %1$s?</string>
+    <string name="sessions_revoke_others">Đăng xuất mọi thiết bị khác</string>
+    <string name="sessions_revoke_others_title">Đăng xuất mọi thiết bị khác?</string>
+    <string name="sessions_revoke_message">Thiết bị đó phải đăng nhập lại mới đồng bộ tiếp. Dữ liệu chưa đồng bộ trên thiết bị đó vẫn còn.</string>
+    <string name="sessions_note">Không nhận ra thiết bị nào thì hãy đăng xuất thiết bị đó.</string>
+    <string name="sessions_only_this">Tài khoản chỉ đang đăng nhập trên máy này.</string>
+    <string name="sessions_need_network">Cần kết nối mạng để xem thiết bị đăng nhập</string>
 
     <!-- Ngọn lửa và rương -->
     <string name="flame_stage">Ngọn lửa giai đoạn %1$d</string>

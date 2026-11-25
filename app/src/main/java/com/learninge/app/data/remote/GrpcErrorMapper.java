@@ -43,7 +43,8 @@ final class GrpcErrorMapper {
             case ALREADY_EXISTS:
                 return oneOf(reason, ErrorCode.DUPLICATE, ErrorCode.EMAIL_TAKEN, ErrorCode.NICKNAME_TAKEN);
             case RESOURCE_EXHAUSTED:
-                return oneOf(reason, ErrorCode.RATE_LIMITED, ErrorCode.ACCOUNT_LOCKED, ErrorCode.RESET_LOCKED);
+                return oneOf(reason, ErrorCode.RATE_LIMITED, ErrorCode.ACCOUNT_LOCKED, ErrorCode.RESET_LOCKED,
+                        ErrorCode.PAYLOAD_TOO_LARGE);
             case NOT_FOUND:
                 return ErrorCode.NOT_FOUND;
             case FAILED_PRECONDITION:

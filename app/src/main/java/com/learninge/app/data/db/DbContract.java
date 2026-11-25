@@ -60,6 +60,7 @@ public final class DbContract {
         public static final String LAST_ATTEMPT_AT = "last_attempt_at";
         public static final String LAST_ERROR_CODE = "last_error_code";
         public static final String LAST_ERROR_AT = "last_error_at";
+        public static final String DATA_EPOCH = "data_epoch";
 
         private SyncState() {
         }

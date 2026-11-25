@@ -42,6 +42,8 @@ public final class ErrorMessages {
                 return R.string.error_rate_limited;
             case UPGRADE_REQUIRED:
                 return R.string.error_upgrade_required;
+            case PAYLOAD_TOO_LARGE:
+                return R.string.error_payload_too_large;
             case ACCOUNT_DELETED:
                 return R.string.error_account_deleted;
             case UNAUTHENTICATED:

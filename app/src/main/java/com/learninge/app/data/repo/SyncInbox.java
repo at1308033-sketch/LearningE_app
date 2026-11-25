@@ -278,9 +278,14 @@ public final class SyncInbox {
         }
     }
 
-    // Bản ghi chỉ-thêm: đã có uuid thì giữ bản trên máy.
+    // Bản ghi chỉ-thêm: đã có uuid thì giữ bản trên máy, và khỏi đẩy vì máy chủ đã có.
     private void insertIfAbsent(String table, ContentValues values) {
-        db().insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (db().insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_IGNORE) == -1) {
+            ContentValues known = new ContentValues();
+            known.put("dirty", 0);
+            known.put("server_seq", values.getAsLong("server_seq"));
+            db().update(table, known, "uuid = ?", new String[]{values.getAsString("uuid")});
+        }
     }
 
     private Long id(String table, String uuid) {
