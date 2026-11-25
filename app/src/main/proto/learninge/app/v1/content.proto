@@ -8,6 +8,8 @@ service ContentService {
   rpc GetManifest(GetManifestRequest) returns (GetManifestResponse);   // EP-14
   rpc GetDeck(GetDeckRequest) returns (GetDeckResponse);               // EP-15
   rpc GetExam(GetExamRequest) returns (GetExamResponse);               // EP-16
+  rpc GetDecks(GetDecksRequest) returns (GetDecksResponse);            // EP-20
+  rpc GetExams(GetExamsRequest) returns (GetExamsResponse);            // EP-21
 }
 message GetManifestRequest { int64 if_version = 1; }   // thay If-None-Match; 0 = luôn trả đủ
 message GetManifestResponse {
@@ -26,7 +28,11 @@ message ManifestItem {
   int32 item_count = 3;             // số từ / số câu
   int64 updated_at_ms = 4;
 }
-message GetDeckRequest { string code = 1; }   // ^[A-Z][0-9]{2}$
+message GetDecksRequest { repeated string codes = 1; }                 // 1..10 mã khác nhau
+message GetDecksResponse { repeated GetDeckResponse decks = 1; }       // đúng thứ tự xin; mã không có thì bỏ qua
+message GetExamsRequest { repeated string codes = 1; }                 // 1..10 mã khác nhau
+message GetExamsResponse { repeated GetExamResponse exams = 1; }
+message GetDeckRequest { string code = 1; }   // ^[A-Z][0-9]{2,3}$
 message GetDeckResponse { ContentDeck deck = 1; repeated ContentWord words = 2; }
 message ContentDeck {
   string code = 1; string name = 2; optional string description = 3; string language_code = 4;

@@ -13,12 +13,15 @@ public enum Rpc {
     GET_RESET_QUESTION(10, false, true),
     RESET_PASSWORD(10, false, true),
     DELETE_ACCOUNT(10, false, false),
+    LIST_SESSIONS(10, true, false),
+    REVOKE_SESSION(10, false, false),
+    REVOKE_OTHER_SESSIONS(10, false, false),
     PUSH(20, true, false),
     PULL(15, true, false),
     GET_WEEKLY(5, true, false),
     GET_MANIFEST(15, true, false),
-    GET_DECK(15, true, false),
-    GET_EXAM(15, true, false);
+    GET_DECKS(15, true, false),
+    GET_EXAMS(15, true, false);
 
     final int deadlineSeconds;
     /**
