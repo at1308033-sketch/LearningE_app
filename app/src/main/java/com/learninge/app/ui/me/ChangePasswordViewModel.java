@@ -35,8 +35,7 @@ public class ChangePasswordViewModel extends BaseViewModel {
             return;
         }
         services.executors().io().execute(() -> {
-            // ponytail: cần server implement changePassword(current, newPwd) — hiện stub trả NOT_SUPPORTED
-            Result<Void> r = Result.error(ErrorCode.VALIDATION, "NOT_SUPPORTED");
+            Result<Void> r = services.authService().changePassword(current, newPwd);
             result.postValue(r);
         });
     }

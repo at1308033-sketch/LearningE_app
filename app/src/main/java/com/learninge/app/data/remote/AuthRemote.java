@@ -7,11 +7,16 @@ import com.learninge.app.domain.rules.AccountRules;
 import com.learninge.app.domain.rules.RegisterForm;
 import com.learninge.proto.app.v1.AuthServiceGrpc;
 import com.learninge.proto.app.v1.AuthSession;
+import com.learninge.proto.app.v1.ChangePasswordRequest;
+import com.learninge.proto.app.v1.ChangePasswordResponse;
+import com.learninge.proto.app.v1.GetResetQuestionRequest;
+import com.learninge.proto.app.v1.GetResetQuestionResponse;
 import com.learninge.proto.app.v1.ListSessionsRequest;
 import com.learninge.proto.app.v1.ListSessionsResponse;
 import com.learninge.proto.app.v1.LoginRequest;
 import com.learninge.proto.app.v1.LogoutRequest;
 import com.learninge.proto.app.v1.RegisterRequest;
+import com.learninge.proto.app.v1.ResetPasswordRequest;
 import com.learninge.proto.app.v1.RevokeOtherSessionsRequest;
 import com.learninge.proto.app.v1.RevokeSessionRequest;
 
@@ -99,6 +104,42 @@ public class AuthRemote {
         Result<?> result = client.call(Rpc.REVOKE_OTHER_SESSIONS, AuthServiceGrpc::newBlockingStub,
                 stub -> stub.revokeOtherSessions(RevokeOtherSessionsRequest.getDefaultInstance()));
         return result.isOk() ? Result.ok(null) : Result.errorOf(result);
+    }
+
+    /** EP-07: đổi mật khẩu, trả token mới. */
+    public Result<Void> changePassword(String current, String newPassword) {
+        ChangePasswordRequest request = ChangePasswordRequest.newBuilder()
+                .setCurrentPassword(current)
+                .setNewPassword(newPassword)
+                .setDeviceName(deviceName)
+                .build();
+        Result<ChangePasswordResponse> result = client.call(Rpc.CHANGE_PASSWORD,
+                AuthServiceGrpc::newBlockingStub, stub -> stub.changePassword(request));
+        if (!result.isOk()) return Result.errorOf(result);
+        return Result.ok(null);
+    }
+
+    /** EP-08: lấy câu hỏi bảo mật theo email. */
+    public Result<Integer> getResetQuestion(String email) {
+        GetResetQuestionRequest request = GetResetQuestionRequest.newBuilder()
+                .setEmail(AccountRules.normalizeEmail(email))
+                .build();
+        Result<GetResetQuestionResponse> result = client.call(Rpc.GET_RESET_QUESTION,
+                AuthServiceGrpc::newBlockingStub, stub -> stub.getResetQuestion(request));
+        if (!result.isOk()) return Result.errorOf(result);
+        return Result.ok(result.value.getSecurityQuestionId());
+    }
+
+    /** EP-09: đặt lại mật khẩu, trả session mới. */
+    public Result<RemoteSession> resetPassword(String email, String answer, String newPassword) {
+        ResetPasswordRequest request = ResetPasswordRequest.newBuilder()
+                .setEmail(AccountRules.normalizeEmail(email))
+                .setSecurityAnswer(answer)
+                .setNewPassword(newPassword)
+                .setDeviceName(deviceName)
+                .build();
+        return toSession(client.call(Rpc.RESET_PASSWORD, AuthServiceGrpc::newBlockingStub,
+                stub -> stub.resetPassword(request)));
     }
 
     private static Result<RemoteSession> toSession(Result<AuthSession> result) {

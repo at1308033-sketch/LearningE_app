@@ -95,6 +95,31 @@ public class AuthService {
         return remote.get().revokeOtherSessions();
     }
 
+    /** EP-07: đổi mật khẩu (BR-074). */
+    public Result<Void> changePassword(String current, String newPassword) {
+        if (current.isBlank())
+            return Result.error(ErrorCode.VALIDATION, "CURRENT_PASSWORD");
+        if (!AccountRules.isPassword(newPassword))
+            return Result.error(ErrorCode.VALIDATION, AccountRules.Field.PASSWORD.name());
+        return remote.get().changePassword(current, newPassword);
+    }
+
+    /** EP-08: lấy câu hỏi bảo mật theo email (màn quên mật khẩu). */
+    public Result<Integer> getResetQuestion(String email) {
+        if (!AccountRules.isEmail(email))
+            return Result.error(ErrorCode.VALIDATION, AccountRules.Field.EMAIL.name());
+        return remote.get().getResetQuestion(email);
+    }
+
+    /** EP-09: đặt lại mật khẩu và đăng nhập luôn (BR-075). */
+    public Result<User> resetPassword(String email, String answer, String newPassword) {
+        if (!AccountRules.isAnswer(answer))
+            return Result.error(ErrorCode.VALIDATION, AccountRules.Field.ANSWER.name());
+        if (!AccountRules.isPassword(newPassword))
+            return Result.error(ErrorCode.VALIDATION, AccountRules.Field.PASSWORD.name());
+        return complete(remote.get().resetPassword(email, answer, newPassword));
+    }
+
     public Result<User> currentUser() {
         User user = session.isSignedIn() ? accounts.findById(session.userId()) : null;
         return user == null ? Result.error(ErrorCode.NOT_FOUND) : Result.ok(user);
